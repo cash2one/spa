@@ -1,0 +1,81 @@
+@import "../common/mixin.scss";
+
+div#account-detail-page{
+  div.item{
+    position: relative;
+    height: 2.444rem;
+    line-height: 2.444rem;
+    padding-left:0.883rem;
+    background-color: #fff;
+    margin-top:0.667rem;
+    border-top:1px solid #e0e0e0;
+    border-bottom:1px solid #e0e0e0;
+    font-size:0.889rem;
+    color:#424242;
+
+    div.right-arrow{
+      position: absolute;
+      right:0.833rem;
+      top:50%;
+      margin-top:-0.22rem;
+    }
+  }
+
+  div.qrcode-item>div{
+    position: absolute;
+    width: .889rem;
+    height: .889rem;
+    right:0.833rem;
+    top:50%;
+    margin-top:-0.4445rem;
+    @include img('../../images/account/icon_erweima.png',.889rem .889rem);
+  }
+
+  div.info-item{
+    height:auto;
+    margin-top:0;
+    border-top:none;
+    padding:0.556rem 0.883rem;
+    >div{
+      height: 1.944rem;
+      line-height: 1.944rem;
+      @include sx();
+      >div{
+        margin-right: .5rem;
+        &:first-child{
+          width: 1.056rem;
+          height:1.056rem;
+          border-radius: 50%;
+          @include imgBgFix(1.056rem 1.056rem);
+        }
+        &.available-icon{
+          background-image: url('../../images/account/icon_available.png');
+        }
+        &.frozen-icon{
+          background-image: url('../../images/account/icon_blocked.png');
+        }
+        &:nth-of-type(2){
+          color: #616161;
+          font-size: .778rem;
+        }
+        &:last-child{
+          font-size: .889rem;
+          color: #212121;
+        }
+      }
+    }
+    >a{
+      position: absolute;
+      right: .833rem;
+      width: 2.5rem;
+      height: 1.333rem;
+      top: 1rem;
+      background-color: #fb5549;
+      color: #fff;
+      font-size: .667rem;
+      text-align: center;
+      line-height: 1.333rem;
+      border-radius: 4px;
+    }
+  }
+}

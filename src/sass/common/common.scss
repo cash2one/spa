@@ -1,0 +1,64 @@
+@import "mixin.scss";
+@import 'reset.scss';
+
+div#page-container{
+  position: relative;
+  min-height: 100%;
+  background-color: #eee;
+  //border:1px solid #28a7e1;
+  &>div.page{
+    width:100%;
+    min-height: 100%;
+  }
+}
+
+div.stars{
+  width: 4.111rem;
+  height: 0.694rem;
+  @include sx();
+  @include img('../../images/common/star_null_icon.png', 4.111rem 0.694rem);
+  > div {
+    width: 0;
+    height: 100%;
+    @include img('../../images/common/star_score_icon.png', 4.111rem 0.694rem);
+  }
+}
+
+div.right-arrow{
+  width: 0.43rem;
+  height: 0.43rem;
+  border-left:0.1rem solid #999;
+  border-bottom:0.1rem solid #999;
+  @include rotate(-135deg);
+}
+
+div.data-load-tip,div.finish-load-tip{
+  @include wq();
+  height: 2.4rem;
+  div{
+    font-size: 0.778rem;
+    margin-left: 0.2rem;
+    line-height: 2rem;
+    color: #666;
+  }
+  &.none{
+    display: none;
+  }
+
+  &.border-top{
+    border-top:1px solid #e0e0e0;
+  }
+}
+
+div.data-load-tip{
+  i{
+    display: block;
+    width: 0.778rem;
+    height: 0.778rem;
+    @include img('../../images/common/loading.gif',0.778rem 0.778rem);
+  }
+}
+
+div.finish-load-tip{
+  background-color: #fff;
+}

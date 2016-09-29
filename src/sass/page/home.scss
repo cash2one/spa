@@ -1,0 +1,267 @@
+@import "../common/mixin.scss";
+
+div#home-page{
+  padding-bottom:2.8rem;
+  &>div{
+    background-color: #fff;
+  }
+
+  div.banner,div.banner-swipe{
+    width:20rem;
+    height:12.361rem;
+  }
+  div.banner{
+    position: relative;
+  }
+  div.swipe-indicators{
+    bottom: 0;
+    left: auto;
+    right:0.5rem;
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+    &>div.swipe-indicator{
+      width:10px;
+      height:10px;
+      margin-right:0;
+      margin-left:6px;
+      opacity: 0.4;
+      &:first-child{
+        margin-left:0;
+      }
+    }
+  }
+  div.swipe-items-wrap>div.swipe-item{
+    &>div:nth-of-type(1){
+      height:12.361rem;
+      @include imgBgFix(20rem 12.361rem);
+    }
+    &>div:nth-of-type(2){
+      position: relative;
+      width: 20rem;
+      height: 12.361rem;
+      top: -12.361rem;
+      @include jb(0,100%,rgba(0,0,0,0.5),0,60%,rgba(0,0,0,0));
+    }
+  }
+  div.logo{
+    position: absolute;
+    left:0.667rem;
+    bottom:0.667rem;
+    width: 3.778rem;
+    height: 3.778rem;
+    padding: 0.111rem;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    @include boxsizing(content-box);
+    >div {
+      width: 3.778rem;
+      height: 3.778rem;
+      border-radius:50%;
+      @include imgBgFix(3.778rem 3.778rem);
+    }
+  }
+
+  div.club-name{
+    position: absolute;
+    left: 5.334rem;
+    bottom: 0.667rem;
+    color: #ffffff;
+    width: 14rem;
+    height: 4rem;
+    line-height: 4rem;
+    @include sl();
+  }
+
+  div.menu{
+    border-bottom: 1px solid #d9d9d9;
+    @include wq();
+    &>a{
+      display: block;
+      width:3.85rem;
+      margin-top:0.667rem;
+      margin-bottom:0.611rem;
+      text-align: center;
+      font-size:0.667rem;
+      color:#4d4d4d;
+      border-right:1px solid #d9d9d9;
+      &:last-child{
+        border-right:0;
+      }
+      &>div{
+        margin: 0 auto;
+        &:nth-of-type(1){
+          width:1.861rem;
+          height:1.333rem;
+          @include imgBgFix(1.861rem 1.333rem);
+          &.clubProfile{
+            background-image: url("../../images/home/menu_000.png");
+          }
+          &.promotions{
+            background-image: url("../../images/home/menu_010.png");
+          }
+          &.serviceGroup{
+            background-image: url("../../images/home/menu_020.png");
+          }
+          &.address{
+            background-image: url("../../images/home/menu_030.png");
+          }
+          &.master{
+            background-image: url("../../images/home/menu_040.png");
+          }
+        }
+        &:nth-of-type(2){
+          margin-top:0.3rem;
+          line-height: 1.2rem;
+        }
+      }
+    }
+  }
+
+  div.recommend-tech,div.recommend-item{
+    margin-top:0.417rem;
+    &>div:nth-of-type(1){
+      height:1.667rem;
+      position: relative;
+      text-indent: 1.722rem;
+      line-height: 1.667rem;
+      font-size:0.889rem;
+      color:#4d4d4d;
+      border-bottom:1px solid #d9d9d9;
+      &>div{
+        position: absolute;
+        width:0.944rem;
+        height:0.944rem;
+        top:50%;
+        margin-top:-0.472rem;
+        left:0.389rem;
+        @include imgBgFix(0.944rem 0.944rem);
+      }
+      >a{
+        float: right;
+        font-size: .667rem;
+        margin-right: 1.2rem;
+        color: #999;
+      }
+      &:after{
+        content: ' ';
+        width: .43rem;
+        height: .43rem;
+        display: block;
+        position: absolute;
+        right:.667rem;
+        top:50%;
+        margin-top:-.25rem;
+        border-left:.1rem solid #999;
+        border-bottom:.1rem solid #999;
+        @include rotate(-135deg)
+      }
+    }
+  }
+
+  div.recommend-tech{
+    border-top:1px solid #d9d9d9;
+    border-bottom:1px solid #d9d9d9;
+    &>div:nth-of-type(1)>div{
+      background-image: url('../../images/home/icon_recommend.png');
+    }
+    &>div:nth-of-type(2){
+      height:4.5rem;
+      width:100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      &>div{
+        padding-left:0.333rem;
+        @include syzj();
+        @supports (display: -moz-box) {
+          display: flex;
+          justify-content: flex-start;
+          align-items: flex-start;
+          >div{
+            -webkit-flex-shrink: 0;
+            -ms-flex: 0 0 auto;
+            flex-shrink: 0;
+          }
+        }
+      }
+    }
+
+    div.tech{
+      width:3.833rem;
+      height:3.833rem;
+      margin: 0.333rem;
+      font-size:0.778rem;
+      text-align: center;
+      border-radius: 0.5rem;
+      @include imgBgFix(3.833rem 3.833rem);
+      &>div{
+        margin-top: 2.833rem;
+        line-height: 1rem;
+        display: inline-block;
+        width: 100%;
+        @include sl();
+        background: rgba(0,0,0,0.3);
+        color: #fff;
+        border-bottom-left-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+      }
+    }
+  }
+
+  div.recommend-item{
+    width:20rem;
+    overflow-x: hidden;
+    &>div:nth-of-type(1)>div{
+      background-image: url('../../images/home/recommend_icon.png');
+    }
+    &>div:nth-of-type(2){
+      padding: 0 .333rem .667rem;
+      overflow: hidden;
+      width:22rem;
+    }
+    div.item{
+      padding: 0.667rem 0.333rem 0;
+      width:9.667rem;
+      float: left;
+      &>div{
+        width: 9rem;
+        box-sizing: border-box;
+        border: 1px solid #f0f0f0;
+        &:nth-of-type(1){
+          width: 9rem;
+          height:9rem;
+          @include imgBgFix(9rem 9rem);
+        }
+        &:nth-of-type(2){
+          @include sl();
+          border-top: 0;
+          border-bottom: 0;
+          font-size: 0.889rem;
+          height:1.5rem;
+          line-height: 1.5rem;
+          padding-left: 0.444rem;
+          color:#4d4d4d;
+        }
+        &:nth-of-type(3){
+          @include sx();
+          border-top: 0;
+          height: 1.611rem;
+          padding: 0 0.444rem 0.444rem 0.444rem;
+          >div{
+            &:nth-of-type(1){
+              width: 0.861rem;
+              height: 0.861rem;
+              @include img('../../images/home/clock_icon.png',0.861rem 0.861rem);
+            }
+            &:nth-of-type(2){
+              font-size: 0.778rem;
+              line-height: 0.889rem;
+              color:#fb5549;
+              padding-left: 0.15rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
