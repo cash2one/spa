@@ -24,13 +24,19 @@ Vue.http.interceptors.push(function(request,next){
 
     ///设置全局的请求参数
     if(request.method.toLowerCase() == "get"){
-        request.params["_"] = (+new Date());///时间戳
-        request.params["sessionType"] = _global.sessionType;
-        request.params["token"] = _global.token;
+        var params = request.params;
+        params["_"] = (+new Date());///时间戳
+        params["sessionType"] = _global.sessionType;
+        if(!params["token"]){
+            params["token"] = _global.token;
+        }
     }
     else{
-        request.body["sessionType"] = _global.sessionType;
-        request.body["token"] = _global.token;
+        var body = request.body;
+        body["sessionType"] = _global.sessionType;
+        if(!body["token"]){
+            body["token"] = _global.token;
+        }
     }
 
     ///回调响应函数之前的处理
@@ -108,7 +114,6 @@ var pageRouterList = [
     '/:club/integralExplain',               //积分规则说明
     '/integralExplain',
     '/:club/suggestions',                    //投诉建议
-
     '/:club/qrPayCode',                          //我的账户-付款二维码
     '/qrPayCode',
     '/:club/tradeRecords',                       //我的账户--交易记录
@@ -130,7 +135,11 @@ var pageRouterList = [
     '/:club/hourTicketList',                       //点钟券列表页
     '/hourTicketList',
     '/:club/serviceGroup',                          //服务列表
-    '/:club/member'                                  //会员活动
+    '/:club/member',                                  //会员活动
+    '/:club/qrPay',                                     //支付
+    '/qrPay',
+    '/:club/qrPayComplete',                       //支付完成
+    '/qrPayComplete'
 ];
 
 var pageRouterOption = {};          //构造router的map选项
