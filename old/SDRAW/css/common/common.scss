@@ -1,0 +1,259 @@
+@mixin zy(){//内容左右对齐
+  display: -webkit-box;
+  display:-moz-box;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+}
+@mixin z(){//内容左对齐
+  display: -webkit-box;
+  display:-moz-box;
+  -webkit-box-pack: start;
+  -moz-box-pack: start;
+}
+@mixin y(){//内容右对齐
+  display: -webkit-box;
+  display:-moz-box;
+  -webkit-box-pack: end;
+  -moz-box-pack: end;
+}
+@mixin sx(){//内容完全上下居中
+  display: -webkit-box;
+  display:-moz-box;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+}
+@mixin s(){//内容上对齐
+  display: -webkit-box;
+  display:-moz-box;
+  -webkit-box-align: start;
+  -moz-box-align: start;
+}
+@mixin x(){//内容下对齐
+  display: -webkit-box;
+  display:-moz-box;
+  -webkit-box-align: end;
+  -moz-box-align: end;
+}
+@mixin wq(){//内容完全居中
+  display: -webkit-box;
+  display:-moz-box;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+}
+
+@mixin boxFlex($flex){
+  -moz-box-flex: $flex;
+  -webkit-box-flex: $flex;
+  box-flex:$flex;
+}
+
+@mixin sxgd(){//上下滚动
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+@mixin zygd(){//左右滚动
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+@mixin wqgd(){//完全滚动 上下/左右滚动
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+@mixin mask(){//遮罩
+  //display: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background:rgba(100,100,100,0.7);
+}
+@mixin gpu(){//gpu加速
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -webkit-transition-property: -webkit-transform;
+  -moz-transition-property: -moz-transform;
+  -o-transition-property: -o-transform;
+  -ms-transition-property: -ms-transform;
+  transition-property: transform;
+}
+@mixin syzj(){//scroll控件样式
+  display: -webkit-inline-box;
+  display: -moz-inline-box;
+  display: -ms-inline-flexbox;
+  display: -webkit-inline-flex;
+  //display: flex;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  >*{
+    -webkit-flex-shrink: 0;
+    -ms-flex: 0 0 auto;
+    flex-shrink: 0;
+  }
+}
+@mixin imgBgFix($size){
+  -webkit-background-size:$size;
+  -moz-background-size:$size;
+  -o-background-size:$size;
+  background-size:$size;
+  background-repeat: no-repeat;
+}
+@mixin img($url,$size){
+  //background: url($url) 0 0/ $size no-repeat;
+  /*-webkit-background:url($url) 0 0/ $size no-repeat;
+  -moz-background:url($url) 0 0/ $size no-repeat;
+  -o-background:url($url) 0 0/ $size no-repeat;*/
+  -webkit-background-size:$size;
+  -moz-background-size:$size;
+  -o-background-size:$size;
+  background-size:$size;
+  background-image: url($url);
+  background-repeat: no-repeat;
+}
+@mixin imgRepeat($url,$size){
+  //background: url($url) 0 0/ $size repeat;
+  /*-webkit-background:url($url) 0 0/ $size repeat;
+  -moz-background:url($url) 0 0/ $size repeat;
+  -o-background:url($url) 0 0/ $size repeat;*/
+  -webkit-background-size:$size;
+  -moz-background-size:$size;
+  -o-background-size:$size;
+  background-size:$size;
+  background-image: url($url);
+  background-repeat: repeat;
+}
+@mixin jb($xs,$ys,$cs,$xe,$ye,$ce){//渐变颜色
+  background:-webkit-gradient(linear, $xs $ys, $xe $ye, from($cs), to($ce));
+  background: -moz-linear-gradient(top, $ce $ye, $cs $ys);
+}
+@mixin ty($x,$y,$z,$s,$c){//投影  X轴位移 Y轴位移 阴影扩展 阴影大小 阴影颜色
+  -webkit-box-shadow:$x $y $z $s $c;
+  -moz-box-shadow:$x $y $z $s $c;
+  -ms-shadow:$x $y $z $s $c;
+  -o-shadow:$x $y $z $s $c;
+  box-shadow:$x $y $z $s $c;
+}
+@mixin dhqx($fun){//cs3动画帧方法
+  animation-timing-function: $fun;
+  -webkit-animation-timing-function: $fun;
+  -moz-animation-timing-function: $fun;
+  -ms-animation-timing-function: $fun;
+  -o-animation-timing-function: $fun;
+}
+@mixin dhcs($count){//cs3动画重复次数
+  animation-iteration-count: $count;
+  -webkit-animation-iteration-count: $count;
+  -moz-animation-iteration-count: $count;
+  -ms-animation-iteration-count: $count;
+  -o-animation-iteration-count: $count;
+}
+
+@mixin dhyc($time){//属性变动延迟
+  transition-duration: $time;
+  -webkit-transition-duration: $time;
+  -moz-transition-duration: $time;
+  -ms-transition-duration: $time;
+  -o-transition-duration: $time;
+}
+@mixin dhtc($time){//CSS3动画推迟时间
+  -webkit-animation-delay: $time;
+  -moz-animation-delay: $time;
+  -ms-animation-delay: $time;
+  -o-animation-delay: $time;
+  animation-delay: $time;
+}
+@mixin dhzt($state){//CSS3动画状态
+  -webkit-animation-play-state: $state;
+  -moz-animation-play-state: $state;
+  -ms-animation-play-state: $state;
+  -o-animation-play-state: $state;
+  animation-play-state: $state;
+}
+@mixin wy($x,$y,$z){//cs3位移
+  -webkit-transform: translate3d($x,$y,$z);
+  -moz-transform: translate3d($x,$y,$z);
+  -o-transform: translate($x,$y);
+  -ms-transform: translate3d($x,$y,$z);
+  transform: translate3d($x,$y,$z);
+}
+@mixin translate($x,$y){//cs3位移
+  -webkit-transform: translate($x,$y);
+  -moz-transform: translate($x,$y);
+  -o-transform: translate($x,$y);
+  -ms-transform: translate($x,$y);
+  transform: translate($x,$y);
+}
+@mixin yd($v){//cs3原点
+  -webkit-transform-origin: $v;
+  -moz-transform-origin: $v;
+  -o-transform-origin: $v;
+  -ms-transform-origin: $v;
+  transform-origin: $v;
+}
+@mixin dhz($name,$time){//cs3动画调用
+  animation:$name $time;
+  -moz-animation:$name $time;
+  -webkit-animation:$name $time;
+  -o-animation:$name $time;
+  -ms-animation:$name $time;
+}
+@mixin sl(){//超出文本省略号显示 简单方法
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@mixin slh($line){//超出文本省略号显示 复杂方法 用于多行 外层需要壳定位
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: $line;
+  -webkit-box-orient: block-axis;
+  word-break: break-all;
+}
+@mixin rotate($s){
+  -webkit-transform: rotate($s);
+  -moz-transform: rotate($s);
+  -ms-transform: rotate($s);
+  transform: rotate($s);
+}
+@mixin scale($sx,$sy){
+  -webkit-transform: scale($sx,$sy);
+  -moz-transform: scale($sx,$sy);
+  -o-transform: scale($sx,$sy);
+  -ms-transform: scale($sx,$sy);
+  transform: scale($sx,$sy);
+}
+@mixin tOrigin($p:center){
+  -webkit-transform-origin:$p;
+  -moz-transform-origin:$p;
+  -ms-transform-origin:$p;
+  transform-origin:$p;
+}
+@mixin transition($content){
+  -webkit-transition: $content;
+  -moz-transition: $content;
+  -ms-transition: $content;
+  transition: $content;
+}
+
+@mixin keyframes($animation_name) {
+  @-webkit-keyframes #{$animation_name} {
+    @content;
+  }
+  @-moz-keyframes #{$animation_name} {
+    @content;
+  }
+  @-o-keyframes #{$animation_name} {
+    @content;
+  }
+  @keyframes #{$animation_name} {
+    @content;
+  }
+}

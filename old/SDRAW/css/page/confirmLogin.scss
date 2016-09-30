@@ -1,0 +1,108 @@
+@import "../common/common.scss";
+#_content>#confirmLogin{
+  #content {
+    width: 100%;
+    height: 100%;
+    background: #ededed;
+    overflow: hidden;
+    &>div{
+      width: 100%;
+      &>div:nth-of-type(2){
+        margin-top:0.611rem;
+        padding:0 0.722rem;
+        background-color: #fff;
+        border-bottom: 1px solid #d9d9d9;
+        box-sizing: border-box;
+        width:100%;
+        &>div{
+          height:2.611rem;
+          position: relative;
+          width:100%;
+          &>div{
+            width:0.75rem;
+            height:0.972rem;
+            position: absolute;
+            left:0;
+            top:50%;
+            margin-right:0.5rem;
+            margin-top:-0.486rem;
+          }
+          &>input{
+            width:100%;
+            font-size:0.888rem;
+            box-sizing: border-box;
+            height:1.4rem;
+            line-height:1.4rem;
+            margin-top:0.605rem;
+            padding-top:0.2rem;
+          }
+        }
+        &>div:nth-of-type(1){
+          border-bottom:1px solid #f0f0f0;
+          &>div{
+            @include img('../../../img/login/tel_icon.png', 0.75rem 0.972rem);
+          }
+          &>span{
+            position: absolute;
+            left:1.4rem;
+            color:#4d4d4d;
+            font-size:0.888rem;
+            display: inline-block;
+            height:1.4rem;
+            top:50%;
+            margin-top:-0.7rem;
+          }
+          &>input{
+            padding-left:3.2rem;
+          }
+        }
+        &>div:nth-of-type(2){
+          &>div{
+            @include img('../../../img/login/lock_icon.png', 0.75rem 0.972rem);
+          }
+          &>input{
+            padding-left:1.4rem;
+          }
+        }
+      }
+      &>div:nth-of-type(3){
+        margin:0.5rem 0.722rem 0;
+        font-size:0.778rem;
+        color:#fb5549;
+      }
+      &>div:nth-of-type(4){
+        background-color: #bebebe;
+        margin:2.25rem 0.722rem 0;
+        letter-spacing: 0.611rem;
+        color:#fff;
+        font-size:0.888rem;
+        height:2.472rem;
+        line-height:2.472rem;
+        text-align: center;
+        border-radius: 0.166rem;
+        &.active{
+          background-color: #fb5549;
+        }
+      }
+      &>div:nth-of-type(5){
+        font-size:0.777rem;
+        margin:0.3rem 0.722rem;
+        &>a{
+          float: right;
+          color:#fb5549;
+        }
+      }
+      &>div:nth-of-type(6){
+        font-size:0.889rem;
+        color:#666;
+        margin:3.2rem 0.722rem 0;
+      }
+      &>div:nth-of-type(7){
+        margin:0 1.811rem;
+        color:#ff9d09;
+        font-size:0.778rem;
+      }
+
+    }
+  }
+}

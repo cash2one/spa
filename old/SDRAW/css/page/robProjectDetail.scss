@@ -1,0 +1,333 @@
+@import "../common/common.scss";
+#_content>#robProjectDetail {
+  #content {
+    color: #616161;
+    >div{
+      padding-bottom: 4rem;
+      >div{
+        background-color: #ffffff;
+        &:nth-of-type(1){
+          >img{
+            width: 20rem;
+            border: none;
+          }
+        }
+        &:nth-of-type(2){
+          padding: .889rem .667rem;
+          >div{
+            line-height: 1;
+            &:nth-of-type(1){
+              @include x();
+              >div{
+                &:nth-of-type(1){
+                  font-size: 1.222rem;
+                  color: #212121;
+                  @include boxFlex(1);
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                }
+              }
+            }
+            &:nth-of-type(2){
+              margin-top: .944rem;
+              font-size: .833rem;
+              color: #616161;
+              >span{
+                &:nth-of-type(1){
+                  font-size: 1.278rem;
+                  color: #fb5549;
+                  padding-left: 1.333rem;
+                  @include img('../../../img/robProject/renminbi.png',1rem 1rem);
+                  background-position: left center;
+                }
+                &:nth-of-type(2){
+                  font-size: .778rem;
+                  color: #999999;
+                  margin:0 1rem;
+                }
+                &:nth-of-type(3){
+                  >span{
+                    padding-left: 1.333rem;
+                    @include img('../../../img/robProject/icon_integral.png',1rem 1rem);
+                    background-position: left center;
+                    font-size: 1.278rem;
+                    color: #FF9A0C;
+                  }
+                }
+              }
+            }
+            &:nth-of-type(3){
+              margin-top: .944rem;
+              @include x();
+              >div{
+                &:nth-of-type(1){
+                  font-size: .889rem;
+                  color: #616161;
+                  text-decoration: line-through;
+                  @include boxFlex(1);
+                }
+                &:nth-of-type(2){
+                  text-align: right;
+                  font-size:.778rem;
+                  color: #757575;
+                  @include boxFlex(1);
+                }
+              }
+            }
+          }
+        }
+        &:nth-of-type(3){
+          border-top:.056rem solid #E0E0E0;
+          border-bottom:.056rem solid #E0E0E0;
+          padding: .278rem .667rem;
+          box-sizing: border-box;
+          background-color: #fef7e3;
+          font-size: .778rem;
+          @include sx();
+          >div{
+            &:nth-of-type(1){
+              margin-right: .667rem;
+              width: .889rem;
+              height: .889rem;
+              @include img('../../../img/robProject/clock.png',.889rem .889rem);
+            }
+          }
+          >span{
+            /*width: .806rem;*/
+            padding: 0 .1rem;
+            height: .917rem;
+            box-sizing: border-box;
+            border:1px solid #BDBDBD;
+            display: block;
+            overflow: hidden;
+            text-align: center;
+            -webkit-border-radius: .222rem;
+            -moz-border-radius: .222rem;
+            border-radius: .222rem;
+            font-weight: bold;
+            &:nth-of-type(odd){
+              margin-left: .3rem;
+              margin-right: .2rem;
+            }
+            &:nth-of-type(even){
+              margin-right: .2rem;
+            }
+            >div{
+              color: #9E4543;
+              font-size: .833rem;
+              @include translate(0,-.917rem);
+              @include transition(all 0 linear);
+              >div{
+                height: .917rem;
+                line-height: .917rem;
+              }
+            }
+            &.toggle{
+              >div{
+                @include translate(0,0);
+                @include dhyc(300ms);
+              }
+            }
+            &.rob-milli{
+              &.toggle{
+                >div{
+                  @include translate(0,0);
+                  @include dhyc(5ms);
+                }
+              }
+            }
+          }
+        }
+        &:nth-of-type(4){
+          box-sizing: border-box;
+          padding: .333rem .667rem;
+          @include sx();
+          >div{
+            &:nth-of-type(1){
+              width: 1.556rem;
+              height: 1.556rem;
+              margin-right: .722rem;
+              -webkit-border-radius: 50%;
+              -moz-border-radius: 50%;
+              border-radius: 50%;
+              @include imgBgFix(1.556rem 1.556rem);
+            }
+            &:nth-of-type(2){
+              @include boxFlex(1);
+              font-size: .833rem;
+              color: #4a4a4a;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+            &:nth-of-type(3){
+              width: .611rem;
+              height: .611rem;
+              border-left: .1rem solid #666;
+              border-bottom: .1rem solid #666;
+              @include rotate(-135deg);
+            }
+          }
+        }
+        &.rob-item{
+          margin-top: .556rem;
+          >div{
+            &:nth-of-type(1){
+              padding:.556rem 1.944rem;
+              font-size: .833rem;
+              @include imgBgFix(.833rem .833rem);
+              background-position: .667rem center;
+              border-bottom: .056rem solid #E0E0E0;
+              line-height: 1;
+              &.node-pad-icon{
+                background-image: url('../../../img/robProject/nodepad.png');
+              }
+              &.info-icon{
+                background-image: url('../../../img/robProject/info-icon.png');
+              }
+            }
+            &:nth-of-type(2){
+              padding-left: .667rem;
+              >div{
+                &:nth-of-type(1){
+                  border-bottom: .056rem solid #E0E0E0;
+                  >div{
+                    padding: .667rem 0;
+                    line-height: 1;
+                    &:nth-of-type(1){
+                      font-size: .889rem;
+                      color: #FF9D09;
+                      @include sx();
+                      >div{
+                        &:nth-of-type(1){
+                          width: 2.833rem;
+                          height: 2.833rem;
+                          margin-right: .556rem;
+                          -webkit-border-radius: .278rem;
+                          -moz-border-radius: .278rem;
+                          border-radius: .278rem;
+                          @include imgBgFix(2.833rem 2.833rem);
+                        }
+                        &:nth-of-type(2){
+                          @include boxFlex(1);
+                          >div{
+                            line-height: 1;
+                            &:nth-of-type(1){
+                              font-size: .944rem;
+                              color: #4a4a4a;
+                              overflow: hidden;
+                              text-overflow: ellipsis;
+                              white-space: nowrap;
+                            }
+                            &:nth-of-type(2){
+                              margin-top: .944rem;
+                              font-size: .833rem;
+                              color: #616161;
+                            }
+                          }
+                        }
+                      }
+                    }
+                    &:nth-of-type(2){
+                      font-size: .833rem;
+                      padding: 0 0 .667rem;
+                    }
+                  }
+                }
+                &:nth-of-type(2){
+                  padding: .667rem .667rem .667rem 0;
+                  line-height: 1;
+                  >div{
+                    &:nth-of-type(1){
+                      font-size: .944rem;
+                      color: #FF9D09;
+                    }
+                    &:nth-of-type(2){
+                      margin-top: .556rem;
+                      font-size: .833rem;
+                      >div:nth-of-type(1){
+                        color: #212121;
+                        >span{
+                          color: #616161;
+                        }
+                      }
+                      >div{
+                        >ul{
+                          margin: .556rem 0 0;
+                          padding-left: .85rem;
+                          >li{
+                            margin-top: .556rem;
+                            &:first-child{
+                              margin-top: 0;
+                            }
+                          }
+
+                          ul{
+                            margin: 0;
+                            padding-left: 0;
+                            list-style-type: none;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  #confirmBtn{
+    position: absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    background-color: #d9d9d9;
+    padding: .25rem .667rem;
+    box-sizing: border-box;
+    @include sx();
+    &>div{
+      @include boxFlex(1);
+      background-color: #fb5549;
+      color:#ffffff;
+      font-size:1.056rem;
+      text-align: center;
+      height:2.444rem;
+      line-height: 2.444rem;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+      &:nth-of-type(1){
+        margin-right: .556rem;
+        background-color: #ffffff;
+        border:1px solid #fb5549;
+        color: #fb5549;
+      }
+    }
+    &.processing{
+      >div{
+        background-color: #CCCCCC;
+        &.loading{
+          background-image: url("../../../img/loading.gif");
+          background-repeat:no-repeat;
+          background-position: 15% 45%;
+        }
+      }
+    }
+    &.disabled{
+      >div{
+        background-color: #CCCCCC;
+        &:nth-of-type(1){
+          border-color: #CCCCCC;
+          color: #FFFFFF;
+        }
+      }
+    }
+  }
+  .hide{
+    display: none !important;
+  }
+}
