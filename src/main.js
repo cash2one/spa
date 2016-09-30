@@ -103,6 +103,8 @@ var pageRouterList = [
     '/collect',
     '/:club/contacts',                         //最近联系人
     '/contacts',
+    '/:club/techReward',                    //打赏技师
+    '/techReward',
     '/:club/info',                                //用户信息
     '/info',
     '/:club/picture',                           //用户修改头像

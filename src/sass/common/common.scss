@@ -5,8 +5,7 @@ div#page-container{
   position: relative;
   min-height: 100%;
   background-color: #eee;
-  //border:1px solid #28a7e1;
-  &>div.page{
+  >div.page{
     width:100%;
     min-height: 100%;
   }
@@ -30,6 +29,25 @@ div.right-arrow{
   border-left:0.1rem solid #999;
   border-bottom:0.1rem solid #999;
   @include rotate(-135deg);
+}
+
+div.submit-button{
+  height: 2.444rem;
+  line-height: 2.444rem;
+  margin:0 .667rem;
+  text-align: center;
+  font-size: .889rem;
+  border-radius: .222rem;
+  background-color: #fb5549;
+  color: #fff;
+  &.disabled{
+    color: #bdbdbd;
+    background-color: #e0e0e0;
+  }
+  &.processing{
+    color: #bdbdbd;
+    background: #e0e0e0 url("../../images/common/loading.gif") no-repeat 30% 45%;
+  }
 }
 
 div.data-load-tip,div.finish-load-tip{
