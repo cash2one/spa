@@ -167,6 +167,19 @@ exports.Global = {
         });
     },
     /*
+     * 获取当前用户积分
+     */
+    getCreditAccount : function(clubId,callback){
+        var _this = this;
+        clubId = clubId || _this.data.clubId;
+        Vue.http.get("../api/v2/credit/user/account",{ params : { clubId : clubId , userType : "user" }}).then(function(res){
+            res = res.body;
+            if(res.statusCode == 200){
+                if(callback) callback(res.respData);
+            }
+        });
+    },
+    /*
      * 更新用户的名称和头像
      */
     updateUserNameAndHeader : function(){

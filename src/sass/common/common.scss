@@ -80,3 +80,52 @@ div.data-load-tip{
 div.finish-load-tip{
   background-color: #fff;
 }
+
+///积分不足的弹出提示框
+div.credit-tip-pop{
+  >div{
+    width:16.389rem;
+    height:9.889rem;
+    margin-top:-4.944rem;
+    margin-left:-8.194rem;
+    border-radius: 0.22rem;
+    background-color: #fff;
+    overflow: hidden;
+    >h3{
+      height:2.5rem;
+      line-height: 2.5rem;
+      margin-top:0.5rem;
+      text-align: center;
+      color:#212121;
+      font-weight: normal;
+      letter-spacing: 1px;
+      font-size:1.167rem;
+    }
+    >div.tip{
+      line-height: 1.4rem;
+      margin:0 1.222rem 0.9rem;
+      color:#616161;
+      font-size:0.833rem;
+    }
+    >div.btn{
+      height:3.222rem;
+      line-height: 3.222rem;
+      border-top:1px solid #e0e0e0;
+      &>div{
+        float: left;
+        width:50%;
+        height: 100%;
+        text-align: center;
+        font-size:1rem;
+        border-right:1px solid #e0e0e0;
+        &.cancel{
+          color:#616161;
+        }
+        &.get{
+          color:#ff6666;
+          border-right-width:0
+        }
+      }
+    }
+  }
+}
