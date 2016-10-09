@@ -46,18 +46,18 @@
             </div>
             <div class="submit-btn" @click="doClickSubmitBtn()" :class="{ processing : inProcessing }">提交{{ inProcessing ? "中..." : "" }}</div>
         </div>
-        <attention-9358public></attention-9358public>
+        <attention></attention>
     </div>
 </template>
 <script>
     import { Global } from '../libs/global';
     import Util from "../libs/util";
     import CommentFormatter from "../filters/comment-formatter";
-    import Attention9358Public from '../components/attention-9358public';
+    import Attention from '../components/attention';
 
     module.exports = {
         components: {
-            'attention-9358public' : Attention9358Public
+            'attention' : Attention
         },
         filters : {
             CommentFormatter : CommentFormatter

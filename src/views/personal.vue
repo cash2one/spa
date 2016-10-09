@@ -75,7 +75,7 @@
             <div class="right-arrow"></div>
         </div>
 
-        <attention-9358public></attention-9358public>
+        <attention></attention>
     </div>
     <div class="confirm-logout pop-modal" :class="{ active : showLogout }">
         <div class="center-wrap">
@@ -87,11 +87,11 @@
 <script>
     import { Global } from '../libs/global';
     import Util from "../libs/util";
-    import Attention9358Public from '../components/attention-9358public';
+    import Attention from '../components/attention';
 
     module.exports = {
         components: {
-            'attention-9358public' : Attention9358Public
+            'attention' : Attention
         },
         data: function(){
             return {

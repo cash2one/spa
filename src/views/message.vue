@@ -4,7 +4,7 @@
 <template>
     <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
     <div class="page message-list-page" id="message-page" v-show="!$loadingRouteData">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>消息列表<div v-show="dataList.length!=0" class="edit-title" @click="doClickEditBtn()">{{ inEdit ? "完成" : "编辑"}}</div></div>
+        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>消息列表<div v-show="dataList.length!=0" class="edit-title" @click="doClickEditBtn()">{{ inEdit ? "完成" : "编辑" }}</div></div>
         <div class="list" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }">
             <div class="list-item" v-for="item in dataList" @click="doClickRecord(item)" track-by="chatId">
                 <div :style="{ backgroundImage : 'url('+(item.header || global.defaultHeader)+')' }"></div>
@@ -35,8 +35,6 @@
                 global : Global.data,
                 im : IM,
                 dataList : [],
-                currPage : 0,
-                pageSize : 10,
                 sessionList : null,
                 inEdit : false
             }
@@ -66,8 +64,7 @@
                 history.back();
             },
             doClickEditBtn : function(){
-                var _this = this;
-                _this.inEdit = !_this.inEdit;
+                this.inEdit = !this.inEdit;
             },
             doClickRecord : function(item){
                 var _this = this, techId = item.techId;

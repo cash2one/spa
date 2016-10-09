@@ -149,7 +149,7 @@ var pageName;
 function RouterOption(name,componentName){
     this.name = name;
     this.component = function(resolve){
-        require(['./routers/'+componentName+'.vue'], resolve);
+        require(['./views/'+componentName+'.vue'], resolve);
     }
 }
 for(var i=0;i<pageRouterList.length;i++){
