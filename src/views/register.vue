@@ -89,7 +89,7 @@
                 }
             }
         },
-        ready: function(){
+        mounted: function(){
             var _this = this, param = _this.userLoginParam;
             if(param && param["username"]){
                 _this.tel = param["username"];
@@ -157,10 +157,10 @@
                                     Util.tipShow("注册成功！");
 
                                     if(global.loginPage){
-                                        _this.$router.go({ name : global.loginPage, query : global.loginPageQuery });
+                                        _this.$router.push({ name : global.loginPage, query : global.loginPageQuery });
                                     }
                                     else{
-                                        _this.$router.go({ name : "home" });
+                                        _this.$router.push({ name : "home" });
                                     }
                                 }
                                 else if(res.statusCode == "935801"){

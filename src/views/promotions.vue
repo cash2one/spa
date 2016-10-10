@@ -18,12 +18,12 @@
             </div>
         </div>
         <div class="title" v-if="activities.length>0">优惠活动</div>
-        <a v-for="act in activities" class="activity" :style="{ backgroundImage : 'url('+act.actLogoUrl+')' }" v-link="{ name :'promotionsActivity' , query : { id : act.actId }}">
+        <router-link v-for="act in activities" class="activity" :style="{ backgroundImage : 'url('+act.actLogoUrl+')' }" :to="{ name :'promotionsActivity' , query : { id : act.actId }}">
             <div>
                 <div>{{act.actTitle}}</div>
-                <div>活动时间：{{act.startDate | DateToString act.endDate '—'}}</div>
+                <div>活动时间：{{act.startDate | dateToString(act.endDate,'—')}}</div>
             </div>
-        </a>
+        </router-link>
         <div class="nullData" v-if="activities.length==0 && coupons.length==0"><div></div><div>暂无内容...</div></div>
     </div>
 </template>
@@ -71,7 +71,7 @@
             }
         },
         filters: {
-            DateToString : DateToString
+            dateToString : DateToString
         },
         methods: {
             doClickPageBack : function(){//点击返回按钮

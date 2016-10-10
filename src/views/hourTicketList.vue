@@ -76,7 +76,7 @@
                     global.loginPageQuery = { actId : actId, techCode : _this.techCode };
                 }
                 else{
-                    _this.$router.go({
+                    _this.$router.push({
                         name : "paidCoupon", query : { actId : actId, techCode : _this.techCode }
                     });
                 }

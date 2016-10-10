@@ -93,7 +93,7 @@
                     res = res.body;
                     if(res.statusCode == 200){
                         Util.tipShow("提交成功！");
-                        _this.$router.go({ name : "home" });
+                        _this.$router.push({ name : "home" });
                     }
                     else{
                         Util.tipShow(res.msg || "提交失败！");

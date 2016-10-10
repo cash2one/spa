@@ -65,7 +65,7 @@
                 }
             }
         },
-        ready: function(){
+        mounted: function(){
             var _this = this, param = _this.userLoginParam;
             if(param && param["username"]){
                 _this.tel = param["username"];
@@ -101,7 +101,7 @@
                         res = res.body;
                         if(res.statusCode==2){
                             window['spa-login-info'] = paramData;
-                            _this.$router.go({ name : "register" });
+                            _this.$router.push({ name : "register" });
                         }else if(res.statusCode == '935801'){        //需重新获取授权
                             Util.localStorage('con-login-param',JSON.stringify(paramData));
                             Global.getOauthCode('','9358','9358_login','base');
@@ -129,15 +129,15 @@
                             /////
                             ///////////////////////////////////////////////////////////
                             if(global.loginPage){
-                                _this.$router.go({ name : global.loginPage, query : global.loginPageQuery });
+                                _this.$router.push({ name : global.loginPage, query : global.loginPageQuery });
                             }
                             else{
-                                _this.$router.go({ name : "home" });
+                                _this.$router.push({ name : "home" });
                             }
                         }
                         else if(res.respData == 'HAS_BOUND'){
                             Util.tipShow(res.message || '当前用户已绑定！');
-                            _this.$router.go({ name : global.loginPage, query : global.loginPageQuery });
+                            _this.$router.push({ name : global.loginPage, query : global.loginPageQuery });
                         }
                         else{
                             Util.tipShow(res.message || "登录出错！");
@@ -151,7 +151,7 @@
             doClickRecoverPasswordBtn : function(){
                 var _this = this;
                 window["spa-login-info"] = { "username" : _this.tel };
-                _this.$router.go({ name : "recoverPassword" });
+                _this.$router.push({ name : "recoverPassword" });
             }
         }
     }

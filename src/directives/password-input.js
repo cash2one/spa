@@ -2,7 +2,6 @@
  * 限定输入6~20位的密码
  */
 module.exports = {
-    twoWay : true,
     bind: function() {
         var _this = this;
         _this.handler = function () {

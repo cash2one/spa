@@ -64,7 +64,7 @@
                                 Util.tipShow("当前用户是已绑定状态。");
                                 global.isTelephoneUser = true;
                                 Util.localStorage('isTelephoneUser',true);
-                                if(global.loginPage) _this.$router.go({ name : global.loginPage, query : global.loginPageQuery });
+                                if(global.loginPage) _this.$router.push({ name : global.loginPage, query : global.loginPageQuery });
                             }
                             else{
                                 _this.$http.get(_this.telBandUrl, { params : { 'phoneNum' : _this.tel }}).then(function(bindRes){
@@ -114,7 +114,7 @@
                     if(res.statusCode==2){
                         Util.removeLocalStorage("user-login-param");
                         Util.localStorage('user-register-param',JSON.stringify(paramData));
-                        _this.$router.go({ name : "register" });
+                        _this.$router.push({ name : "register" });
                     }
                     else if(res.statusCode == '935801'){//需重新获取授权
                         Util.localStorage('user-login-param',JSON.stringify(paramData));
@@ -123,7 +123,7 @@
                     else if(res.statusCode ==1){
                         Util.removeLocalStorage("user-login-param");
                         Util.localStorage('con-login-param',JSON.stringify(paramData));
-                        _this.$router.go({ name : "confirmLogin" });
+                        _this.$router.push({ name : "confirmLogin" });
                     }
                 });
             }

@@ -62,7 +62,7 @@
                 transition.next();
             }
         },
-        ready: function(){
+        mounted: function(){
             var _this = this, param = _this.userLoginParam;
             if(param && param["username"]){
                 _this.tel = param["username"];
@@ -91,7 +91,7 @@
                                 password : _this.password
                             };
                             Util.localStorage('con-login-param',JSON.stringify(loginInfo));
-                            _this.$router.go({ name : "confirmLogin" });
+                            _this.$router.push({ name : "confirmLogin" });
                         });
                     });
                 }

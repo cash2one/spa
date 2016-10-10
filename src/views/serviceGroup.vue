@@ -5,7 +5,7 @@
     <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
     <div class="page-back-btn" @click="doClickPageBack()" v-show="!$loadingRouteData"></div>
     <div class="page" id="service-group-page" v-show="!$loadingRouteData">
-        <div class="item" v-for="item in dataList" :style="{ backgroundImage : 'url('+item.imageUrl+')' }" v-link="{ name : 'serviceList' , query : { id : item.id }}"></div>
+        <router-link class="item" v-for="item in dataList" :style="{ backgroundImage : 'url('+item.imageUrl+')' }" :to="{ name : 'serviceList' , query : { id : item.id }}" tag="div"></router-link>
         <div class="nullData" v-show="dataList.length==0"><div></div><div>暂无内容...</div></div>
     </div>
 </template>

@@ -8,12 +8,8 @@
     export default {
         name: 'mt-swipe-item',
 
-        ready() {
+        mounted() {
             this.$dispatch('swipeItemCreated', this);
-        },
-
-        detached() {
-            this.$dispatch('swipeItemDestroyed', this);
         },
 
         destroyed() {

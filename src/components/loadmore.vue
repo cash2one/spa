@@ -3,7 +3,7 @@
 </style>
 <template>
   <div class="mint-loadmore">
-    <div class="mint-loadmore-content" :class="{ 'is-dropped': topDropped || bottomDropped}" :style="{ 'transform': 'translate3d(0, ' + translate + 'px, 0)' }" v-el:loadmore-content>
+    <div class="mint-loadmore-content" :class="{ 'is-dropped': topDropped || bottomDropped}" :style="{ 'transform': 'translate3d(0, ' + translate + 'px, 0)' }" ref="loadmoreContent">
       <slot name="top">
         <div class="mint-loadmore-top">
           <spinner v-if="topStatus === 'loading'" class="mint-loadmore-spinner" :size="20" type="fading-circle"></spinner>
@@ -185,7 +185,7 @@
         this.$el.addEventListener('touchend', this.handleTouchEnd);
       },
 
-      init() {
+      beforeCreate() {
         this.topStatus = 'pull';
         this.bottomStatus = 'pull';
         this.topText = this.topPullText;
@@ -296,7 +296,7 @@
       }
     },
 
-    ready() {
+    mounted() {
       this.uuid = Math.random().toString(36).substring(3, 8);
       this.init();
     }

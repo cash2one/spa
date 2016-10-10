@@ -6,7 +6,7 @@
     <div class="page message-list-page" id="message-page" v-show="!$loadingRouteData">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>消息列表<div v-show="dataList.length!=0" class="edit-title" @click="doClickEditBtn()">{{ inEdit ? "完成" : "编辑" }}</div></div>
         <div class="list" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }">
-            <div class="list-item" v-for="item in dataList" @click="doClickRecord(item)" track-by="chatId">
+            <div class="list-item" v-for="item in dataList" @click="doClickRecord(item)" :key="item.chatId">
                 <div :style="{ backgroundImage : 'url('+(item.header || global.defaultHeader)+')' }"></div>
                 <div>
                     <div>{{ item.name }}<span v-if="item.no"><span>[</span>{{ item.no }}<span>]</span></span></div>
@@ -71,12 +71,13 @@
                 if(!techId){///管理者
                     /////
                 }
-                _this.$router.go({ name : "chat" , query : { techId : techId , clubId : item.clubId } });
+                _this.$router.push({ name : "chat" , query : { techId : techId , clubId : item.clubId } });
             },
             doClickDelRecord : function(item){
                 var _this = this, im = _this.im;
                 im.delMessageRecord(item.chatId);
-                _this.dataList.$remove(item);
+                var itemIndex = _this.dataList.indexOf(item);
+                _this.dataList.splice(itemIndex,1);
             }
         }
     }

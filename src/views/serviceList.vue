@@ -11,13 +11,13 @@
                  <div>{{service.name}}</div>
              </div>
              <ul class="service-list">
-                 <li v-for="item in service.serviceItems" v-link="{ name : 'serviceItem', query : { id : item.id } }">
+                 <router-link v-for="item in service.serviceItems" :to="{ name : 'serviceItem', query : { id : item.id } }" tag="li">
                      <div :style="{ backgroundImage : 'url('+item.imageUrl+')' }"></div>
                      <div>
                          <div>{{item.name}}</div>
-                         <div>{{item.price1 | ItemPriceFormatter item.duration1 item.durationUnit}}<span><span v-show="item.price2">加钟：</span>{{item.price2 | ItemPriceFormatter item.duration2 item.durationUnitPlus}}</span></div>
+                         <div>{{item.price1 | itemPriceFormatter(item.duration1,item.durationUnit)}}<span><span v-show="item.price2">加钟：</span>{{item.price2 | itemPriceFormatter(item.duration2,item.durationUnitPlus)}}</span></div>
                      </div>
-                 </li>
+                 </router-link>
              </ul>
          </div>
     </div>
@@ -59,7 +59,7 @@
           }
         },
         filters: {
-            ItemPriceFormatter : ItemPriceFormatter
+            itemPriceFormatter : ItemPriceFormatter
         },
         methods: {
             doClickPageBack : function(){//点击返回按钮

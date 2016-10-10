@@ -36,7 +36,7 @@
                 var _this = this;
                 if(!_this.global.isLogin){
                     Util.tipShow("请您先登录！");
-                    _this.$router.go({ name : "login" });
+                    _this.$router.push({ name : "login" });
                     transition.abort();
                 }
                 else{
@@ -62,7 +62,7 @@
                         _this.global.userName = _this.nickName;
                         Util.localStorage("userName",_this.nickName);
                         Util.tipShow("保存成功！");
-                        _this.$router.go({ name : "personal" });
+                        _this.$router.push({ name : "personal" });
                     }
                     else{
                         Util.tipShow(res.msg || "保存失败！");
@@ -83,7 +83,7 @@
                     if(_this.nickName.length != 0){
                         _this.$http.post(_this.saveUserInfoUrl,{ name : _this.nickName });
                     }
-                    _this.$router.go({ name : "picture", query : { type : 'avatar' } });
+                    _this.$router.push({ name : "picture", query : { type : 'avatar' } });
                 };
                 win._fileReader.readAsDataURL(file);
             }

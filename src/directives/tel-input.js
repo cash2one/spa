@@ -2,7 +2,6 @@
  * 限定只能输入11位的手机号码
  */
 module.exports = {
-    twoWay : true,
     bind: function() {
         var _this = this;
         _this.handler = function () {

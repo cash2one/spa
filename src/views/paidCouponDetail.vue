@@ -7,7 +7,7 @@
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>点钟券详情</div>
         <div class="club-info" @click="doClickClubInfo()" v-show="global.pageMode != 'club'"><div :style="{ backgroundImage : 'url('+(couponData.imageUrl || global.defaultClubLogo )+')' }"></div><span>{{ couponData.clubName }}</span></div>
         <div class="detail-info">
-            <div><div :style="{ backgroundImage : 'url('+(couponData.techs.avatarUrl || global.defaultHeader )+')' }" v-link="{ name : 'chat', query : { techId : couponData.techs.id, clubId : couponData.clubId }}"></div></div>
+            <div><router-link :style="{ backgroundImage : 'url('+(couponData.techs.avatarUrl || global.defaultHeader )+')' }" :to="{ name : 'chat', query : { techId : couponData.techs.id, clubId : couponData.clubId }}" tag="div"></router-link></div>
             <div>
                 <div>
                     <div>
@@ -21,7 +21,7 @@
                 <div></div>
                 <div>
                     <div>{{ couponData.techs.description || "这个技师很懒，没有填写个人简介..." }}</div>
-                    <div v-link="{ name : 'confirmOrder', query : { techId : couponData.techs.id , clubId : couponData.clubId }}">预约</div>
+                    <router-link :to="{ name : 'confirmOrder', query : { techId : couponData.techs.id , clubId : couponData.clubId }}" tag="div">预约</router-link>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@
         </div>
         <div class="detail-use-desc">
             <div>使用说明：</div>
-            <div>{{{ couponData.userAct.actContent }}}</div>
+            <div v-html="couponData.userAct.actContent"></div>
         </div>
     </div>
     <div class="paid-coupon-pay-btn" v-show="!hidePayBtn"><div :class="{ downline : footerBtnText=='已下线' , processing : inPaid }" @click="doClickPayBtn()">{{ footerBtnText }}</div></div>
@@ -132,7 +132,7 @@
                 }
             }
         },
-        ready : function(){
+        mounted : function(){
             var _this = this;
             if(_this.paramData && _this.payAuthCode){
                 _this.$http.post(_this.getOpenIdUrl,{
@@ -163,7 +163,7 @@
             doClickClubInfo : function(){//点击会所
                 var _this = this, global = _this.global, couponData = _this.couponData;
                 if(global.pageMode != "club"){
-                    _this.$router.go({ name : "home" });
+                    _this.$router.push({ name : "home" });
                 }
                 else{
                     Util.pageReload(couponData.clubId,"home");
@@ -194,7 +194,7 @@
                         }
                         else if(!global.userTel){
                             global.saveLoginPageParams("paidCouponDetail");
-                            _this.$router.go({ name : "bindPhone" });
+                            _this.$router.push({ name : "bindPhone" });
                         }
                         else{
                             Util.removeLocalStorage("paid-cou-detail-param");
@@ -247,7 +247,7 @@
                         }
                     }
                     else if(_this.footerBtnText == "立即预约"){
-                        _this.$router.go({ name : "confirmOrder", query : { techId : couponData.techs.id , clubId : couponData.clubId } });
+                        _this.$router.push({ name : "confirmOrder", query : { techId : couponData.techs.id , clubId : couponData.clubId } });
                     }
                 }
             },

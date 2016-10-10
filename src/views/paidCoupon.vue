@@ -8,7 +8,7 @@
         <div class="club-info" @click="doClickClubInfo()"><div :style="{ backgroundImage : 'url('+(couponData.imageUrl || global.defaultClubLogo )+')' }"></div><span>{{ couponData.clubName }}</span></div>
         <div class="coupon-info">
             <div>
-                <div :style="{ backgroundImage : 'url('+(couponData.techs.avatarUrl || global.defaultHeader )+')' }" v-link="{ name : 'chat', query : { techId : couponData.techs.id, clubId : couponData.clubId }}"></div>
+                <router-link :style="{ backgroundImage : 'url('+(couponData.techs.avatarUrl || global.defaultHeader )+')' }" :to="{ name : 'chat', query : { techId : couponData.techs.id, clubId : couponData.clubId }}" tag="div"></router-link>
                 <div>{{ couponData.techs.name }}<span v-show="couponData.techs.serialNo">[<span>{{ couponData.techs.serialNo }}</span>]</span></div>
             </div>
             <div>
@@ -22,7 +22,7 @@
         </div>
         <div class="coupon-desc">
             <div><i></i>使用说明：</div>
-            <div>{{{ couponData.actContent }}}</div>
+            <div v-html="couponData.actContent"></div>
         </div>
     </div>
     <div class="paid-coupon-bottom-wrap">
@@ -99,7 +99,7 @@
                 }
             }
         },
-        ready : function(){
+        mounted : function(){
             var _this = this;
             if(_this.paramData && _this.payAuthCode){
                 _this.$http.post(_this.getOpenIdUrl,{
@@ -130,7 +130,7 @@
             doClickClubInfo : function(){//点击会所
                 var _this = this, global = _this.global, couponData = _this.couponData;
                 if(global.pageMode != "club"){
-                    _this.$router.go({ name : "home" });
+                    _this.$router.push({ name : "home" });
                 }
                 else{
                     Util.pageReload(couponData.clubId,"home");
@@ -162,7 +162,7 @@
                         global.saveLoginPageParams("paidCoupon");
                         if(!global.isLogin){
                             Util.tipShow("请您先登录！");
-                            _this.$router.go({ name : "login" });
+                            _this.$router.push({ name : "login" });
                         }
                         else{
                             global.bindTelPhone();

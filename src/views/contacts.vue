@@ -5,8 +5,8 @@
     <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
     <div class="page message-list-page" id="contacts-page" v-show="!$loadingRouteData">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>最近联系人<div class="edit-title" @click="doClickEditBtn()">{{ inEdit ? "完成" : "编辑"}}</div></div>
-        <div class="list" v-el:list-ele :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
-            <div class="list-item" v-for="item in dataList" track-by="friendUserId" @click="doClickRecord(item)">
+        <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
+            <div class="list-item" v-for="item in dataList" :key="item.friendUserId" @click="doClickRecord(item)">
                 <div :style="{ backgroundImage : 'url('+(item.friendAvatarUrl || (item.toType == 'manager' ? global.defaultClubLogo : global.defaultHeader ))+')' }"></div>
                 <div>
                     <div>{{ item.friendName}}<span v-if="item.techNo"><span>[</span>{{ item.techNo }}<span>]</span></span></div>
@@ -56,7 +56,7 @@
                 transition.next();
             }
         },
-        ready : function(){
+        mounted : function(){
             var   _this = this;
             _this.queryRecord();
         },
@@ -116,7 +116,7 @@
                 });
             },
             doHandlerListScroll : function(){
-                var _this = this,listEle = _this.$els.listEle;
+                var _this = this,listEle = _this.$refs.listEle;
                 if(!_this.isDataAddEnd && listEle.scrollTop+listEle.clientHeight*1.4>listEle.scrollHeight ){
                     _this.queryRecord();
                 }
@@ -131,7 +131,7 @@
                     techId = "";
                     /////////////////////////
                 }
-                _this.$router.go({ name : "chat" , query : { techId : techId , clubId : item.clubId } });
+                _this.$router.push({ name : "chat" , query : { techId : techId , clubId : item.clubId } });
             },
             doClickDelRecord : function(item){
                 var _this = this, im = _this.im;
@@ -144,7 +144,8 @@
                     res = res.body;
                     if(res.statusCode == 200){
                         im.delMessageRecord(item.friendUserId);
-                        _this.dataList.$remove(item);
+                        var itemIndex = _this.dataList.indexOf(item);
+                        _this.dataList.splice(itemIndex,1);
                     }
                     else{
                         Util.tipShow(res.msg || "操作失败！");

@@ -15,8 +15,8 @@
   "author": "shidou",
   "license": "none",
   "dependencies": {
-    "vue": "^1.0.25",
-    "vue-router": "^0.7.13"
+    "vue": "^2.0.1",
+    "vue-router": "^2.0.0"
   },
   "devDependencies": {
     "autoprefixer-loader": "^2.0.0",
@@ -34,7 +34,6 @@
     "html-webpack-plugin": "^2.22.0",
     "imports-loader": "^0.6.5",
     "jr-qrcode": "^1.0.4",
-    "mint-loadmore": "^0.1.2",
     "node-sass": "^3.8.0",
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.1",

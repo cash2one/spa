@@ -5,8 +5,8 @@
     <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
     <div class="page" id="treat-records-page" v-show="!$loadingRouteData">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>请客记录</div>
-        <div class="list" v-el:list-ele :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
-            <div class="list-item" v-for="item in dataList" v-link="{ name : 'treatDetail' , query : { detailId : item.id }}">
+        <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
+            <router-link class="list-item" v-for="item in dataList" :to="{ name : 'treatDetail' , query : { detailId : item.id }}" tag="div">
                 <div>
                     <div>{{ item.createDateStr }}</div>
                     <div :class="statusObj[item.status].value">{{ statusObj[item.status].name }}</div>
@@ -15,7 +15,7 @@
                     <div>授权金额<span>{{ item.amount }}</span></div>
                     <div>授权手机<span>{{ item.telStr }}</span></div>
                 </div>
-            </div>
+            </router-link>
             <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
             <div class="finish-load-tip" :class="{ none : !showFinishLoadTip || dataList.length==0 }"><div>已经加载全部数据</div></div>
             <div class="nullData" v-show="dataList.length==0 && !isAddData"><div></div><div>暂无内容...</div></div>
@@ -68,20 +68,21 @@
                 }
             }
         },
-        ready : function(){
+        mounted : function(){
             var _this = this, global = _this.global, k, pageData = global.pageData["treatRecords"];
             if(pageData){
                 setTimeout(function(){
-                    _this.$els.listEle.scrollTop = pageData["scrollTop"];
+                    _this.$refs.listEle.scrollTop = pageData["scrollTop"];
                 },100);
 
                 var changeObj = pageData.changeStatusRecord;
                 if(changeObj){
-                    for(k=0;k<_this.dataList.length;k++){
-                        if(_this.dataList[k]['id'] == changeObj.id ){
+                    var dataList = _this.dataList;
+                    for(k=0;k<dataList.length;k++){
+                        if(dataList[k]['id'] == changeObj.id ){
                             if(changeObj.status == 'CANCLED'){
-                                _this.dataList[k]['status'] = 'CANCLED';
-                                _this.dataList.$set(k,_this.dataList[k]);
+                                dataList[k]['status'] = 'CANCLED';
+                                Vue.set(dataList,k,dataList[k]);
                             }
                             break;
                         }
@@ -139,7 +140,7 @@
                 });
             },
             doHandlerListScroll : function(){
-                var _this = this,listEle = _this.$els.listEle;
+                var _this = this,listEle = _this.$refs.listEle;
                 if(!_this.isDataAddEnd && listEle.scrollTop+listEle.clientHeight*1.4>listEle.scrollHeight ){
                     _this.queryRecord();
                 }
@@ -154,7 +155,7 @@
                 status = _this.storeDataList[k];
                 pageData[status] = _this[status];
             }
-            pageData["scrollTop"] = _this.$els.listEle.scrollTop;
+            pageData["scrollTop"] = _this.$refs.listEle.scrollTop;
         }
     }
 </script>

@@ -6,12 +6,12 @@
     <div class="page" id="integral-detail-page" v-show="!$loadingRouteData" :style="{ height : global.winHeight+'px' }">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>积分中心</div>
         <div class="total">
-            <div>现有积分<span v-link="{ name : 'integralExplain' }">积分规则</span><i></i></div>
+            <div>现有积分<router-link :to="{ name : 'integralExplain' }" tag="span">积分规则</router-link><i></i></div>
             <b>{{amount}}<span>(冻结:{{freezeAmount}})</span></b>
         </div>
         <div class="tip" v-show="isNoIntegral">您没有积分了，<a>如何获取积分</a></div>
         <div class="title" v-show="!isNoIntegral">积分记录</div>
-        <div class="list" v-el:list-ele v-show="!isNoIntegral" :style="{ height : (global.winHeight-10.36*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
+        <div class="list" ref="listEle" v-show="!isNoIntegral" :style="{ height : (global.winHeight-10.36*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <div class="list-item" v-for="item in dataList">
                 <div>{{ item.businessCategoryDesc }}<div :class="{ add : item.amount>0 }">{{ item.amount>0 ? "+" : "" }}{{ item.amount }}</div></div>
                 <div><div :class="{ active : item.peerName }" :style="{ backgroundImage : 'url('+(item.peerAvatar || global.defaultHeader)+')' }"></div><div>{{ item.peerName || "" }}</div><span>{{ item.createDatetime }}</span></div>
@@ -70,7 +70,7 @@
                 }
             }
         },
-        ready: function(){
+        mounted: function(){
             this.queryRecord();
         },
         methods: {
@@ -145,7 +145,7 @@
                 });
             },
             doHandlerListScroll : function(){
-                var _this = this,listEle = _this.$els.listEle;
+                var _this = this,listEle = _this.$refs.listEle;
                 if(!_this.isDataAddEnd && listEle.scrollTop+listEle.clientHeight*1.4>listEle.scrollHeight ){
                     _this.queryRecord();
                 }

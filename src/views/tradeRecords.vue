@@ -5,7 +5,7 @@
     <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
     <div class="page" id="trade-records-page" v-show="!$loadingRouteData">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>交易记录</div>
-        <div class="list" v-el:list-ele :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
+        <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <div class="list-item" v-for="item in dataList">
                 <div>{{ tradeType[item.bizType] }}<span :class="{ recharge : item.income }">{{ item.income ? '+' : '-' }}{{item.amount}}元</span></div>
                 <div>{{ item.createDatetime }}</div>
@@ -54,7 +54,7 @@
                 }
             }
         },
-        ready : function(){
+        mounted : function(){
             this.queryRecord();
         },
         methods: {
@@ -103,7 +103,7 @@
                 });
             },
             doHandlerListScroll : function(){
-                var _this = this, listEle = _this.$els.listEle;
+                var _this = this, listEle = _this.$refs.listEle;
                 if(!_this.isDataAddEnd && listEle.scrollTop+listEle.clientHeight*1.4>listEle.scrollHeight ){
                     _this.queryRecord();
                 }

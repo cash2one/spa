@@ -4,7 +4,7 @@
 
 <template>
     <div class="swipe">
-        <div class="swipe-items-wrap" v-el:wrap>
+        <div class="swipe-items-wrap" ref="wrap">
             <slot></slot>
         </div>
         <div class="swipe-indicators" v-show="showIndicators">
@@ -401,45 +401,47 @@
             }
         },
 
-        ready() {
-            this.ready = true;
+        mounted() {
+            var _this = this;
+            this.$nextTick(function(){
+                _this.ready = true;
 
-            if (this.auto > 0) {
-                this.timer = setInterval(() => {
-							if (!this.dragging && !this.animating) {
-                    this.next();
-                	}
-            	}, this.auto);
-            }
+                if (_this.auto > 0) {
+                    _this.timer = setInterval(() => {
+                                if (!_this.dragging && !_this.animating) {
+                        _this.next();
+                    }
+                }, _this.auto);
+                }
 
-            this.reInitPages();
+                _this.reInitPages();
 
-            var element = this.$el;
+                var element = _this.$el;
 
-            element.addEventListener('touchstart', (event) => {
-                if (this.prevent) {
-                event.preventDefault();
-            }
-            if (this.animating) return;
-            this.dragging = true;
-            this.userScrolling = false;
-            this.doOnTouchStart(event);
-        });
+                element.addEventListener('touchstart', (event) => {
+                    if (_this.prevent) {
+                    event.preventDefault();
+                }
+                if (_this.animating) return;
+                _this.dragging = true;
+                _this.userScrolling = false;
+                _this.doOnTouchStart(event);
+            });
+                element.addEventListener('touchmove', (event) => {
+                    if (!_this.dragging) return;
+                _this.doOnTouchMove(event);
+            });
 
-            element.addEventListener('touchmove', (event) => {
-                if (!this.dragging) return;
-            this.doOnTouchMove(event);
-        });
-
-            element.addEventListener('touchend', (event) => {
-                if (this.userScrolling) {
-                this.dragging = false;
-                this.dragState = {};
-                return;
-            }
-            if (!this.dragging) return;
-            this.doOnTouchEnd(event);
-            this.dragging = false;
+                element.addEventListener('touchend', (event) => {
+                    if (_this.userScrolling) {
+                    _this.dragging = false;
+                    _this.dragState = {};
+                    return;
+                }
+                if (!_this.dragging) return;
+                _this.doOnTouchEnd(event);
+                _this.dragging = false;
+            });
         });
         }
     };

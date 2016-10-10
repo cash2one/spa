@@ -50,7 +50,7 @@
                transition.next();
             }
         },
-        ready : function(){
+        mounted : function(){
           /*var _this = this;
             for(var i=0;i<10;i++){
                 _this.list.push(i);

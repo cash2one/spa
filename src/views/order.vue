@@ -1,35 +1,32 @@
 <style lang="sass">
-    @import "../sass/page/order.scss";
+    @import "../sass/page/order.scss"
 </style>
 <template>
     <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
     <div class="page" id="order-list-page" v-if="!$loadingRouteData">
         <div class="page-title"><a class="back" @click="doClickBackPage()"></a>我的订单</div>
-
-        <div class="order-list" v-el:list-ele :style="{ height : (global.winHeight-5.411*global.winScale*16)+'px'}" @scroll="doHandlerOrderListScroll()">
-            <div v-for="order in orderList" track-by="id" v-link="{name:'orderDetail',query:{id:order.id}">
-                <div>{{order.clubName}}<span>{{order.downPayment>0?('￥'+order.downPayment+'元'):''}}</span><span>{{order.status | OrderStatusFilter 'name'}}</span></div>
+        <div class="order-list" ref="listEle" :style="{ height : (global.winHeight-5.411*global.winScale*16)+'px'}" @scroll="doHandlerOrderListScroll()">
+            <router-link v-for="order in orderList" :key="order.id" :to="{name:'orderDetail',query:{id:order.id}" tag="div">
+                <div>{{order.clubName}}<span>{{order.downPayment>0?('￥'+order.downPayment+'元'):''}}</span><span>{{order.status | orderStatusFilter('name')}}</span></div>
                 <div>
                     <div>选择技师<span>{{order.techId ? order.techName : '到店安排'}}<span v-if="order.techId">[<strong>{{order.techSerialNo || ""}}</strong>]</span></span></div>
                     <div>选择项目<span>{{order.serviceItemName || "到店选择"}}</span></div>
-                    <div>到店时间<span>{{order.appointTime | Date2FullDate}}</span></div>
+                    <div>到店时间<span>{{order.appointTime | date2FullDate}}</span></div>
                     <div v-if="order.orderType=='paid'&&(order.status=='submit' || order.status=='accept' || order.status=='complete')" v-show="order.qrShow">
                         <img :src='order.qrCodeUrl'/>
                         <div>预约号：{{order.orderNo}}</div>
                     </div>
                 </div>
                 <a class='paid' v-if="order.orderType=='paid' && order.status=='unpaid'" @click="doClickPaid($index)">支付</a>
-                <a class='reminder' v-if="order.status=='submit'" @click="doClickReminder($index)">催单</a>
-                <a class='inquiries' v-if="order.status=='accept'" @click="doClickInquiries($index)">问询</a>
-                <a class='comment' v-if="order.orderType=='complete' && order.techId && order.commented == 'N'" v-link="{name:'orderDetail',query:{id:order.id}">点评</a>
+                <a class='reminder' v-if="order.status=='submit'" @click="doClickReminder()">催单</a>
+                <a class='inquiries' v-if="order.status=='accept'" @click="doClickInquiries(order)">问询</a>
+                <router-link class='comment' v-if="order.orderType=='complete' && order.techId && order.commented == 'N'" :to="{name:'orderDetail',query:{id:order.id}">点评</router-link>
                 <a class='refunded' v-if="order.orderType=='paid' && order.status=='refund'" @click="doClickRefuncQuery($index)">查询</a>
-                <a class='reAppoint' v-if="order.status=='error'"
-                   v-link="{name:'confirmOrder',query:{orderId:order.id,clubId:order.clubId,downPayment:order.downPayment,customerName:encodeURIComponent(order.customerName,itemId:order.itemId,techId:order.techId)}">预约</a>
-                <a class='refund' v-if="order.orderType=='paid' && (order.status=='refundfailure' || order.status=='reject' || order.status=='overtime' || order.ststus=='error')"
-                   @click="doClickRefund($index)">退款</a>
+                <router-link class='reAppoint' v-if="order.status=='error'" :to="{name:'confirmOrder',query:{orderId:order.id,clubId:order.clubId,downPayment:order.downPayment,customerName:encodeURIComponent(order.customerName,itemId:order.itemId,techId:order.techId)}">预约</router-link>
+                <a class='refund' v-if="order.orderType=='paid' && (order.status=='refundfailure' || order.status=='reject' || order.status=='overtime' || order.ststus=='error')" @click="doClickRefund(order)">退款</a>
                 <span class='expandBtn' v-if="order.orderType=='paid' && (order.status=='submit' || order.status=='accept' || order.status=='complete')"
-                      @click="doShowQrCode($index)" :class="{expand:order.qrShow}">{{order.qrShow?'收起':'展开'}}</span>
-            </div>
+                      @click="doShowQrCode(order)" :class="{expand:order.qrShow}">{{order.qrShow?'收起':'展开'}}</span>
+            </router-link>
 
             <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
             <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
@@ -65,7 +62,7 @@
             </div>
         </div>
     </div>
-    <tel-detail v-ref:tel-detail v-if="global.clubTelephone.length>0" :telephone="global.clubTelephone"></tel-detail>
+    <tel-detail ref="telDetail" v-if="global.clubTelephone.length>0" :telephone="global.clubTelephone"></tel-detail>
 </template>
 <script type="text/ecmascript-6">
     import { GLOBAL } from '../libs/global';
@@ -79,8 +76,8 @@
             'tel-detail':TelDetail
         },
         filters:{
-            OrderStatusFilter:OrderStatusFilter,
-            Date2FullDate:Date2FullDate
+            orderStatusFilter:OrderStatusFilter,
+            date2FullDate:Date2FullDate
         },
         data(){
             return {
@@ -112,11 +109,11 @@
                 paramData:null,     //自动支付的参数
             }
         },
-        ready(){
+        mounted(){
             var _this = this,pageData = _this.global.pageData["orderList"];
             if(pageData){
                 setTimeout(function(){
-                    _this.$els.listEle.scrollTop = pageData["scrollTop"];
+                    _this.$refs.listEle.scrollTop = pageData["scrollTop"];
                 },100)
             }
 
@@ -243,13 +240,13 @@
                 });
             },
             doHandlerOrderListScroll (){//数据列表往下滑动加载的处理
-                var _this = this,listEle = _this.$els.listEle;
+                var _this = this,listEle = _this.$refs.listEle;
                 if(!_this.isDataAddEnd && listEle.scrollTop+listEle.clientHeight*1.4>listEle.scrollHeight ){
                     _this.queryOrderList();
                 }
             },
-            doShowQrCode(index) {
-                this.orderList[index].qrShow = !this.orderList[index].qrShow;
+            doShowQrCode(order) {
+                order.qrShow = !order.qrShow;
             },
             doClickPaid(index){          //支付
                 var _this = this,data = this.orderList[index];
@@ -258,15 +255,15 @@
                     return;
                 }
                 if(!_this.global.isLogin){
-                    _this.$router.go({
+                    _this.$router.push({
                         name:'login'
                     });
                 }else{
                     _this.paidOrder(data,index);
                 }
             },
-            doClickRefund(index){        //退款
-                var _this = this,data = this.orderList[index];
+            doClickRefund(data){        //退款
+                var _this = this;
                 if(!data.isOperating){
                     data.isOperating = true;
                     _this.$http.post('../api/v2/wx/pay/refund/applyfor',{
@@ -324,7 +321,7 @@
                     });
                 }
             },
-            doClickReminder(index){         //催单
+            doClickReminder(){         //催单
                 var _this = this;
                 if(_this.global.clubTelephone.length==0){
                     Util.tipShow("暂无会所电话！");
@@ -332,10 +329,10 @@
                     _this.$refs.telDetail.$emit("change-visible",{ ope : "show" });
                 }
             },
-            doClickInquiries(index){        //问询
-                var data = this.orderList[index],_this = this;
+            doClickInquiries(data){        //问询
+                var _this = this;
                 if(data.techId){
-                    _this.$router.go({
+                    _this.$router.push({
                         name:'chat',
                         query:{
                             techId:data.techId,

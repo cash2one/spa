@@ -5,7 +5,7 @@
     <div class="loading" v-show="$loadingRouteData || inPostData"><i></i><i></i><i></i></div>
     <div class="page info-page" id="picture-page">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>裁剪图片<div @click="doClickSaveBtn()">保存</div></div>
-        <image-cut v-ref:img-cut :all-w="global.winWidth" :all-h="global.winHeight" :v-w="global.winWidth*0.8" :v-h="global.winWidth*0.8"></image-cut>
+        <image-cut ref="imgCut" :all-w="global.winWidth" :all-h="global.winHeight" :v-w="global.winWidth*0.8" :v-h="global.winWidth*0.8" @putBase64="doPutBase64($event)"></image-cut>
     </div>
 </template>
 <script>
@@ -35,7 +35,7 @@
                     Global.updateUserNameAndHeader();
                     Util.tipShow("保存成功！");
                     _this.inPostData = false;
-                    _this.$router.go({ name : "info" });
+                    _this.$router.push({ name : "info" });
                  });
             }
         },
@@ -59,6 +59,9 @@
                 var _this = this;
                 _this.inPostData = true;
                 _this.$refs.imgCut.$emit("get-base64",{ width : 160, height : 160 });
+            },
+            doPutBase64 : function(){
+
             }
         }
     }

@@ -19,7 +19,7 @@
         </div>
         <div class="check" :class="{ active : canVisible }" @click="canVisible = !canVisible">朋友可以看见授权金额。</div>
         <div class="btn" :class="{ active : isTelValid && isMoneyValid, processing : isProcessing }" @click="doClickConfirmBtn()">{{confirmBtnText}}</div>
-        <div class="footer-area"><a v-link="{ name : 'treatExplain' }">请客说明</a><a v-link="{ name : 'treatRecords' , query : { clubId : clubId } }">请客记录</a></div>
+        <div class="footer-area"><router-link :to="{ name : 'treatExplain' }">请客说明</router-link><router-link :to="{ name : 'treatRecords' , query : { clubId : clubId } }">请客记录</router-link></div>
     </div>
 </template>
 <script>
@@ -101,7 +101,7 @@
                                 Util.tipShow(res.msg || '授权失败。');
                             }
                             else{
-                                _this.$router.go({
+                                _this.$router.push({
                                     name : "treatDetail",
                                     query : { backAccount : true, detailId : res.respData }
                                 });

@@ -30,7 +30,7 @@
         },
         filters: {
         },
-        ready : function(){
+        mounted : function(){
             var _this = this;
 
         },

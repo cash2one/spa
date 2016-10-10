@@ -67,7 +67,7 @@
                 pZ : null
             }
         },
-        ready: function() {
+        mounted: function() {
             var _this = this;
             _this.vW = _this.vW<_this.allW ? _this.vW : _this.allW;
             _this.vH = _this.vH<_this.allH ? _this.vH : _this.allH;

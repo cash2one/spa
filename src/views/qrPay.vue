@@ -102,7 +102,7 @@
                 }
             }
         },
-        ready : function(){
+        mounted : function(){
             var _this = this;
             _this.$http.get(_this.getClubNameUrl).then(function(res){
                 res = res.body;
@@ -221,7 +221,7 @@
                     _this.payBtnText = '确认支付';
                     if (res.err_msg.indexOf("ok") >= 0) {//支付成功之后
                         Util.tipShow("支付成功！");
-                        _this.$router.go({ name : "qrPayComplete", query : { clubId : paramData.clubId, money : paramData.amount, payToken : paramData.payToken }});
+                        _this.$router.push({ name : "qrPayComplete", query : { clubId : paramData.clubId, money : paramData.amount, payToken : paramData.payToken }});
                     }
                     else {
                         Util.tipShow("未能成功支付！");

@@ -56,7 +56,7 @@
                 }
             }
         },
-        ready: function(){
+        mounted: function(){
             var _this = this, param = _this.userLoginParam;
             if(param && param["username"]){
                 _this.tel = param["username"];
@@ -89,7 +89,7 @@
                         if(res.statusCode==2){
                             Util.removeLocalStorage("user-login-param");
                             Util.localStorage('user-register-param',JSON.stringify(paramData));
-                            _this.$router.go({ name : "register" });
+                            _this.$router.push({ name : "register" });
                         }
                         else if(res.statusCode == '935801'){//需重新获取授权
                             Util.localStorage('user-login-param',JSON.stringify(paramData));
@@ -98,7 +98,7 @@
                         else if(res.statusCode ==1){
                             Util.removeLocalStorage("user-login-param");
                             Util.localStorage('con-login-param',JSON.stringify(paramData));
-                            _this.$router.go({ name : "confirmLogin" });
+                            _this.$router.push({ name : "confirmLogin" });
                         }
                     })
                 }

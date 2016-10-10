@@ -18,18 +18,18 @@
             </div>
             <a @click="doChargeClick()">充值</a>
         </div>
-        <div class="qrcode-item item" v-link="{ name : 'qrPayCode' , query : { accountId : accountId }}">
+        <router-link class="qrcode-item item" :to="{ name : 'qrPayCode' , query : { accountId : accountId }}" tag="div">
             <span>付款二维码</span>
             <div></div>
-        </div>
-        <div class="record-item item" v-link="{ name : 'tradeRecords' , query : { accountId : accountId }}">
+        </router-link>
+        <router-link class="record-item item" :to="{ name : 'tradeRecords' , query : { accountId : accountId }}" tag="div">
             <span>交易记录</span>
             <div class="right-arrow"></div>
-        </div>
-        <div class="invite-item item" v-link="{ name : 'treat' , query : { accountId : accountId }}">
+        </router-link>
+        <router-link class="invite-item item" :to="{ name : 'treat' , query : { accountId : accountId }}" tag="div">
             <span>我要请客</span>
             <div class="right-arrow"></div>
-        </div>
+        </router-link>
     </div>
 </template>
 <script>
@@ -83,7 +83,7 @@
             doChargeClick : function(){
                 var _this = this, global = _this.global;
                 if(global.userAgent.isWX){
-                    _this.$router.go({ name : "recharge", query : { accountId : _this.accountId, clubId : _this.clubId } });
+                    _this.$router.push({ name : "recharge", query : { accountId : _this.accountId, clubId : _this.clubId } });
                 }
                 else{
                     Util.tipShow("使用微信打开才能充值！");

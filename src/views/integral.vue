@@ -5,11 +5,11 @@
     <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
     <div class="page" id="integral-all-page" v-show="!$loadingRouteData" :style="{ height : global.winHeight+'px' }">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>所有账户</div>
-        <div class="list" v-el:list-ele :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
-            <div class="list-item" v-for="item in dataList" v-link="{ name : 'integralDetail', query : { clubId : item.clubId } }">
+        <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
+            <router-link class="list-item" v-for="item in dataList" :to="{ name : 'integralDetail', query : { clubId : item.clubId } }" tag="div">
                 <div><div :style="{ backgroundImage : 'url('+(item.clubImage || global.defaultClubLogo)+')' }"></div>{{ item.clubName || '小摩豆会所' }}<i></i></div>
                 <div><span>剩余积分</span>{{ item.amount }}</div>
-            </div>
+            </router-link>
             <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
             <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
             <div class="nullData" v-show="dataList.length==0 && !isAddData"><div></div><div>暂无内容...</div></div>
@@ -34,7 +34,7 @@
                 isAddData : false//数据是否正在加载
             }
         },
-        ready: function(){
+        mounted: function(){
             this.queryRecord();
         },
         methods: {
@@ -90,7 +90,7 @@
                 });
             },
             doHandlerListScroll : function(){
-                var _this = this, listEle = _this.$els.listEle;
+                var _this = this, listEle = _this.$refs.listEle;
                 if(!_this.isDataAddEnd && listEle.scrollTop+listEle.clientHeight*1.4>listEle.scrollHeight ){
                     _this.queryRecord();
                 }

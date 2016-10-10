@@ -11,7 +11,6 @@ import { IM } from './libs/im';
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
-Vue.config.debug = true; // 开启debug模式
 Vue.http.options.emulateJSON = true;
 
 Global.init();
@@ -45,12 +44,6 @@ Vue.http.interceptors.push(function(request,next){
     next(function(response){
         return response;
     });
-});
-
-// 路由配置
-var router = new VueRouter({
-    // 是否开启History模式的路由,默认开发环境开启,生产环境不开启。如果生产环境的服务端没有进行相关配置,请慎用
-    history: Env != 'production'
 });
 
 //对于有:club参数的路径，对应的name是页面名称,否则加$(公众号模式)
@@ -146,7 +139,7 @@ var pageRouterList = [
     '/qrPayComplete'
 ];
 
-var pageRouterOption = {};          //构造router的map选项
+var pageRouterOption = [];          //构造router的map选项
 var pageName;
 function RouterOption(name,componentName){
     this.name = name;
@@ -156,33 +149,36 @@ function RouterOption(name,componentName){
 }
 for(var i=0;i<pageRouterList.length;i++){
     pageName = pageRouterList[i].substr(pageRouterList[i].lastIndexOf("/")+1);
-    pageRouterOption[pageRouterList[i]] = new RouterOption(( /:club/.test(pageRouterList[i]) ? "" : "$") + pageName,pageName);
+    pageRouterOption.push(new RouterOption(( /:club/.test(pageRouterList[i]) ? "" : "$") + pageName,pageName));
 }
 
-//配置路由
-router.map(pageRouterOption);
+// 路由配置
+var router = new VueRouter({
+    // 是否开启History模式的路由,默认开发环境开启,生产环境不开启。如果生产环境的服务端没有进行相关配置,请慎用
+    mode : 'hash',
+    linkActiveClass : 'active',
+    routers : pageRouterOption
+});
 
-router.beforeEach(function (transition) {
+router.beforeEach(function (to,from,next) {
     //window.scrollTo(0, 0);
-    _global.currPageParams = transition.to.params;
-    _global.currPageQuery = transition.to.query;
-
+    _global.currPageParams = to.params;
+    _global.currPageQuery = to.query;
+    console.log("to："+JSON.stringify(to));
     var _AppMenu = document.querySelector("#menu-container");
-    if(/(home|message|order|personal|technicianList)/.test(transition.to.name)){
-        _AppMenu.style.display = "block";
+    if(_AppMenu){
+        if(/(home|message|order|personal|technicianList)/.test(to.name)){
+            _AppMenu.style.display = "block";
+        }
+        else{
+            _AppMenu.style.display = "none";
+        }
     }
-    else{
-        _AppMenu.style.display = "none";
-    }
-    transition.next()
+    next();
 });
 
-router.afterEach(function (transition) {
+router.afterEach(function () {
 
 });
 
-router.redirect({
-    '*': "/home"
-});
-
-router.start(App, '#app');
+new Vue({ el: '#app', router, render: h => h(App) });

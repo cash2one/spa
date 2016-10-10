@@ -7,27 +7,27 @@
     <div class="confirm-btn" v-if="dataList.length>0"><a @click="doClickConfirmOrder()">确认预约</a></div>
     <div class="page" id="service-item-page" :style="{ height : (global.winHeight-3.333*global.winScale*16)+'px' }" v-if="!$loadingRouteData">
         <swipe class="profile-swipe" :show-indicators="false" :continuous="false" :auto="maxAutoTime" :index="swipeInitIndex" v-if="dataList.length>0">
-            <swipe-item v-for="item in dataList" track-by="$index">
+            <swipe-item v-for="item in dataList" :key="item.id">
                 <div class="service-item-top">
                     <div class="img" :style="{ backgroundImage : 'url('+(item.imageUrl || global.defaultServiceItemImgUrl)+')' }"></div>
                     <div>
                         <div>{{item.name}}</div>
                         <div v-show="item.price">
                             <div></div>
-                            <div>{{item.price | ItemPriceFormatter item.duration item.durationUnit}}</div>
+                            <div>{{item.price | itemPriceFormatter(item.duration,item.durationUnit)}}</div>
                         </div>
-                        <div v-show="item.pricePlus">加钟{{item.pricePlus | ItemPriceFormatter item.durationPlus item.durationUnitPlus}}</div>
+                        <div v-show="item.pricePlus">加钟{{item.pricePlus | itemPriceFormatter(item.durationPlus,item.durationUnitPlus)}}</div>
                     </div>
                 </div>
                 <div class="service-item-desc">
                     <div><i></i>项目说明</div>
-                    {{{ item['description'] || '' }}}
+                    <div v-html="item['description'] || ''"></div>
                 </div>
             </swipe-item>
         </swipe>
         <div class="nullData" v-show="dataList.length==0"><div></div><div>暂无内容...</div></div>
     </div>
-    <tel-detail v-ref:tel-detail v-if="telephone.length>0" :telephone="telephone"></tel-detail>
+    <tel-detail ref="telDetail" v-if="telephone.length>0" :telephone="telephone"></tel-detail>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -108,9 +108,9 @@
             }
         },
         filters: {
-            ItemPriceFormatter : ItemPriceFormatter
+            itemPriceFormatter : ItemPriceFormatter
         },
-        ready : function(){
+        mounted : function(){
             var _this = this;
             if(_this.isQueryAll){
                 _this.queryItemData(_this.currServiceItemId,0);
@@ -201,7 +201,7 @@
                     Util.tipShow('【此会所需支付预约，请在微信客户端中打开】');
                 }
                 else{//跳转到预约
-                    _this.$router.go({ name : "confirmOrder", query : { itemId : _this.activeItemId }});
+                    _this.$router.push({ name : "confirmOrder", query : { itemId : _this.activeItemId }});
                 }
             }
         }

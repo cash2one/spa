@@ -2,7 +2,6 @@
  * 限定只能输入4位的数字
  */
 module.exports = {
-    twoWay : true,
     bind: function() {
         var _this = this;
         _this.handler = function () {

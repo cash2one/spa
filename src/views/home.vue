@@ -15,22 +15,22 @@
             <div class="club-name">{{global.clubName}}</div>
         </div>
         <div class="menu">
-            <a v-link="{name : 'clubProfile' }">
+            <router-link :to="{name : 'clubProfile' }">
                 <div class="clubProfile"></div>
                 <div>会所</div>
-            </a>
-            <a v-link="{name : 'promotions' }">
+            </router-link>
+            <router-link :to="{name : 'promotions' }">
                 <div class="promotions"></div>
                 <div>活动</div>
-            </a>
-            <a v-link="{name : 'serviceList' }">
+            </router-link>
+            <router-link :to="{name : 'serviceList' }">
                 <div class="serviceGroup"></div>
                 <div>项目</div>
-            </a>
-            <a v-link="{name : 'map' }">
+            </router-link>
+            <router-link :to="{name : 'map' }">
                 <div class="address"></div>
                 <div>地址</div>
-            </a>
+            </router-link>
             <a @click="doClickContactClub()">
                 <div class="master"></div>
                 <div>店长</div>
@@ -38,31 +38,31 @@
         </div>
 
         <div class="recommend-tech" v-if="techs.length>0">
-            <div><div></div>推荐技师<a v-link="{name : 'technicianList'}">全部技师</a></div>
+            <div><div></div>推荐技师<router-link :to="{ name : 'technicianList' }">全部技师</router-link></div>
             <div>
                 <div>
-                    <div v-for="tech in techs" v-link="{ name : 'technicianDetail', query : { id : tech.id } }" :style="{ backgroundImage : 'url('+(tech.avatarUrl || global.defaultHeader)+')' }" class="tech">
+                    <router-link v-for="tech in techs" :to="{ name : 'technicianDetail', query : { id : tech.id } }" :style="{ backgroundImage : 'url('+(tech.avatarUrl || global.defaultHeader)+')' }" class="tech" tag="div">
                         <div>{{tech.name}}</div>
-                    </div>
+                    </router-link>
                 </div>
             </div>
         </div>
 
         <div class="recommend-item">
-            <div><div></div>推荐项目<a v-link="{name : 'serviceList'}">全部项目</a></div>
+            <div><div></div>推荐项目<router-link :to="{name : 'serviceList'}">全部项目</router-link></div>
             <div>
-                <div class="item" v-for="item in serviceItems" v-link="{ name : 'serviceItem', query : { top : '1' , id : item.id } }">
+                <router-link class="item" v-for="item in serviceItems" :to="{ name : 'serviceItem', query : { top : '1' , id : item.id } }" tag="div">
                     <div :style="{ backgroundImage : 'url('+(item.imageUrl || global.defaultServiceItemImgUrl)+')' }"></div>
                     <div>{{item.name}}</div>
                     <div>
                         <div v-show="item.price1"></div>
-                        <div v-show="item.price1">{{item.price1 | ItemPriceFormatter item.duration1 item.durationUnit}}</div>
+                        <div v-show="item.price1">{{item.price1 | itemPriceFormatter(item.duration1,item.durationUnit)}}</div>
                     </div>
-                </div>
+                </router-link>
             </div>
         </div>
     </div>
-    <tel-detail v-ref:tel-detail v-if="global.clubTelephone.length>0" :telephone="global.clubTelephone"></tel-detail>
+    <tel-detail ref="telDetail" v-if="global.clubTelephone.length>0" :telephone="global.clubTelephone"></tel-detail>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -112,7 +112,7 @@
           }
         },
         filters: {
-            ItemPriceFormatter : ItemPriceFormatter
+            itemPriceFormatter : ItemPriceFormatter
         },
         methods: {
             doClickContactClub : function(){

@@ -12,50 +12,50 @@
                 <div :class="{ 'bind-phone' : !global.userTel }" @click="bindTelPhone()">{{ global.userTel || '绑定手机' }}</div>
             </div>
             <div class="btn" v-show="!global.isLogin" @click="doClickLoginBtn()">登录/注册</div>
-            <div class="edit" v-show="global.isLogin" v-link="{ name : 'info' }"></div>
+            <router-link class="edit" v-show="global.isLogin" :to="{ name : 'info' }" tag="div"></router-link>
         </div>
 
         <div class="account-wrap" v-show="global.clubCfg.accountSwitch || global.clubCfg.creditSwitch">
-            <div v-show="global.pageMode=='9358' || global.clubCfg.accountSwitch" v-link="{ name : (global.pageMode=='club' ? 'accountDetail' : 'account') }">
+            <router-link v-show="global.pageMode=='9358' || global.clubCfg.accountSwitch" :to="{ name : (global.pageMode=='club' ? 'accountDetail' : 'account') }" tag="div">
                 <div class="account"></div>
                 <div>我的账户</div>
                 <div class="right-arrow"></div>
-            </div>
-            <div v-show="global.pageMode=='9358' || global.clubCfg.creditSwitch" v-link="{ name : (global.pageMode=='club' ? 'integralDetail' : 'integral') }">
+            </router-link>
+            <router-link v-show="global.pageMode=='9358' || global.clubCfg.creditSwitch" :to="{ name : (global.pageMode=='club' ? 'integralDetail' : 'integral') }" tag="div">
                 <div class="integral"></div>
                 <div>积分中心</div>
                 <div class="right-arrow"></div>
-            </div>
+            </router-link>
         </div>
 
         <div class="menu-wrap">
-            <div v-link="{ name : 'coupon' }">
+            <router-link :to="{ name : 'coupon' }" tag="div">
                 <div class="coupon"></div>
                 <div>优惠券<span>分享获得更多优惠券</span></div>
                 <div class="right-arrow"></div>
-            </div>
-            <div v-link="{ name : 'order' }">
+            </router-link>
+            <router-link :to="{ name : 'order' }" tag="div">
                 <div class="order"></div>
                 <div>我的订单</div>
                 <div class="right-arrow"></div>
-            </div>
-            <div v-link="{ name : 'collect' }">
+            </router-link>
+            <router-link :to="{ name : 'collect' }" tag="div">
                 <div class="collect"></div>
                 <div>技师收藏</div>
                 <div class="right-arrow"></div>
-            </div>
-            <div v-link="{ name : 'contacts' }">
+            </router-link>
+            <router-link :to="{ name : 'contacts' }" tag="div">
                 <div class="contacts"></div>
                 <div>最近联系人</div>
                 <div class="right-arrow"></div>
-            </div>
+            </router-link>
         </div>
 
-        <div class="suggestion-wrap" v-show="global.pageMode=='club'" v-link="{ name : 'suggestions' }">
+        <router-link class="suggestion-wrap" v-show="global.pageMode=='club'" :to="{ name : 'suggestions' }" tag="div">
             <div class="suggestions"></div>
             <div>投诉建议</div>
             <div class="right-arrow"></div>
-        </div>
+        </router-link>
 
         <div class="wx-wrap" v-show="showWxUnbind">
             <div class="unbind-wechat"></div>
@@ -158,7 +158,7 @@
                 transition.next();
             }
         },
-        ready: function(){
+        mounted: function(){
 
         },
         methods: {
@@ -169,7 +169,7 @@
                 var _this = this;
                 _this.global.loginPage = "personal";
                 _this.global.loginPageQuery = {};
-                _this.$router.go({ name : "login" });
+                _this.$router.push({ name : "login" });
             },
             doClickUnbandTel : function(){
                 ///////////////解除手机绑定

@@ -8,7 +8,7 @@
         <div class="item" v-for="item in dataList">
             <div :style="{ backgroundImage : 'url('+item.logoUrl+')' }"></div>
             <div>{{ item.memberName }}</div>
-            <div>{{{ item.memberContent }}}</div>
+            <div v-html="item.memberContent"></div>
         </div>
         <div class="nullData" v-show="dataList.length==0"><div></div><div>暂无内容...</div></div>
     </div>

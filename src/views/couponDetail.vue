@@ -35,7 +35,7 @@
             <div>使用说明：</div>
             <div>券有效期：{{userAct.couponPeriod}}</div>
             <div>使用时段：{{userAct.useTimePeriod}}</div>
-            <div><div v-show="useServiceItem">使用项目：仅限{{useServiceItem}}</div>{{{userAct.actContent}}}</div>
+            <div><div v-show="useServiceItem">使用项目：仅限{{useServiceItem}}</div><div v-html="userAct.actContent"></div></div>
         </div>
     </div>
     <div class="share-coupons-pop pop-modal" :class="{ active : showSharePop }" v-if="isRepeatCoupn">
@@ -117,7 +117,7 @@
               }
           }
         },
-        ready: function(){
+        mounted: function(){
             var _this = this;
             if(!_this.couponQrCodeUrl){
                 _this.getQrCodeImageUrl();

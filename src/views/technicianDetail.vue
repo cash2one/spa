@@ -12,9 +12,9 @@
             <div class="favorite" @click="doClickCollectBtn()" :class="{ collected : isFavorite }"><div></div><div>{{favoriteCount}}</div><span :class="{ active : showCollectedAni }">{{collectedText}}</span></div>
         </div>
         <div class="pics" v-show="techPics.length>0">
-            <div><div v-for="pic in techPics" :style="{ backgroundImage : 'url('+pic.imageUrl+')' }" v-link="{ name : 'technicianImg' , query : { id : techId , index : $index }}"></div></div>
+            <div><router-link v-for="pic in techPics" :style="{ backgroundImage : 'url('+pic.imageUrl+')' }" :to="{ name : 'technicianImg' , query : { id : techId , index : pic.orders }}" tag="div"></router-link></div>
         </div>
-        <div class="comment" v-link="{ name : 'review' , query : { id : techId }}">
+        <router-link class="comment" :to="{ name : 'review' , query : { id : techId }}" tag="div">
             <div class="icon"></div>
             <div class="arrow"></div>
             <div>所有评论</div>
@@ -22,12 +22,12 @@
                 <div class="stars"><div :style="{ width : techStar+'%'}"></div></div>
                 <div>{{techCommentCount}}评论</div>
             </div>
-        </div>
-        <div class="view" v-link="{ name : 'technicianList' }">
+        </router-link>
+        <router-link class="view" :to="{ name : 'technicianList' }" tag="div">
             <div class="icon"></div>
             <div class="arrow"></div>
             <div>查看店内其他技师</div>
-        </div>
+        </router-link>
         <div class="service-item" v-show="serviceItems.length>0">
             <div class="title">选择项目<div></div></div>
             <div class="wrap">
@@ -36,8 +36,8 @@
                     <div :style="{ backgroundImage : 'url('+service.imageUrl+')' }"></div>
                     <div>{{service.name}}</div>
                     <div>
-                        <div>{{service.price1 | ItemPriceFormatter service.duration1 service.durationUnit}}</div>
-                        <div v-show="service.price2">{{service.price2 | ItemPriceFormatter service.duration2 service.durationUnitPlus}}</div>
+                        <div>{{service.price1 | itemPriceFormatter(service.duration1,service.durationUnit)}}</div>
+                        <div v-show="service.price2">{{service.price2 | itemPriceFormatter(service.duration2,service.durationUnitPlus)}}</div>
                     </div>
                 </div>
             </div>
@@ -46,11 +46,11 @@
     <div class="tech-detail-footer-wrap">
         <div @click="doClickCommentBtn()"><i></i>点评</div>
         <div @click="doClickRewardBtn()"><i></i>打赏</div>
-        <div v-link="{ name : 'chat', query : { techId : techId } }"><i></i>聊天</div>
+        <router-link :to="{ name : 'chat', query : { techId : techId } }" tag="div"><i></i>聊天</router-link>
         <div @click="doClickOrderBtn()" :class="{ active : canOrder }">预约</div>
     </div>
 
-    <tel-detail v-ref:tel-detail v-if="telephone.length>0" :telephone="telephone"></tel-detail>
+    <tel-detail ref="telDetail" v-if="telephone.length>0" :telephone="telephone"></tel-detail>
 
     <div class="club-coupon" :class="{ hide : paidCoupons.length==0 && ordinaryCoupons.length==0 }" @click="switchCouponListStatus(true)"><div></div><span>抢优惠</span></div>
     <div class="coupon-list" :class="{ active : showCouponList }">
@@ -131,7 +131,7 @@
                 showCouponList : false //是否显示优惠券列表
             };
         },
-        ready : function(){
+        mounted : function(){
             var _this = this;
             ////////////////////////////////////获取优惠券数据
             _this.$http.get(_this.queryClubCouponUrl).then(function(res) {
@@ -218,7 +218,7 @@
             doClickRewardBtn : function(){//点击打赏按钮
                 var _this = this;
                 if(_this.global.userAgent.isWX){
-                    _this.$router.go({
+                    _this.$router.push({
                         name : "techReward",
                         query : { techId : _this.techId }
                     });
@@ -232,7 +232,7 @@
                 if(_this.canOrder){
                     if(_this.phoneAppointment != "n"){
                         if(!_this.global.isLogin){//未登录，跳转到登录页
-                            _this.$router.go({ name : "login" });
+                            _this.$router.push({ name : "login" });
                         }
                         else if(_this.telephone.length ==0){
                             Util.tipShow("暂无联系电话！");
@@ -246,7 +246,7 @@
                             Util.tipShow("此会所需支付预约，请在微信客户端中打开！");
                         }
                         else{
-                            _this.$router.go({
+                            _this.$router.push({
                                 name : "confirmOrder",
                                 query : {
                                     techId : _this.techId,
@@ -261,7 +261,7 @@
             doClickCommentBtn : function(){//点击点评按钮
                 var _this = this;
                 if(_this.canComment){
-                    _this.$router.go({
+                    _this.$router.push({
                         name : 'comment',
                         query : { techId : _this.techId, type : 'tech' }
                     })
@@ -278,7 +278,7 @@
                 if(!global.isLogin){
                     global.loginPage = "technicianDetail";
                     global.loginPageQuery = { id : _this.techId };
-                    _this.$router.go({ name : 'comment' });
+                    _this.$router.push({ name : 'comment' });
                     return;
                 }
                 if(_this.collectedAniTimer){
@@ -305,14 +305,14 @@
             },
             doClickPaidCoupon : function(coupon){
                 var _this = this, global = _this.global;
-                _this.$router.go({
+                _this.$router.push({
                     name : "paidCoupon",
                     query : { actId : coupon.actId , techCode : _this.techInviteCode, chanel : global.currPageQuery.chanel || "link" }
                 });
             }
         },
         filters: {
-            ItemPriceFormatter : ItemPriceFormatter
+            itemPriceFormatter : ItemPriceFormatter
         }
     }
 </script>

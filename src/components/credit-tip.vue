@@ -5,7 +5,7 @@
             <div class="tip">送礼物需要<span>{{ giftValue }}</span>积分，当前您的积分不足。</div>
             <div class="btn">
                 <div class="cancel" @click="doClickCancelBtn()">取消</div>
-                <div class="get" v-link="{ name : 'integralExplain' }">如何获取积分</div>
+                <router-link class="get" :to="{ name : 'integralExplain' }" tag="div">如何获取积分</router-link>
             </div>
         </div>
     </div>

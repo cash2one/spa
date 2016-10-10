@@ -83,7 +83,7 @@
                 }
             }
         },
-        ready : function(){
+        mounted : function(){
             var _this = this;
             if(_this.paramData){
                 Util.removeLocalStorage("con-recharge-param");
@@ -188,7 +188,7 @@
                     _this.submitText = '确认支付';
                     if (res.err_msg.indexOf("ok") >= 0) {//支付成功之后
                         Util.tipShow("支付成功！");
-                        _this.$router.go({ name : "accountDetail", query : { accountId : _this.accountId }});
+                        _this.$router.push({ name : "accountDetail", query : { accountId : _this.accountId }});
                     }
                     else {
                         Util.tipShow("未能成功支付！");

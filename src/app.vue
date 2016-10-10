@@ -6,26 +6,26 @@
         <router-view></router-view>
     </div>
     <div id="menu-container">
-        <a class="home" v-link="{name : 'home', activeClass : 'active' }">
+        <router-link class="home" :to="{ name : 'home' }">
             <div></div>
             <div>首页</div>
-        </a>
-        <a class="message" v-link="{name : 'message', activeClass : 'active' }">
+        </router-link>
+        <router-link class="message" :to="{ name : 'message' }">
             <div><i style="visibility: hidden">0</i></div>
             <div>聊天</div>
-        </a>
-        <a class="technicianList" v-link="{name : 'technicianList', activeClass : 'active'}">
+        </router-link>
+        <router-link class="technicianList" :to="{ name : 'technicianList' }">
             <div></div>
             <div>约技师</div>
-        </a>
-        <a class="order" v-link="{name : 'order', activeClass : 'active'}">
+        </router-link>
+        <router-link class="order" :to="{ name : 'order' }">
             <div></div>
             <div>订单</div>
-        </a>
-        <a class="personal" v-link="{name : 'personal', activeClass : 'active'}">
+        </router-link>
+        <router-link class="personal" :to="{ name : 'personal' }">
             <div></div>
             <div>个人中心</div>
-        </a>
+        </router-link>
     </div>
     <div id="app-tip"><div></div></div>
 </template>
@@ -38,7 +38,7 @@
                 global : Global.data
             }
         },
-        ready: function() {
+        mounted: function() {
             var _this = this;
 
             ////依据窗口的宽度调整

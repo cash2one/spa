@@ -5,13 +5,13 @@
     <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
     <div class="page" id="account-page" v-show="!$loadingRouteData" :style="{ height : global.winHeight+'px' }">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>所有账户</div>
-        <div class="jump-qrcode" v-show="dataList.length>0" v-link="{ name : 'qrPayCode' }">
+        <router-link class="jump-qrcode" v-show="dataList.length>0" :to="{ name : 'qrPayCode' }" tag="div">
             <div></div>
             <div>付款二维码</div>
             <div></div>
-        </div>
+        </router-link>
         <div class="list" :style="{ height : (global.winHeight-(dataList.length>0 ? 5.722 : 2.611)*global.winScale*16)+'px' }">
-            <div class="list-item" v-for="item in dataList" v-link="{ name : 'accountDetail', query : { accountId : item.id } }">
+            <router-link class="list-item" v-for="item in dataList" :to="{ name : 'accountDetail', query : { accountId : item.id } }" tag="div">
                 <div class="header">
                     <span :style="{ backgroundImage : 'url('+(item.clubImage || global.defaultClubLogo )+')' }"></span><span>{{ item.clubName }}</span><i></i>
                 </div>
@@ -19,7 +19,7 @@
                     <div><span>可用金额</span><span>{{ item.amount | MoneyFormatter }}</span></div>
                     <div><span>冻结金额</span><span>{{ item.freezeAmount | MoneyFormatter }}</span></div>
                 </div>
-            </div>
+            </router-link>
             <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
             <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
             <div class="nullData" v-show="dataList.length==0 && !showDataLoadTip"><div></div><div>暂无内容...</div></div>

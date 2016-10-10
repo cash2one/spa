@@ -13,7 +13,7 @@
                     <div>{{item.intro || ""}}</div>
                     <div :style="{ backgroundImage : 'url('+(item.imageUrl || global.defaultBannerImgUrl )+')' }"></div>
                 </div>
-                <div class="rich-text profile-rich-text">{{{item.description}}}</div>
+                <div class="rich-text profile-rich-text" v-html="item.description"></div>
             </swipe-item>
         </swipe>
     </div>

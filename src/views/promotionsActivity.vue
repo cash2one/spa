@@ -11,15 +11,15 @@
                 <div class="act-title">
                     <div></div>
                     <span>{{actDetail.actTitle}}</span>
-                    <a v-link="{ name : 'technicianList' }">马上预约</a>
+                    <router-link :to="{ name : 'technicianList' }">马上预约</router-link>
                 </div>
                 <div class="act-item">
-                    <i></i><div>{{actDetail.startDate | DateToString actDetail.endDate '—'}}</div>
+                    <i></i><div>{{actDetail.startDate | dateToString(actDetail.endDate,'—')}}</div>
                 </div>
                 <div class="act-item">
                     <i></i><div>活动规则</div>
                 </div>
-                <div class="act-desc">{{{actDetail.actContent}}}</div>
+                <div class="act-desc" v-html="actDetail.actContent"></div>
             </div>
         </div>
         <div class="other-act" v-if="otherActs.length>1">
@@ -27,11 +27,11 @@
                 <div></div>
                 <div>其他优惠</div>
             </div>
-            <a v-if='act.actId !=actDetail.actId ' v-for="act in otherActs" v-link="{name :'promotionsActivity' , query : { id : act.actId }}">
+            <router-link v-if='act.actId !=actDetail.actId ' v-for="act in otherActs" :to="{name :'promotionsActivity' , query : { id : act.actId }}">
                 <div :style="{ backgroundImage : 'url('+act.actLogoUrl+')' }"></div>
                 <div><i></i>{{act.actTitle}}</div>
-                <div>活动时间：{{act.startDate | DateToString act.endDate '—'}}</div>
-            </a>
+                <div>活动时间：{{act.startDate | dateToString(act.endDate,'—')}}</div>
+            </router-link>
         </div>
     </div>
 </template>
@@ -80,7 +80,7 @@
           }
         },
         filters: {
-            DateToString : DateToString
+            dateToString : DateToString
         },
         methods: {
             doClickPageBack : function(){//点击返回按钮

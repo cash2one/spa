@@ -5,10 +5,10 @@
     <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
     <div class="page" id="collect-page" v-show="!$loadingRouteData" :style="{ height : global.winHeight+'px' }">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>我的收藏</div>
-        <div class="list" v-el:list-ele :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
+        <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <div class="list-item" v-for="singleClubData in dataList">
-                <div class='header' :class="{ 'first' : $index==0 }" v-if="isQueryAll">{{ singleClubData.clubName }}</div>
-                <div class="item" v-for="item in singleClubData.list" v-link="{ name : 'technicianDetail', query : { id : item.techId } }">
+                <div class='header' v-if="isQueryAll">{{ singleClubData.clubName }}</div>
+                <router-link class="item" v-for="item in singleClubData.list" :to="{ name : 'technicianDetail', query : { id : item.techId } }" tag="div">
                     <div>
                         <div :style="{ backgroundImage : 'url('+(item.avatarUrl || global.defaultHeader)+')' }"></div>
                         <div :class="item.status">{{ item.status == 'free' ? '闲' : '忙' }}</div>
@@ -27,7 +27,7 @@
                             <div>预约</div>
                         </div>
                     </div>
-                </div>
+                </router-link>
             </div>
             <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
             <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
@@ -56,7 +56,7 @@
                 isAddData : false//数据是否正在加载
             }
         },
-        ready: function(){
+        mounted: function(){
             var _this = this;
             _this.isQueryAll = _this.global.pageMode != "club" || _this.global.currPageQuery.all=="true";
             _this.queryRecord();
@@ -106,7 +106,7 @@
                 });
             },
             doHandlerListScroll : function(){
-                var _this = this,listEle = _this.$els.listEle;
+                var _this = this,listEle = _this.$refs.listEle;
                 if(!_this.isDataAddEnd && listEle.scrollTop+listEle.clientHeight*1.4>listEle.scrollHeight ){
                     _this.queryRecord();
                 }

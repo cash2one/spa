@@ -16,7 +16,7 @@
                 </ul>
             </div>
         </div>
-        <div class="comment-list" v-el:list-ele :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerCommentListScroll()">
+        <div class="comment-list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerCommentListScroll()">
             <div class="comment-item" v-for="item in comments">
                 <div>
                     <div :style="{ backgroundImage : 'url('+(item.avatarUrl || global.defaultHeader)+')' }"></div>
@@ -165,7 +165,7 @@
                 });
             },
             doHandlerCommentListScroll : function(){//列表的滚动加载
-                var _this = this, listEle = _this.$els.listEle;
+                var _this = this, listEle = _this.$refs.listEle;
                 if(!_this.isDataAddEnd && listEle.scrollTop+listEle.clientHeight*1.4>listEle.scrollHeight ){
                     _this.queryCommentData();
                 }

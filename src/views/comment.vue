@@ -11,7 +11,7 @@
                 <div>感谢您的评价!</div>
             </div>
         </div>
-        <div class="wrap top-info" v-link="{ name : 'technicianDetail' , query : { id : techId }}">
+        <router-link class="wrap top-info" :to="{ name : 'technicianDetail' , query : { id : techId }}" tag="div">
             <div class="tech-header" :style="{ backgroundImage : 'url('+techHeader+')' }"></div>
             <div class="tech-info">
                 <div>
@@ -24,21 +24,21 @@
                 <div>编号【<span>{{ techNo }}</span>】</div>
             </div>
             <div class="right-arrow"></div>
-        </div>
+        </router-link>
         <div class="comment-info wrap">
             <div class="title">服务评级</div>
             <div></div>
             <div class="item" v-for="item in commentItems">
                 <div>{{ item.label }}</div>
                 <div class="comment-stars">
-                    <div @click="doClickCommentStar($event,$index)"><div :style="{ width : item.value+'%' }"></div></div>
+                    <div @click="doClickCommentStar($event,item)"><div :style="{ width : item.value+'%' }"></div></div>
                 </div>
-                <div>{{ item.value | CommentFormatter item.type}}</div>
+                <div>{{ item.value | commentFormatter(item.type) }}</div>
             </div>
         </div>
         <div class="comment-impression wrap">
             <div class="title">印象点评<span>(最多3项)</span></div>
-            <div class="comment-labels"><div track-by="id" v-for="item in impressionList" @click="doClickImpressionItem(item,$index)" :class="{ active : item.selected }">{{ item.tag }}</div></div>
+            <div class="comment-labels"><div v-for="item in impressionList" :key="item.id" @click="doClickImpressionItem(item)" :class="{ active : item.selected }">{{ item.tag }}</div></div>
             <div class="comment-text" v-show="!(orderType == 1 && commentInputText.length == 0)">
                 <textarea maxlength="200" @focus="onTextareaFocus()" @blur="onTextareaBlur()" v-model="commentInputText" :readonly="orderType==1"></textarea>
                 <div>200字以内哦~</div>
@@ -60,7 +60,7 @@
             'attention' : Attention
         },
         filters : {
-            CommentFormatter : CommentFormatter
+            commentFormatter : CommentFormatter
         },
         data: function(){
             return {
@@ -171,12 +171,13 @@
             doClickPageBack : function(){
                 history.back();
             },
-            doClickCommentStar : function(event,index){ //点击服务评级
+            doClickCommentStar : function(event,item){ //点击服务评级
                 var _this = this;
                 if(_this.orderType != 0) return;
                 var v = Math.ceil((event.offsetX || event.layerX)/(8.611*16*_this.global.winScale*0.2)),
-                        currItem = _this.commentItems[index];
-                _this.commentItems.$set(index, { value : v*20, type : currItem.type, label : currItem.label });
+                        commentItems = _this.commentItems,
+                        itemIndex = commentItems.indexOf(item);
+                Vue.set(commentItems,itemIndex,{ value : v*20, type : item.type, label : item.label });
             },
             onTextareaFocus : function(){
                 var _this = this;
@@ -220,7 +221,7 @@
                                 _this.orderType = 1;
                                 _this.commentCount ++;
                                 if(global.userAgent.isWX){
-                                    _this.$router.go({ name : "techReward", query : { techId : _this.techId , commentId : res.respData || "" } });
+                                    _this.$router.push({ name : "techReward", query : { techId : _this.techId , commentId : res.respData || "" } });
                                 }
                             }
                             else if(res.statusCode == 412){
@@ -238,11 +239,12 @@
                     }
                 }
             },
-            doClickImpressionItem : function(impressionItem,index){
+            doClickImpressionItem : function(impressionItem){
                 var _this = this, k= 0, selectedList = _this.selectedImpression,impressionList = _this.impressionList;
                 if(_this.orderType != 0) return;
                 if(impressionItem.selected){//取消选中
-                    impressionList.$set(index,{ id : impressionItem.id, tag : impressionItem.tag, selected : false });
+                    var index = impressionList.indexOf(impressionItem);
+                    Vue.set(impressionList,index,{ id : impressionItem.id, tag : impressionItem.tag, selected : false });
                     for(k=0;k<selectedList.length;k++){
                         if(selectedList[k] == impressionItem.id){
                             selectedList.splice(k,1);

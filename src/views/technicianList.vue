@@ -28,11 +28,11 @@
                 <div :class="{ active : currSelectItemName != '全部项目' }">{{currSelectItemName=="全部项目" ? "项目筛选" : currSelectItemName }}</div></div>
         </div>
 
-        <div class="tech-list" v-el:list-ele :style="{ height : (global.winHeight-7.633*global.winScale*16)+'px' }" @scroll="doHandlerTechListScroll()">
-            <div class="item" v-link="{ name : 'technicianDetail', query : { id : tech.id } }" v-for="tech in techList" track-by="id">
+        <div class="tech-list" ref="listEle" :style="{ height : (global.winHeight-7.633*global.winScale*16)+'px' }" @scroll="doHandlerTechListScroll()">
+            <router-link class="item" :to="{ name : 'technicianDetail', query : { id : tech.id } }" v-for="tech in techList" :key="tech.id" tag="div">
                 <div>
                     <div :style="{ backgroundImage : 'url('+(tech.avatarUrl || global.defaultHeader)+')' }"></div>
-                    <div class="{{ tech['status'] }}">{{ tech['status']=='free' ? '闲' : '忙' }}</div>
+                    <div :class="tech['status']">{{ tech['status']=='free' ? '闲' : '忙' }}</div>
                 </div>
                 <div>
                     <div>
@@ -55,7 +55,7 @@
                         <div>预约</div>
                     </div>
                 </div>
-            </div>
+            </router-link>
             <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
             <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
             <div class="nullData" v-show="techList.length==0 && !isAddData"><div></div><div>暂无内容...</div></div>
@@ -121,11 +121,11 @@
                 storeDataList : [ 'techList', 'showSearchInput', 'currPage', 'stateActiveId', 'scoreActiveId', 'itemActiveId', 'searchTechName', 'selectedCategory', 'selectItemName', 'currSelectedCategory', 'currSelectItemName', 'currItemActiveId', 'showFinishLoadTip', 'isDataAddEnd', 'showSelectScore', 'showServiceItemSelectArea']
             };
         },
-        ready : function(){
+        mounted : function(){
             var _this = this,pageData = _this.global.pageData["technicianList"];
             if(pageData){
                 setTimeout(function(){
-                    _this.$els.listEle.scrollTop = pageData["scrollTop"];
+                    _this.$refs.listEle.scrollTop = pageData["scrollTop"];
                     //console.log("set scroll top："+ pageData["scrollTop"]+"---"+_this.techListEle.scrollTop);
                 },100)
             }
@@ -236,7 +236,7 @@
                 });
             },
             doHandlerTechListScroll : function(){//数据列表往下滑动加载的处理
-                var _this = this,listEle = _this.$els.listEle;
+                var _this = this,listEle = _this.$refs.listEle;
                 if(!_this.isDataAddEnd && listEle.scrollTop+listEle.clientHeight*1.4>listEle.scrollHeight ){
                     _this.queryTechList();
                 }
@@ -311,7 +311,7 @@
                 status = _this.storeDataList[k];
                 pageData[status] = _this[status];
             }
-            pageData["scrollTop"] = _this.$els.listEle.scrollTop;
+            pageData["scrollTop"] = _this.$refs.listEle.scrollTop;
         }
     }
 </script>

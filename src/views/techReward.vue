@@ -7,14 +7,14 @@
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>技师打赏</div>
         <div class="top-tip"><div></div></div>
         <div class="reward-list">
-            <div v-for="item in moneyList" class="money" @click="doSelectReward('money',$index)" :class="{ active : selectType=='money' && selectIndex==$index }">{{ item }}元</div>
-            <div v-for="item in giftList" class="gift" :class="{ active : selectType=='gift' && selectIndex==$index }" @click="doSelectReward('gift',$index)">
+            <div v-for="item in moneyList" class="money" @click="doSelectReward('money',item)" :class="{ active : selectType=='money' && selectVal==item }">{{ item }}元</div>
+            <div v-for="item in giftList" class="gift" :class="{ active : selectType=='gift' && selectVal==item }" @click="doSelectReward('gift',item)">
                 <div><img :src="item.iconUrl"/></div><div>{{ item.ratio }}积分</div>
             </div>
         </div>
         <div class="submit-button" :class="submitStatusCls" @click="doClickSubmitBtn()">{{ submitBtnText }}</div>
     </div>
-    <credit-tip v-ref:not-enough-tip :gift-value="currSelectGiftValue"></credit-tip>
+    <credit-tip ref="notEnoughTip" :gift-value="currSelectGiftValue"></credit-tip>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -37,7 +37,7 @@
                 submitStatusCls : "",
                 submitBtnText : "打赏",
                 selectType : "money",
-                selectIndex : 0,
+                selectVal : 1,
                 currSelectGiftValue : 0,
                 moneyList : [ 1 , 3 , 6 , 9 ],
                 giftList : [],
@@ -79,7 +79,7 @@
                                 Util.removeLocalStorage("tech-reward-param");
                             }
                             else if(res.statusCode == 935801){
-                                Util.localStorage("tech-reward-param",_this.selectIndex);
+                                Util.localStorage("tech-reward-param",_this.selectVal);
                                 Global.getOauthCode('','9358','tech_reward','userInfo');
                             }
                             else{
@@ -94,7 +94,7 @@
                 }
             }
         },
-        ready : function(){
+        mounted : function(){
             var _this = this;
             ////获取技师信息
             _this.$http.get(_this.getTechInfoUrl).then(function(res){
@@ -127,7 +127,7 @@
             ///////
             if(_this.paramData){
                 _this.selectType = "money";
-                _this.selectIndex = _this.paramData;
+                _this.selectVal = _this.paramData;
                 _this.doClickSubmitBtn();
             }
         },
@@ -135,10 +135,10 @@
             doClickPageBack : function(){
                 history.back();
             },
-            doSelectReward : function(type,index){
+            doSelectReward : function(type,val){
                 var _this = this;
                 _this.selectType = type;
-                _this.selectIndex = index;
+                _this.selectVal = val;
             },
             doClickSubmitBtn : function(){
                 var _this = this, global = _this.global;
@@ -147,7 +147,7 @@
                     return;
                 }
                 if(_this.selectType == "gift"){ //送积分礼物
-                    var selectGift = _this.giftList[_this.selectIndex];
+                    var selectGift = _this.selectVal;
                     _this.currSelectGiftValue = selectGift.ratio;
                     if(_this.currSelectGiftValue>_this.currIntegralAccount){
                         _this.$refs.notEnoughTip.$emit("change-visible",true);
@@ -178,7 +178,7 @@
                     _this.submitStatusCls = "processing";
                     _this.submitBtnText = "打赏中...";
                     _this.$http.post(_this.rewardUrl,{
-                        consumeMoney : _this.moneyList[_this.selectIndex],
+                        consumeMoney : _this.selectVal,
                         openId : global.openId,
                         clubId : _this.clubId,
                         consumeType : "user_reward",
@@ -200,7 +200,7 @@
                             }
                         }
                         else if(res.statusCode == 935801){
-                            Util.localStorage('tech-reward-param',_this.selectIndex);
+                            Util.localStorage('tech-reward-param',_this.selectVal);
                             Global.getOauthCode('','9358','tech-reward','userInfo');
                         }
                         else{

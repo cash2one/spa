@@ -1,1 +1,0 @@
-!function(){$.ajax({url:"service",success:function(t){for(var e="",i=0;i<t.length;i++)e+="<div style=\"background-image: url('"+t[i].imageUrl+'\')" hh="'+t[i].id+'"></div>';""==e?$("#content").Class("nullData"):$("#content").Html(e),$("#content>div").Click(function(t,e){$.page("serviceList&id="+e.getAttribute("hh"))}),$.pageSwitch()}})}();
