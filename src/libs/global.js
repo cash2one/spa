@@ -48,6 +48,7 @@ exports.Global = {
         defaultName : '匿名用户',                                                               //默认的名称
         defaultBannerImgUrl : 'images/home/banner_default.jpg',             //默认的banner图
         defaultServiceItemImgUrl : "images/home/serviceItem_default.jpg",//默认的服务项目图
+        defaultGiftImg : "images/chat/gift_default.png",                              //默认的积分礼物图片
         loadDataErrorTip : "数据请求失败！",
 
         clubId : null,                                                                               //当前会所ID
@@ -107,7 +108,10 @@ exports.Global = {
                 else{
                     ///////
                     IM.id = Util.md5(data.userId);
+                    IM.password = IM.id;
                     IM.userId = data.userId;
+                    IM.header = data.userHeader;
+                    IM.name = (data.userName == data.defaultName && data.userTel) ? data.defaultName + "(" + data.userTel.substr(0, 3) + "****" + data.userTel.slice(-4) + ")" : data.userName;
 
                     data.isLogin = true;
                     _this.updateUserNameAndHeader();

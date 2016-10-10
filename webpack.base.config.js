@@ -1,5 +1,5 @@
 /**
- *
+ *base config
  */
 
 var path = require('path');
@@ -42,6 +42,7 @@ module.exports = {
     },
     plugins: [],
     externals: {
-        "AMap": "window.AMap"
+        "AMap" : "window.AMap",
+        "Strophe" : "window.Strophe"
     }
 };

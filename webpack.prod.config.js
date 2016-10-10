@@ -1,5 +1,5 @@
 /**
- *
+ *prod config
  */
 
 var webpack = require('webpack');

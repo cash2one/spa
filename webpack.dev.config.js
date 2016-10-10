@@ -1,5 +1,5 @@
 /**
- * Created by aresn on 16/7/5.
+ * dev config
  */
 
 var webpack = require('webpack');

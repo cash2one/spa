@@ -7,6 +7,7 @@ import VueResource from 'vue-resource';
 import App from './app.vue';
 import Env from './config/env';
 import { Global } from './libs/global';
+import { IM } from './libs/im';
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
@@ -17,6 +18,7 @@ Global.init();
 var _global = Global.data;
 
 window["spa"] = _global;
+window["im"] = IM;
 
 //设置vue-resource的inteceptor
 Vue.http.interceptors.push(function(request,next){

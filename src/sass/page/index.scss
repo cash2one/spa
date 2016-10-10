@@ -371,22 +371,3 @@ div.rich-text{
     }
   }
 }
-
-/////弹窗样式
-div.pop-modal{
-  @include mask();
-  z-index:3;
-  @include transition(all 0.5s);
-  @include tOrigin(50% 100%);
-  @include scale(1,0);
-  opacity: 0;
-  &.active{
-    opacity: 1;
-    @include scale(1,1);
-  }
-  &>div.center-wrap{
-    position: absolute;
-    top:50%;
-    left:50%;
-  }
-}

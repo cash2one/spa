@@ -1,24 +1,38 @@
 import Vue from 'vue';
 import Util from "../libs/util";
+import { Global } from "../libs/global";
+import "../libs/websdk-1.1.2";
 
 /**
  * 即时通讯IM
  * */
+
 exports.IM = {
     id : "", //聊天ID
     password : '', //登录密码
-    appKey : "", //环信AppKey
+    appKey : "xiaomodo#spa"+( /spa.93wifi.com/.test(location.hostname) ? "" : "test" ), //环信AppKey
     userId : "", //用户id
-    sessionList : null, //会话列表
+    header : null, //用户头像
+    name : "", //聊天时的用户名称
+    conn : null, //与环信的连接
 
-    talker : { //当前聊天的对方信息
+    secondId : "",
+    secondConn : null,
+    reConnTimer : null, //重新连接的定时器
+
+    sessionList : null, //会话列表
+    global : null,
+
+    talker : { //当前聊天对方信息
         name : "",
         id : "",//环信ID
         userId : "",//小摩豆系统中的用户id
         userNo : "",//用户编号
+        userType : "tech", //技师或者管理者 tech、manager
         header : "", //用户头像
         avatar : "", //头像编号
-        clubId : "" //对方所在的clubID
+        clubId : "", //对方所在的clubID
+        msgList : [] //当前聊天页面的消息列表
     },
 
     expression : {
@@ -74,6 +88,72 @@ exports.IM = {
         var _this = this;
         return msg.replace(_this.decodeExpressionReg, function () {
             return _this.expression[arguments[0]] || arguments[0];
+        });
+    },
+
+    //创建环信连接
+    createConn : function(connIndex){
+        connIndex = connIndex || 0;
+        var _this = this,
+            conn = new WebIM.connection();
+        conn.listen({
+            onOpened : function(){
+                if(connIndex == 0 && _this.reConnTimer){
+                    clearTimeout(_this.reConnTimer);
+                }
+                conn.setPresence();
+                conn.heartBeat();
+                _this.getSessionList();//加载会话列表
+            },
+            onTextMessage : function(msg){
+                _this.doHandlerTextMessage(msg,conn);
+            },
+            onPictureMessage : function(msg){
+                _this.doHandlerPicMessage(msg,conn);
+            },
+            onError : function(e){
+
+            },
+            onClosed : function(){
+
+            }
+        });
+    },
+
+    //处理接受到的文本消息
+    doHandlerTextMessage : function(msg,conn){
+        if(msg.data.toLowerCase()=="debug"){
+            return console.dir(msg);
+        }
+        var _this = this, ext = msg.ext;
+        msg.time = ext.time - 0;
+        if(ext.msgType == "ordinaryCoupon" && ext.actId && ext.techCode){
+            if(!_this.userTel){//未绑定手机号
+                return _this.sendTextMessage({
+
+                });
+            }
+            else{
+
+            }
+        }
+    },
+
+    //处理接受到的图片消息
+    doHandlerPicMessage : function(msg,conn){
+
+    },
+
+    //发送文本消息
+    sendTextMessage : function(option){
+        var _this = this;
+        Object.assign(option,{
+            type : "chat",
+            ext : {
+                name : _this.name,
+                header : _this.header,
+                time : (+new Date())
+            }
         });
     }
 };
