@@ -141,7 +141,9 @@ var pageRouterList = [
 
 var pageRouterOption = [];          //构造router的map选项
 var pageName;
-function RouterOption(name,componentName){
+function RouterOption(path,name,componentName){
+    //console.log("name："+name+"--componentName："+componentName);
+    this.path = path;
     this.name = name;
     this.component = function(resolve){
         require(['./views/'+componentName+'.vue'], resolve);
@@ -149,21 +151,29 @@ function RouterOption(name,componentName){
 }
 for(var i=0;i<pageRouterList.length;i++){
     pageName = pageRouterList[i].substr(pageRouterList[i].lastIndexOf("/")+1);
-    pageRouterOption.push(new RouterOption(( /:club/.test(pageRouterList[i]) ? "" : "$") + pageName,pageName));
+    pageRouterOption.push(new RouterOption(pageRouterList[i],( /:club/.test(pageRouterList[i]) ? "" : "$") + pageName,pageName));
 }
 
+//console.dir(pageRouterOption);
 // 路由配置
+const Home = { template: '<div>This is Home</div>' }
+
 var router = new VueRouter({
     // 是否开启History模式的路由,默认开发环境开启,生产环境不开启。如果生产环境的服务端没有进行相关配置,请慎用
-    mode : 'hash',
     linkActiveClass : 'active',
-    routers : pageRouterOption
+    routers : [
+        { path: '/', name: 'home', component: Home }
+    ]
 });
+
+console.log("router obj：");
+console.dir(router);
 
 router.beforeEach(function (to,from,next) {
     //window.scrollTo(0, 0);
     _global.currPageParams = to.params;
     _global.currPageQuery = to.query;
+    console.log("from："+JSON.stringify(from));
     console.log("to："+JSON.stringify(to));
     var _AppMenu = document.querySelector("#menu-container");
     if(_AppMenu){
