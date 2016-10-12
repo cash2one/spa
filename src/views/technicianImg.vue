@@ -2,13 +2,15 @@
     @import '../styles/page/technicianImg.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page" id="technician-img-page" v-show="!$loadingRouteData" :style="{ height : global.winHeight+'px' }">
-        <swipe class="pic-swipe" :auto="maxAutoTime" :index="startIndex">
-            <swipe-item v-for="pic in pics">
-                <img :src="pic.bigImageUrl"/>
-            </swipe-item>
-        </swipe>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page" id="technician-img-page" v-show="!loading" :style="{ height : global.winHeight+'px' }">
+            <swipe class="pic-swipe" :auto="maxAutoTime" :index="startIndex">
+                <swipe-item v-for="pic in pics">
+                    <img :src="pic.bigImageUrl"/>
+                </swipe-item>
+            </swipe>
+        </div>
     </div>
 </template>
 <script>
@@ -24,6 +26,7 @@
         },
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 queryTechDetailUrl : "../api/v2/club/technician/"+Global.data.currPageQuery.id,
                 techId : "",
@@ -32,43 +35,38 @@
                 pics : [] //相册
             };
         },
-        route : {
-            data : function(transition){
-                var _this = this, pageParam = _this.global.currPageQuery;
-                if(pageParam.id == undefined){//链接上无技师id
-                    transition.abort();
-                    return;
-                }
-                _this.startIndex = parseInt((pageParam.index || 0));
-                return new Promise(function(resolve,reject){
-                    var pageData = _this.global.pageData;
-                    _this.techId = Global.data.currPageQuery.id;
-                    if(!pageData["technicianImg"]){
-                        pageData["technicianImg"] = {};
-                    }
-                    pageData = pageData["technicianImg"];
-                    if(pageData[_this.techId]){
-                        resolve({ pics : pageData[_this.techId] });
+        created : function(){
+            var _this = this, global = _this.global, pageParam = global.currPageQuery;
+            if(pageParam.id == undefined){//链接上无技师id
+                return _this.$router.back();
+            }
+            _this.startIndex = parseInt((pageParam.index || 0));
+            var pageData = global.pageData;
+            _this.techId = global.currPageQuery.id;
+            if(!pageData["technicianImg"]){
+                pageData["technicianImg"] = {};
+            }
+            pageData = pageData["technicianImg"];
+            if(pageData[_this.techId]){
+                _this.pics = pageData[_this.techId];
+            }
+            else{
+                _this.loading = true;
+                _this.$http.get(_this.queryTechDetailUrl).then(function(res){
+                    res = res.body;
+                    if(res && res.albums && res.albums.length>0){
+                        pageData[_this.techId] = res.albums;
+                        _this.pics = pageData[_this.techId];
                     }
                     else{
-                        _this.$http.get(_this.queryTechDetailUrl).then(function(res){
-                            res = res.body;
-                            if(res && res.albums && res.albums.length>0){
-                                pageData[_this.techId] = res.albums;
-                                resolve({ pics : pageData[_this.techId] });
-                            }
-                            else{
-                                Util.tipShow(_this.global.loadDataErrorTip);
-                                reject(false);
-                                transition.abort();
-                            }
-                        }, function(){
-                            Util.tipShow(_this.global.loadDataErrorTip);
-                            reject(false);
-                            transition.abort();
-                        });
+                        Util.tipShow(global.loadDataErrorTip);
+                        _this.$router.back();
                     }
-                })
+                    _this.loading = false;
+                }, function(){
+                    Util.tipShow(global.loadDataErrorTip);
+                    _this.$router.back();
+                });
             }
         },
         methods: {

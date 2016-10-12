@@ -2,34 +2,37 @@
     @import '../styles/page/serviceItem.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page-back-btn" @click="doClickPageBack()" v-show="!$loadingRouteData"></div>
-    <div class="confirm-btn" v-if="dataList.length>0"><a @click="doClickConfirmOrder()">确认预约</a></div>
-    <div class="page" id="service-item-page" :style="{ height : (global.winHeight-3.333*global.winScale*16)+'px' }" v-if="!$loadingRouteData">
-        <swipe class="profile-swipe" :show-indicators="false" :continuous="false" :auto="maxAutoTime" :index="swipeInitIndex" v-if="dataList.length>0">
-            <swipe-item v-for="item in dataList" :key="item.id">
-                <div class="service-item-top">
-                    <div class="img" :style="{ backgroundImage : 'url('+(item.imageUrl || global.defaultServiceItemImgUrl)+')' }"></div>
-                    <div>
-                        <div>{{item.name}}</div>
-                        <div v-show="item.price">
-                            <div></div>
-                            <div>{{item.price | itemPriceFormatter(item.duration,item.durationUnit)}}</div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page-back-btn" @click="doClickPageBack()" v-show="!loading"></div>
+        <div class="confirm-btn" v-if="dataList.length>0"><a @click="doClickConfirmOrder()">确认预约</a></div>
+        <div class="page" id="service-item-page" :style="{ height : (global.winHeight-3.333*global.winScale*16)+'px' }" v-if="!loading">
+            <swipe class="profile-swipe" :show-indicators="false" :continuous="false" :auto="maxAutoTime" :curr-index="swipeInitIndex" v-if="dataList.length>0">
+                <swipe-item v-for="item in dataList" :key="item.id">
+                    <div class="service-item-top">
+                        <div class="img" :style="{ backgroundImage : 'url('+(item.imageUrl || global.defaultServiceItemImgUrl)+')' }"></div>
+                        <div>
+                            <div>{{item.name}}</div>
+                            <div v-show="item.price">
+                                <div></div>
+                                <div>{{item.price | itemPriceFormatter(item.duration,item.durationUnit)}}</div>
+                            </div>
+                            <div v-show="item.pricePlus">加钟{{item.pricePlus | itemPriceFormatter(item.durationPlus,item.durationUnitPlus)}}</div>
                         </div>
-                        <div v-show="item.pricePlus">加钟{{item.pricePlus | itemPriceFormatter(item.durationPlus,item.durationUnitPlus)}}</div>
                     </div>
-                </div>
-                <div class="service-item-desc">
-                    <div><i></i>项目说明</div>
-                    <div v-html="item['description'] || ''"></div>
-                </div>
-            </swipe-item>
-        </swipe>
-        <div class="nullData" v-show="dataList.length==0"><div></div><div>暂无内容...</div></div>
+                    <div class="service-item-desc">
+                        <div><i></i>项目说明</div>
+                        <div v-html="item['description'] || ''"></div>
+                    </div>
+                </swipe-item>
+            </swipe>
+            <div class="nullData" v-show="dataList.length==0"><div></div><div>暂无内容...</div></div>
+        </div>
+        <tel-detail v-if="telephone.length>0" :telephone="telephone"></tel-detail>
     </div>
-    <tel-detail ref="telDetail" v-if="telephone.length>0" :telephone="telephone"></tel-detail>
 </template>
 <script>
+    import Vue from 'vue';
     import { Global } from '../libs/global';
     import Swipe from '../components/swipe';
     import SwipeItem from '../components/swipe-item';
@@ -41,7 +44,10 @@
         data: function(){
             return {
                 global : Global.data,
+                eventHub : Global.eventHub,
+                loading : false,
                 queryDataUrl : "../api/v2/club/"+Global.data.clubId+"/service/item",
+                //queryDataUrl : "../json/serviceItem.json",
                 isQueryAll : true,
                 currServiceItemId : "",
                 dataList : [],
@@ -60,52 +66,45 @@
             'swipe-item' : SwipeItem,
             'tel-detail' : TelDetail
         },
-        route: {
-            data : function(transition){
-                var _this = this, global = _this.global,pageParam = global.currPageQuery;
-                _this.activeItemId = _this.currServiceItemId = pageParam.id;
-                _this.isQueryAll = pageParam.top != 1;
-                if(!_this.currServiceItemId){
-                    transition.abort();
-                }
-                else if(!_this.isQueryAll && _this.dataList.length==0){
-                    return new Promise(function(resolve,reject){
-                        _this.$http.get(_this.queryDataUrl, { params : { top : 1 }}).then(function(res){
-                            res = res.body;
-                            if(res.statusCode == 200){
-                                res = res.respData;
-                                for(var i=0;i<res.serviceItems.length;i++){
-                                    if(res.serviceItems[i]["id"] == _this.currServiceItemId ){
-                                        _this.swipeIndex = _this.swipeInitIndex = i;
-                                        break;
-                                    }
-                                }
-                                if(res.telephone){
-                                    _this.telephone = res.telephone.split(",");
-                                }
-                                resolve({
-                                    dataList : res.serviceItems,
-                                    appointment : res.appointment == "Y",
-                                    payAppointment : res.payAppointment == "Y",
-                                    phoneAppointment : res.phoneAppointment == "Y"
-                                });
-                            }
-                            else{
-                                Util.tipShow(global.loadDataErrorTip);
-                                reject(false);
-                                transition.abort();
-                            }
-                        },function(){
-                            Util.tipShow(global.loadDataErrorTip);
-                            reject(false);
-                            transition.abort();
-                        });
-                    });
-                }
-                else{
-                    transition.next();
-                }
+        created : function(){
+            var _this = this, global = _this.global,pageParam = global.currPageQuery;
+            _this.activeItemId = _this.currServiceItemId = pageParam.id;
+            _this.isQueryAll = pageParam.top != 1;
+            if(!_this.currServiceItemId){
+                return _this.$router.back();
             }
+            else if(!_this.isQueryAll && _this.dataList.length==0){
+                _this.loading = true;
+                _this.$http.get(_this.queryDataUrl, { params : { top : 1 }}).then(function(res){
+                    res = res.body;
+                    if(res.statusCode == 200){
+                        res = res.respData;
+                        for(var i=0;i<res.serviceItems.length;i++){
+                            if(res.serviceItems[i]["id"] == _this.currServiceItemId ){
+                                _this.swipeIndex = _this.swipeInitIndex = i;
+                                break;
+                            }
+                        }
+                        if(res.telephone){
+                            _this.telephone = res.telephone.split(",");
+                        }
+
+                        _this.dataList = res.serviceItems;
+                        _this.appointment = res.appointment == "Y";
+                        _this.payAppointment = res.payAppointment == "Y";
+                        _this.phoneAppointment = res.phoneAppointment == "Y";
+                    }
+                    else{
+                        Util.tipShow(global.loadDataErrorTip);
+                        return _this.$router.back();
+                    }
+                    _this.loading = false;
+                },function(){
+                    Util.tipShow(global.loadDataErrorTip);
+                    return _this.$router.back();
+                });
+            }
+            _this.eventHub.$on("swipePageEnd",_this.doSwipePageEnd);
         },
         filters: {
             itemPriceFormatter : ItemPriceFormatter
@@ -114,26 +113,6 @@
             var _this = this;
             if(_this.isQueryAll){
                 _this.queryItemData(_this.currServiceItemId,0);
-            }
-        },
-        events : {
-            "swipePageEnd" : function(option){
-                var   _this = this,
-                        dataList = _this.dataList;
-                _this.activeItemId = dataList[option.currIndex]["id"];
-                var queryParam = { id : _this.activeItemId };
-
-                if(_this.isQueryAll){
-                    var  direction = (option.currIndex-_this.swipeIndex>0 ? 1 : -1);
-                    var swipeIndex = _this.swipeIndex = option.currIndex;
-                    if((direction==1 && swipeIndex<dataList.length-1 && !dataList[swipeIndex+1]) || (direction==-1 && swipeIndex>0 && !dataList[swipeIndex-1])){
-                        _this.queryItemData(dataList[swipeIndex]["id"],direction);
-                    }
-                }
-                else{
-                    queryParam.top = 1;
-                }
-                _this.$router.replace({ name : "serviceItem" , query : queryParam });
             }
         },
         methods: {
@@ -151,7 +130,7 @@
                         if(direction == 0){////初始加载数据
                             var tempArr = [];
                             for(i=0;i<parseInt(res.pageCount);i++){
-                                tempArr.push(null);
+                                tempArr.push({});
                             }
                             _this.swipeIndex = _this.swipeInitIndex = data.itemIndex;
                             _this.dataList = tempArr;
@@ -176,9 +155,9 @@
                         }
                         tempIndex = itemIndex - tempIndex;
                         for(i=0; i<listData.length; i++){
-                            if(!_this.dataList[i+tempIndex]){
+                            if(!_this.dataList[i+tempIndex].id){
                                 //console.log("填充位置:"+(i+tempIndex));
-                                _this.dataList.$set(i+tempIndex,listData[i]);
+                                Vue.set(_this.dataList,i+tempIndex,listData[i]);
                             }
                         }
                     }
@@ -194,7 +173,7 @@
                         Util.tipShow("暂无预约电话！");
                     }
                     else{
-                        _this.$refs.telDetail.$emit("change-visible",{ ope : "show" });
+                        _this.eventHub.$emit("change-tel-detail",true);
                     }
                 }
                 else if(_this.payAppointment && !global.userAgent.isWX){
@@ -203,7 +182,28 @@
                 else{//跳转到预约
                     _this.$router.push({ name : "confirmOrder", query : { itemId : _this.activeItemId }});
                 }
+            },
+            doSwipePageEnd : function(option){
+                var   _this = this, dataList = _this.dataList;
+                _this.activeItemId = dataList[option.currIndex]["id"];
+                var queryParam = { id : _this.activeItemId };
+
+                if(_this.isQueryAll){
+                    var  direction = (option.currIndex-_this.swipeIndex>0 ? 1 : -1);
+                    var swipeIndex = _this.swipeIndex = option.currIndex;
+                    if((direction==1 && swipeIndex<dataList.length-1 && !dataList[swipeIndex+1]) || (direction==-1 && swipeIndex>0 && !dataList[swipeIndex-1])){
+                        _this.queryItemData(dataList[swipeIndex]["id"],direction);
+                    }
+                }
+                else{
+                    queryParam.top = 1;
+                }
+                //_this.$router.replace({ name : "serviceItem" , query : queryParam });
             }
+        },
+        beforeDestroy : function(){
+            var _this = this;
+            _this.eventHub.$off("swipePageEnd",_this.doSwipePageEnd);
         }
     }
 </script>

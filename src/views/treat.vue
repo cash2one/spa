@@ -2,24 +2,26 @@
     @import '../styles/page/treat.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page" id="treat-page" v-show="!$loadingRouteData" :style="{ height : global.winHeight+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>我要请客</div>
-        <div class="treat-area">
-            <div>
-                <div>授权金额<span>(可用金额：{{accountMoney}})</span></div>
-                <div><input type="number" v-model="money" pattern="[0-9]*" @input="doInputOfMoney()"/>元</div>
-                <div>注：朋友最多可用金额，授权完成后，将冻结授权金额。朋友使用后或者取消授权后将取消解冻。</div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page" id="treat-page" v-show="!loading" :style="{ height : global.winHeight+'px' }">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>我要请客</div>
+            <div class="treat-area">
+                <div>
+                    <div>授权金额<span>(可用金额：{{accountMoney}})</span></div>
+                    <div><input type="number" v-model="money" pattern="[0-9]*" @input="doInputOfMoney()"/>元</div>
+                    <div>注：朋友最多可用金额，授权完成后，将冻结授权金额。朋友使用后或者取消授权后将取消解冻。</div>
+                </div>
+                <div>
+                    <div>朋友手机号码</div>
+                    <div><input type="tel" v-model="tel" maxlength="11" v-tel-input="isTelValid"></div>
+                    <div>注：我们将发送授权码给您的朋友。</div>
+                </div>
             </div>
-            <div>
-                <div>朋友手机号码</div>
-                <div><input type="tel" v-model="tel" maxlength="11" v-tel-input="isTelValid"></div>
-                <div>注：我们将发送授权码给您的朋友。</div>
-            </div>
+            <div class="check" :class="{ active : canVisible }" @click="canVisible = !canVisible">朋友可以看见授权金额。</div>
+            <div class="btn" :class="{ active : isTelValid && isMoneyValid, processing : isProcessing }" @click="doClickConfirmBtn()">{{confirmBtnText}}</div>
+            <div class="footer-area"><router-link :to="{ name : 'treatExplain' }">请客说明</router-link><router-link :to="{ name : 'treatRecords' , query : { clubId : clubId } }">请客记录</router-link></div>
         </div>
-        <div class="check" :class="{ active : canVisible }" @click="canVisible = !canVisible">朋友可以看见授权金额。</div>
-        <div class="btn" :class="{ active : isTelValid && isMoneyValid, processing : isProcessing }" @click="doClickConfirmBtn()">{{confirmBtnText}}</div>
-        <div class="footer-area"><router-link :to="{ name : 'treatExplain' }">请客说明</router-link><router-link :to="{ name : 'treatRecords' , query : { clubId : clubId } }">请客记录</router-link></div>
     </div>
 </template>
 <script>
@@ -33,6 +35,7 @@
         },
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 queryDataUrl : "../api/v2/finacial/account/",
                 payAuthUrl : "../api/v2/finacial/account/payforother/auth",
@@ -49,30 +52,28 @@
                 oldMoney : ''
             }
         },
-        route : {
-            data : function(transition){
-                var   _this = this, global = _this.global, pageParams = global.currPageQuery;
-                _this.accountId = pageParams.accountId;
-                if(!_this.accountId){
-                    transition.abort();
-                }
-                else{
-                    _this.queryDataUrl += _this.accountId;
-                    return new Promise(function(resolve,reject){
-                        _this.$http.get(_this.queryDataUrl).then(function(res){
-                            res = res.body;
-                            if(res.statusCode == 200){
-                                res = res.respData;
-                                resolve({ clubId : res.clubId, accountMoney : (res.amount/100).toFixed(2) });
-                            }
-                            else{
-                                Util.tipShow(global.loadDataErrorTip);
-                                reject(false);
-                                transition.abort();
-                            }
-                        });
-                    });
-                }
+        created : function(){
+            var   _this = this, global = _this.global, pageParams = global.currPageQuery;
+            _this.accountId = pageParams.accountId;
+            if(!_this.accountId){
+                return _this.$router.back();
+            }
+            else{
+                _this.queryDataUrl += _this.accountId;
+                _this.loading = true;
+                _this.$http.get(_this.queryDataUrl).then(function(res){
+                    res = res.body;
+                    if(res.statusCode == 200){
+                        res = res.respData;
+                        _this.clubId = res.clubId;
+                        _this.accountMoney = (res.amount/100).toFixed(2);
+                    }
+                    else{
+                        Util.tipShow(global.loadDataErrorTip);
+                        return _this.$router.back();
+                    }
+                    _this.loading = false;
+                });
             }
         },
         methods: {

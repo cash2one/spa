@@ -2,36 +2,38 @@
     @import '../styles/page/promotionsActivity.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page-back-btn" @click="doClickPageBack()" v-show="!$loadingRouteData"></div>
-    <div class="page" id="promotions-activity-page" v-show="!$loadingRouteData">
-        <div class="act-detail">
-            <div class="act-bg" :style="{ backgroundImage : 'url('+actDetail.actLogoUrl+')' }"><div></div></div>
-            <div class="act-content">
-                <div class="act-title">
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page-back-btn" @click="doClickPageBack()" v-show="!loading"></div>
+        <div class="page" id="promotions-activity-page" v-show="!loading">
+            <div class="act-detail">
+                <div class="act-bg" :style="{ backgroundImage : 'url('+(actDetail.actLogoUrl || global.defaultBannerImgUrl)+')' }"><div></div></div>
+                <div class="act-content">
+                    <div class="act-title">
+                        <div></div>
+                        <span>{{actDetail.actTitle}}</span>
+                        <router-link :to="{ name : 'technicianList' }">马上预约</router-link>
+                    </div>
+                    <div class="act-item">
+                        <i></i><div>{{actDetail.startDate | dateToString(actDetail.endDate,'—')}}</div>
+                    </div>
+                    <div class="act-item">
+                        <i></i><div>活动规则</div>
+                    </div>
+                    <div class="act-desc" v-html="actDetail.actContent"></div>
+                </div>
+            </div>
+            <div class="other-act" v-if="otherActs.length>1">
+                <div class="title">
                     <div></div>
-                    <span>{{actDetail.actTitle}}</span>
-                    <router-link :to="{ name : 'technicianList' }">马上预约</router-link>
+                    <div>其他优惠</div>
                 </div>
-                <div class="act-item">
-                    <i></i><div>{{actDetail.startDate | dateToString(actDetail.endDate,'—')}}</div>
-                </div>
-                <div class="act-item">
-                    <i></i><div>活动规则</div>
-                </div>
-                <div class="act-desc" v-html="actDetail.actContent"></div>
+                <router-link v-if='act.actId !=actDetail.actId ' v-for="act in otherActs" :to="{name :'promotionsActivity' , query : { id : act.actId }}">
+                    <div :style="{ backgroundImage : 'url('+act.actLogoUrl+')' }"></div>
+                    <div><i></i>{{act.actTitle}}</div>
+                    <div>活动时间：{{act.startDate | dateToString(act.endDate,'—')}}</div>
+                </router-link>
             </div>
-        </div>
-        <div class="other-act" v-if="otherActs.length>1">
-            <div class="title">
-                <div></div>
-                <div>其他优惠</div>
-            </div>
-            <router-link v-if='act.actId !=actDetail.actId ' v-for="act in otherActs" :to="{name :'promotionsActivity' , query : { id : act.actId }}">
-                <div :style="{ backgroundImage : 'url('+act.actLogoUrl+')' }"></div>
-                <div><i></i>{{act.actTitle}}</div>
-                <div>活动时间：{{act.startDate | dateToString(act.endDate,'—')}}</div>
-            </router-link>
         </div>
     </div>
 </template>
@@ -43,11 +45,12 @@
     module.exports = {
         data: function(){
             return {
-                getActDetailDataUrl : "../api/v2/club/"+Global.data.clubId+"/"+Global.data.currPageQuery.id+"/actdetail",
+                loading : false,
+                getDataUrl : "../api/v2/club/",
                 global : Global.data,
                 actDetail : {
                     actId : "",
-                    actLogoUrl :  Global.data.defaultBannerImgUrl,
+                    actLogoUrl : null,
                     actTitle : "",
                     startDate : "",
                     endDate : "",
@@ -56,28 +59,28 @@
                 otherActs : []
             };
         },
-        route: {
-          data : function(transition){
-              var _this = this;
-              return new Promise(function(resolve,reject){
-                  _this.$http.get(_this.getActDetailDataUrl).then(function(res){
-                      res = res.body;
-                      if(res.statusCode == 200){
-                          res = res.respData;
-                          resolve({ actDetail : res.act, otherActs : res.acts });
-                      }
-                      else{
-                          Util.tipShow(_this.global.loadDataErrorTip);
-                          reject(false);
-                          transition.abort();
-                      }
-                  },function(){
-                      Util.tipShow(_this.global.loadDataErrorTip);
-                      reject(false);
-                      transition.abort();
-                  })
-              })
-          }
+        created: function(){
+            var _this = this, global = _this.global, query = global.currPageQuery;
+            if(!query.id){
+                Util.tipShow(global.visitPageErrorTip);
+                return _this.$router.back();
+            }
+            _this.getDataUrl += global.clubId+"/"+query.id+"/actdetail";
+            _this.$http.get(_this.getDataUrl).then(function(res){
+                res = res.body;
+                if(res.statusCode == 200){
+                    res = res.respData;
+                    _this.actDetail = res.act;
+                    _this.otherActs = res.acts;
+                }
+                else{
+                    Util.tipShow(global.loadDataErrorTip);
+                    _this.$router.back();
+                }
+            },function(){
+                Util.tipShow(global.loadDataErrorTip);
+                _this.$router.back();
+            })
         },
         filters: {
             dateToString : DateToString

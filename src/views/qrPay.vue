@@ -2,26 +2,28 @@
     @import '../styles/page/qrPay.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page" id="qrpay-page" v-show="!$loadingRouteData" :style="{ height : global.winHeight+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>支付</div>
-        <div class="club-info">
-            <div>
-                <div :style="{ backgroundImage : 'url('+(logoImgUrl || global.defaultClubLogo )+')' }"></div>
-                <p>{{ clubName }}</p>
-            </div>
-        </div>
-        <div class="money-info">
-            <div>消费金额</div>
-            <div>
-                <span>￥</span>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page" id="qrpay-page" v-show="!loading" :style="{ height : global.winHeight+'px' }">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>支付</div>
+            <div class="club-info">
                 <div>
-                    <input type="number" pattern="[0-9]*" v-model="payMoney" @focus="onFocusOfInput()" @blur="onBlurOfInput()" @input="onInputOfPayMoney()"/>
-                    <span v-show="showInputTip">请询问服务员后输入</span>
-                    <i @click="doClickClearBtn()"></i></div>
+                    <div :style="{ backgroundImage : 'url('+(logoImgUrl || global.defaultClubLogo )+')' }"></div>
+                    <p>{{ clubName }}</p>
+                </div>
             </div>
+            <div class="money-info">
+                <div>消费金额</div>
+                <div>
+                    <span>￥</span>
+                    <div>
+                        <input type="number" pattern="[0-9]*" v-model="payMoney" @focus="onFocusOfInput()" @blur="onBlurOfInput()" @input="onInputOfPayMoney()"/>
+                        <span v-show="showInputTip">请询问服务员后输入</span>
+                        <i @click="doClickClearBtn()"></i></div>
+                </div>
+            </div>
+            <div class="pay-btn" :class="payBtnStatusCls" @click="doClickPayBtn()">{{ payBtnText }}</div>
         </div>
-        <div class="pay-btn" :class="payBtnStatusCls" @click="doClickPayBtn()">{{ payBtnText }}</div>
     </div>
 </template>
 <script>
@@ -31,6 +33,7 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 getOpenIdUrl : "../api/v2/wx/oauth2/openid",
                 getClubNameUrl : "../api/v2/club/",
@@ -50,55 +53,52 @@
                 payRequestObj : null
             }
         },
-        route : {
-            data : function(transition){
-                var   _this = this, global = _this.global, pageParams = global.currPageQuery;
-                _this.clubId = pageParams.clubId;
-                if(!_this.clubId && global.pageMode == "club"){
-                    _this.clubId = global.clubId;
+        created : function(){
+            var   _this = this, global = _this.global, pageParams = global.currPageQuery;
+            _this.clubId = pageParams.clubId;
+            if(!_this.clubId && global.pageMode == "club"){
+                _this.clubId = global.clubId;
+            }
+            if(!_this.clubId){
+                Util.tipShow(global.visitPageErrorTip);
+                _this.$router.back();
+            }
+            else{
+                _this.getClubNameUrl += _this.clubId +"/clubName";
+                _this.payAuthCode = pageParams.payAuthCode || global.authCode;
+                var param = Util.localStorage("con-qrpay-param");
+                if(param){
+                    _this.paramData = JSON.parse(param);
                 }
-                if(!_this.clubId){
-                    Util.tipShow("页面访问参数错误！");
-                    transition.abort();
-                }
-                else{
-                    _this.getClubNameUrl += _this.clubId +"/clubName";
-                    _this.payAuthCode = pageParams.payAuthCode || global.authCode;
-                    var param = Util.localStorage("con-qrpay-param");
-                    if(param){
-                        _this.paramData = JSON.parse(param);
-                    }
 
-                    if(global.userAgent.isWX){
-                        if(!_this.openId || _this.openId.length < 10){
-                            if(((+new Date())-(global.currPageQuery["_t"] || 0) > 2400) || !_this.payAuthCode){
-                                Global.getOauthCode('','9358','confirm-qrpay','base');
-                            }
-                            else{
-                                _this.$http.get(_this.getOpenIdUrl,{ params : {
-                                    code : _this.payAuthCode,
-                                    scope : 'snsapi_base',
-                                    wxmp : '9358',
-                                    openId : '',
-                                    webSessionId : ''
-                                }}).then(function(res){
-                                    res = res.body;
-                                    if(res.statusCode == 200){
-                                        _this.openId = res.respData.openid;
-                                        Util.localStorage("_qrpay_user_open_id",_this.openId);
-                                    }
-                                    else if(res.statusCode == 40029){
-                                        Util.getOauthCode('','9358','confirm-qrpay','base');
-                                    }
-                                    else{
-                                        Util.tipShow(res.msg || "未能获取openId！");
-                                        transition.abort();
-                                    }
-                                });
-                            }
+                if(global.userAgent.isWX){
+                    if(!_this.openId || _this.openId.length < 10){
+                        if(((+new Date())-(global.currPageQuery["_t"] || 0) > 2400) || !_this.payAuthCode){
+                            Global.getOauthCode('','9358','confirm-qrpay','base');
+                        }
+                        else{
+                            _this.$http.get(_this.getOpenIdUrl,{ params : {
+                                code : _this.payAuthCode,
+                                scope : 'snsapi_base',
+                                wxmp : '9358',
+                                openId : '',
+                                webSessionId : ''
+                            }}).then(function(res){
+                                res = res.body;
+                                if(res.statusCode == 200){
+                                    _this.openId = res.respData.openid;
+                                    Util.localStorage("_qrpay_user_open_id",_this.openId);
+                                }
+                                else if(res.statusCode == 40029){
+                                    Util.getOauthCode('','9358','confirm-qrpay','base');
+                                }
+                                else{
+                                    Util.tipShow(res.msg || "未能获取openId！");
+                                    _this.$router.back();
+                                }
+                            });
                         }
                     }
-                    transition.next();
                 }
             }
         },

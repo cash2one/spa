@@ -2,9 +2,11 @@
     @import '../styles/page/techReward.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page" id="tech-reward-page" v-show="!$loadingRouteData">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>技师打赏</div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page" id="tech-reward-page" v-show="!loading">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>技师打赏</div>
+        </div>
     </div>
 </template>
 <script>
@@ -14,14 +16,12 @@
     module.exports = {
         data: function(){
             return {
-                global : Global.data
+                global : Global.data,
+                loading : false
             }
         },
-        route : {
-            data : function(transition){
-                var   _this = this, global = _this.global;
-                transition.next();
-            }
+        created : function(){
+            var   _this = this, global = _this.global;
         },
         methods: {
             doClickPageBack : function(){

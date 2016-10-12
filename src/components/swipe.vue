@@ -8,19 +8,25 @@
             <slot></slot>
         </div>
         <div class="swipe-indicators" v-show="showIndicators">
-            <div class="swipe-indicator" v-for="page in pages" :class="{ active: $index === index }"></div>
+            <div class="swipe-indicator" v-for="page in pages" :class="{ active: page.index === index }"></div>
         </div>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
     import { once, addClass, removeClass } from 'wind-dom';
+    import { Global } from '../libs/global';
 
     export default {
         name: 'mt-swipe',
 
         created() {
-            this.dragState = {};
+            var _this = this;
+            _this.dragState = {};
+
+            ///////on event
+            _this.eventHub.$on("swipeItemCreated",_this.doHandleSwipeItemCreated);
+            _this.eventHub.$on("swipeItemDestroyed",_this.doHandleSwipeItemDestroyed);
         },
 
         data() {
@@ -29,14 +35,19 @@
                 dragging: false,
                 userScrolling: false,
                 animating: false,
-                index: 0,
                 pages: [],
                 timer: null,
                 reInitTimer: null,
-                noDrag: false
+                noDrag: false,
+                index : 0,
+                eventHub : Global.eventHub
             };
         },
-
+        watch : {
+            currIndex : function(val){
+                this.index = val;
+            }
+        },
         props: {
             speed: {
                 type: Number,
@@ -53,7 +64,7 @@
                 default: true
             },
 
-            index: {
+            currIndex: { /////从父组件获取的currIndex
               type: Number,
                 default: 0
             },
@@ -74,27 +85,21 @@
             }
         },
 
-        events: {
-            swipeItemCreated() {
+        methods: {
+            doHandleSwipeItemCreated : function(){
                 if (!this.ready) return;
 
                 clearTimeout(this.reInitTimer);
-                this.reInitTimer = setTimeout(() => {
-							this.reInitPages();
-            	}, 100);
+                this.reInitTimer = setTimeout(() => {this.reInitPages() }, 100);
             },
 
-            swipeItemDestroyed(){
+            doHandleSwipeItemDestroyed : function(){
                 if (!this.ready) return;
 
                 clearTimeout(this.reInitTimer);
-                this.reInitTimer = setTimeout(() => {
-                            this.reInitPages();
-            	}, 100);
-            }
-        },
+                this.reInitTimer = setTimeout(() => { this.reInitPages() }, 100);
+            },
 
-        methods: {
             translate(element, offset, speed, callback) {
                 if (speed) {
                     this.animating = true;
@@ -131,11 +136,13 @@
                 //this.index = 0;
 
                 children.forEach(function(child, index) {
-                    pages.push(child.$el);
-                    removeClass(child.$el, 'active');
+                    pages.push({ el : child.$el, index : index });
 
                     if (index === _index) {
                         addClass(child.$el, 'active');
+                    }
+                    else{
+                        removeClass(child.$el, 'active');
                     }
                 });
 
@@ -154,15 +161,15 @@
 
                 if (!options) {
                     pageWidth = this.$el.clientWidth;
-                    currentPage = pages[index];
-                    prevPage = pages[index - 1];
-                    nextPage = pages[index + 1];
+                    currentPage = pages[index] ? pages[index].el : null;
+                    prevPage = pages[index - 1] ? pages[index - 1].el : null;
+                    nextPage = pages[index + 1] ? pages[index + 1].el : null;
                     if (this.continuous && pages.length > 1) {
                         if (!prevPage) {
-                            prevPage = pages[pages.length - 1];
+                            prevPage = pages[pages.length - 1] ? pages[pages.length - 1].el : null;
                         }
                         if (!nextPage) {
-                            nextPage = pages[0];
+                            nextPage = pages[0] ? pages[0].el : null;
                         }
                     }
                     if (prevPage) {
@@ -182,7 +189,6 @@
                 }
 
                 var newIndex;
-
                 var oldPage = this.$children[index].$el;
 
                 if (towards === 'prev') {
@@ -219,7 +225,7 @@
                     }
 
 					////////////////////////////////dispatch event
-					this.$dispatch('swipePageEnd', { 'currIndex' : this.index });
+                    this.eventHub.$emit("swipePageEnd",{ 'currIndex' : this.index });
                 };
 
                 setTimeout(() => {
@@ -399,6 +405,12 @@
                 clearTimeout(this.reInitTimer);
                 this.reInitTimer = null;
             }
+        },
+
+        beforeDestroy : function(){
+            var _this = this;
+            _this.eventHub.$off("swipeItemCreated",_this.doHandleSwipeItemCreated);
+            _this.eventHub.$off("swipeItemDestroyed",_this.doHandleSwipeItemDestroyed);
         },
 
         mounted() {

@@ -2,17 +2,19 @@
     @import '../styles/page/tradeRecords.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page" id="trade-records-page" v-show="!$loadingRouteData">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>交易记录</div>
-        <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
-            <div class="list-item" v-for="item in dataList">
-                <div>{{ tradeType[item.bizType] }}<span :class="{ recharge : item.income }">{{ item.income ? '+' : '-' }}{{item.amount}}元</span></div>
-                <div>{{ item.createDatetime }}</div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page" id="trade-records-page" v-show="!loading">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>交易记录</div>
+            <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
+                <div class="list-item" v-for="item in dataList">
+                    <div>{{ tradeType[item.bizType] }}<span :class="{ recharge : item.income }">{{ item.income ? '+' : '-' }}{{item.amount}}元</span></div>
+                    <div>{{ item.createDatetime }}</div>
+                </div>
+                <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
+                <div class="finish-load-tip" :class="{ none : !showFinishLoadTip || dataList.length==0 }"><div>已经加载全部数据</div></div>
+                <div class="nullData" v-show="dataList.length==0 && !isAddData"><div></div><div>暂无内容...</div></div>
             </div>
-            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
-            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip || dataList.length==0 }"><div>已经加载全部数据</div></div>
-            <div class="nullData" v-show="dataList.length==0 && !isAddData"><div></div><div>暂无内容...</div></div>
         </div>
     </div>
 </template>
@@ -23,6 +25,7 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 getRecordsUrl : "../api/v2/finacial/account/trades/",
                 dataList : [],
@@ -41,17 +44,14 @@
                 isAddData : false//数据是否正在加载
             }
         },
-        route : {
-            data : function(transition){
-                var   _this = this, global = _this.global, pageParams = global.currPageQuery;
-                _this.accountId = pageParams.accountId;
-                if(!_this.accountId){
-                    transition.abort();
-                }
-                else{
-                    _this.getRecordsUrl += _this.accountId;
-                    transition.next();
-                }
+        created : function(){
+            var   _this = this, global = _this.global, pageParams = global.currPageQuery;
+            _this.accountId = pageParams.accountId;
+            if(!_this.accountId){
+                _this.$router.back();
+            }
+            else{
+                _this.getRecordsUrl += _this.accountId;
             }
         },
         mounted : function(){

@@ -2,23 +2,25 @@
     @import '../styles/page/treatRecords.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page" id="treat-records-page" v-show="!$loadingRouteData">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>请客记录</div>
-        <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
-            <router-link class="list-item" v-for="item in dataList" :to="{ name : 'treatDetail' , query : { detailId : item.id }}" tag="div">
-                <div>
-                    <div>{{ item.createDateStr }}</div>
-                    <div :class="statusObj[item.status].value">{{ statusObj[item.status].name }}</div>
-                </div>
-                <div>
-                    <div>授权金额<span>{{ item.amount }}</span></div>
-                    <div>授权手机<span>{{ item.telStr }}</span></div>
-                </div>
-            </router-link>
-            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
-            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip || dataList.length==0 }"><div>已经加载全部数据</div></div>
-            <div class="nullData" v-show="dataList.length==0 && !isAddData"><div></div><div>暂无内容...</div></div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page" id="treat-records-page" v-show="!loading">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>请客记录</div>
+            <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
+                <router-link class="list-item" v-for="item in dataList" :to="{ name : 'treatDetail' , query : { detailId : item.id }}" tag="div">
+                    <div>
+                        <div>{{ item.createDateStr }}</div>
+                        <div :class="statusObj[item.status].value">{{ statusObj[item.status].name }}</div>
+                    </div>
+                    <div>
+                        <div>授权金额<span>{{ item.amount }}</span></div>
+                        <div>授权手机<span>{{ item.telStr }}</span></div>
+                    </div>
+                </router-link>
+                <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
+                <div class="finish-load-tip" :class="{ none : !showFinishLoadTip || dataList.length==0 }"><div>已经加载全部数据</div></div>
+                <div class="nullData" v-show="dataList.length==0 && !isAddData"><div></div><div>暂无内容...</div></div>
+            </div>
         </div>
     </div>
 </template>
@@ -29,6 +31,7 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 getRecordsUrl : "../api/v2/finacial/account/payforother/list",
                 dataList : [],
@@ -47,25 +50,19 @@
                 storeDataList : ['dataList', 'currPage', 'showFinishLoadTip', 'isDataAddEnd', 'showFinishLoadTip', 'clubId']
             }
         },
-        route : {
-            data : function(transition){
-                var   _this = this,
-                        global = _this.global,
-                        pageParams = global.currPageQuery,
-                        pageData = global.pageData["treatRecords"];
-                _this.clubId = pageParams.clubId || global.clubId;
-                if(pageData && _this.clubId == pageData.clubId){
-                    return new Promise(function(resolve){ //从数据缓存中加载数据
-                        var resolveDataObj = {};
-                        for(var key in pageData){
-                            resolveDataObj[key] = pageData[key];
-                        }
-                        resolve(resolveDataObj);
-                    });
+        created : function(){
+            var   _this = this,
+                    global = _this.global,
+                    pageParams = global.currPageQuery,
+                    pageData = global.pageData["treatRecords"];
+            _this.clubId = pageParams.clubId || global.clubId;
+            if(pageData && _this.clubId == pageData.clubId){
+                for(var key in pageData) {//从数据缓存中加载数据
+                    _this[key] = pageData[key];
                 }
-                else {
-                    transition.next();
-                }
+            }
+            else {
+                _this.$router.back();
             }
         },
         mounted : function(){

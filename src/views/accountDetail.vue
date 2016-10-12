@@ -2,34 +2,36 @@
     @import '../styles/page/accountDetail.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page" id="account-detail-page" v-show="!$loadingRouteData">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>我的账户</div>
-        <div class="info-item item">
-            <div>
-                <div class="available-icon"></div>
-                <div>可用金额</div>
-                <div>{{availableMoney}}</div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page" id="account-detail-page" v-show="!loading">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>我的账户</div>
+            <div class="info-item item">
+                <div>
+                    <div class="available-icon"></div>
+                    <div>可用金额</div>
+                    <div>{{availableMoney}}</div>
+                </div>
+                <div>
+                    <div class="frozen-icon"></div>
+                    <div>冻结金额</div>
+                    <div>{{frozenMoney}}</div>
+                </div>
+                <a @click="doChargeClick()">充值</a>
             </div>
-            <div>
-                <div class="frozen-icon"></div>
-                <div>冻结金额</div>
-                <div>{{frozenMoney}}</div>
-            </div>
-            <a @click="doChargeClick()">充值</a>
+            <router-link class="qrcode-item item" :to="{ name : 'qrPayCode' , query : { accountId : accountId }}" tag="div">
+                <span>付款二维码</span>
+                <div></div>
+            </router-link>
+            <router-link class="record-item item" :to="{ name : 'tradeRecords' , query : { accountId : accountId }}" tag="div">
+                <span>交易记录</span>
+                <div class="right-arrow"></div>
+            </router-link>
+            <router-link class="invite-item item" :to="{ name : 'treat' , query : { accountId : accountId }}" tag="div">
+                <span>我要请客</span>
+                <div class="right-arrow"></div>
+            </router-link>
         </div>
-        <router-link class="qrcode-item item" :to="{ name : 'qrPayCode' , query : { accountId : accountId }}" tag="div">
-            <span>付款二维码</span>
-            <div></div>
-        </router-link>
-        <router-link class="record-item item" :to="{ name : 'tradeRecords' , query : { accountId : accountId }}" tag="div">
-            <span>交易记录</span>
-            <div class="right-arrow"></div>
-        </router-link>
-        <router-link class="invite-item item" :to="{ name : 'treat' , query : { accountId : accountId }}" tag="div">
-            <span>我要请客</span>
-            <div class="right-arrow"></div>
-        </router-link>
     </div>
 </template>
 <script>
@@ -39,6 +41,7 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 accountId : '',
                 clubId : '',
@@ -47,34 +50,34 @@
                 frozenMoney : "-"
             }
         },
-        route : {
-            data : function(transition){
-                var   _this = this, global = _this.global, pageParams = global.currPageQuery;
-                _this.accountId = pageParams.accountId || "";
-                if(!_this.accountId && !global.clubId){
-                    transition.abort();
-                }
-                else if(_this.accountId){
-                    _this.queryDataUrl += "account/"+_this.accountId;
+        created : function(){
+            var   _this = this, global = _this.global, pageParams = global.currPageQuery;
+            _this.accountId = pageParams.accountId || "";
+            if(!_this.accountId && !global.clubId){
+                return _this.$router.back();
+            }
+            else if(_this.accountId){
+                _this.queryDataUrl += "account/"+_this.accountId;
+            }
+            else{
+                _this.queryDataUrl += "club/account";
+            }
+            _this.loading = true;
+            _this.$http.get(_this.queryDataUrl,{ params : { clubId : global.clubId }}).then(function(res){
+                res = res.body;
+                if(res.statusCode == 200){
+                    res = res.respData;
+                    _this.accountId = res.id;
+                    _this.availableMoney = (res.amount/100).toFixed(2);
+                    _this.frozenMoney = (res.freezeAmount/100).toFixed(2);
+                    _this.clubId = res.clubId;
                 }
                 else{
-                    _this.queryDataUrl += "club/account";
+                    Util.tipShow(global.loadDataErrorTip);
+                    return _this.$router.back();
                 }
-                return new Promise(function(resolve,reject){
-                    _this.$http.get(_this.queryDataUrl,{ params : { clubId : global.clubId }}).then(function(res){
-                        res = res.body;
-                        if(res.statusCode == 200){
-                            res = res.respData;
-                            resolve({ accountId : res.id, availableMoney : (res.amount/100).toFixed(2), frozenMoney : (res.freezeAmount/100).toFixed(2), clubId : res.clubId });
-                        }
-                        else{
-                            Util.tipShow(global.loadDataErrorTip);
-                            reject(false);
-                            transition.abort();
-                        }
-                    });
-                });
-            }
+                _this.loading = false;
+            });
         },
         methods: {
             doClickPageBack : function(){

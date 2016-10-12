@@ -2,19 +2,21 @@
     @import '../styles/page/techReward.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page" id="tech-reward-page" v-show="!$loadingRouteData">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>技师打赏</div>
-        <div class="top-tip"><div></div></div>
-        <div class="reward-list">
-            <div v-for="item in moneyList" class="money" @click="doSelectReward('money',item)" :class="{ active : selectType=='money' && selectVal==item }">{{ item }}元</div>
-            <div v-for="item in giftList" class="gift" :class="{ active : selectType=='gift' && selectVal==item }" @click="doSelectReward('gift',item)">
-                <div><img :src="item.iconUrl"/></div><div>{{ item.ratio }}积分</div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page" id="tech-reward-page" v-show="!loading">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>技师打赏</div>
+            <div class="top-tip"><div></div></div>
+            <div class="reward-list">
+                <div v-for="item in moneyList" class="money" @click="doSelectReward('money',item)" :class="{ active : selectType=='money' && selectVal==item }">{{ item }}元</div>
+                <div v-for="item in giftList" class="gift" :class="{ active : selectType=='gift' && selectVal==item }" @click="doSelectReward('gift',item)">
+                    <div><img :src="item.iconUrl"/></div><div>{{ item.ratio }}积分</div>
+                </div>
             </div>
+            <div class="submit-button" :class="submitStatusCls" @click="doClickSubmitBtn()">{{ submitBtnText }}</div>
         </div>
-        <div class="submit-button" :class="submitStatusCls" @click="doClickSubmitBtn()">{{ submitBtnText }}</div>
+        <credit-tip ref="notEnoughTip" :gift-value="currSelectGiftValue"></credit-tip>
     </div>
-    <credit-tip ref="notEnoughTip" :gift-value="currSelectGiftValue"></credit-tip>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -27,6 +29,7 @@
         },
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 getOpenIdUrl : "../api/v2/wx/oauth2/openid",
                 getTechInfoUrl : "../api/v2/club/technician/",
@@ -52,45 +55,40 @@
                 prePayId : ""
             }
         },
-        route : {
-            data : function(transition){
-                var   _this = this, global = _this.global, params = global.currPageQuery;
-                _this.techId = params.techId;
-                if(!_this.techId){
-                    Util.tipShow("页面缺少访问参数！");
-                    transition.abort();
-                }
-                else{
-                    _this.getTechInfoUrl += _this.techId;
-                    _this.commentId = params.commentId;
-                    _this.paramData = Util.localStorage("tech-reward-param");
-                    _this.payAuthCode = params.code;
-                    _this.clubId = global.clubId;
-                    if(_this.paramData && _this.payAuthCode){
-                        _this.$http.post(_this.getOpenIdUrl,{
-                            code : _this.payAuthCode,
-                            scope : 'snsapi_userinfo',
-                            wxmp : '9358',
-                            userType : 'user',
-                            state : 'tech-reward'
-                        }).then(function(res){
-                            res = res.body;
-                            if(res.statusCode == 200){
-                                Util.removeLocalStorage("tech-reward-param");
-                            }
-                            else if(res.statusCode == 935801){
-                                Util.localStorage("tech-reward-param",_this.selectVal);
-                                Global.getOauthCode('','9358','tech_reward','userInfo');
-                            }
-                            else{
-                                Util.tipShow("未能获取OpenId！");
-                                transition.abort();
-                            }
-                        });
-                    }
-                    else{
-                        transition.next();
-                    }
+        created : function(){
+            var   _this = this, global = _this.global, params = global.currPageQuery;
+            _this.techId = params.techId;
+            if(!_this.techId){
+                Util.tipShow(global.visitPageErrorTipi);
+                _this.$router.back();
+            }
+            else{
+                _this.getTechInfoUrl += _this.techId;
+                _this.commentId = params.commentId;
+                _this.paramData = Util.localStorage("tech-reward-param");
+                _this.payAuthCode = params.code;
+                _this.clubId = global.clubId;
+                if(_this.paramData && _this.payAuthCode){
+                    _this.$http.post(_this.getOpenIdUrl,{
+                        code : _this.payAuthCode,
+                        scope : 'snsapi_userinfo',
+                        wxmp : '9358',
+                        userType : 'user',
+                        state : 'tech-reward'
+                    }).then(function(res){
+                        res = res.body;
+                        if(res.statusCode == 200){
+                            Util.removeLocalStorage("tech-reward-param");
+                        }
+                        else if(res.statusCode == 935801){
+                            Util.localStorage("tech-reward-param",_this.selectVal);
+                            Global.getOauthCode('','9358','tech_reward','userInfo');
+                        }
+                        else{
+                            Util.tipShow("未能获取OpenId！");
+                            _this.$router.back();
+                        }
+                    });
                 }
             }
         },

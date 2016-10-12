@@ -2,19 +2,21 @@
     @import '../styles/page/info.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page info-page" id="info-page" v-show="!$loadingRouteData">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>资料编辑<div @click="doClickSaveBtn()">保存</div></div>
-        <div class="info-content">
-            <div>
-                <input type="file" accept="image/*" capture="camcorder" @change="doImgChange($event)"/>
-                <div>头像</div>
-                <div class="header" :style="{ backgroundImage : 'url('+(global.userHeader)+')' }"></div>
-                <div class="tip">更换头像</div>
-            </div>
-            <div>
-                <div>昵称</div>
-                <div><input type="text" maxlength="20" v-model="nickName" /></div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page info-page" id="info-page" v-show="!loading">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>资料编辑<div @click="doClickSaveBtn()">保存</div></div>
+            <div class="info-content">
+                <div>
+                    <input type="file" accept="image/*" capture="camcorder" @change="doImgChange($event)"/>
+                    <div>头像</div>
+                    <div class="header" :style="{ backgroundImage : 'url('+(global.userHeader)+')' }"></div>
+                    <div class="tip">更换头像</div>
+                </div>
+                <div>
+                    <div>昵称</div>
+                    <div><input type="text" maxlength="20" v-model="nickName" /></div>
+                </div>
             </div>
         </div>
     </div>
@@ -26,23 +28,20 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 saveUserInfoUrl : "../api/v2/profile/user/info/eidt",
                 nickName : ""
             }
         },
-        route : {
-            data: function (transition) {
-                var _this = this;
-                if(!_this.global.isLogin){
-                    Util.tipShow("请您先登录！");
-                    _this.$router.push({ name : "login" });
-                    transition.abort();
-                }
-                else{
-                    _this.nickName = _this.global.userName;
-                    transition.next();
-                }
+        created : function(){
+            var _this = this;
+            if(!_this.global.isLogin){
+                Util.tipShow("请您先登录！");
+                return _this.$router.push({ name : "login" });
+            }
+            else{
+                _this.nickName = _this.global.userName;
             }
         },
         methods: {

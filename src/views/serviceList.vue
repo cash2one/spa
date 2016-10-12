@@ -2,24 +2,26 @@
     @import '../styles/page/serviceList.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page-back-btn" @click="doClickPageBack()" v-show="!$loadingRouteData"></div>
-    <div class="page" id="service-list-page" v-show="!$loadingRouteData">
-         <div class="category" v-for="service in serviceList">
-             <div :class="service['code']">
-                 <div></div>
-                 <div>{{service.name}}</div>
-             </div>
-             <ul class="service-list">
-                 <router-link v-for="item in service.serviceItems" :to="{ name : 'serviceItem', query : { id : item.id } }" tag="li">
-                     <div :style="{ backgroundImage : 'url('+item.imageUrl+')' }"></div>
-                     <div>
-                         <div>{{item.name}}</div>
-                         <div>{{item.price1 | itemPriceFormatter(item.duration1,item.durationUnit)}}<span><span v-show="item.price2">加钟：</span>{{item.price2 | itemPriceFormatter(item.duration2,item.durationUnitPlus)}}</span></div>
-                     </div>
-                 </router-link>
-             </ul>
-         </div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page-back-btn" @click="doClickPageBack()" v-show="!loading"></div>
+        <div class="page" id="service-list-page" v-show="!loading">
+            <div class="category" v-for="service in serviceList">
+                <div :class="service['code']">
+                    <div></div>
+                    <div>{{service.name}}</div>
+                </div>
+                <ul class="service-list">
+                    <li v-for="item in service.serviceItems" @click="doClickItem(item.id)">
+                        <div :style="{ backgroundImage : 'url('+item.imageUrl+')' }"></div>
+                        <div>
+                            <div>{{item.name}}</div>
+                            <div>{{item.price1 | itemPriceFormatter(item.duration1,item.durationUnit)}}<span><span v-show="item.price2">加钟：</span>{{item.price2 | itemPriceFormatter(item.duration2,item.durationUnitPlus)}}</span></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -30,33 +32,30 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 //getServiceListDataUrl : "../json/serviceList.json",
                 getServiceListDataUrl : "../api/v2/club/"+Global.data.clubId+"/categoryService",
                 global : Global.data,
                 serviceList : []
             };
         },
-        route: {
-          data : function(transition){
-              var _this = this;
-              return new Promise(function(resolve,reject){
-                  _this.$http.get(_this.getServiceListDataUrl).then(function(res){
-                      res = res.body;
-                      if(res){
-                          resolve({ serviceList : res });
-                      }
-                      else{
-                          Util.tipShow(_this.global.loadDataErrorTip);
-                          reject(false);
-                          transition.abort();
-                      }
-                  },function(){
-                      Util.tipShow(_this.global.loadDataErrorTip);
-                      reject(false);
-                      transition.abort();
-                  })
-              });
-          }
+        created : function(){
+            var _this = this, global = _this.global;
+            _this.loading = true;
+            _this.$http.get(_this.getServiceListDataUrl).then(function(res){
+                res = res.body;
+                if(res){
+                    _this.serviceList = res;
+                }
+                else{
+                    Util.tipShow(global.loadDataErrorTip);
+                    _this.$router.back();
+                }
+                _this.loading = false;
+            },function(){
+                Util.tipShow(global.loadDataErrorTip);
+                _this.$router.back();
+            })
         },
         filters: {
             itemPriceFormatter : ItemPriceFormatter
@@ -64,6 +63,9 @@
         methods: {
             doClickPageBack : function(){//点击返回按钮
                 history.back();
+            },
+            doClickItem : function(id){
+                this.$router.push({ name : 'serviceItem', query : { id : id } });
             }
         }
     }

@@ -2,10 +2,12 @@
     @import '../styles/page/info.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData || inPostData"><i></i><i></i><i></i></div>
-    <div class="page info-page" id="picture-page">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>裁剪图片<div @click="doClickSaveBtn()">保存</div></div>
-        <image-cut ref="imgCut" :all-w="global.winWidth" :all-h="global.winHeight" :v-w="global.winWidth*0.8" :v-h="global.winWidth*0.8" @putBase64="doPutBase64($event)"></image-cut>
+    <div>
+        <div class="loading" v-show="loading || inPostData"><i></i><i></i><i></i></div>
+        <div class="page info-page" id="picture-page">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>裁剪图片<div @click="doClickSaveBtn()">保存</div></div>
+            <image-cut ref="imgCut" :all-w="global.winWidth" :all-h="global.winHeight" :v-w="global.winWidth*0.8" :v-h="global.winWidth*0.8" @putBase64="doPutBase64($event)"></image-cut>
+        </div>
     </div>
 </template>
 <script>
@@ -16,6 +18,7 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 saveUserPicUrl : "../api/v2/profile/user/avatar/eidt",
                 type : "",
@@ -39,16 +42,13 @@
                  });
             }
         },
-        route : {
-            data: function (transition) {
-                var _this = this, win = window;
-                if(!win._fileReader){
-                    transition.redirect({ name : "info", query : {} });
-                }
-                else{
-                    _this.type = _this.global.currPageQuery.type;
-                    transition.next();
-                }
+        created : function(){
+            var _this = this, win = window;
+            if(!win._fileReader){
+                _this.$router.redirect({ name : "info", query : {} });
+            }
+            else{
+                _this.type = _this.global.currPageQuery.type;
             }
         },
         methods: {

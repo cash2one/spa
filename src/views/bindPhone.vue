@@ -2,23 +2,25 @@
     @import '../styles/page/bindPhone.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page login-page" id="account-page" v-show="!$loadingRouteData">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>绑定手机</div>
-        <div class="input tel">
-            <i></i><span>+86</span><input type="tel" placeholder="请输入您的11位手机号" v-model="tel" maxlength="11" v-tel-input="isTelValid" @keypress="dokeyPressOfInput($event)"/>
-        </div>
-        <div class="next-btn" :class="{ active : isTelValid }" @click="doClickBindBtn()">确认绑定</div>
-    </div>
-    <div class="bind-phone-dialog pop-modal" :class="{ active : showBindPhoneDialog }">
-        <div class="center-wrap">
-            <div>
-                <p class="h2">确认绑定</p>
-                <p>该手机已经绑定另一个微信，确认绑定将解除该手机原绑定关系。</p>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page login-page" id="account-page" v-show="!loading">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>绑定手机</div>
+            <div class="input tel">
+                <i></i><span>+86</span><input type="tel" placeholder="请输入您的11位手机号" v-model="tel" maxlength="11" v-tel-input="isTelValid" @keypress="dokeyPressOfInput($event)"/>
             </div>
-            <div>
-                <a class="cancel-btn" @click="doCancelPhoneDialog()">取消</a>
-                <a class="sure-btn" @click="doLogin()">确定</a>
+            <div class="next-btn" :class="{ active : isTelValid }" @click="doClickBindBtn()">确认绑定</div>
+        </div>
+        <div class="bind-phone-dialog pop-modal" :class="{ active : showBindPhoneDialog }">
+            <div class="center-wrap">
+                <div>
+                    <p class="h2">确认绑定</p>
+                    <p>该手机已经绑定另一个微信，确认绑定将解除该手机原绑定关系。</p>
+                </div>
+                <div>
+                    <a class="cancel-btn" @click="doCancelPhoneDialog()">取消</a>
+                    <a class="sure-btn" @click="doLogin()">确定</a>
+                </div>
             </div>
         </div>
     </div>
@@ -35,6 +37,7 @@
         },
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 im : IM,
                 checkBandUrl : "../api/v2/wx/current/check_bind",

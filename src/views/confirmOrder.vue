@@ -2,9 +2,11 @@
     @import '../styles/page/confirmOrder.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page" id="service-item-page" v-if="!$loadingRouteData">
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page" id="service-item-page" v-if="!loading">
 
+        </div>
     </div>
 </template>
 <script>
@@ -15,6 +17,7 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 queryDataUrl : "../api/v2/club/"+Global.data.clubId+"/service/item"
             }
@@ -22,11 +25,8 @@
         components: {
 
         },
-        route: {
-            data : function(transition){
-                var _this = this, global = _this.global,pageParam = global.currPageQuery;
-                transition.next();
-            }
+        route: function(){
+            var _this = this, global = _this.global,pageParam = global.currPageQuery;
         },
         filters: {
         },

@@ -2,11 +2,13 @@
     @import '../styles/page/serviceGroup.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page-back-btn" @click="doClickPageBack()" v-show="!$loadingRouteData"></div>
-    <div class="page" id="service-group-page" v-show="!$loadingRouteData">
-        <router-link class="item" v-for="item in dataList" :style="{ backgroundImage : 'url('+item.imageUrl+')' }" :to="{ name : 'serviceList' , query : { id : item.id }}" tag="div"></router-link>
-        <div class="nullData" v-show="dataList.length==0"><div></div><div>暂无内容...</div></div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page-back-btn" @click="doClickPageBack()" v-show="!loading"></div>
+        <div class="page" id="service-group-page" v-show="!loading">
+            <div class="item" v-for="item in dataList" :style="{ backgroundImage : 'url('+item.imageUrl+')' }" @click="doClickItem(item.id)"></div>
+            <div class="nullData" v-show="dataList.length==0"><div></div><div>暂无内容...</div></div>
+        </div>
     </div>
 </template>
 <script>
@@ -16,36 +18,34 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 queryDataUrl : "../api/v2/club/"+Global.data.clubId+"/service",
                 dataList : []
             }
         },
-        route : {
-            data : function(transition){
-                var   _this = this, global = _this.global;
-                return new Promise(function(resolve,reject){
-                    _this.$http.get(_this.queryDataUrl).then(function(res){
-                        res = res.body;
-                        if(res.length){
-                            resolve({ dataList : res });
-                        }
-                        else{
-                            Util.tipShow(res.msg || global.loadDataErrorTip);
-                            reject(false);
-                            transition.abort();
-                        }
-                    },function(){
-                        Util.tipShow(global.loadDataErrorTip);
-                        reject(false);
-                        transition.abort();
-                    });
-                });
-            }
+        created : function(){
+            var   _this = this, global = _this.global;
+            _this.$http.get(_this.queryDataUrl).then(function(res){
+                res = res.body;
+                if(res.length){
+                    _this.dataList = res;
+                }
+                else{
+                    Util.tipShow(res.msg || global.loadDataErrorTip);
+                    return _this.$router.back();
+                }
+            },function(){
+                Util.tipShow(global.loadDataErrorTip);
+                return _this.$router.back();
+            });
         },
         methods: {
             doClickPageBack : function(){
                 history.back();
+            },
+            doClickItem : function(id){
+                this.$router.push({ name : 'serviceList' , query : { id : id }});
             }
         }
     }

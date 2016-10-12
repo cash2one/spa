@@ -2,16 +2,18 @@
     @import '../styles/page/chat.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page" id="chat-page" v-show="!$loadingRouteData">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>{{ talker.name }}<span v-show="talker.userNo">[{{ talker.userNo }}]</span><i></i><i></i></div>
-        <div class="order-tip" @click="doClickOrderTip()">如果技师没有回应，那就立即预约吧！<div></div></div>
-        <div class="message-wrap" :style="{ height : msgWrapHeight+'px' }">
-           <loadmore :top-method="loadMoreData">
-                <ul>
-                    <li v-for="item in list">{{ item }}</li>
-                </ul>
-            </loadmore>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page" id="chat-page" v-show="!loading">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>{{ talker.name }}<span v-show="talker.userNo">[{{ talker.userNo }}]</span><i></i><i></i></div>
+            <div class="order-tip" @click="doClickOrderTip()">如果技师没有回应，那就立即预约吧！<div></div></div>
+            <div class="message-wrap" :style="{ height : msgWrapHeight+'px' }">
+                <loadmore :top-method="loadMoreData">
+                    <ul>
+                        <li v-for="item in list">{{ item }}</li>
+                    </ul>
+                </loadmore>
+            </div>
         </div>
     </div>
 </template>
@@ -27,6 +29,7 @@
         },
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 im : IM,
                 talker : IM.talker, //当前聊天的对方
@@ -38,17 +41,13 @@
                 giftListData : {} //积分礼物数据
             }
         },
-        route : {
-            data : function(transition){
-                var   _this = this, global = _this.global, params = global.currPageQuery;
-               if(!params.clubId && global.pageMode != "club"){
-                    Util.tipShow("页面缺少访问参数！");
-                    return transition.abort();
-                }
-                _this.msgWrapHeight = global.winHeight-4.389*global.winScale*16;
-
-               transition.next();
+        created : function(){
+            var   _this = this, global = _this.global, params = global.currPageQuery;
+            if(!params.clubId && global.pageMode != "club"){
+                Util.tipShow(global.visitPageErrorTip);
+                return _this.$router.back();
             }
+            _this.msgWrapHeight = global.winHeight-4.389*global.winScale*16;
         },
         mounted : function(){
           /*var _this = this;

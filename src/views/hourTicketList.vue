@@ -2,20 +2,22 @@
     @import '../styles/page/hourTicketList.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page" id="hour-ticket-list-page" v-show="!$loadingRouteData">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>点钟券</div>
-        <div class="list" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }">
-            <div class="item" v-for="item in dataList" @click="doClickPaidCoupon(item.actId)">
-                <div>
-                    <div><span v-show="item.useType == 'money'">￥</span>{{ item.useType == "money" ? item.actValue : item.actTitle }}</div>
-                    <span>{{ item.consumeMoneyDescription }}</span>
-                    <div><div>{{ item.useTypeName }}</div><div>立即购买</div></div>
-                    <div></div>
-                    <div></div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page" id="hour-ticket-list-page" v-show="!loading">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>点钟券</div>
+            <div class="list" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }">
+                <div class="item" v-for="item in dataList" @click="doClickPaidCoupon(item.actId)">
+                    <div>
+                        <div><span v-show="item.useType == 'money'">￥</span>{{ item.useType == "money" ? item.actValue : item.actTitle }}</div>
+                        <span>{{ item.consumeMoneyDescription }}</span>
+                        <div><div>{{ item.useTypeName }}</div><div>立即购买</div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
                 </div>
+                <div class="nullData" v-show="dataList.length==0"><div></div><div>暂无内容...</div></div>
             </div>
-            <div class="nullData" v-show="dataList.length==0"><div></div><div>暂无内容...</div></div>
         </div>
     </div>
 </template>
@@ -26,6 +28,7 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 queryDataUrl : "../api/v1/profile/redpack/list",
                 dataList : [],
@@ -33,37 +36,33 @@
                 techCode : ""
             }
         },
-        route : {
-            data : function(transition){
-                var   _this = this, global = _this.global;
-                _this.clubId = global.currPageQuery.clubId || global.clubId;
-                _this.techCode = global.currPageQuery.techCode;
-                return new Promise(function(resolve,reject){
-                    _this.$http.get(_this.queryDataUrl, { params : { clubId : _this.clubId }}).then(function(res){
-                        res = res.body;
-                        if(res.statusCode == 200){
-                            res = res.respData.coupons;
-                            var list = [];
-                            for(var i=0;i<res.length;i++){
-                                if(res[i].couponType == "paid"){
-                                    res[i].useType =( res[i].useType == "null" ? "money" : res[i].useType);
-                                    list.push(res[i]);
-                                }
-                            }
-                            resolve({ dataList : list });
+        created : function(){
+            var   _this = this, global = _this.global;
+            _this.clubId = global.currPageQuery.clubId || global.clubId;
+            _this.techCode = global.currPageQuery.techCode;
+            _this.loading = true;
+            _this.$http.get(_this.queryDataUrl, { params : { clubId : _this.clubId }}).then(function(res){
+                res = res.body;
+                if(res.statusCode == 200){
+                    res = res.respData.coupons;
+                    var list = [];
+                    for(var i=0;i<res.length;i++){
+                        if(res[i].couponType == "paid"){
+                            res[i].useType =( res[i].useType == "null" ? "money" : res[i].useType);
+                            list.push(res[i]);
                         }
-                        else{
-                            Util.tipShow(res.msg || global.loadDataErrorTip);
-                            reject(false);
-                            transition.abort();
-                        }
-                    },function(){
-                        Util.tipShow(global.loadDataErrorTip);
-                        reject(false);
-                        transition.abort();
-                    });
-                });
-            }
+                    }
+                    _this.dataList = list;
+                }
+                else{
+                    Util.tipShow(res.msg || global.loadDataErrorTip);
+                    return _this.$router.back();
+                }
+                _this.loading = false;
+            },function(){
+                Util.tipShow(global.loadDataErrorTip);
+                return _this.$router.back();
+            });
         },
         methods: {
             doClickPageBack : function(){
@@ -76,9 +75,7 @@
                     global.loginPageQuery = { actId : actId, techCode : _this.techCode };
                 }
                 else{
-                    _this.$router.push({
-                        name : "paidCoupon", query : { actId : actId, techCode : _this.techCode }
-                    });
+                    _this.$router.push({ name : "paidCoupon", query : { actId : actId, techCode : _this.techCode }});
                 }
             }
         }

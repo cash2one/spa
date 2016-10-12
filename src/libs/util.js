@@ -179,5 +179,11 @@ module.exports = {
         }
         location.href = url;
         location.reload(true);
+    },
+    assignIndex : function(arr){//给数组中的对象增加index属性
+        for(var i=0;i<arr.length;i++){
+            arr[i].index = i;
+        }
+        return arr;
     }
 };

@@ -2,35 +2,37 @@
     @import '../styles/page/paidCoupon.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page paid-coupon-page" id="paid-coupon-page" v-show="!$loadingRouteData" :style="{ height : (global.winHeight-6.966*global.winScale*16)+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>点钟券</div>
-        <div class="club-info" @click="doClickClubInfo()"><div :style="{ backgroundImage : 'url('+(couponData.imageUrl || global.defaultClubLogo )+')' }"></div><span>{{ couponData.clubName }}</span></div>
-        <div class="coupon-info">
-            <div>
-                <router-link :style="{ backgroundImage : 'url('+(couponData.techs.avatarUrl || global.defaultHeader )+')' }" :to="{ name : 'chat', query : { techId : couponData.techs.id, clubId : couponData.clubId }}" tag="div"></router-link>
-                <div>{{ couponData.techs.name }}<span v-show="couponData.techs.serialNo">[<span>{{ couponData.techs.serialNo }}</span>]</span></div>
-            </div>
-            <div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page paid-coupon-page" id="paid-coupon-page" v-show="!loading" :style="{ height : (global.winHeight-6.966*global.winScale*16)+'px' }">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>点钟券</div>
+            <div class="club-info" @click="doClickClubInfo()"><div :style="{ backgroundImage : 'url('+(couponData.imageUrl || global.defaultClubLogo )+')' }"></div><span>{{ couponData.clubName }}</span></div>
+            <div class="coupon-info">
                 <div>
-                    <div>{{ couponData.actTitle }}</div>
-                    <div>{{ couponData.actValue }}元抵{{ couponData.consumeMoney }}元</div>
+                    <router-link :style="{ backgroundImage : 'url('+(couponData.techs.avatarUrl || global.defaultHeader )+')' }" :to="{ name : 'chat', query : { techId : couponData.techs.id, clubId : couponData.clubId }}" tag="div"></router-link>
+                    <div>{{ couponData.techs.name }}<span v-show="couponData.techs.serialNo">[<span>{{ couponData.techs.serialNo }}</span>]</span></div>
                 </div>
-                <div>点钟券</div>
+                <div>
+                    <div>
+                        <div>{{ couponData.actTitle }}</div>
+                        <div>{{ couponData.actValue }}元抵{{ couponData.consumeMoney }}元</div>
+                    </div>
+                    <div>点钟券</div>
+                </div>
+                <div>券有效期：<span>{{ couponData.couponPeriod }}</span></div>
             </div>
-            <div>券有效期：<span>{{ couponData.couponPeriod }}</span></div>
+            <div class="coupon-desc">
+                <div><i></i>使用说明：</div>
+                <div v-html="couponData.actContent"></div>
+            </div>
         </div>
-        <div class="coupon-desc">
-            <div><i></i>使用说明：</div>
-            <div v-html="couponData.actContent"></div>
+        <div class="paid-coupon-bottom-wrap">
+            <div>
+                <span @click="doClickChangeCount(0)">-</span><span>{{ payCount }}</span><span @click="doClickChangeCount(1)">+</span>
+                <div>共支付：￥<span>{{ payCount*couponData.actValue*100 | MoneyFormatter }}</span>元</div>
+            </div>
+            <div :class="{ processing : inPaid , downline : isDownLine }" @click="doClickPayBtn()">{{ isDownLine ? "已下线" : ( inPaid ? "购买中..." : "立即购买")}}</div>
         </div>
-    </div>
-    <div class="paid-coupon-bottom-wrap">
-        <div>
-            <span @click="doClickChangeCount(0)">-</span><span>{{ payCount }}</span><span @click="doClickChangeCount(1)">+</span>
-            <div>共支付：￥<span>{{ payCount*couponData.actValue*100 | MoneyFormatter }}</span>元</div>
-        </div>
-        <div :class="{ processing : inPaid , downline : isDownLine }" @click="doClickPayBtn()">{{ isDownLine ? "已下线" : ( inPaid ? "购买中..." : "立即购买")}}</div>
     </div>
 </template>
 <script>
@@ -41,6 +43,7 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 getDataUrl : "../api/v2/club/redpacket/data",
                 getOpenIdUrl : "../api/v2/wx/oauth2/user/openid",
@@ -57,46 +60,40 @@
                 payRequestObj : null
             }
         },
-        route : {
-            data : function(transition){
-                var   _this = this, global = _this.global, query = global.currPageQuery;
-                _this.actId = query.actId;
-                _this.techCode = query.techCode;
-                _this.payAuthCode = query.code || global.authCode;
-                _this.chanel = query.channel || "link";
-                if(!_this.actId || !_this.techCode){
-                    Util.tipShow("页面缺少访问参数！");
-                    transition.abort();
-                }
-                else{
-                    return new Promise(function(resolve,reject){
-                        _this.$http.get(_this.getDataUrl,{ params : {
-                            actId : _this.actId,
-                            userCode : "",
-                            techCode : _this.techCode,
-                            chanel : _this.chanel,
-                            phoneNum : ""
-                        }}).then(function(res){
-                            res = res.body;
-                            if(res.statusCode == 200){
-                                res = res.respData;
-                                if(res.status == "downline_can_use"){
-                                    _this.isDownLine = true;
-                                }
-                                resolve({ couponData : res });
-                            }
-                            else{
-                                Util.tipShow(res.msg || "获取点钟券数据失败！");
-                                reject(false);
-                                transition.abort();
-                            }
-                        },function(){
-                            Util.tipShow("获取点钟券数据失败！");
-                            reject(false);
-                            transition.abort();
-                        });
-                    });
-                }
+        created : function(){
+            var   _this = this, global = _this.global, query = global.currPageQuery;
+            _this.actId = query.actId;
+            _this.techCode = query.techCode;
+            _this.payAuthCode = query.code || global.authCode;
+            _this.chanel = query.channel || "link";
+            if(!_this.actId || !_this.techCode){
+                Util.tipShow(global.visitPageErrorTip);
+                _this.$router.back();
+            }
+            else{
+                _this.$http.get(_this.getDataUrl,{ params : {
+                    actId : _this.actId,
+                    userCode : "",
+                    techCode : _this.techCode,
+                    chanel : _this.chanel,
+                    phoneNum : ""
+                }}).then(function(res){
+                    res = res.body;
+                    if(res.statusCode == 200){
+                        res = res.respData;
+                        if(res.status == "downline_can_use"){
+                            _this.isDownLine = true;
+                        }
+                        _this.couponData = res;
+                    }
+                    else{
+                        Util.tipShow(res.msg || "获取点钟券数据失败！");
+                        _this.$router.back();
+                    }
+                },function(){
+                    Util.tipShow("获取点钟券数据失败！");
+                    _this.$router.back();
+                });
             }
         },
         mounted : function(){

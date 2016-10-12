@@ -2,50 +2,52 @@
     @import '../styles/page/paidCoupon.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page paid-coupon-page" id="paid-coupon-detail-page" v-show="!$loadingRouteData" :style="{ height : (global.winHeight-(hidePayBtn ? 0 : 3.278)*global.winScale*16)+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>点钟券详情</div>
-        <div class="club-info" @click="doClickClubInfo()" v-show="global.pageMode != 'club'"><div :style="{ backgroundImage : 'url('+(couponData.imageUrl || global.defaultClubLogo )+')' }"></div><span>{{ couponData.clubName }}</span></div>
-        <div class="detail-info">
-            <div><router-link :style="{ backgroundImage : 'url('+(couponData.techs.avatarUrl || global.defaultHeader )+')' }" :to="{ name : 'chat', query : { techId : couponData.techs.id, clubId : couponData.clubId }}" tag="div"></router-link></div>
-            <div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page paid-coupon-page" id="paid-coupon-detail-page" v-show="!loading" :style="{ height : (global.winHeight-(hidePayBtn ? 0 : 3.278)*global.winScale*16)+'px' }">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>点钟券详情</div>
+            <div class="club-info" @click="doClickClubInfo()" v-show="global.pageMode != 'club'"><div :style="{ backgroundImage : 'url('+(couponData.imageUrl || global.defaultClubLogo )+')' }"></div><span>{{ couponData.clubName }}</span></div>
+            <div class="detail-info">
+                <div><router-link :style="{ backgroundImage : 'url('+(couponData.techs.avatarUrl || global.defaultHeader )+')' }" :to="{ name : 'chat', query : { techId : couponData.techs.id, clubId : couponData.clubId }}" tag="div"></router-link></div>
                 <div>
                     <div>
-                        <div>{{ couponData.techs.name }}</div><div v-show="couponData.techs.serialNo">[<span>{{ couponData.techs.serialNo }}</span>]</div>
+                        <div>
+                            <div>{{ couponData.techs.name }}</div><div v-show="couponData.techs.serialNo">[<span>{{ couponData.techs.serialNo }}</span>]</div>
+                        </div>
+                        <div>
+                            <div class="stars"><div :style="{ width : couponData.techs.star+'%' }"></div></div>
+                            <div>{{ couponData.techs.commentCount }}评论</div>
+                        </div>
                     </div>
+                    <div></div>
                     <div>
-                        <div class="stars"><div :style="{ width : couponData.techs.star+'%' }"></div></div>
-                        <div>{{ couponData.techs.commentCount }}评论</div>
+                        <div>{{ couponData.techs.description || "这个技师很懒，没有填写个人简介..." }}</div>
+                        <router-link :to="{ name : 'confirmOrder', query : { techId : couponData.techs.id , clubId : couponData.clubId }}" tag="div">预约</router-link>
                     </div>
                 </div>
-                <div></div>
+            </div>
+            <div class="detail-desc">
                 <div>
-                    <div>{{ couponData.techs.description || "这个技师很懒，没有填写个人简介..." }}</div>
-                    <router-link :to="{ name : 'confirmOrder', query : { techId : couponData.techs.id , clubId : couponData.clubId }}" tag="div">预约</router-link>
+                    <div>{{ couponData.userAct.actTitle }}</div>
+                    <div>{{ couponData.userAct.consumeMoneyDescription }}</div>
+                    <div>券有效期：<span>{{ couponData.userAct.couponPeriod }}</span></div>
+                    <div>购买时间：<span>{{ couponData.userAct.getDate }}</span></div>
+                    <div :class="couponStatusCls">{{ couponStatusDescription }}</div>
+                    <span>30分钟未支付将失效</span>
+                </div>
+                <div>
+                    <div>电子票号（使用时请出示二维码，或者优惠码）</div>
+                    <img alt="二维码" v-show="qrCodeImgUrl" :src="qrCodeImgUrl"/>
+                    <span>{{ couponData.userAct.couponNo }}</span>
                 </div>
             </div>
-        </div>
-        <div class="detail-desc">
-            <div>
-                <div>{{ couponData.userAct.actTitle }}</div>
-                <div>{{ couponData.userAct.consumeMoneyDescription }}</div>
-                <div>券有效期：<span>{{ couponData.userAct.couponPeriod }}</span></div>
-                <div>购买时间：<span>{{ couponData.userAct.getDate }}</span></div>
-                <div :class="couponStatusCls">{{ couponStatusDescription }}</div>
-                <span>30分钟未支付将失效</span>
-            </div>
-            <div>
-                <div>电子票号（使用时请出示二维码，或者优惠码）</div>
-                <img alt="二维码" v-show="qrCodeImgUrl" :src="qrCodeImgUrl"/>
-                <span>{{ couponData.userAct.couponNo }}</span>
+            <div class="detail-use-desc">
+                <div>使用说明：</div>
+                <div v-html="couponData.userAct.actContent"></div>
             </div>
         </div>
-        <div class="detail-use-desc">
-            <div>使用说明：</div>
-            <div v-html="couponData.userAct.actContent"></div>
-        </div>
+        <div class="paid-coupon-pay-btn" v-show="!hidePayBtn"><div :class="{ downline : footerBtnText=='已下线' , processing : inPaid }" @click="doClickPayBtn()">{{ footerBtnText }}</div></div>
     </div>
-    <div class="paid-coupon-pay-btn" v-show="!hidePayBtn"><div :class="{ downline : footerBtnText=='已下线' , processing : inPaid }" @click="doClickPayBtn()">{{ footerBtnText }}</div></div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -54,6 +56,7 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 queryDataUrl : "../api/v2/club/userredpacket/",
                 getOpenIdUrl : "../api/v2/wx/oauth2/user/openid",
@@ -73,63 +76,59 @@
                 hidePayBtn : false
             }
         },
-        route : {
-            data : function(transition){
-                var   _this = this, global = _this.global, query = global.currPageQuery;
-                _this.userActId = query.userActId;
-                console.log("paid coupon detail userActId;"+_this.userActId);
-                if(!_this.userActId){
-                    Util.tipShow("页面缺少访问参数！");
-                    transition.abort();
-                }
-                else if(!global.isLogin){
-                    global.saveLoginPageParams("paidCouponDetail");
-                    transition.redirect({ name : "login" });
-                }
-                else{
-                    _this.payAuthCode = query.code || global.authCode;
-                    _this.queryDataUrl += _this.userActId;
-                    return new Promise(function(resolve,reject){
-                        _this.$http.get(_this.queryDataUrl,{ params : { userType : "user" }}).then(function(res){
-                            res = res.body;
-                            if(res.statusCode == 200){
-                                res = res.respData;
-                                res.userAct.getDate = res.userAct.getDate.split(" ")[0];
-                                if(res.userAct.couponQrCodeUrl){
-                                    _this.qrCodeImgUrl = res.userAct.couponQrCodeUrl;
-                                }
-                                else{
-                                    _this.getQrCodeImg();//获取二维码
-                                }
-                                var couponNo = res.userAct.couponNo;
-                                res.userAct.couponNo = couponNo.substr(0,4)+" "+couponNo.substr(4,4)+" "+couponNo.substr(8);
+        created : function(){
+            var   _this = this, global = _this.global, query = global.currPageQuery;
+            _this.userActId = query.userActId;
+            console.log("paid coupon detail userActId;"+_this.userActId);
+            if(!_this.userActId){
+                Util.tipShow(global.visitPageErrorTip);
+                _this.$router.back();
+            }
+            else if(!global.isLogin){
+                global.saveLoginPageParams("paidCouponDetail");
+                _this.$router.push({ name : "login" });
+            }
+            else{
+                _this.payAuthCode = query.code || global.authCode;
+                _this.queryDataUrl += _this.userActId;
+                _this.loading = true;
+                _this.$http.get(_this.queryDataUrl,{ params : { userType : "user" }}).then(function(res){
+                    res = res.body;
+                    if(res.statusCode == 200){
+                        res = res.respData;
+                        res.userAct.getDate = res.userAct.getDate.split(" ")[0];
+                        if(res.userAct.couponQrCodeUrl){
+                            _this.qrCodeImgUrl = res.userAct.couponQrCodeUrl;
+                        }
+                        else{
+                            _this.getQrCodeImg();//获取二维码
+                        }
+                        var couponNo = res.userAct.couponNo;
+                        res.userAct.couponNo = couponNo.substr(0,4)+" "+couponNo.substr(4,4)+" "+couponNo.substr(8);
 
-                                if(res.userAct.couponStatus==1){
-                                    _this.couponStatusCls = "already";
-                                    _this.footerBtnText = "立即预约";
-                                }
-                                else if(res.actStatus != 'online'){
-                                    _this.footerBtnText = "已下线";
-                                }
-                                else if(res.userAct.couponStatus != 0){
-                                    _this.couponStatusCls = "expire";
-                                    _this.hidePayBtn = true;
-                                }
-                                _this.couponStatusDescription = res.userAct.couponStatusDescription;
-                                resolve({ couponData : res });
-                            }
-                            else{
-                                Util.tipShow(res.msg || "获取点钟券数据详情失败！");
-                                reject(false);
-                                transition.abort();
-                            }
-                        },function(){
-                            Util.tipShow("获取点钟券数据详情失败！");
-                            reject(false);
-                            transition.abort();
-                        });
-                    });
-                }
+                        if(res.userAct.couponStatus==1){
+                            _this.couponStatusCls = "already";
+                            _this.footerBtnText = "立即预约";
+                        }
+                        else if(res.actStatus != 'online'){
+                            _this.footerBtnText = "已下线";
+                        }
+                        else if(res.userAct.couponStatus != 0){
+                            _this.couponStatusCls = "expire";
+                            _this.hidePayBtn = true;
+                        }
+                        _this.couponStatusDescription = res.userAct.couponStatusDescription;
+                        _this.couponData = res;
+                    }
+                    else{
+                        Util.tipShow(res.msg || "获取点钟券数据详情失败！");
+                        _this.$router.back();
+                    }
+                    _this.loading = false;
+                },function(){
+                    Util.tipShow("获取点钟券数据详情失败！");
+                    _this.$router.back();
+                });
             }
         },
         mounted : function(){

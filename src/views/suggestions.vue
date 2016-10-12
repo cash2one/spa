@@ -2,27 +2,29 @@
     @import '../styles/page/suggestions.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page" id="suggestions-page" v-show="!$loadingRouteData" :style="{ height : global.winHeight+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>投诉建议</div>
-        <div class="star-comment">
-            <div>
-                <div>环境</div>
-                <div class="stars" @click="doClickCommentStar($event,0)"><div :style="{ width: environmentScore+'%' }"></div></div>
-                <div>{{ scoreArr[environmentScore/20-1] }}</div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page" id="suggestions-page" v-show="!loading" :style="{ height : global.winHeight+'px' }">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>投诉建议</div>
+            <div class="star-comment">
+                <div>
+                    <div>环境</div>
+                    <div class="stars" @click="doClickCommentStar($event,0)"><div :style="{ width: environmentScore+'%' }"></div></div>
+                    <div>{{ scoreArr[environmentScore/20-1] }}</div>
+                </div>
+                <div>
+                    <div>服务</div>
+                    <div class="stars" @click="doClickCommentStar($event,1)"><div :style="{ width: serviceScore+'%' }"></div></div>
+                    <div>{{ scoreArr[serviceScore/20-1] }}</div>
+                </div>
             </div>
-            <div>
-                <div>服务</div>
-                <div class="stars" @click="doClickCommentStar($event,1)"><div :style="{ width: serviceScore+'%' }"></div></div>
-                <div>{{ scoreArr[serviceScore/20-1] }}</div>
+            <div class="input-comment">
+                <div><div>会所评价</div></div>
+                <div><textarea placeholder="给会所一个评价吧" maxlength="1000" v-model="commentText"></textarea></div>
             </div>
         </div>
-        <div class="input-comment">
-            <div><div>会所评价</div></div>
-            <div><textarea placeholder="给会所一个评价吧" maxlength="1000" v-model="commentText"></textarea></div>
-        </div>
+        <div class="suggestion-btn"><div @click="doSubmitComment()">提交</div></div>
     </div>
-    <div class="suggestion-btn"><div @click="doSubmitComment()">提交</div></div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -31,6 +33,7 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 submitCommentUrl : "../api/v2/profile/user/feedback/create",
                 environmentScore : 100,
@@ -39,14 +42,9 @@
                 scoreArr : ['非常差','不满意','一般','满意','非常好']
             }
         },
-        route : {
-            data: function (transition) {
-                if(!this.global.clubId){
-                    transition.abort();
-                }
-                else{
-                    transition.next();
-                }
+        created : function(){
+            if(!this.global.clubId){
+                this.$router.back();
             }
         },
         methods: {

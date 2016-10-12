@@ -2,17 +2,19 @@
     @import '../styles/page/integral.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page" id="integral-all-page" v-show="!$loadingRouteData" :style="{ height : global.winHeight+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>所有账户</div>
-        <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
-            <router-link class="list-item" v-for="item in dataList" :to="{ name : 'integralDetail', query : { clubId : item.clubId } }" tag="div">
-                <div><div :style="{ backgroundImage : 'url('+(item.clubImage || global.defaultClubLogo)+')' }"></div>{{ item.clubName || '小摩豆会所' }}<i></i></div>
-                <div><span>剩余积分</span>{{ item.amount }}</div>
-            </router-link>
-            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
-            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
-            <div class="nullData" v-show="dataList.length==0 && !isAddData"><div></div><div>暂无内容...</div></div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page" id="integral-all-page" v-show="!loading" :style="{ height : global.winHeight+'px' }">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>所有账户</div>
+            <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
+                <router-link class="list-item" v-for="item in dataList" :to="{ name : 'integralDetail', query : { clubId : item.clubId } }" tag="div">
+                    <div><div :style="{ backgroundImage : 'url('+(item.clubImage || global.defaultClubLogo)+')' }"></div>{{ item.clubName || '小摩豆会所' }}<i></i></div>
+                    <div><span>剩余积分</span>{{ item.amount }}</div>
+                </router-link>
+                <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
+                <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
+                <div class="nullData" v-show="dataList.length==0 && !isAddData"><div></div><div>暂无内容...</div></div>
+            </div>
         </div>
     </div>
 </template>
@@ -23,6 +25,7 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 getRecordsUrl : "../api/v2/credit/user/account",
                 dataList : [],

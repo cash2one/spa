@@ -2,14 +2,16 @@
     @import '../styles/page/inviteCode.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page login-page" id="invite-code-page" v-show="!$loadingRouteData">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>输入邀请码</div>
-        <div class="code-input">
-            <input placeholder="会所邀请码 (必填)" maxlength="6" v-model="inviteCode" @input="doInputInviteCode()"/>
-            <input placeholder="技师编号 (选填)" maxlength="6" v-model="techNo" @input="doInputTechNo()"/>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page login-page" id="invite-code-page" v-show="!loading">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>输入邀请码</div>
+            <div class="code-input">
+                <input placeholder="会所邀请码 (必填)" maxlength="6" v-model="inviteCode" @input="doInputInviteCode()"/>
+                <input placeholder="技师编号 (选填)" maxlength="6" v-model="techNo" @input="doInputTechNo()"/>
+            </div>
+            <div class="submit-btn" :class="{ active : isInviteCodeValid && isTechNoValid }" @click="doClickSubmitBtn()">完成</div>
         </div>
-        <div class="submit-btn" :class="{ active : isInviteCodeValid && isTechNoValid }" @click="doClickSubmitBtn()">完成</div>
     </div>
 </template>
 <script>
@@ -19,6 +21,7 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 inviteCode : "",
                 techNo : "",
@@ -27,21 +30,18 @@
                 getClubTechUrl : "../api/v1/wx/club_tech_page_url"
             }
         },
-        route : {
-            data: function (transition) {
-                var _this = this, global = _this.global;
-                if(global.clubInviteCode){
-                    _this.inviteCode = global.clubInviteCode;
-                    _this.isInviteCodeValid = true;
-                }
-                if(global.techSerialNo){
-                    _this.techNo = global.techSerialNo;
-                }
+        created : function(){
+            var _this = this, global = _this.global;
+            if(global.clubInviteCode){
+                _this.inviteCode = global.clubInviteCode;
+                _this.isInviteCodeValid = true;
+            }
+            if(global.techSerialNo){
+                _this.techNo = global.techSerialNo;
+            }
 
-                if(_this.clubInviteCode && (global.techSerialNo || global.techInviteCode)){
-                    _this.doClickSubmitBtn();
-                }
-                transition.next();
+            if(_this.clubInviteCode && (global.techSerialNo || global.techInviteCode)){
+                _this.doClickSubmitBtn();
             }
         },
         methods: {

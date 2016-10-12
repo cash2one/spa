@@ -2,13 +2,15 @@
     @import '../styles/page/qrPayCode.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page" id="qrpay-code-page" v-show="!$loadingRouteData" :style="{ height : global.winHeight+'px' }">
-        <div class="page-title"><a v-if="!isDirect" class="back" @click="doClickPageBack()"></a>付款二维码</div>
-        <div class="qrcode-wrap">
-            <div>
-                <div><img  :src="qrCodeImgSrc"/></div>
-                <div :class="{ processing : isProcessing }" @click="refreshCode()"><span>{{timeStr}}</span></div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page" id="qrpay-code-page" v-show="!loading" :style="{ height : global.winHeight+'px' }">
+            <div class="page-title"><a v-if="!isDirect" class="back" @click="doClickPageBack()"></a>付款二维码</div>
+            <div class="qrcode-wrap">
+                <div>
+                    <div><img  :src="qrCodeImgSrc"/></div>
+                    <div :class="{ processing : isProcessing }" @click="refreshCode()"><span>{{timeStr}}</span></div>
+                </div>
             </div>
         </div>
     </div>
@@ -21,6 +23,7 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 isDirect : false,
                 isProcessing : false,
@@ -30,12 +33,10 @@
                 qrCodeImgSrc : null
             }
         },
-        route : {
-            data : function(){
-                var   _this = this, global = _this.global, pageParams = global.currPageQuery;
-                if(pageParams.isDirect != undefined) _this.isDirect = true;
-                _this.refreshCode();
-            }
+        created : function(){
+            var   _this = this, global = _this.global, pageParams = global.currPageQuery;
+            if(pageParams.isDirect != undefined) _this.isDirect = true;
+            _this.refreshCode();
         },
         beforeDestroy : function(){
             if(this.timer)  clearTimeout(this.timer);

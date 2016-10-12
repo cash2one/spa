@@ -2,48 +2,50 @@
     @import '../styles/page/couponDetail.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page" id="coupon-detail-page" v-show="!$loadingRouteData">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>优惠券详情</div>
-        <div class="club-name">{{userAct.clubName}}</div>
-        <div class="coupon-info">
-            <div>{{userAct.useTypeName}}</div>
-            <div>{{isMoneyCoupon ? userAct.actValue+"元" : userAct.actTitle}}</div>
-            <div v-show="!isMoneyCoupon || userAct.consumeMoney!=0">{{userAct.consumeMoneyDescription}}</div>
-            <div>券有效期：<span>{{userAct.couponPeriod}}</span></div>
-            <div>领取时间：<span>{{userAct.getDate}}</span></div>
-            <div v-show="isRepeatCoupn">可用次数：<span>{{userAct.canUseSum}}次</span></div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page" id="coupon-detail-page" v-show="!loading">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>优惠券详情</div>
+            <div class="club-name">{{userAct.clubName}}</div>
+            <div class="coupon-info">
+                <div>{{userAct.useTypeName}}</div>
+                <div>{{isMoneyCoupon ? userAct.actValue+"元" : userAct.actTitle}}</div>
+                <div v-show="!isMoneyCoupon || userAct.consumeMoney!=0">{{userAct.consumeMoneyDescription}}</div>
+                <div>券有效期：<span>{{userAct.couponPeriod}}</span></div>
+                <div>领取时间：<span>{{userAct.getDate}}</span></div>
+                <div v-show="isRepeatCoupn">可用次数：<span>{{userAct.canUseSum}}次</span></div>
+            </div>
+            <div class="item share" v-show="isRepeatCoupn">分享给朋友<br/>朋友使用后可再获得一次使用机会<div :class="shareStatus" @click="doClickShareBtn()">立即分享</div></div>
+            <div class="item qrcode">
+                <div>电子票号（使用时请出示二维码，或者优惠码）</div>
+                <img alt="二维码" v-if="couponQrCodeUrl" :src="couponQrCodeUrl"/>
+                <span>{{userAct.couponNoText}}</span>
+            </div>
+            <div class="item get-records" v-show="isRepeatCoupn" v-if="phoneNumsOfGet.length>0 || phoneNumsOfUse.length>0">
+                <div>好友领取</div>
+                <ul>
+                    <li v-for="item in phoneNumsOfGet">{{item.phone}}<div>已经领取{{couponName}}<span>{{item.date}}</span></div></li>
+                    <li v-for="item in phoneNumsOfUse">{{item.phone}}<div>已经使用{{couponName}}<span>{{item.date}}</span></div></li>
+                </ul>
+            </div>
+            <div class="item desc" v-if="!isMoneyCoupon && !userAct.actDescription">
+                <div>优惠说明：</div>
+                <div>{{userAct.actDescription || "无"}}</div>
+            </div>
+            <div class="item desc content">
+                <div>使用说明：</div>
+                <div>券有效期：{{userAct.couponPeriod}}</div>
+                <div>使用时段：{{userAct.useTimePeriod}}</div>
+                <div><div v-show="useServiceItem">使用项目：仅限{{useServiceItem}}</div><div v-html="userAct.actContent"></div></div>
+            </div>
         </div>
-        <div class="item share" v-show="isRepeatCoupn">分享给朋友<br/>朋友使用后可再获得一次使用机会<div :class="shareStatus" @click="doClickShareBtn()">立即分享</div></div>
-        <div class="item qrcode">
-            <div>电子票号（使用时请出示二维码，或者优惠码）</div>
-            <img alt="二维码" v-if="couponQrCodeUrl" :src="couponQrCodeUrl"/>
-            <span>{{userAct.couponNoText}}</span>
-        </div>
-        <div class="item get-records" v-show="isRepeatCoupn" v-if="phoneNumsOfGet.length>0 || phoneNumsOfUse.length>0">
-            <div>好友领取</div>
-            <ul>
-                <li v-for="item in phoneNumsOfGet">{{item.phone}}<div>已经领取{{couponName}}<span>{{item.date}}</span></div></li>
-                <li v-for="item in phoneNumsOfUse">{{item.phone}}<div>已经使用{{couponName}}<span>{{item.date}}</span></div></li>
-            </ul>
-        </div>
-        <div class="item desc" v-if="!isMoneyCoupon && !userAct.actDescription">
-            <div>优惠说明：</div>
-            <div>{{userAct.actDescription || "无"}}</div>
-        </div>
-        <div class="item desc content">
-            <div>使用说明：</div>
-            <div>券有效期：{{userAct.couponPeriod}}</div>
-            <div>使用时段：{{userAct.useTimePeriod}}</div>
-            <div><div v-show="useServiceItem">使用项目：仅限{{useServiceItem}}</div><div v-html="userAct.actContent"></div></div>
-        </div>
-    </div>
-    <div class="share-coupons-pop pop-modal" :class="{ active : showSharePop }" v-if="isRepeatCoupn">
-        <div :class="{ active : global.userAgent.isWX }">发送给朋友或者分享到朋友圈</div>
-        <div class="center-wrap" :class="{ active : !global.userAgent.isWX }">
-            <div><a :href="shareUrl">{{shareUrl}}</a></div>
-            <div>长按复制您的专属链接，发送给您的朋友<br/>赢取更多优惠</div>
-            <div @click="doCloseSharePop()">关闭</div>
+        <div class="share-coupons-pop pop-modal" :class="{ active : showSharePop }" v-if="isRepeatCoupn">
+            <div :class="{ active : global.userAgent.isWX }">发送给朋友或者分享到朋友圈</div>
+            <div class="center-wrap" :class="{ active : !global.userAgent.isWX }">
+                <div><a :href="shareUrl">{{shareUrl}}</a></div>
+                <div>长按复制您的专属链接，发送给您的朋友<br/>赢取更多优惠</div>
+                <div @click="doCloseSharePop()">关闭</div>
+            </div>
         </div>
     </div>
 </template>
@@ -54,6 +56,7 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 userActId : "",
                 getDataUrl : "../api/v2/club/userredpacket/",
@@ -74,48 +77,48 @@
                 shareUrl : ""
             }
         },
-        route : {
-          data : function(transition){
-              var _this = this, global = _this.global;
-              _this.userActId = global.currPageQuery.userActId;
-              if(!_this.userActId){
-                  transition.abort();
-              }
-              else{
-                  return new Promise(function(resolve,reject){
-                      _this.$http.get(_this.getDataUrl+_this.userActId,{ params : { userType : "user" }}).then(function(res){
-                          res = res.body;
-                          if(res.statusCode == 200){
-                              res = res.respData;
-                              var userAct = res.userAct, couponNo = userAct.couponNo;
-                              _this.isMoneyCoupon = userAct.useType == "money";
-                              _this.isRepeatCoupn = userAct.couponType == "redpack";
-                              _this.couponQrCodeUrl = userAct.couponQrCodeUrl || "";
-                              userAct.couponNoText = couponNo.substr(0,4)+" "+couponNo.substr(4,4)+" "+couponNo.substr(8);
-                              _this.couponName = _this.isMoneyCoupon ? userAct.actValue+"元"+userAct.useTypeName : userAct.actTitle;
-                              if((userAct.couponStatus != "1" && userAct.couponStatus != "2") || !res.shareUrl) _this.shareStatus = "unwork";
-                              _this.useDefaultShareConfig = !(global.userAgent.isWX && (_this.shareStatus == ""));
-                              res.items = res.items || [];
-                              if(res.items.length>0){
-                                  var items = res.items, itemsArr = [];
-                                  for(var i=0;i<items.length;i++){
-                                      itemsArr.push(items[i]["name"]);
-                                  }
-                                  _this.useServiceItem = itemsArr.join("，");
-                              }
-                              if(_this.isRepeatCoupn && !_this.useDefaultShareConfig){
-                                  _this.doHandlerShareConfig(res);
-                              }
-                              resolve({ userAct : userAct, phoneNumsOfGet : res.phoneNums_get || [], phoneNumsOfUse : res.phoneNums_use || [] , shareUrl : res.shareUrl });
-                          }
-                          else{
-                              reject(false);
-                              transition.abort();
-                          }
-                      });
-                  });
-              }
-          }
+        created : function(){
+            var _this = this, global = _this.global;
+            _this.userActId = global.currPageQuery.userActId;
+            if(!_this.userActId){
+                return _this.$router.back();
+            }
+            else{
+                _this.loading = true;
+                _this.$http.get(_this.getDataUrl+_this.userActId,{ params : { userType : "user" }}).then(function(res){
+                    res = res.body;
+                    if(res.statusCode == 200){
+                        res = res.respData;
+                        var userAct = res.userAct, couponNo = userAct.couponNo;
+                        _this.isMoneyCoupon = userAct.useType == "money";
+                        _this.isRepeatCoupn = userAct.couponType == "redpack";
+                        _this.couponQrCodeUrl = userAct.couponQrCodeUrl || "";
+                        userAct.couponNoText = couponNo.substr(0,4)+" "+couponNo.substr(4,4)+" "+couponNo.substr(8);
+                        _this.couponName = _this.isMoneyCoupon ? userAct.actValue+"元"+userAct.useTypeName : userAct.actTitle;
+                        if((userAct.couponStatus != "1" && userAct.couponStatus != "2") || !res.shareUrl) _this.shareStatus = "unwork";
+                        _this.useDefaultShareConfig = !(global.userAgent.isWX && (_this.shareStatus == ""));
+                        res.items = res.items || [];
+                        if(res.items.length>0){
+                            var items = res.items, itemsArr = [];
+                            for(var i=0;i<items.length;i++){
+                                itemsArr.push(items[i]["name"]);
+                            }
+                            _this.useServiceItem = itemsArr.join("，");
+                        }
+                        if(_this.isRepeatCoupn && !_this.useDefaultShareConfig){
+                            _this.doHandlerShareConfig(res);
+                        }
+                        _this.userAct = userAct;
+                        _this.phoneNumsOfGet = res.phoneNums_get || [];
+                        _this.phoneNumsOfUse = res.phoneNums_use || [];
+                        _this.shareUrl = res.shareUrl;
+                    }
+                    else{
+                        return _this.$router.back();
+                    }
+                    _this.loading = false;
+                });
+            }
         },
         mounted: function(){
             var _this = this;

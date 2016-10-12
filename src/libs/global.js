@@ -6,6 +6,7 @@ import { IM } from "../libs/im";
  * 全局的数据
  * */
 exports.Global = {
+    eventHub : new Vue(),                      //event hub 组件之间通讯的hub
     data : {
         baseWidth : null,                           //页面加载时窗口初始宽度，用于计算页面 scale
         winWidth : null,                             //页面内容容器的当前宽度--固定20rem
@@ -50,6 +51,7 @@ exports.Global = {
         defaultServiceItemImgUrl : "images/home/serviceItem_default.jpg",//默认的服务项目图
         defaultGiftImg : "images/chat/gift_default.png",                              //默认的积分礼物图片
         loadDataErrorTip : "数据请求失败！",
+        visitPageErrorTip : "页面缺少访问参数！",
 
         clubId : null,                                                                               //当前会所ID
         clubLogoUrl : null,                                                                      //当前会所logo

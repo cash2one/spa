@@ -14,8 +14,7 @@ Vue.use(VueResource);
 Vue.http.options.emulateJSON = true;
 
 Global.init();
-var _global = Global.data;
-
+var _global = Global.data, isClubMode = _global.pageMode == "club";
 window["spa"] = _global;
 window["im"] = IM;
 
@@ -48,122 +47,92 @@ Vue.http.interceptors.push(function(request,next){
 
 //对于有:club参数的路径，对应的name是页面名称,否则加$(公众号模式)
 var pageRouterList = [
-    '/:club/home',                         //会所首页
-    '/:club/message',                     //消息列表
-    '/message',
-    '/:club/technicianList',              //技师列表
-    '/:club/technicianDetail',          //技师详情
-    '/technicianDetail',
-    '/:club/order',                          //订单列表
-    '/:club/personal',                     //个人中心
-    '/:club/clubProfile',                  //会所简介
-    '/:club/promotions',                 //优惠活动
-    '/:club/serviceList',                   //服务项目列表
-    '/:club/serviceItem',                 //服务项目详情
-    '/:club/map',                            //会所地址
-    '/:club/comment',                     //技师评论
-    '/comment',
-    '/:club/review',                          //技师评论列表
-    '/review',
-    '/:club/technicianImg',              //技师相册
-    '/technicianImg',
-    '/:club/chat',                             //聊天页面
-    '/chat',
-    '/:club/login',                             //登录
-    '/login',
-    '/:club/confirmLogin',                 //确认登录
-    '/confirmLogin',
-    '/:club/recoverPassword',            //找回密码
-    '/recoverPassword',
-    '/:club/register',                          //注册
-    '/register',
-    '/:club/promotionsActivity',          //会所活动详情
-    '/:club/accountDetail',                 //个人账户
-    '/:club/account',                          //个人账户
-    '/account',
-    '/:club/integralDetail',                 //积分中心
-    '/:club/integral',                          //
-    '/integral',
-    '/:club/coupon',                          //我的优惠券
-    '/coupon',
-    '/:club/couponDetail',                 //优惠券详情
-    '/couponDetail',
-    '/:club/confirmOrder',                 //预约页面
-    '/confirmOrder',
-    '/:club/paidCouponDetail',           //点钟券详情
-    '/paidCouponDetail',
-    '/:club/paidCoupon',                   //点钟券
-    '/paidCoupon',
-    '/:club/collect',                            //技师收藏
-    '/collect',
-    '/:club/contacts',                         //最近联系人
-    '/contacts',
-    '/:club/techReward',                    //打赏技师
-    '/techReward',
-    '/:club/info',                                //用户信息
-    '/info',
-    '/:club/picture',                           //用户修改头像
-    '/picture',
-    '/:club/integralDetail',                 //积分中心详情
-    '/integralDetail',
-    '/:club/integral',                          //积分中心--所有账户
-    '/integral',
-    '/:club/integralExplain',               //积分规则说明
-    '/integralExplain',
-    '/:club/suggestions',                    //投诉建议
-    '/:club/qrPayCode',                          //我的账户-付款二维码
-    '/qrPayCode',
-    '/:club/tradeRecords',                       //我的账户--交易记录
-    '/tradeRecords',
-    '/:club/treat',                                    //我的账户--交易记录
-    '/treat',
-    '/:club/recharge',                               //我的账户--充值
-    '/recharge',
-    '/:club/treatExplain',                           //我的账户--请客说明
-    '/treatExplain',
-    '/:club/treatRecords',                          //我的账户--请客记录
-    '/treatRecords',
-    '/:club/treatDetail',                             //我的账户--请客详情
-    '/treatDetail',
-    '/:club/bindPhone',                            //绑定手机
-    '/bindPhone',
-    '/:club/inviteCode',                            //输入邀请码
-    '/inviteCode',
-    '/:club/hourTicketList',                       //点钟券列表页
-    '/hourTicketList',
-    '/:club/serviceGroup',                          //服务列表
-    '/:club/member',                                  //会员活动
-    '/:club/qrPay',                                     //支付
-    '/qrPay',
-    '/:club/qrPayComplete',                       //支付完成
-    '/qrPayComplete'
+    'home',                         //会所首页
+    'message',                     //消息列表
+    'technicianList',              //技师列表
+    'technicianDetail',          //技师详情
+    'order',                          //订单列表
+    'personal',                     //个人中心
+    'clubProfile',                  //会所简介
+    'promotions',                 //优惠活动
+    'serviceList',                   //服务项目列表
+    'serviceItem',                 //服务项目详情
+    'map',                            //会所地址
+    'comment',                     //技师评论
+    'review',                          //技师评论列表
+    'technicianImg',              //技师相册
+    'chat',                             //聊天页面
+    'login',                             //登录
+    'confirmLogin',                 //确认登录
+    'recoverPassword',            //找回密码
+    'register',                          //注册
+    'promotionsActivity',          //会所活动详情
+    'accountDetail',                 //个人账户
+    'account',                          //个人账户
+    'integralDetail',                 //积分中心
+    'integral',                          //
+    'coupon',                          //我的优惠券
+    'couponDetail',                 //优惠券详情
+    'confirmOrder',                 //预约页面
+    'paidCouponDetail',           //点钟券详情
+    'paidCoupon',                   //点钟券
+    'collect',                            //技师收藏
+    'contacts',                         //最近联系人
+    'techReward',                    //打赏技师
+    'info',                                //用户信息
+    'picture',                           //用户修改头像
+    'integralDetail',                 //积分中心详情
+    'integral',                          //积分中心--所有账户
+    'integralExplain',               //积分规则说明
+    'suggestions',                    //投诉建议
+    'qrPayCode',                          //我的账户-付款二维码
+    'tradeRecords',                       //我的账户--交易记录
+    'treat',                                    //我的账户--交易记录
+    'recharge',                               //我的账户--充值
+    'treatExplain',                           //我的账户--请客说明
+    'treatRecords',                          //我的账户--请客记录
+    'treatDetail',                             //我的账户--请客详情
+    'bindPhone',                            //绑定手机
+    'inviteCode',                            //输入邀请码
+    'hourTicketList',                       //点钟券列表页
+    'serviceGroup',                          //服务列表
+    'member',                                  //会员活动
+    'qrPay',                                     //支付
+    'qrPayComplete'                      //支付完成
 ];
 
 var pageRouterOption = [];          //构造router的map选项
 var pageName;
-function RouterOption(path,name,componentName){
-    //console.log("name："+name+"--componentName："+componentName);
+function RouterOption(path,name){
     this.path = path;
     this.name = name;
     this.component = function(resolve){
-        require(['./views/'+componentName+'.vue'], resolve);
+        require(['./views/'+name+'.vue'], resolve);
     }
 }
 for(var i=0;i<pageRouterList.length;i++){
-    pageName = pageRouterList[i].substr(pageRouterList[i].lastIndexOf("/")+1);
-    pageRouterOption.push(new RouterOption(pageRouterList[i],( /:club/.test(pageRouterList[i]) ? "" : "$") + pageName,pageName));
+    pageName = pageRouterList[i];
+    if(!isClubMode){
+        pageRouterList[i] = "/"+pageRouterList[i];
+    }
+    pageRouterOption.push(new RouterOption(pageRouterList[i],pageName));
+}
+var clubPageRouterOption = [];
+if(isClubMode){//设置嵌套路由
+    clubPageRouterOption.push({
+        name : "app",
+        path : "/"+_global.clubId,
+        component : {
+            template : "<router-view></router-view>"
+        },
+        children : pageRouterOption
+    });
 }
 
-//console.dir(pageRouterOption);
 // 路由配置
-const Home = { template: '<div>This is Home</div>' }
-
 var router = new VueRouter({
-    // 是否开启History模式的路由,默认开发环境开启,生产环境不开启。如果生产环境的服务端没有进行相关配置,请慎用
     linkActiveClass : 'active',
-    routers : [
-        { path: '/', name: 'home', component: Home }
-    ]
+    routes : isClubMode ? clubPageRouterOption : pageRouterOption
 });
 
 console.log("router obj：");
@@ -173,8 +142,8 @@ router.beforeEach(function (to,from,next) {
     //window.scrollTo(0, 0);
     _global.currPageParams = to.params;
     _global.currPageQuery = to.query;
-    console.log("from："+JSON.stringify(from));
-    console.log("to："+JSON.stringify(to));
+    //console.log("from："+JSON.stringify(from));
+    //console.log("to："+JSON.stringify(to));
     var _AppMenu = document.querySelector("#menu-container");
     if(_AppMenu){
         if(/(home|message|order|personal|technicianList)/.test(to.name)){
@@ -191,4 +160,4 @@ router.afterEach(function () {
 
 });
 
-new Vue({ el: '#app', router, render: h => h(App) });
+new Vue({ router, render : h => h(App) }).$mount("#app");

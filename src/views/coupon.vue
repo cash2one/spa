@@ -2,26 +2,28 @@
     @import '../styles/page/coupon.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page" id="coupon-page" v-show="!$loadingRouteData" :style="{ height : global.winHeight+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>优惠券</div>
-        <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
-            <div class="list-item" v-for="singleClubData in dataList">
-                <div class='header' v-if="isQueryAll">{{ singleClubData.clubName }}</div>
-                <router-link v-for="item in singleClubData.list" class="item" :class="{ expire : item.isExpire }" :type="item.couponType" :to="{ name : item.couponType=='paid' ? 'paidCouponDetail' : 'couponDetail', query : { userActId : item.userActId }}" tag="div">
-                    <i></i>
-                    <div>{{ item.actTitle }}</div>
-                    <div>{{ item.useType == 'money' ? ( item.actValue+'元现金券') : '' }}<div v-html="item.consumeMoneyDescription"></div></div>
-                    <div>券有效期：{{ item.couponPeriod }}</div>
-                    <div>{{ item.useTypeName }}</div>
-                    <span v-if="item.isExpire">{{ item.couponStatusDescription }}</span>
-                    <span v-if="!item.isExpire && item.couponType == 'paid'" :class="item.couponStatusClass">{{ item.couponStatusDescription }}</span>
-                    <div v-show="item.couponType== 'redpack'">分享获得更多优惠机会</div>
-                </router-link>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page" id="coupon-page" v-show="!loading" :style="{ height : global.winHeight+'px' }">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>优惠券</div>
+            <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
+                <div class="list-item" v-for="singleClubData in dataList">
+                    <div class='header' v-if="isQueryAll">{{ singleClubData.clubName }}</div>
+                    <router-link v-for="item in singleClubData.list" class="item" :class="{ expire : item.isExpire }" :type="item.couponType" :to="{ name : item.couponType=='paid' ? 'paidCouponDetail' : 'couponDetail', query : { userActId : item.userActId }}" tag="div">
+                        <i></i>
+                        <div>{{ item.actTitle }}</div>
+                        <div>{{ item.useType == 'money' ? ( item.actValue+'元现金券') : '' }}<div v-html="item.consumeMoneyDescription"></div></div>
+                        <div>券有效期：{{ item.couponPeriod }}</div>
+                        <div>{{ item.useTypeName }}</div>
+                        <span v-if="item.isExpire">{{ item.couponStatusDescription }}</span>
+                        <span v-if="!item.isExpire && item.couponType == 'paid'" :class="item.couponStatusClass">{{ item.couponStatusDescription }}</span>
+                        <div v-show="item.couponType== 'redpack'">分享获得更多优惠机会</div>
+                    </router-link>
+                </div>
+                <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
+                <div class="finish-load-tip border-top" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
+                <div class="nullData" v-show="dataList.length==0 && !isAddData"><div></div><div>暂无内容...</div></div>
             </div>
-            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
-            <div class="finish-load-tip border-top" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
-            <div class="nullData" v-show="dataList.length==0 && !isAddData"><div></div><div>暂无内容...</div></div>
         </div>
     </div>
 </template>
@@ -32,6 +34,7 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 getRecordsUrl : "../api/v2/club/user_get_coupons",
                 dataList : [],

@@ -2,83 +2,84 @@
     @import '../styles/page/technicianList.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page" id="technician-list-page" v-show="!$loadingRouteData">
-        <div class="page-title">技师列表<a class="search" @click="doClickSwitchSearchInputBtn()"></a></div>
-        <div class="search" :class="{ active: showSearchInput }">
-            <input type="text" placeholder="技师昵称或者编号" maxlength="30" v-model="searchTechName" /><div @click="doClickSearchBtn()">搜索</div>
-        </div>
-        <div class="menu" :class="{ 'search-active': showSearchInput }">
-            <div class="status" @click="doClickChangeStatus()">
-                <div :class="{ active : stateActiveId=='free' }"></div>
-                <div>只显示闲</div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page" id="technician-list-page" v-show="!loading">
+            <div class="page-title">技师列表<a class="search" @click="doClickSwitchSearchInputBtn()"></a></div>
+            <div class="search" :class="{ active: showSearchInput }">
+                <input type="text" placeholder="技师昵称或者编号" maxlength="30" v-model="searchTechName" /><div @click="doClickSearchBtn()">搜索</div>
             </div>
-            <div class="comment" @click="doClickShowSelectScore()">
-                <div :class="{ active : showSelectScore }">
-                    <div>{{ scoreActiveId =='1' ? '评论最多' : '评分最高' }}</div>
-                    <span></span>
+            <div class="menu" :class="{ 'search-active': showSearchInput }">
+                <div class="status" @click="doClickChangeStatus()">
+                    <div :class="{ active : stateActiveId=='free' }"></div>
+                    <div>只显示闲</div>
                 </div>
-                <div :class="{ active : showSelectScore }">
-                    <div @click="doClickChangeScoreStatus('1')" :class="{ active : scoreActiveId =='1' }">评论最多</div>
-                    <div @click="doClickChangeScoreStatus('-1')" :class="{ active : scoreActiveId !='1' }">评分最高</div>
+                <div class="comment" @click="doClickShowSelectScore()">
+                    <div :class="{ active : showSelectScore }">
+                        <div>{{ scoreActiveId =='1' ? '评论最多' : '评分最高' }}</div>
+                        <span></span>
+                    </div>
+                    <div :class="{ active : showSelectScore }">
+                        <div @click="doClickChangeScoreStatus('1')" :class="{ active : scoreActiveId =='1' }">评论最多</div>
+                        <div @click="doClickChangeScoreStatus('-1')" :class="{ active : scoreActiveId !='1' }">评分最高</div>
+                    </div>
                 </div>
+                <div class="filter" @click="doClickShowServiceItemSelectArea()">
+                    <div></div>
+                    <div :class="{ active : currSelectItemName != '全部项目' }">{{currSelectItemName=="全部项目" ? "项目筛选" : currSelectItemName }}</div></div>
             </div>
-            <div class="filter" @click="doClickShowServiceItemSelectArea()">
-                <div></div>
-                <div :class="{ active : currSelectItemName != '全部项目' }">{{currSelectItemName=="全部项目" ? "项目筛选" : currSelectItemName }}</div></div>
-        </div>
 
-        <div class="tech-list" ref="listEle" :style="{ height : (global.winHeight-7.633*global.winScale*16)+'px' }" @scroll="doHandlerTechListScroll()">
-            <router-link class="item" :to="{ name : 'technicianDetail', query : { id : tech.id } }" v-for="tech in techList" :key="tech.id" tag="div">
-                <div>
-                    <div :style="{ backgroundImage : 'url('+(tech.avatarUrl || global.defaultHeader)+')' }"></div>
-                    <div :class="tech['status']">{{ tech['status']=='free' ? '闲' : '忙' }}</div>
-                </div>
-                <div>
+            <div class="tech-list" ref="listEle" :style="{ height : (global.winHeight-7.633*global.winScale*16)+'px' }" @scroll="doHandlerTechListScroll()">
+                <router-link class="item" :to="{ name : 'technicianDetail', query : { id : tech.id } }" v-for="tech in techList" :key="tech.id" tag="div">
+                    <div>
+                        <div :style="{ backgroundImage : 'url('+(tech.avatarUrl || global.defaultHeader)+')' }"></div>
+                        <div :class="tech['status']">{{ tech['status']=='free' ? '闲' : '忙' }}</div>
+                    </div>
                     <div>
                         <div>
-                            <div>{{ tech['name'] || global.defaultTechName }}</div>
-                            <div v-show="tech['serialNo']">[<span>{{ tech['serialNo'] }}</span>]</div>
-                        </div>
-                        <div>
-                            <div class="stars">
-                                <div :style="{ width : tech['star']+'%'}"></div>
+                            <div>
+                                <div>{{ tech['name'] || global.defaultTechName }}</div>
+                                <div v-show="tech['serialNo']">[<span>{{ tech['serialNo'] }}</span>]</div>
                             </div>
-                            <div>{{tech['commentCount']}}评论</div>
+                            <div>
+                                <div class="stars">
+                                    <div :style="{ width : tech['star']+'%'}"></div>
+                                </div>
+                                <div>{{tech['commentCount']}}评论</div>
+                            </div>
+                        </div>
+                        <div>
+                            <span v-for="tag in tech.tagStrArr">{{tag}}</span>
+                        </div>
+                        <div>
+                            <div>{{tech['description'] || ''}}</div>
+                            <div>预约</div>
                         </div>
                     </div>
-                    <div>
-                        <span v-for="tag in tech.tagStrArr">{{tag}}</span>
-                    </div>
-                    <div>
-                        <div>{{tech['description'] || ''}}</div>
-                        <div>预约</div>
-                    </div>
-                </div>
-            </router-link>
-            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
-            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
-            <div class="nullData" v-show="techList.length==0 && !isAddData"><div></div><div>暂无内容...</div></div>
-        </div>
-    </div>
-
-    <div id="tech-list-select-area" class="pop-modal" :class="{ active : showServiceItemSelectArea }">
-        <div>
-            <div>
-                <div class="all">
-                    <div :class="{ active : itemActiveId=='-1' }" @click="doClickServiceItem('-1','全部项目','')">全部项目</div>
-                </div>
-                <div class="category" v-for="item in serviceItems">
-                    <div>{{item.name}}</div>
-                    <div>
-                        <div v-for="subItem in item.serviceItems" :class="{ active : itemActiveId==subItem.id }" @click="doClickServiceItem(subItem.id,subItem.name,item.name)">{{subItem.name}}</div>
-                    </div>
-                </div>
-                <div class="null"></div>
+                </router-link>
+                <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
+                <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
+                <div class="nullData" v-show="techList.length==0 && !isAddData"><div></div><div>暂无内容...</div></div>
             </div>
-            <div class="btns">
-                <div @click="doClickServiceItemBtn('cancel')">取消</div>
-                <div @click="doClickServiceItemBtn('ok')">确定</div>
+        </div>
+        <div id="tech-list-select-area" class="pop-modal" :class="{ active : showServiceItemSelectArea }">
+            <div>
+                <div>
+                    <div class="all">
+                        <div :class="{ active : itemActiveId=='-1' }" @click="doClickServiceItem('-1','全部项目','')">全部项目</div>
+                    </div>
+                    <div class="category" v-for="item in serviceItems">
+                        <div>{{item.name}}</div>
+                        <div>
+                            <div v-for="subItem in item.serviceItems" :class="{ active : itemActiveId==subItem.id }" @click="doClickServiceItem(subItem.id,subItem.name,item.name)">{{subItem.name}}</div>
+                        </div>
+                    </div>
+                    <div class="null"></div>
+                </div>
+                <div class="btns">
+                    <div @click="doClickServiceItemBtn('cancel')">取消</div>
+                    <div @click="doClickServiceItemBtn('ok')">确定</div>
+                </div>
             </div>
         </div>
     </div>
@@ -90,6 +91,7 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 getTechListUrl : "../api/v2/club/"+Global.data.clubId+"/technician",
                 getServiceItemUrl : "../api/v2/club/"+Global.data.clubId+"/service/select",
                 global : Global.data,
@@ -139,44 +141,37 @@
                 /////////////////
             })
         },
-        route : {
-            data : function(transition){
-                var _this = this;
-                return new Promise(function(resolve,reject){
-                    var pageData = _this.global.pageData["technicianList"];
-                    if(pageData){
-                        var resolveDataObj = {};
-                        for(var key in pageData){
-                            resolveDataObj[key] = pageData[key];
-                        }
-                        resolve(resolveDataObj);
+        created : function(){
+            var _this = this, pageData = _this.global.pageData["technicianList"];
+            if(pageData){
+                for(var key in pageData){
+                    _this[key] = pageData[key];
+                }
+            }
+            else{
+                _this.loading = true;
+                _this.$http.get(_this.getTechListUrl,{ params : {
+                    page : _this.currPage,
+                    pageSize : _this.pageSize,
+                    stateActiveId : _this.stateActiveId,
+                    scoreActiveId : _this.scoreActiveId,
+                    itemActiveId : _this.currItemActiveId,
+                    techName : _this.showSearchInput ? encodeURIComponent(_this.searchTechName) : ""
+                }}).then(function(res){
+                    res = res.body;
+                    if(res && res.list){
+                        _this.doHandlerTechListData(res.list);
+                        _this.techList = res.list;
                     }
                     else{
-                        _this.$http.get(_this.getTechListUrl,{ params : {
-                            page : _this.currPage,
-                            pageSize : _this.pageSize,
-                            stateActiveId : _this.stateActiveId,
-                            scoreActiveId : _this.scoreActiveId,
-                            itemActiveId : _this.currItemActiveId,
-                            techName : _this.showSearchInput ? encodeURIComponent(_this.searchTechName) : ""
-                        }}).then(function(res){
-                            res = res.body;
-                            if(res && res.list){
-                                _this.doHandlerTechListData(res.list);
-                                resolve({ techList : res.list });
-                            }
-                            else{
-                                Util.tipShow(_this.global.loadDataErrorTip);
-                                reject(false);
-                                transition.abort();
-                            }
-                        }, function(){
-                            Util.tipShow(_this.global.loadDataErrorTip);
-                            reject(false);
-                            transition.abort();
-                        });
+                        Util.tipShow(_this.global.loadDataErrorTip);
+                        return _this.$router.back();
                     }
-                })
+                    _this.loading = false;
+                }, function(){
+                    Util.tipShow(_this.global.loadDataErrorTip);
+                    return _this.$router.back();
+                });
             }
         },
         methods: {

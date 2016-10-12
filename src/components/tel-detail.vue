@@ -1,31 +1,40 @@
 <template>
-    <div class="telDetail pop-modal" :class="{'active' : showTelDetail }" v-if="telephone.length>0">
+    <div class="telDetail pop-modal" :class="{ active : show }" v-if="telephone.length>0">
         <div>
             <a v-for="tel in telephone" :href="'tel:'+tel">{{tel}}</a>
-            <a @click="hideTelDetail()">取消</a>
+            <a @click="doChangeVisible(false)">取消</a>
         </div>
     </div>
 </template>
 
 <script>
+    import { Global } from '../libs/global';
+
     module.exports = {
-        data: function(){
+        data : function(){
             return {
-                telephone : [],
-                showTelDetail : false
-            };
+                show : false,
+                eventHub : Global.eventHub
+            }
         },
-        props : ['telephone'],
-        events : {
-          "change-visible" : function(option){
-              console.log("change-visible");
-              this.showTelDetail = option.ope == "show";
-          }
+        props : {
+            telephone : {
+                type : Array,
+                default : []
+            }
+        },
+        created : function(){
+            var _this = this;
+            _this.eventHub.$on("change-tel-detail",_this.doChangeVisible);
         },
         methods: {
-            hideTelDetail : function(){
-                this.showTelDetail = false;
+            doChangeVisible : function(type){
+                this.show = type;
             }
+        },
+        beforeDestroy : function(){
+            var _this = this;
+            _this.eventHub.$off("change-tel-detail",_this.doChangeVisible);
         }
     }
 </script>

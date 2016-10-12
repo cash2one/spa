@@ -2,24 +2,26 @@
     @import '../styles/page/login.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page login-page" id="recover-password-page" v-show="!$loadingRouteData">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>修改密码</div>
-        <div class="input tel spec">
-            <i></i><span>+86</span><input type="tel" placeholder="请输入您的11位手机号" v-model="tel" maxlength="11" v-tel-input="isTelValid"/>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page login-page" id="recover-password-page" v-show="!loading">
+            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>修改密码</div>
+            <div class="input tel spec">
+                <i></i><span>+86</span><input type="tel" placeholder="请输入您的11位手机号" v-model="tel" maxlength="11" v-tel-input="isTelValid"/>
+            </div>
+            <div class="input auth spec">
+                <i></i><input type="tel" placeholder="请输入手机短信验证码" v-model="testCode" v-test-code-input="isTestCodeVaild" maxlength="4"/><a @click="getTestCode()" :class="testCodeBtnStatus">{{testCodeBtnText}}</a>
+            </div>
+            <div class="input pw">
+                <i></i><input type="password" placeholder="请输入6-20位密码，仅限字母和数字" v-password-input="isPasswordValid" v-model="password" maxlength="20"/>
+            </div>
+            <div class="error" v-show="!isTelValid">*&nbsp;请输入正确的11位手机号</div>
+            <div class="error" v-show="isTelValid && !isTestCodeVaild">*&nbsp;请输入短信验证码</div>
+            <div class="error" v-show="isTelValid && isTestCodeVaild && !isPasswordValid">*&nbsp;请输入6~20位密码</div>
+            <div class="next-btn" :class="{ active : isTelValid && isTestCodeVaild && isPasswordValid }" @click="doClickConfirmBtn()">确认修改密码</div>
+            <div class="tip-title">注：</div>
+            <div class="tip">请输入相关信息完成密码的重置</div>
         </div>
-        <div class="input auth spec">
-            <i></i><input type="tel" placeholder="请输入手机短信验证码" v-model="testCode" v-test-code-input="isTestCodeVaild" maxlength="4"/><a @click="getTestCode()" :class="testCodeBtnStatus">{{testCodeBtnText}}</a>
-        </div>
-        <div class="input pw">
-            <i></i><input type="password" placeholder="请输入6-20位密码，仅限字母和数字" v-password-input="isPasswordValid" v-model="password" maxlength="20"/>
-        </div>
-        <div class="error" v-show="!isTelValid">*&nbsp;请输入正确的11位手机号</div>
-        <div class="error" v-show="isTelValid && !isTestCodeVaild">*&nbsp;请输入短信验证码</div>
-        <div class="error" v-show="isTelValid && isTestCodeVaild && !isPasswordValid">*&nbsp;请输入6~20位密码</div>
-        <div class="next-btn" :class="{ active : isTelValid && isTestCodeVaild && isPasswordValid }" @click="doClickConfirmBtn()">确认修改密码</div>
-        <div class="tip-title">注：</div>
-        <div class="tip">请输入相关信息完成密码的重置</div>
     </div>
 </template>
 <script>
@@ -37,6 +39,7 @@
         },
         data: function(){
             return {
+                loading : false,
                 checkLoginNameUrl : "../api/v1/user/checkLoginName",
                 getTestCodeUrl : "../api/v1/icode",
                 resetPasswordUrl : "../api/v1/user/resetPassword",
@@ -53,13 +56,10 @@
                 getTestCodeRepeatCount : 6
             }
         },
-        route : {
-            data : function(transition){
-                var   _this = this, _userLoginParam = Util.localStorage("spa-login-info");
-                if(_userLoginParam){
-                    _this.userLoginParam = JSON.parse(_userLoginParam);
-                }
-                transition.next();
+        created : function(){
+            var   _this = this, _userLoginParam = Util.localStorage("spa-login-info");
+            if(_userLoginParam){
+                _this.userLoginParam = JSON.parse(_userLoginParam);
             }
         },
         mounted: function(){

@@ -2,9 +2,11 @@
     @import '../styles/page/map.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page-back-btn" @click="doClickPageBack()" v-show="!$loadingRouteData"></div>
-    <div class="page" id="map-page" :style="{ height : global.winHeight+'px'}" v-show="!$loadingRouteData"></div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page-back-btn" @click="doClickPageBack()" v-show="!loading"></div>
+        <div class="page" id="map-page" :style="{ height : global.winHeight+'px'}" v-show="!loading"></div>
+    </div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -14,34 +16,32 @@
     module.exports = {
         data: function(){
             return {
+                loading : false,
                 //getClubPlaceDataUrl : "../json/map.json",
                 getClubPlaceDataUrl : "../api/v2/club/club_map",
                 global : Global.data,
                 mapData : null
             };
         },
-        route : {
-            data : function(transition){
-                var _this = this;
-                return new Promise(function(resolve,reject){
-                    _this.$http.get(_this.getClubPlaceDataUrl,{ params : { clubId : _this.global.clubId } }).then(function(res){
-                        res = res.body;
-                        if(res && res.statusCode =="200" && AMap && res.respData.lngx){
-                            resolve({mapData : res.respData });
-                            _this.initPage(res.respData);
-                        }
-                        else{
-                            Util.tipShow("获取会所位置失败！");
-                            reject(false);
-                            transition.abort();
-                        }
-                    }, function(){
-                        Util.tipShow("获取会所位置失败！");
-                        reject(false);
-                        transition.abort();
-                    });
-                })
-            }
+        created : function(){
+            var _this = this;
+            _this.loading = true;
+            _this.$http.get(_this.getClubPlaceDataUrl,{ params : { clubId : _this.global.clubId } }).then(function(res){
+                res = res.body;
+                if(res && res.statusCode =="200" && AMap && res.respData.lngx){
+                    res = res.respData;
+                    _this.mapData = res;
+                    _this.initPage(res);
+                }
+                else{
+                    Util.tipShow("获取会所位置失败！");
+                    _this.$router.back();
+                }
+                _this.loading = false;
+            }, function(){
+                Util.tipShow("获取会所位置失败！");
+                _this.$router.back();
+            });
         },
         methods: {
             initPage : function(res){

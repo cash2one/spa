@@ -2,81 +2,83 @@
     @import '../styles/page/technicianDetail.css';
 </style>
 <template>
-    <div class="loading" v-show="$loadingRouteData"><i></i><i></i><i></i></div>
-    <div class="page-back-btn tech-detail-page" @click="doClickPageBack()" v-show="!$loadingRouteData"></div>
-    <div class="page-back-home" @click="doClickBackHomeBtn()">会所</div>
-    <div class="page" id="technician-detail-page" v-show="!$loadingRouteData" :style="{ height : (global.winHeight-2.667*global.winScale*16)+'px' }">
-        <div class="top">
-            <div class="header"><div v-if="techAvatarUrl" :style="{ backgroundImage : 'url('+techAvatarUrl+')' }"></div></div>
-            <div class="name"><div>{{techName}}</div><div v-show="techNo">{{techNo}}</div><div :class="techStatus">{{ techStatus=='free' ? '闲' : '忙' }}</div></div>
-            <div class="favorite" @click="doClickCollectBtn()" :class="{ collected : isFavorite }"><div></div><div>{{favoriteCount}}</div><span :class="{ active : showCollectedAni }">{{collectedText}}</span></div>
+    <div>
+        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
+        <div class="page-back-btn tech-detail-page" @click="doClickPageBack()" v-show="!loading"></div>
+        <div class="page-back-home" @click="doClickBackHomeBtn()">会所</div>
+        <div class="page" id="technician-detail-page" v-show="!loading" :style="{ height : (global.winHeight-2.667*global.winScale*16)+'px' }">
+            <div class="top">
+                <div class="header"><div v-if="techAvatarUrl" :style="{ backgroundImage : 'url('+techAvatarUrl+')' }"></div></div>
+                <div class="name"><div>{{techName}}</div><div v-show="techNo">{{techNo}}</div><div :class="techStatus">{{ techStatus=='free' ? '闲' : '忙' }}</div></div>
+                <div class="favorite" @click="doClickCollectBtn()" :class="{ collected : isFavorite }"><div></div><div>{{favoriteCount}}</div><span :class="{ active : showCollectedAni }">{{collectedText}}</span></div>
+            </div>
+            <div class="pics" v-show="techPics.length>0">
+                <div><router-link v-for="pic in techPics" :style="{ backgroundImage : 'url('+pic.imageUrl+')' }" :to="{ name : 'technicianImg' , query : { id : techId , index : pic.orders }}" tag="div"></router-link></div>
+            </div>
+            <router-link class="comment" :to="{ name : 'review' , query : { id : techId }}" tag="div">
+                <div class="icon"></div>
+                <div class="arrow"></div>
+                <div>所有评论</div>
+                <div>
+                    <div class="stars"><div :style="{ width : techStar+'%'}"></div></div>
+                    <div>{{techCommentCount}}评论</div>
+                </div>
+            </router-link>
+            <router-link class="view" :to="{ name : 'technicianList' }" tag="div">
+                <div class="icon"></div>
+                <div class="arrow"></div>
+                <div>查看店内其他技师</div>
+            </router-link>
+            <div class="service-item" v-show="serviceItems.length>0">
+                <div class="title">选择项目<div></div></div>
+                <div class="wrap">
+                    <div class="item" v-for="service in serviceItems" :class="{ selected : service.id == currSelectItem }" @click="doSelectServiceItem(service.id)">
+                        <div></div>
+                        <div :style="{ backgroundImage : 'url('+service.imageUrl+')' }"></div>
+                        <div>{{service.name}}</div>
+                        <div>
+                            <div>{{service.price1 | itemPriceFormatter(service.duration1,service.durationUnit)}}</div>
+                            <div v-show="service.price2">{{service.price2 | itemPriceFormatter(service.duration2,service.durationUnitPlus)}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="pics" v-show="techPics.length>0">
-            <div><router-link v-for="pic in techPics" :style="{ backgroundImage : 'url('+pic.imageUrl+')' }" :to="{ name : 'technicianImg' , query : { id : techId , index : pic.orders }}" tag="div"></router-link></div>
+        <div class="tech-detail-footer-wrap">
+            <div @click="doClickCommentBtn()"><i></i>点评</div>
+            <div @click="doClickRewardBtn()"><i></i>打赏</div>
+            <router-link :to="{ name : 'chat', query : { techId : techId } }" tag="div"><i></i>聊天</router-link>
+            <div @click="doClickOrderBtn()" :class="{ active : canOrder }">预约</div>
         </div>
-        <router-link class="comment" :to="{ name : 'review' , query : { id : techId }}" tag="div">
-            <div class="icon"></div>
-            <div class="arrow"></div>
-            <div>所有评论</div>
+
+        <tel-detail ref="telDetail" v-if="telephone.length>0" :telephone="telephone"></tel-detail>
+
+        <div class="club-coupon" :class="{ hide : paidCoupons.length==0 && ordinaryCoupons.length==0 }" @click="switchCouponListStatus(true)"><div></div><span>抢优惠</span></div>
+        <div class="coupon-list" :class="{ active : showCouponList }">
             <div>
-                <div class="stars"><div :style="{ width : techStar+'%'}"></div></div>
-                <div>{{techCommentCount}}评论</div>
-            </div>
-        </router-link>
-        <router-link class="view" :to="{ name : 'technicianList' }" tag="div">
-            <div class="icon"></div>
-            <div class="arrow"></div>
-            <div>查看店内其他技师</div>
-        </router-link>
-        <div class="service-item" v-show="serviceItems.length>0">
-            <div class="title">选择项目<div></div></div>
-            <div class="wrap">
-                <div class="item" v-for="service in serviceItems" :class="{ selected : service.id == currSelectItem }" @click="doSelectServiceItem(service.id)">
-                    <div></div>
-                    <div :style="{ backgroundImage : 'url('+service.imageUrl+')' }"></div>
-                    <div>{{service.name}}</div>
-                    <div>
-                        <div>{{service.price1 | itemPriceFormatter(service.duration1,service.durationUnit)}}</div>
-                        <div v-show="service.price2">{{service.price2 | itemPriceFormatter(service.duration2,service.durationUnitPlus)}}</div>
+                <div class="title"><span>抢优惠</span><div @click="switchCouponListStatus(false)">&times;</div></div>
+                <div class="list">
+                    <div class="coupon-title" v-if="paidCoupons.length>0">点钟券</div>
+                    <div class="coupon-item paid" v-for="coupon in paidCoupons" @click="doClickPaidCoupon(coupon)">
+                        <div>
+                            <div>{{coupon.actTitle}}</div>
+                            <div>{{coupon.consumeMoneyDescription}}</div>
+                        </div>
+                        <div>
+                            <div>点钟券</div>
+                            <div>立即购买</div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="tech-detail-footer-wrap">
-        <div @click="doClickCommentBtn()"><i></i>点评</div>
-        <div @click="doClickRewardBtn()"><i></i>打赏</div>
-        <router-link :to="{ name : 'chat', query : { techId : techId } }" tag="div"><i></i>聊天</router-link>
-        <div @click="doClickOrderBtn()" :class="{ active : canOrder }">预约</div>
-    </div>
-
-    <tel-detail ref="telDetail" v-if="telephone.length>0" :telephone="telephone"></tel-detail>
-
-    <div class="club-coupon" :class="{ hide : paidCoupons.length==0 && ordinaryCoupons.length==0 }" @click="switchCouponListStatus(true)"><div></div><span>抢优惠</span></div>
-    <div class="coupon-list" :class="{ active : showCouponList }">
-        <div>
-            <div class="title"><span>抢优惠</span><div @click="switchCouponListStatus(false)">&times;</div></div>
-            <div class="list">
-                <div class="coupon-title" v-if="paidCoupons.length>0">点钟券</div>
-                <div class="coupon-item paid" v-for="coupon in paidCoupons" @click="doClickPaidCoupon(coupon)">
-                    <div>
-                        <div>{{coupon.actTitle}}</div>
-                        <div>{{coupon.consumeMoneyDescription}}</div>
-                    </div>
-                    <div>
-                        <div>点钟券</div>
-                        <div>立即购买</div>
-                    </div>
-                </div>
-                <div class="coupon-title" v-if="ordinaryCoupons.length>0">优惠券</div>
-                <div class="coupon-item ordinary" v-for="coupon in ordinaryCoupons">
-                    <div>
-                        <div>{{coupon.actTitle}}</div>
-                        <div>{{(coupon.useType == 'money' ? (coupon.actValue+'元现金券，') : '') + coupon.consumeMoneyDescription}}</div>
-                    </div>
-                    <div>
-                        <div>{{coupon.useTypeName}}</div>
-                        <div>{{ (coupon.getFlag == 'already_get' ? '已领取' : (coupon.getFlag == 'finish_get' ? '已领完' : '立即领取')) }}</div>
+                    <div class="coupon-title" v-if="ordinaryCoupons.length>0">优惠券</div>
+                    <div class="coupon-item ordinary" v-for="coupon in ordinaryCoupons">
+                        <div>
+                            <div>{{coupon.actTitle}}</div>
+                            <div>{{(coupon.useType == 'money' ? (coupon.actValue+'元现金券，') : '') + coupon.consumeMoneyDescription}}</div>
+                        </div>
+                        <div>
+                            <div>{{coupon.useTypeName}}</div>
+                            <div>{{ (coupon.getFlag == 'already_get' ? '已领取' : (coupon.getFlag == 'finish_get' ? '已领完' : '立即领取')) }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -95,6 +97,7 @@
         },
         data: function(){
             return {
+                loading : false,
                 global : Global.data,
                 queryTechDetailUrl : "../api/v2/club/technician/"+Global.data.currPageQuery.id,
                 queryClubCouponUrl : "../api/v2/club/"+Global.data.clubId+"/coupons",
@@ -152,58 +155,51 @@
                 }
             });
         },
-        route : {
-            data : function(transition){
-                var _this = this;
-                if(_this.global.currPageQuery.id == undefined){//链接上无技师id
-                    transition.abort();
-                    return;
-                }
-                return new Promise(function(resolve,reject){
-                    _this.$http.get(_this.queryTechDetailUrl).then(function(res){
-                        res = res.body;
-                        if(res && res.info){
-                            ///////////技师相册缓存到global
-                            if(res.albums){
-                                var pageData = _this.global.pageData;
-                                if(!pageData["technicianImg"]){
-                                    pageData["technicianImg"] = {};
-                                }
-                                pageData["technicianImg"][res.id] = res.albums;
-                            }
-                            resolve({
-                                techId : res.id,
-                                techAvatarUrl : res.info.avatarUrl || _this.global.defaultHeader,
-                                techName : res.info.name || _this.global.defaultTechName,
-                                techNo : res.info.serialNo || "",
-                                techStatus : res.info.status || "free",
-                                favoriteCount : parseInt(res.favoriteCount || 0),
-                                techInviteCode : res.info.inviteCode || "",
-                                techPics : res.albums || [],
-                                techCommentCount : res.info.commentCount || 0,
-                                techStar : res.info.star || 0,
-                                serviceItems : res.service || [],
-                                canComment : res.toDayCommentCount !=1,
-                                isFavorite : (res["isFavorite"] || 'n').toLowerCase() == 'y',
-                                canOrder : (res['appointment'] || 'y').toLowerCase() != 'n' || (res['phoneAppointment'] || 'y').toLowerCase() != 'n',
-                                phoneAppointment : (res.phoneAppointment || 'y').toLowerCase(),
-                                appointment : (res.appointment || 'y').toLowerCase(),
-                                telephone : res.telephone ? res.telephone.split(",") : [],
-                                payAppointment : res.payAppointment || 'N'
-                            });
-                        }
-                        else{
-                            Util.tipShow(_this.global.loadDataErrorTip);
-                            reject(false);
-                            transition.abort();
-                        }
-                    }, function(){
-                        Util.tipShow(_this.global.loadDataErrorTip);
-                        reject(false);
-                        transition.abort();
-                    });
-                })
+        created : function(){
+            var _this = this;
+            if(_this.global.currPageQuery.id == undefined){//链接上无技师id
+                return _this.$router.back();
             }
+            _this.loading = true;
+            _this.$http.get(_this.queryTechDetailUrl).then(function(res){
+                res = res.body;
+                if(res && res.info){
+                    ///////////技师相册缓存到global
+                    if(res.albums){
+                        var pageData = _this.global.pageData;
+                        if(!pageData["technicianImg"]){
+                            pageData["technicianImg"] = {};
+                        }
+                        pageData["technicianImg"][res.id] = res.albums;
+                    }
+                    _this.techId = res.id;
+                    _this.techAvatarUrl = res.info.avatarUrl || _this.global.defaultHeader;
+                    _this.techName = res.info.name || _this.global.defaultTechName;
+                    _this.techNo = res.info.serialNo || "";
+                    _this.techStatus = res.info.status || "free";
+                    _this.favoriteCount = parseInt(res.favoriteCount || 0);
+                    _this.techInviteCode = res.info.inviteCode || "";
+                    _this.techPics = res.albums || [];
+                    _this.techCommentCount = res.info.commentCount || 0;
+                    _this.techStar = res.info.star || 0;
+                    _this.serviceItems = res.service || [];
+                    _this.canComment = res.toDayCommentCount != 1;
+                    _this.isFavorite = (res["isFavorite"] || 'n').toLowerCase() == 'y';
+                    _this.canOrder = (res['appointment'] || 'y').toLowerCase() != 'n' || (res['phoneAppointment'] || 'y').toLowerCase() != 'n';
+                    _this.phoneAppointment = (res.phoneAppointment || 'y').toLowerCase();
+                    _this.appointment = (res.appointment || 'y').toLowerCase();
+                    _this.telephone = res.telephone ? res.telephone.split(",") : [];
+                    _this.payAppointment = res.payAppointment || 'N';
+                }
+                else{
+                    Util.tipShow(_this.global.loadDataErrorTip);
+                    return _this.$router.back();
+                }
+                _this.loading = false;
+            }, function(){
+                Util.tipShow(_this.global.loadDataErrorTip);
+                return _this.$router.back();
+            });
         },
         methods: {
             doClickPageBack : function(){//点击返回按钮
