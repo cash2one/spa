@@ -2,9 +2,7 @@
     @import '../styles/page/treatRecords.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="treat-records-page" v-show="!loading">
+    <div class="page" id="treat-records-page" v-show="!global.loading">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>请客记录</div>
             <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
                 <router-link class="list-item" v-for="item in dataList" :to="{ name : 'treatDetail' , query : { detailId : item.id }}" tag="div">
@@ -22,7 +20,6 @@
                 <div class="nullData" v-show="dataList.length==0 && !isAddData"><div></div><div>暂无内容...</div></div>
             </div>
         </div>
-    </div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -31,7 +28,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 getRecordsUrl : "../api/v2/finacial/account/payforother/list",
                 dataList : [],
@@ -130,10 +126,10 @@
                         _this.showDataLoadTip = false;
                     }
                     else {
-                        Util.tipShow(global.loadDataErrorTip);
+                        Util.tipShow(global.loadError);
                     }
                 }, function () {
-                    Util.tipShow(global.loadDataErrorTip);
+                    Util.tipShow(global.loadError);
                 });
             },
             doHandlerListScroll : function(){

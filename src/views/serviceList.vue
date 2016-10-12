@@ -3,9 +3,8 @@
 </style>
 <template>
     <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page-back-btn" @click="doClickPageBack()" v-show="!loading"></div>
-        <div class="page" id="service-list-page" v-show="!loading">
+        <div class="page-back-btn" @click="doClickPageBack()" v-show="!global.loading"></div>
+        <div class="page" id="service-list-page" v-show="!global.loading">
             <div class="category" v-for="service in serviceList">
                 <div :class="service['code']">
                     <div></div>
@@ -32,7 +31,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 //getServiceListDataUrl : "../json/serviceList.json",
                 getServiceListDataUrl : "../api/v2/club/"+Global.data.clubId+"/categoryService",
                 global : Global.data,
@@ -41,19 +39,20 @@
         },
         created : function(){
             var _this = this, global = _this.global;
-            _this.loading = true;
+            global.loading = true;
             _this.$http.get(_this.getServiceListDataUrl).then(function(res){
+                global.loading = false;
                 res = res.body;
                 if(res){
                     _this.serviceList = res;
                 }
                 else{
-                    Util.tipShow(global.loadDataErrorTip);
+                    Util.tipShow(global.loadError);
                     _this.$router.back();
                 }
-                _this.loading = false;
             },function(){
-                Util.tipShow(global.loadDataErrorTip);
+                Util.tipShow(global.loadError);
+                global.loading = false;
                 _this.$router.back();
             })
         },

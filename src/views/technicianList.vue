@@ -3,8 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="technician-list-page" v-show="!loading">
+        <div class="page" id="technician-list-page" v-show="!global.loading">
             <div class="page-title">技师列表<a class="search" @click="doClickSwitchSearchInputBtn()"></a></div>
             <div class="search" :class="{ active: showSearchInput }">
                 <input type="text" placeholder="技师昵称或者编号" maxlength="30" v-model="searchTechName" /><div @click="doClickSearchBtn()">搜索</div>
@@ -91,7 +90,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 getTechListUrl : "../api/v2/club/"+Global.data.clubId+"/technician",
                 getServiceItemUrl : "../api/v2/club/"+Global.data.clubId+"/service/select",
                 global : Global.data,
@@ -142,14 +140,14 @@
             })
         },
         created : function(){
-            var _this = this, pageData = _this.global.pageData["technicianList"];
+            var _this = this, global = _this.global, pageData = global.pageData["technicianList"];
             if(pageData){
                 for(var key in pageData){
                     _this[key] = pageData[key];
                 }
             }
             else{
-                _this.loading = true;
+                global.loading = true;
                 _this.$http.get(_this.getTechListUrl,{ params : {
                     page : _this.currPage,
                     pageSize : _this.pageSize,
@@ -158,19 +156,20 @@
                     itemActiveId : _this.currItemActiveId,
                     techName : _this.showSearchInput ? encodeURIComponent(_this.searchTechName) : ""
                 }}).then(function(res){
+                    global.loading = false;
                     res = res.body;
                     if(res && res.list){
                         _this.doHandlerTechListData(res.list);
                         _this.techList = res.list;
                     }
                     else{
-                        Util.tipShow(_this.global.loadDataErrorTip);
-                        return _this.$router.back();
+                        Util.tipShow(global.loadError);
+                        _this.$router.back();
                     }
-                    _this.loading = false;
                 }, function(){
-                    Util.tipShow(_this.global.loadDataErrorTip);
-                    return _this.$router.back();
+                    Util.tipShow(global.loadError);
+                    global.loading = false;
+                    _this.$router.back();
                 });
             }
         },
@@ -224,10 +223,10 @@
                         //console.log((+new Date())+"---_this.showFinishLoadTip："+_this.showFinishLoadTip+"--_this.isDataAddEnd："+_this.isDataAddEnd);
                     }
                     else {
-                        Util.tipShow(_this.global.loadDataErrorTip);
+                        Util.tipShow(_this.global.loadError);
                     }
                 }, function () {
-                    Util.tipShow(_this.global.loadDataErrorTip);
+                    Util.tipShow(_this.global.loadError);
                 });
             },
             doHandlerTechListScroll : function(){//数据列表往下滑动加载的处理

@@ -2,9 +2,7 @@
     @import '../styles/page/info.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page info-page" id="info-page" v-show="!loading">
+    <div class="page info-page" id="info-page" v-show="!global.loading">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>资料编辑<div @click="doClickSaveBtn()">保存</div></div>
             <div class="info-content">
                 <div>
@@ -19,7 +17,6 @@
                 </div>
             </div>
         </div>
-    </div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -28,7 +25,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 saveUserInfoUrl : "../api/v2/profile/user/info/eidt",
                 nickName : ""

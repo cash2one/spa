@@ -2,9 +2,7 @@
     @import '../styles/page/hourTicketList.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="hour-ticket-list-page" v-show="!loading">
+    <div class="page" id="hour-ticket-list-page" v-show="!global.loading">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>点钟券</div>
             <div class="list" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }">
                 <div class="item" v-for="item in dataList" @click="doClickPaidCoupon(item.actId)">
@@ -19,7 +17,6 @@
                 <div class="nullData" v-show="dataList.length==0"><div></div><div>暂无内容...</div></div>
             </div>
         </div>
-    </div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -28,7 +25,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 queryDataUrl : "../api/v1/profile/redpack/list",
                 dataList : [],
@@ -40,9 +36,10 @@
             var   _this = this, global = _this.global;
             _this.clubId = global.currPageQuery.clubId || global.clubId;
             _this.techCode = global.currPageQuery.techCode;
-            _this.loading = true;
+            global.loading = true;
             _this.$http.get(_this.queryDataUrl, { params : { clubId : _this.clubId }}).then(function(res){
                 res = res.body;
+                global.loading = false;
                 if(res.statusCode == 200){
                     res = res.respData.coupons;
                     var list = [];
@@ -55,13 +52,13 @@
                     _this.dataList = list;
                 }
                 else{
-                    Util.tipShow(res.msg || global.loadDataErrorTip);
-                    return _this.$router.back();
+                    Util.tipShow(res.msg || global.loadError);
+                    _this.$router.back();
                 }
-                _this.loading = false;
             },function(){
-                Util.tipShow(global.loadDataErrorTip);
-                return _this.$router.back();
+                Util.tipShow(global.loadError);
+                global.loading = false;
+                _this.$router.back();
             });
         },
         methods: {

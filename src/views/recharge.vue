@@ -2,9 +2,7 @@
     @import '../styles/page/recharge.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="recharge-page" v-show="!loading" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="recharge-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>充值</div>
             <div class="recharge-area">
                 <div>充值金额</div>
@@ -16,7 +14,6 @@
             </div>
             <div class="submit-button" :class="submitStatusCls" @click="doClickSubmitBtn()">{{ submitText }}</div>
         </div>
-    </div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -25,7 +22,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 getOpenIdUrl : "../api/v2/wx/oauth2/openid",
                 reChargeUrl : "../api/v2/wx/pay/recharge/save",

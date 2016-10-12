@@ -2,9 +2,7 @@
     @import '../styles/page/tradeRecords.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="trade-records-page" v-show="!loading">
+    <div class="page" id="trade-records-page" v-show="!global.loading">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>交易记录</div>
             <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
                 <div class="list-item" v-for="item in dataList">
@@ -16,7 +14,6 @@
                 <div class="nullData" v-show="dataList.length==0 && !isAddData"><div></div><div>暂无内容...</div></div>
             </div>
         </div>
-    </div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -25,7 +22,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 getRecordsUrl : "../api/v2/finacial/account/trades/",
                 dataList : [],
@@ -96,10 +92,10 @@
                         _this.showDataLoadTip = false;
                     }
                     else {
-                        Util.tipShow(_this.global.loadDataErrorTip);
+                        Util.tipShow(_this.global.loadError);
                     }
                 }, function () {
-                    Util.tipShow(_this.global.loadDataErrorTip);
+                    Util.tipShow(_this.global.loadError);
                 });
             },
             doHandlerListScroll : function(){

@@ -2,9 +2,7 @@
     @import '../styles/page/review.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="review-list-page" v-show="!loading">
+    <div class="page" id="review-list-page" v-show="!global.loading">
             <div class="page-title">
                 <a class="back" @click="doClickPageBack()"></a>评论列表
                 <div class="comment-select" :class="{ active : showCommentTypeSelect }" @click="doShowCommentTypeSelect()">
@@ -36,7 +34,6 @@
                 <div class="nullData" v-show="comments.length==0 && !isAddData"><div></div><div>暂无内容...</div></div>
             </div>
         </div>
-    </div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -45,7 +42,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 queryTechCommentsUrl : "../api/v2/club/technician/comments",
                 pageSize : 20,
@@ -67,7 +63,7 @@
             if(global.currPageQuery.id == undefined){//链接上无技师id
                 return _this.$router.back();
             }
-            _this.loading = true;
+            global.loading = true;
             _this.$http.get(_this.queryTechCommentsUrl, { params : {
                 page : _this.currPage,
                 pageSize : _this.pageSize,
@@ -75,6 +71,7 @@
                 techId : _this.techId
             }}).then(function(res){
                 res = res.body;
+                global.loading = false;
                 if(res.statusCode == 200){
                     res = res.respData;
                     if(res.length == 0){
@@ -87,12 +84,12 @@
                     _this.comments = res;
                 }
                 else{
-                    Util.tipShow(global.loadDataErrorTip);
+                    Util.tipShow(global.loadError);
                     _this.$router.back();
                 }
-                _this.loading = false;
             }, function(){
-                Util.tipShow(global.loadDataErrorTip);
+                Util.tipShow(global.loadError);
+                global.loading = false;
                 _this.$router.back();
             });
         },
@@ -156,10 +153,10 @@
                         _this.showDataLoadTip = false;
                     }
                     else {
-                        Util.tipShow(_this.global.loadDataErrorTip);
+                        Util.tipShow(_this.global.loadError);
                     }
                 }, function () {
-                    Util.tipShow(_this.global.loadDataErrorTip);
+                    Util.tipShow(_this.global.loadError);
                 });
             },
             doHandlerCommentListScroll : function(){//列表的滚动加载

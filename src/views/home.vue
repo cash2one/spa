@@ -3,8 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="home-page" v-show="!loading">
+        <div class="page" id="home-page" v-show="!global.loading">
             <div class="banner">
                 <swipe class="banner-swipe">
                     <swipe-item v-for="pic in bannerPics">
@@ -67,7 +66,6 @@
         },
         data: function(){
             return {
-                loading : false,
                 eventHub : Global.eventHub,
                 //getHomeDataUrl : "../json/homeData.json",
                 getHomeDataUrl : "../api/v2/club/"+Global.data.clubId+"/homeData",
@@ -79,9 +77,10 @@
         },
         created : function(){
             var _this = this,global = _this.global;
-            _this.loading = true;
+            global.loading = true;
             _this.$http.get(_this.getHomeDataUrl).then(function(res){
                 res = res.body;
+                global.loading = false;
                 if(res.statusCode == 200){
                     res = res.respData;
                     global.clubLogoUrl = res.club.imageUrl || global.defaultClubLogo;
@@ -93,11 +92,10 @@
                     _this.techs = res.techs;
                 }
                 else{
-                    Util.tipShow(global.loadDataErrorTip);
+                    Util.tipShow(global.loadError);
                 }
-                _this.loading = false;
             }, function(){
-                Util.tipShow(global.loadDataErrorTip);
+                Util.tipShow(global.loadError);
             });
         },
         filters: {

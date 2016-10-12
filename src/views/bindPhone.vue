@@ -3,8 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page login-page" id="account-page" v-show="!loading">
+        <div class="page login-page" id="account-page" v-show="!global.loading">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>绑定手机</div>
             <div class="input tel">
                 <i></i><span>+86</span><input type="tel" placeholder="请输入您的11位手机号" v-model="tel" maxlength="11" v-tel-input="isTelValid" @keypress="dokeyPressOfInput($event)"/>
@@ -37,7 +36,6 @@
         },
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 im : IM,
                 checkBandUrl : "../api/v2/wx/current/check_bind",

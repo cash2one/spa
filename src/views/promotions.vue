@@ -2,9 +2,7 @@
     @import '../styles/page/promotions.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="promotions-page" v-show="!loading">
+    <div class="page" id="promotions-page" v-show="!global.loading">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>优惠活动</div>
             <div class="title" v-if="coupons.length>0">优惠券</div>
             <div v-for="coupon in coupons" :class="[coupon['getFlag'], 'money', coupon['useType']=='money' ? '' : 'coupon' ]">
@@ -27,7 +25,6 @@
             </router-link>
             <div class="nullData" v-if="activities.length==0 && coupons.length==0"><div></div><div>暂无内容...</div></div>
         </div>
-    </div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -37,7 +34,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 getActivitiesDataUrl : "../api/v2/club/"+Global.data.clubId+"/activities",
                 coupons : [],
@@ -46,10 +42,11 @@
         },
         created : function(){
             var _this = this, global = _this.global;
-            _this.loading = true;
+            global.loading = true;
             _this.$http.get(_this.getActivitiesDataUrl).then(function(res){
                 res = res.body;
                 if(res.statusCode == 200){
+                    global.loading = false;
                     res = res.respData;
                     for(var i=0;i<res.coupons.length;i++){
                         res.coupons[i]['useType'] = ( res.coupons[i]['useType']=="null" ? "money" : res.coupons[i]['useType']);
@@ -61,12 +58,12 @@
                     _this.activities = res.acts;
                 }
                 else{
-                    Util.tipShow(global.loadDataErrorTip);
+                    Util.tipShow(global.loadError);
                     _this.$router.back();
                 }
-                _this.loading = false;
             }, function(){
-                Util.tipShow(global.loadDataErrorTip);
+                Util.tipShow(global.loadError);
+                global.loading = false;
                 _this.$router.back();
             });
         },

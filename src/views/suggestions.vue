@@ -3,8 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="suggestions-page" v-show="!loading" :style="{ height : global.winHeight+'px' }">
+        <div class="page" id="suggestions-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>投诉建议</div>
             <div class="star-comment">
                 <div>
@@ -33,7 +32,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 submitCommentUrl : "../api/v2/profile/user/feedback/create",
                 environmentScore : 100,

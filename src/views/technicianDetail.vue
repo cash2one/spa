@@ -3,10 +3,9 @@
 </style>
 <template>
     <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page-back-btn tech-detail-page" @click="doClickPageBack()" v-show="!loading"></div>
+        <div class="page-back-btn tech-detail-page" @click="doClickPageBack()" v-show="!global.loading"></div>
         <div class="page-back-home" @click="doClickBackHomeBtn()">会所</div>
-        <div class="page" id="technician-detail-page" v-show="!loading" :style="{ height : (global.winHeight-2.667*global.winScale*16)+'px' }">
+        <div class="page" id="technician-detail-page" v-show="!global.loading" :style="{ height : (global.winHeight-2.667*global.winScale*16)+'px' }">
             <div class="top">
                 <div class="header"><div v-if="techAvatarUrl" :style="{ backgroundImage : 'url('+techAvatarUrl+')' }"></div></div>
                 <div class="name"><div>{{techName}}</div><div v-show="techNo">{{techNo}}</div><div :class="techStatus">{{ techStatus=='free' ? '闲' : '忙' }}</div></div>
@@ -97,7 +96,6 @@
         },
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 queryTechDetailUrl : "../api/v2/club/technician/"+Global.data.currPageQuery.id,
                 queryClubCouponUrl : "../api/v2/club/"+Global.data.clubId+"/coupons",
@@ -156,17 +154,18 @@
             });
         },
         created : function(){
-            var _this = this;
-            if(_this.global.currPageQuery.id == undefined){//链接上无技师id
+            var _this = this, global = _this.global;
+            if(global.currPageQuery.id == undefined){//链接上无技师id
                 return _this.$router.back();
             }
-            _this.loading = true;
+            global.loading = true;
             _this.$http.get(_this.queryTechDetailUrl).then(function(res){
                 res = res.body;
+                global.loading = false;
                 if(res && res.info){
                     ///////////技师相册缓存到global
                     if(res.albums){
-                        var pageData = _this.global.pageData;
+                        var pageData = global.pageData;
                         if(!pageData["technicianImg"]){
                             pageData["technicianImg"] = {};
                         }
@@ -192,13 +191,13 @@
                     _this.payAppointment = res.payAppointment || 'N';
                 }
                 else{
-                    Util.tipShow(_this.global.loadDataErrorTip);
-                    return _this.$router.back();
+                    Util.tipShow(global.loadError);
+                    _this.$router.back();
                 }
-                _this.loading = false;
             }, function(){
-                Util.tipShow(_this.global.loadDataErrorTip);
-                return _this.$router.back();
+                Util.tipShow(global.loadError);
+                global.loading = false;
+                _this.$router.back();
             });
         },
         methods: {

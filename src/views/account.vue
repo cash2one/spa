@@ -2,9 +2,7 @@
     @import '../styles/page/account.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="account-page" v-show="!loading" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="account-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>所有账户</div>
             <router-link class="jump-qrcode" v-show="dataList.length>0" :to="{ name : 'qrPayCode' }" tag="div">
                 <div></div>
@@ -26,7 +24,6 @@
                 <div class="nullData" v-show="dataList.length==0 && !showDataLoadTip"><div></div><div>暂无内容...</div></div>
             </div>
         </div>
-    </div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -36,7 +33,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 getRecordsUrl : "../api/v2/finacial/accounts",
                 dataList : [],
@@ -47,22 +43,23 @@
         created : function(){
             var   _this = this, global = _this.global;
             _this.showDataLoadTip = true;
-            _this.loading = true;
+            global.loading = true;
             _this.$http.get(_this.getRecordsUrl).then(function(res){
                 _this.showDataLoadTip = false;
                 res = res.body;
+                global.loading = false;
                 if(res.statusCode == 200){
                     res = res.respData;
                     _this.dataList = res;
                     _this.showFinishLoadTip = res.length>0;
                 }
                 else{
-                    Util.tipShow(res.msg || global.loadDataErrorTip);
+                    Util.tipShow(res.msg || global.loadError);
                     return _this.$router.back();
                 }
-                _this.loading = false;
             },function(){
-                Util.tipShow(global.loadDataErrorTip);
+                Util.tipShow(global.loadError);
+                global.loading = false;
                 return _this.$router.back();
             });
         },

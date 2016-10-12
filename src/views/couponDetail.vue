@@ -3,8 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="coupon-detail-page" v-show="!loading">
+        <div class="page" id="coupon-detail-page" v-show="!global.loading">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>优惠券详情</div>
             <div class="club-name">{{userAct.clubName}}</div>
             <div class="coupon-info">
@@ -56,7 +55,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 userActId : "",
                 getDataUrl : "../api/v2/club/userredpacket/",
@@ -84,9 +82,10 @@
                 return _this.$router.back();
             }
             else{
-                _this.loading = true;
+                global.loading = true;
                 _this.$http.get(_this.getDataUrl+_this.userActId,{ params : { userType : "user" }}).then(function(res){
                     res = res.body;
+                    global.loading = false;
                     if(res.statusCode == 200){
                         res = res.respData;
                         var userAct = res.userAct, couponNo = userAct.couponNo;
@@ -116,7 +115,6 @@
                     else{
                         return _this.$router.back();
                     }
-                    _this.loading = false;
                 });
             }
         },

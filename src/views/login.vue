@@ -2,17 +2,14 @@
     @import '../styles/page/login.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page login-page" id="login-page" v-show="!loading">
-            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>登录/注册</div>
-            <div class="input tel">
-                <i></i><span>+86</span><input type="tel" placeholder="请输入您的11位手机号" v-model="tel" maxlength="11" v-tel-input="isTelValid" @keypress="dokeyPressOfInput($event)"/>
-            </div>
-            <div class="next-btn" :class="{ active : isTelValid }" @click="doClickNextBtn()">下一步</div>
-            <div class="tip-title">注：</div>
-            <div class="tip">进行身份验证后系统会自动判断你是否为注册用户，并自动衔接后续的操作</div>
+    <div class="page login-page" id="login-page" v-show="!global.loading">
+        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>登录/注册</div>
+        <div class="input tel">
+            <i></i><span>+86</span><input type="tel" placeholder="请输入您的11位手机号" v-model="tel" maxlength="11" v-tel-input @keypress="dokeyPressOfInput($event)"/>
         </div>
+        <div class="next-btn" :class="{ active : isTelValid }" @click="doClickNextBtn()">下一步</div>
+        <div class="tip-title">注：</div>
+        <div class="tip">进行身份验证后系统会自动判断你是否为注册用户，并自动衔接后续的操作</div>
     </div>
 </template>
 <script>
@@ -26,13 +23,16 @@
         },
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 loginUrl : "../api/v1/user/login",
                 tel : "",
-                isTelValid : false,
                 userLoginParam : null
             };
+        },
+        computed : {
+          isTelValid : function(){
+              return /^1[34578]\d{9}$/.test(this.tel)
+          }
         },
         created : function(){
             var   _this = this,

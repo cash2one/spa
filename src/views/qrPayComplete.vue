@@ -2,9 +2,7 @@
     @import '../styles/page/qrPayComplete.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="qrpay-complete-page" v-show="!loading" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="qrpay-complete-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>支付完成</div>
             <div class="success-info">
                 <div>
@@ -31,7 +29,6 @@
             <textarea class="comment-text" placeholder="您的建设很重要，来点评下吧！" v-model="commentStr"></textarea>
             <div class="submit-btn" @click="doClickSubmitBtn()">提交</div>
         </div>
-    </div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -40,7 +37,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 submitUrl : "../api/v2/profile/user/feedback/create",
                 scoreObj : ['非常差','很差','一般','很好','非常好'],
@@ -61,7 +57,7 @@
                 _this.clubId = global.clubId;
             }
             if(!_this.money || !_this.clubId){
-                Util.tipShow(global.visitPageErrorTip);
+                Util.tipShow(global.visitError);
                 _this.$router.back();
             }
         },

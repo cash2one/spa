@@ -3,9 +3,8 @@
 </style>
 <template>
     <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page-back-btn" @click="doClickPageBack()" v-show="!loading"></div>
-        <div class="page" id="promotions-activity-page" v-show="!loading">
+        <div class="page-back-btn" @click="doClickPageBack()" v-show="!global.loading"></div>
+        <div class="page" id="promotions-activity-page" v-show="!global.loading">
             <div class="act-detail">
                 <div class="act-bg" :style="{ backgroundImage : 'url('+(actDetail.actLogoUrl || global.defaultBannerImgUrl)+')' }"><div></div></div>
                 <div class="act-content">
@@ -45,7 +44,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 getDataUrl : "../api/v2/club/",
                 global : Global.data,
                 actDetail : {
@@ -62,7 +60,7 @@
         created: function(){
             var _this = this, global = _this.global, query = global.currPageQuery;
             if(!query.id){
-                Util.tipShow(global.visitPageErrorTip);
+                Util.tipShow(global.visitError);
                 return _this.$router.back();
             }
             _this.getDataUrl += global.clubId+"/"+query.id+"/actdetail";
@@ -74,11 +72,11 @@
                     _this.otherActs = res.acts;
                 }
                 else{
-                    Util.tipShow(global.loadDataErrorTip);
+                    Util.tipShow(global.loadError);
                     _this.$router.back();
                 }
             },function(){
-                Util.tipShow(global.loadDataErrorTip);
+                Util.tipShow(global.loadError);
                 _this.$router.back();
             })
         },

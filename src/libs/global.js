@@ -16,6 +16,8 @@ exports.Global = {
         currPageQuery : null,                      //当前页面query
         currPageParams : null,                    //当前页面params
 
+        showAppMenu : false,                   //是否显示底部菜单
+        loading : false,                               //loading效果
         pageMode : 'club',                         //当前模式，club--会所网站 9358--公众号
         sessionType : 'web',                        //sessionType
         token : '',                                        //用户token
@@ -50,8 +52,8 @@ exports.Global = {
         defaultBannerImgUrl : 'images/home/banner_default.jpg',             //默认的banner图
         defaultServiceItemImgUrl : "images/home/serviceItem_default.jpg",//默认的服务项目图
         defaultGiftImg : "images/chat/gift_default.png",                              //默认的积分礼物图片
-        loadDataErrorTip : "数据请求失败！",
-        visitPageErrorTip : "页面缺少访问参数！",
+        loadError : "数据请求失败！",
+        visitError : "页面缺少访问参数！",
 
         clubId : null,                                                                               //当前会所ID
         clubLogoUrl : null,                                                                      //当前会所logo
@@ -335,5 +337,5 @@ exports.Global = {
                 }
             }
         });
-    },
+    }
 };

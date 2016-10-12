@@ -2,11 +2,8 @@
     @import '../styles/page/techReward.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="tech-reward-page" v-show="!loading">
-            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>技师打赏</div>
-        </div>
+    <div class="page" id="tech-reward-page" v-show="!global.loading">
+        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>技师打赏</div>
     </div>
 </template>
 <script>
@@ -16,8 +13,7 @@
     module.exports = {
         data: function(){
             return {
-                global : Global.data,
-                loading : false
+                global : Global.data
             }
         },
         created : function(){

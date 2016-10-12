@@ -2,9 +2,7 @@
     @import '../styles/page/accountDetail.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="account-detail-page" v-show="!loading">
+    <div class="page" id="account-detail-page" v-show="!global.loading">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>我的账户</div>
             <div class="info-item item">
                 <div>
@@ -32,7 +30,6 @@
                 <div class="right-arrow"></div>
             </router-link>
         </div>
-    </div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -41,7 +38,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 accountId : '',
                 clubId : '',
@@ -62,10 +58,11 @@
             else{
                 _this.queryDataUrl += "club/account";
             }
-            _this.loading = true;
+            global.loading = true;
             _this.$http.get(_this.queryDataUrl,{ params : { clubId : global.clubId }}).then(function(res){
                 res = res.body;
-                if(res.statusCode == 200){
+                global.loading = false;
+                if(res.statusCode == 200 && res.respData){
                     res = res.respData;
                     _this.accountId = res.id;
                     _this.availableMoney = (res.amount/100).toFixed(2);
@@ -73,10 +70,9 @@
                     _this.clubId = res.clubId;
                 }
                 else{
-                    Util.tipShow(global.loadDataErrorTip);
+                    Util.tipShow(global.loadError);
                     return _this.$router.back();
                 }
-                _this.loading = false;
             });
         },
         methods: {

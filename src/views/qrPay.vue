@@ -2,9 +2,7 @@
     @import '../styles/page/qrPay.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="qrpay-page" v-show="!loading" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="qrpay-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>支付</div>
             <div class="club-info">
                 <div>
@@ -24,7 +22,6 @@
             </div>
             <div class="pay-btn" :class="payBtnStatusCls" @click="doClickPayBtn()">{{ payBtnText }}</div>
         </div>
-    </div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -33,7 +30,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 getOpenIdUrl : "../api/v2/wx/oauth2/openid",
                 getClubNameUrl : "../api/v2/club/",
@@ -60,7 +56,7 @@
                 _this.clubId = global.clubId;
             }
             if(!_this.clubId){
-                Util.tipShow(global.visitPageErrorTip);
+                Util.tipShow(global.visitError);
                 _this.$router.back();
             }
             else{

@@ -3,26 +3,25 @@
 </style>
 <template>
     <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="personal-page" v-show="!loading" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }">
+        <div class="page" id="personal-page" v-show="!global.loading" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }">
             <div class="page-title">个人中心</div>
             <div class="top">
                 <div class="header" v-show="global.isLogin" :style="{ backgroundImage : 'url('+global.userHeader+')' }"></div>
                 <div class="info" v-show="global.isLogin">
-                    <div>{{global.userName}}</div>
+                    <div>{{ global.userName }}</div>
                     <div :class="{ 'bind-phone' : !global.userTel }" @click="bindTelPhone()">{{ global.userTel || '绑定手机' }}</div>
                 </div>
                 <div class="btn" v-show="!global.isLogin" @click="doClickLoginBtn()">登录/注册</div>
-                <router-link class="edit" v-show="global.isLogin" :to="{ name : 'info' }" tag="div"></router-link>
+                <router-link class="edit" v-show="global.isLogin" :to="{ name : 'info' }"></router-link>
             </div>
 
             <div class="account-wrap" v-show="global.clubCfg.accountSwitch || global.clubCfg.creditSwitch">
-                <router-link v-show="global.pageMode=='9358' || global.clubCfg.accountSwitch" :to="{ name : (global.pageMode=='club' ? 'accountDetail' : 'account') }" tag="div">
+                <router-link v-show="global.pageMode=='9358' || global.clubCfg.accountSwitch" :to="{ name : (global.pageMode=='club' ? 'accountDetail' : 'account') }">
                     <div class="account"></div>
                     <div>我的账户</div>
                     <div class="right-arrow"></div>
                 </router-link>
-                <router-link v-show="global.pageMode=='9358' || global.clubCfg.creditSwitch" :to="{ name : (global.pageMode=='club' ? 'integralDetail' : 'integral') }" tag="div">
+                <router-link v-show="global.pageMode=='9358' || global.clubCfg.creditSwitch" :to="{ name : (global.pageMode=='club' ? 'integralDetail' : 'integral') }">
                     <div class="integral"></div>
                     <div>积分中心</div>
                     <div class="right-arrow"></div>
@@ -30,29 +29,29 @@
             </div>
 
             <div class="menu-wrap">
-                <router-link :to="{ name : 'coupon' }" tag="div">
+                <router-link :to="{ name : 'coupon' }">
                     <div class="coupon"></div>
                     <div>优惠券<span>分享获得更多优惠券</span></div>
                     <div class="right-arrow"></div>
                 </router-link>
-                <router-link :to="{ name : 'order' }" tag="div">
+                <router-link :to="{ name : 'order' }">
                     <div class="order"></div>
                     <div>我的订单</div>
                     <div class="right-arrow"></div>
                 </router-link>
-                <router-link :to="{ name : 'collect' }" tag="div">
+                <router-link :to="{ name : 'collect' }">
                     <div class="collect"></div>
                     <div>技师收藏</div>
                     <div class="right-arrow"></div>
                 </router-link>
-                <router-link :to="{ name : 'contacts' }" tag="div">
+                <router-link :to="{ name : 'contacts' }">
                     <div class="contacts"></div>
                     <div>最近联系人</div>
                     <div class="right-arrow"></div>
                 </router-link>
             </div>
 
-            <router-link class="suggestion-wrap" v-show="global.pageMode=='club'" :to="{ name : 'suggestions' }" tag="div">
+            <router-link class="suggestion-wrap" v-show="global.pageMode=='club'" :to="{ name : 'suggestions' }">
                 <div class="suggestions"></div>
                 <div>投诉建议</div>
                 <div class="right-arrow"></div>
@@ -97,7 +96,6 @@
         },
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 checkTelBandUrl : "../api/v2/wx/current/check_bind",
                 checkWxBandUrl : "../api/v2/wx/check_bind",
@@ -110,6 +108,7 @@
             }
         },
         created : function(){
+            console.log("personal created.....");
             var _this = this, global = _this.global;
             if(global.clubCfg.accountSwitch == null){//获取开关状态
                 Global.getClubSwitches();

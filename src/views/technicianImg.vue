@@ -2,16 +2,13 @@
     @import '../styles/page/technicianImg.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="technician-img-page" v-show="!loading" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="technician-img-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
             <swipe class="pic-swipe" :auto="maxAutoTime" :index="startIndex">
                 <swipe-item v-for="pic in pics">
                     <img :src="pic.bigImageUrl"/>
                 </swipe-item>
             </swipe>
         </div>
-    </div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -26,7 +23,6 @@
         },
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 queryTechDetailUrl : "../api/v2/club/technician/"+Global.data.currPageQuery.id,
                 techId : "",
@@ -51,20 +47,21 @@
                 _this.pics = pageData[_this.techId];
             }
             else{
-                _this.loading = true;
+                global.loading = true;
                 _this.$http.get(_this.queryTechDetailUrl).then(function(res){
                     res = res.body;
+                    global.loading = false;
                     if(res && res.albums && res.albums.length>0){
                         pageData[_this.techId] = res.albums;
                         _this.pics = pageData[_this.techId];
                     }
                     else{
-                        Util.tipShow(global.loadDataErrorTip);
+                        Util.tipShow(global.loadError);
                         _this.$router.back();
                     }
-                    _this.loading = false;
                 }, function(){
-                    Util.tipShow(global.loadDataErrorTip);
+                    Util.tipShow(global.loadError);
+                    global.loading = false;
                     _this.$router.back();
                 });
             }

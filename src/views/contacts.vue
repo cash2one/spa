@@ -2,9 +2,7 @@
     @import '../styles/page/message.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page message-list-page" id="contacts-page" v-show="!loading">
+    <div class="page message-list-page" id="contacts-page" v-show="!global.loading">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>最近联系人<div class="edit-title" @click="doClickEditBtn()">{{ inEdit ? "完成" : "编辑"}}</div></div>
             <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
                 <div class="list-item" v-for="item in dataList" :key="item.friendUserId" @click="doClickRecord(item)">
@@ -21,7 +19,6 @@
                 <div class="nullData" v-show="dataList.length==0 && !isAddData"><div></div><div>暂无内容...</div></div>
             </div>
         </div>
-    </div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -35,7 +32,6 @@
         },
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 im : IM,
                 getRecordsUrl : "../api/v1/emchat/friendlist/",
@@ -109,10 +105,10 @@
                         _this.showDataLoadTip = false;
                     }
                     else {
-                        Util.tipShow(global.loadDataErrorTip);
+                        Util.tipShow(global.loadError);
                     }
                 }, function() {
-                    Util.tipShow(global.loadDataErrorTip);
+                    Util.tipShow(global.loadError);
                 });
             },
             doHandlerListScroll : function(){

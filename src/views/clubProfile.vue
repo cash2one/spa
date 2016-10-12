@@ -3,10 +3,9 @@
 </style>
 <template>
     <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page-back-btn" @click="doClickPageBack()" v-show="!loading"></div>
+        <div class="page-back-btn" @click="doClickPageBack()" v-show="!global.loading"></div>
         <div class="club-profile-page-num" v-show="totalPage>0">{{pageIndex}}/{{totalPage}}</div>
-        <div class="page" id="club-profile-page" :style="{ height : global.winHeight+'px'}" v-show="!loading">
+        <div class="page" id="club-profile-page" :style="{ height : global.winHeight+'px'}" v-show="!global.loading">
             <swipe class="profile-swipe" :show-indicators="false" :auto="maxAutoTime">
                 <swipe-item v-for="item in profileData">
                     <div class="profile-top">
@@ -33,7 +32,6 @@
         },
         data: function(){
             return {
-                loading : false,
                 eventHub : Global.eventHub,
                 getClubProfileDataUrl : "../api/v2/club/"+Global.data.clubId+"/item",
                 global : Global.data,
@@ -46,21 +44,22 @@
         },
         created: function(){
             var _this = this, global = _this.global;
-            _this.loading = true;
+            global.loading = true;
             _this.$http.get(_this.getClubProfileDataUrl).then(function(res){
                 res = res.body;
+                global.loading = false;
                 if(res){
                     _this.totalPage = res.length;
                     _this.currPage = 1;
                     _this.profileData = res;
                 }
                 else{
-                    Util.tipShow(global.loadDataErrorTip);
+                    Util.tipShow(global.loadError);
                     _this.$router.back();
                 }
-                _this.loading = false;
             }, function(){
-                Util.tipShow(global.loadDataErrorTip);
+                Util.tipShow(global.loadError);
+                global.loading = false;
                 _this.$router.back();
             });
             _this.eventHub.$on("swipePageEnd",_this.doSwipePageEnd);

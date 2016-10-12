@@ -3,9 +3,8 @@
 </style>
 <template>
     <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page-back-btn" @click="doClickPageBack()" v-show="!loading"></div>
-        <div class="page" id="map-page" :style="{ height : global.winHeight+'px'}" v-show="!loading"></div>
+        <div class="page-back-btn" @click="doClickPageBack()" v-show="!global.loading"></div>
+        <div class="page" id="map-page" :style="{ height : global.winHeight+'px'}" v-show="!global.loading"></div>
     </div>
 </template>
 <script>
@@ -16,7 +15,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 //getClubPlaceDataUrl : "../json/map.json",
                 getClubPlaceDataUrl : "../api/v2/club/club_map",
                 global : Global.data,
@@ -24,22 +22,23 @@
             };
         },
         created : function(){
-            var _this = this;
-            _this.loading = true;
-            _this.$http.get(_this.getClubPlaceDataUrl,{ params : { clubId : _this.global.clubId } }).then(function(res){
+            var _this = this, global = _this.global;
+            global.loading = true;
+            _this.$http.get(_this.getClubPlaceDataUrl,{ params : { clubId : global.clubId } }).then(function(res){
                 res = res.body;
+                global.loading = false;
                 if(res && res.statusCode =="200" && AMap && res.respData.lngx){
                     res = res.respData;
                     _this.mapData = res;
                     _this.initPage(res);
                 }
                 else{
-                    Util.tipShow("获取会所位置失败！");
+                    Util.tipShow("未能获取会所位置！");
                     _this.$router.back();
                 }
-                _this.loading = false;
             }, function(){
-                Util.tipShow("获取会所位置失败！");
+                Util.tipShow("未能获取会所位置！");
+                global.loading = false;
                 _this.$router.back();
             });
         },

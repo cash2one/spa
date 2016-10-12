@@ -3,8 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="chat-page" v-show="!loading">
+        <div class="page" id="chat-page" v-show="!global.loading">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>{{ talker.name }}<span v-show="talker.userNo">[{{ talker.userNo }}]</span><i></i><i></i></div>
             <div class="order-tip" @click="doClickOrderTip()">如果技师没有回应，那就立即预约吧！<div></div></div>
             <div class="message-wrap" :style="{ height : msgWrapHeight+'px' }">
@@ -29,7 +28,6 @@
         },
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 im : IM,
                 talker : IM.talker, //当前聊天的对方
@@ -44,7 +42,7 @@
         created : function(){
             var   _this = this, global = _this.global, params = global.currPageQuery;
             if(!params.clubId && global.pageMode != "club"){
-                Util.tipShow(global.visitPageErrorTip);
+                Util.tipShow(global.visitError);
                 return _this.$router.back();
             }
             _this.msgWrapHeight = global.winHeight-4.389*global.winScale*16;

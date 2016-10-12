@@ -3,8 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page paid-coupon-page" id="paid-coupon-detail-page" v-show="!loading" :style="{ height : (global.winHeight-(hidePayBtn ? 0 : 3.278)*global.winScale*16)+'px' }">
+        <div class="page paid-coupon-page" id="paid-coupon-detail-page" v-show="!global.loading" :style="{ height : (global.winHeight-(hidePayBtn ? 0 : 3.278)*global.winScale*16)+'px' }">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>点钟券详情</div>
             <div class="club-info" @click="doClickClubInfo()" v-show="global.pageMode != 'club'"><div :style="{ backgroundImage : 'url('+(couponData.imageUrl || global.defaultClubLogo )+')' }"></div><span>{{ couponData.clubName }}</span></div>
             <div class="detail-info">
@@ -56,7 +55,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 queryDataUrl : "../api/v2/club/userredpacket/",
                 getOpenIdUrl : "../api/v2/wx/oauth2/user/openid",
@@ -81,7 +79,7 @@
             _this.userActId = query.userActId;
             console.log("paid coupon detail userActId;"+_this.userActId);
             if(!_this.userActId){
-                Util.tipShow(global.visitPageErrorTip);
+                Util.tipShow(global.visitError);
                 _this.$router.back();
             }
             else if(!global.isLogin){
@@ -91,10 +89,11 @@
             else{
                 _this.payAuthCode = query.code || global.authCode;
                 _this.queryDataUrl += _this.userActId;
-                _this.loading = true;
+                global.loading = true;
                 _this.$http.get(_this.queryDataUrl,{ params : { userType : "user" }}).then(function(res){
                     res = res.body;
                     if(res.statusCode == 200){
+                        global.loading = false;
                         res = res.respData;
                         res.userAct.getDate = res.userAct.getDate.split(" ")[0];
                         if(res.userAct.couponQrCodeUrl){
@@ -124,9 +123,9 @@
                         Util.tipShow(res.msg || "获取点钟券数据详情失败！");
                         _this.$router.back();
                     }
-                    _this.loading = false;
                 },function(){
                     Util.tipShow("获取点钟券数据详情失败！");
+                    global.loading = false;
                     _this.$router.back();
                 });
             }

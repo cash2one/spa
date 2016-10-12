@@ -3,9 +3,8 @@
 </style>
 <template>
     <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page-back-btn" @click="doClickPageBack()" v-show="!loading"></div>
-        <div class="page" id="service-group-page" v-show="!loading">
+        <div class="page-back-btn" @click="doClickPageBack()" v-show="!global.loading"></div>
+        <div class="page" id="service-group-page" v-show="!global.loading">
             <div class="item" v-for="item in dataList" :style="{ backgroundImage : 'url('+item.imageUrl+')' }" @click="doClickItem(item.id)"></div>
             <div class="nullData" v-show="dataList.length==0"><div></div><div>暂无内容...</div></div>
         </div>
@@ -18,7 +17,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 queryDataUrl : "../api/v2/club/"+Global.data.clubId+"/service",
                 dataList : []
@@ -32,11 +30,11 @@
                     _this.dataList = res;
                 }
                 else{
-                    Util.tipShow(res.msg || global.loadDataErrorTip);
+                    Util.tipShow(res.msg || global.loadError);
                     return _this.$router.back();
                 }
             },function(){
-                Util.tipShow(global.loadDataErrorTip);
+                Util.tipShow(global.loadError);
                 return _this.$router.back();
             });
         },

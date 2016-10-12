@@ -2,9 +2,7 @@
     @import '../styles/page/treat.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="treat-page" v-show="!loading" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="treat-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>我要请客</div>
             <div class="treat-area">
                 <div>
@@ -22,7 +20,6 @@
             <div class="btn" :class="{ active : isTelValid && isMoneyValid, processing : isProcessing }" @click="doClickConfirmBtn()">{{confirmBtnText}}</div>
             <div class="footer-area"><router-link :to="{ name : 'treatExplain' }">请客说明</router-link><router-link :to="{ name : 'treatRecords' , query : { clubId : clubId } }">请客记录</router-link></div>
         </div>
-    </div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -35,7 +32,6 @@
         },
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 queryDataUrl : "../api/v2/finacial/account/",
                 payAuthUrl : "../api/v2/finacial/account/payforother/auth",
@@ -60,8 +56,9 @@
             }
             else{
                 _this.queryDataUrl += _this.accountId;
-                _this.loading = true;
+                global.loading = true;
                 _this.$http.get(_this.queryDataUrl).then(function(res){
+                    global.loading = false;
                     res = res.body;
                     if(res.statusCode == 200){
                         res = res.respData;
@@ -69,10 +66,9 @@
                         _this.accountMoney = (res.amount/100).toFixed(2);
                     }
                     else{
-                        Util.tipShow(global.loadDataErrorTip);
-                        return _this.$router.back();
+                        Util.tipShow(global.loadError);
+                        _this.$router.back();
                     }
-                    _this.loading = false;
                 });
             }
         },

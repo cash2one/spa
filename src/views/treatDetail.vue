@@ -3,8 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="treat-detail-page" v-show="!loading">
+        <div class="page" id="treat-detail-page" v-show="!global.loading">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>我要请客</div>
             <div class="info-area">
                 <div class="info-top">
@@ -79,7 +78,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 queryDataUrl : "../api/v2/finacial/account/payforother/detail",
                 cancelAuthUrl : "../api/v2/finacial/account/payforother/cancel",
@@ -102,7 +100,7 @@
             var   _this = this, global = _this.global, pageParams = global.currPageQuery;
             _this.detailId = pageParams.detailId;
             if(!_this.detailId){
-                Util.tipShow(global.visitPageErrorTip);
+                Util.tipShow(global.visitError);
                 return _this.$router.back();
             }
             else{
@@ -122,7 +120,7 @@
                         _this.usedAmount = (res.usedAmount / 100).toFixed(2);
                     }
                     else{
-                        Util.tipShow(res.msg || global.loadDataErrorTip);
+                        Util.tipShow(res.msg || global.loadError);
                         return _this.$router.back();
                     }
                 });

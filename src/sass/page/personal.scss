@@ -5,7 +5,7 @@ div#personal-page{
   div.top{
     height: 4.722rem;
     @include img('../../images/personal/bg.jpg',20rem 4.722rem);
-    &>div{
+    &>div,&>a{
       float: left;
     }
     div.header{
@@ -56,7 +56,8 @@ div#personal-page{
       font-size:0.889rem;
     }
 
-    div.edit{
+    a.edit{
+      display: block;
       width:1.222rem;
       height:1.167rem;
       margin-top:1.7775rem;
@@ -70,7 +71,8 @@ div#personal-page{
     background: #fff;
     margin-bottom: .667rem;
     border-bottom:1px solid #e0e0e0;
-    >div{
+    >a{
+      display: block;
       width: 19.333rem;
       height: 2.667rem;
       border-top: 1px solid #f0f0f0;
@@ -129,8 +131,10 @@ div#personal-page{
   div.menu-wrap{
     border-top:1px solid #e0e0e0;
   }
-
-  div.suggestion-wrap,div.wx-wrap,div.phone-wrap,div.exit-wrap{
+  a.suggestion-wrap{
+    display: block;
+  }
+  a.suggestion-wrap,div.wx-wrap,div.phone-wrap,div.exit-wrap{
     margin-bottom: 0.722rem;
     height: 2.611rem;
     background: #fff;

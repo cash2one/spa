@@ -2,9 +2,7 @@
     @import '../styles/page/qrPayCode.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="qrpay-code-page" v-show="!loading" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="qrpay-code-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
             <div class="page-title"><a v-if="!isDirect" class="back" @click="doClickPageBack()"></a>付款二维码</div>
             <div class="qrcode-wrap">
                 <div>
@@ -13,7 +11,6 @@
                 </div>
             </div>
         </div>
-    </div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -23,7 +20,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 isDirect : false,
                 isProcessing : false,

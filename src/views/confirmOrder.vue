@@ -2,11 +2,7 @@
     @import '../styles/page/confirmOrder.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="service-item-page" v-if="!loading">
-
-        </div>
+    <div class="page" id="service-item-page" v-if="!global.loading">
     </div>
 </template>
 <script>
@@ -17,7 +13,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 queryDataUrl : "../api/v2/club/"+Global.data.clubId+"/service/item"
             }

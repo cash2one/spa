@@ -2,9 +2,7 @@
     @import '../styles/page/inviteCode.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page login-page" id="invite-code-page" v-show="!loading">
+    <div class="page login-page" id="invite-code-page" v-show="!global.loading">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>输入邀请码</div>
             <div class="code-input">
                 <input placeholder="会所邀请码 (必填)" maxlength="6" v-model="inviteCode" @input="doInputInviteCode()"/>
@@ -12,7 +10,6 @@
             </div>
             <div class="submit-btn" :class="{ active : isInviteCodeValid && isTechNoValid }" @click="doClickSubmitBtn()">完成</div>
         </div>
-    </div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -21,7 +18,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 inviteCode : "",
                 techNo : "",

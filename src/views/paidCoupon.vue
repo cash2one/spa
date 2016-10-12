@@ -3,8 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page paid-coupon-page" id="paid-coupon-page" v-show="!loading" :style="{ height : (global.winHeight-6.966*global.winScale*16)+'px' }">
+        <div class="page paid-coupon-page" id="paid-coupon-page" v-show="!global.loading" :style="{ height : (global.winHeight-6.966*global.winScale*16)+'px' }">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>点钟券</div>
             <div class="club-info" @click="doClickClubInfo()"><div :style="{ backgroundImage : 'url('+(couponData.imageUrl || global.defaultClubLogo )+')' }"></div><span>{{ couponData.clubName }}</span></div>
             <div class="coupon-info">
@@ -43,7 +42,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 getDataUrl : "../api/v2/club/redpacket/data",
                 getOpenIdUrl : "../api/v2/wx/oauth2/user/openid",
@@ -67,7 +65,7 @@
             _this.payAuthCode = query.code || global.authCode;
             _this.chanel = query.channel || "link";
             if(!_this.actId || !_this.techCode){
-                Util.tipShow(global.visitPageErrorTip);
+                Util.tipShow(global.visitError);
                 _this.$router.back();
             }
             else{

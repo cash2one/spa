@@ -2,23 +2,20 @@
     @import '../styles/page/login.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page login-page" id="confirm-login-page" v-show="!loading">
-            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>登录</div>
-            <div class="input tel spec">
-                <i></i><span>+86</span><input type="tel" placeholder="请输入您的11位手机号" v-model="tel" maxlength="11" v-tel-input="isTelValid"/>
-            </div>
-            <div class="input pw">
-                <i></i><input type="password" autofocus placeholder="请输入6-20位密码，仅限字母和数字" v-password-input="isPasswordValid" v-model="password" maxlength="20"/>
-            </div>
-            <div class="error" v-show="!isTelValid">*&nbsp;请输入正确的11位手机号</div>
-            <div class="error" v-show="isTelValid && !isPasswordValid">*&nbsp;请输入6~20位密码</div>
-            <div class="next-btn" :class="{ active : isTelValid && isPasswordValid }" @click="doClickLoginBtn()">登录</div>
-            <div class="recover-password" @click="doClickRecoverPasswordBtn()">忘记密码？</div>
-            <div class="tip-title">注：</div>
-            <div class="tip">您的手机号已注册，请输入密码完成登录</div>
+    <div class="page login-page" id="confirm-login-page" v-show="!global.loading">
+        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>登录</div>
+        <div class="input tel spec">
+            <i></i><span>+86</span><input type="tel" placeholder="请输入您的11位手机号" v-model="tel" maxlength="11" v-tel-input/>
         </div>
+        <div class="input pw">
+            <i></i><input type="password" autofocus placeholder="请输入6-20位密码，仅限字母和数字" v-password-input v-model="password" maxlength="20"/>
+        </div>
+        <div class="error" v-show="!isTelValid">*&nbsp;请输入正确的11位手机号</div>
+        <div class="error" v-show="isTelValid && !isPasswordValid">*&nbsp;请输入6~20位密码</div>
+        <div class="next-btn" :class="{ active : isTelValid && isPasswordValid }" @click="doClickLoginBtn()">登录</div>
+        <div class="recover-password" @click="doClickRecoverPasswordBtn()">忘记密码？</div>
+        <div class="tip-title">注：</div>
+        <div class="tip">您的手机号已注册，请输入密码完成登录</div>
     </div>
 </template>
 <script>
@@ -34,14 +31,19 @@
         },
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 tel : "",
                 password : "",
-                isTelValid : false,
-                isPasswordValid : false,
                 isBindWeixin : false,
                 userLoginParam : null
+            }
+        },
+        computed : {
+            isTelValid : function(){
+                return /^1[34578]\d{9}$/.test(this.tel)
+            },
+            isPasswordValid : function(){
+                return (this.password.length>=6)
             }
         },
         created: function(){

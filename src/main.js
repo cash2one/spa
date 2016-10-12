@@ -139,24 +139,13 @@ console.log("router obj：");
 console.dir(router);
 
 router.beforeEach(function (to,from,next) {
-    //window.scrollTo(0, 0);
     _global.currPageParams = to.params;
     _global.currPageQuery = to.query;
-    //console.log("from："+JSON.stringify(from));
-    //console.log("to："+JSON.stringify(to));
-    var _AppMenu = document.querySelector("#menu-container");
-    if(_AppMenu){
-        if(/(home|message|order|personal|technicianList)/.test(to.name)){
-            _AppMenu.style.display = "block";
-        }
-        else{
-            _AppMenu.style.display = "none";
-        }
-    }
+    _global.showAppMenu = /(home|message|order|personal|technicianList)/.test(to.name);
     next();
 });
 
-router.afterEach(function () {
+router.afterEach(function (to) {
 
 });
 

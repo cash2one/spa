@@ -2,33 +2,16 @@
     @import './styles/page/index.css';
 </style>
 <template>
-    <div>
-        <div id="page-container">
-            <router-view></router-view>
+    <div id="page-container">
+        <router-view></router-view>
+        <div v-show="global.showAppMenu" id="menu-container">
+            <router-link class="home" :to="{ name : 'home' }"><div></div><div>首页</div></router-link>
+            <router-link class="message" :to="{ name : 'message' }"><div><i style="visibility: hidden">0</i></div><div>聊天</div></router-link>
+            <router-link class="technicianList" :to="{ name : 'technicianList' }"><div></div><div>约技师</div></router-link>
+            <router-link class="order" :to="{ name : 'order' }"><div></div><div>订单</div></router-link>
+            <router-link class="personal" :to="{ name : 'personal' }"><div></div><div>个人中心</div></router-link>
         </div>
-        <div id="menu-container">
-            <router-link class="home" :to="{ name : 'home' }">
-                <div></div>
-                <div>首页</div>
-            </router-link>
-            <router-link class="message" :to="{ name : 'message' }">
-                <div><i style="visibility: hidden">0</i></div>
-                <div>聊天</div>
-            </router-link>
-            <router-link class="technicianList" :to="{ name : 'technicianList' }">
-                <div></div>
-                <div>约技师</div>
-            </router-link>
-            <router-link class="order" :to="{ name : 'order' }">
-                <div></div>
-                <div>订单</div>
-            </router-link>
-            <router-link class="personal" :to="{ name : 'personal' }">
-                <div></div>
-                <div>个人中心</div>
-            </router-link>
-        </div>
-        <div id="app-tip"><div></div></div>
+        <div class="loading" v-show="global.loading"><i></i><i></i><i></i></div>
     </div>
 </template>
 <script>

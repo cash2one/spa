@@ -32,7 +32,7 @@
                 getCodeImgMaxCount : 2
             };
         },
-        mounted : function(){
+        created : function(){
             var _this = this, global = _this.global;
             _this.getClubQrCodeImg();//获取二维码图片
             if(global.pageMode =="club" && global.userAgent.isWX){

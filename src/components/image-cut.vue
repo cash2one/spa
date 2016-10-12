@@ -30,10 +30,13 @@
     </div>
 </template>
 <script>
+    import { Global } from '../libs/global';
+
     module.exports = {
         props : [ 'allW','allH', 'vW','vH' ],
         data: function() {
             return {
+                eventHub : Global.eventHub,
                 img : null,//图片源
                 imgX : 0,//图片当前坐标
                 imgY : 0,
@@ -67,6 +70,10 @@
                 pZ : null
             }
         },
+        created : function(){
+          var _this = this;
+            _this.eventHub.$on("get-base64",_this.doGetBase64);
+        },
         mounted: function() {
             var _this = this;
             _this.vW = _this.vW<_this.allW ? _this.vW : _this.allW;
@@ -93,16 +100,11 @@
                 _this.putImageUrl(window._fileReader.result);
             }
         },
-        beforeDestroy: function() {
-
-        },
-        events : {
-            "get-base64" : function(option){
-                var _this = this, imgData = _this.getImageBase64(option.width,option.height);
-                _this.$dispatch('put-base64', imgData);
-            }
-        },
         methods: {
+            doGetBase64 : function(option){
+                var _this = this, imgData = _this.getImageBase64(option.width,option.height);
+                _this.eventHub.$emit('put-base64', imgData);
+            },
             doTouchStartHandler : function(e){
                 var _this = this;
                 if(e.target != _this.rotateBtn){
@@ -241,6 +243,10 @@
                 $$.restore();
                 return $$.canvas.toDataURL("image/png");
             }
+        },
+        beforeDestroy: function() {
+            var _this = this;
+            _this.eventHub.$off("get-base64",_this.doGetBase64);
         }
     }
 </script>

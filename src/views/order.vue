@@ -170,12 +170,12 @@
                             resolve({ orderList : res.respData });
                         }
                         else{
-                            Util.tipShow(_this.global.loadDataErrorTip);
+                            Util.tipShow(_this.global.loadError);
                             reject(false);
                             transition.abort();
                         }
                     }, function(){
-                            Util.tipShow(_this.global.loadDataErrorTip);
+                            Util.tipShow(_this.global.loadError);
                             reject(false);
                             transition.abort();
                         });
@@ -229,9 +229,9 @@
                     _this.showDataLoadTip = false;
                 }
                 else {
-                    Util.tipShow(_this.global.loadDataErrorTip);
+                    Util.tipShow(_this.global.loadError);
                 }
-            },()=>Util.tipShow(_this.global.loadDataErrorTip));
+            },()=>Util.tipShow(_this.global.loadError));
 
             },
             doHandlerOrderListData(list) {

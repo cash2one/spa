@@ -3,10 +3,9 @@
 </style>
 <template>
     <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page-back-btn" @click="doClickPageBack()" v-show="!loading"></div>
+        <div class="page-back-btn" @click="doClickPageBack()" v-show="!global.loading"></div>
         <div class="confirm-btn" v-if="dataList.length>0"><a @click="doClickConfirmOrder()">确认预约</a></div>
-        <div class="page" id="service-item-page" :style="{ height : (global.winHeight-3.333*global.winScale*16)+'px' }" v-if="!loading">
+        <div class="page" id="service-item-page" :style="{ height : (global.winHeight-3.333*global.winScale*16)+'px' }" v-if="!global.loading">
             <swipe class="profile-swipe" :show-indicators="false" :continuous="false" :auto="maxAutoTime" :curr-index="swipeInitIndex" v-if="dataList.length>0">
                 <swipe-item v-for="item in dataList" :key="item.id">
                     <div class="service-item-top">
@@ -45,7 +44,6 @@
             return {
                 global : Global.data,
                 eventHub : Global.eventHub,
-                loading : false,
                 queryDataUrl : "../api/v2/club/"+Global.data.clubId+"/service/item",
                 //queryDataUrl : "../json/serviceItem.json",
                 isQueryAll : true,
@@ -74,10 +72,11 @@
                 return _this.$router.back();
             }
             else if(!_this.isQueryAll && _this.dataList.length==0){
-                _this.loading = true;
+                global.loading = true;
                 _this.$http.get(_this.queryDataUrl, { params : { top : 1 }}).then(function(res){
                     res = res.body;
                     if(res.statusCode == 200){
+                        global.loading = false;
                         res = res.respData;
                         for(var i=0;i<res.serviceItems.length;i++){
                             if(res.serviceItems[i]["id"] == _this.currServiceItemId ){
@@ -95,12 +94,12 @@
                         _this.phoneAppointment = res.phoneAppointment == "Y";
                     }
                     else{
-                        Util.tipShow(global.loadDataErrorTip);
+                        Util.tipShow(global.loadError);
                         return _this.$router.back();
                     }
-                    _this.loading = false;
                 },function(){
-                    Util.tipShow(global.loadDataErrorTip);
+                    Util.tipShow(global.loadError);
+                    global.loading = false;
                     return _this.$router.back();
                 });
             }

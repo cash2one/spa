@@ -3,8 +3,8 @@
 </style>
 <template>
     <div class="page rule-description" id="integral-explain-page">
-            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>请客说明</div>
-            <div class="wrap" :style="{ height : (global.winHeight-3.278*global.winScale*16)+'px' }">
+        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>请客说明</div>
+        <div class="wrap" :style="{ height : (global.winHeight-3.278*global.winScale*16)+'px' }">
                 <ul class="info">
                     <li>
                         <div>请客有什么作用？</div>
@@ -24,7 +24,7 @@
                     </li>
                 </ul>
             </div>
-        </div>
+    </div>
 </template>
 <script>
     import { Global } from '../libs/global';

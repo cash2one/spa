@@ -2,53 +2,50 @@
     @import '../styles/page/comment.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="comment-page" v-show="!loading" :class="{ 'already-comment' : orderType != 0 }">
-            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>评价</div>
-            <div class="wrap thanks">
-                <div>
-                    <div></div>
-                    <div>感谢您的评价!</div>
-                </div>
-            </div>
-            <router-link class="wrap top-info" :to="{ name : 'technicianDetail' , query : { id : techId }}" tag="div">
-                <div class="tech-header" :style="{ backgroundImage : 'url('+techHeader+')' }"></div>
-                <div class="tech-info">
-                    <div>
-                        <div>{{ techName }}</div>
-                        <div>
-                            <div class="stars"><div :style="{ width : techStars+'%'}"></div></div>
-                            <div>{{ commentCount }}评论</div>
-                        </div>
-                    </div>
-                    <div>编号【<span>{{ techNo }}</span>】</div>
-                </div>
-                <div class="right-arrow"></div>
-            </router-link>
-            <div class="comment-info wrap">
-                <div class="title">服务评级</div>
+    <div class="page" id="comment-page" v-show="!global.loading" :class="{ 'already-comment' : orderType != 0 }">
+        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>评价</div>
+        <div class="wrap thanks">
+            <div>
                 <div></div>
-                <div class="item" v-for="item in commentItems">
-                    <div>{{ item.label }}</div>
-                    <div class="comment-stars">
-                        <div @click="doClickCommentStar($event,item)"><div :style="{ width : item.value+'%' }"></div></div>
-                    </div>
-                    <div>{{ item.value | commentFormatter(item.type) }}</div>
-                </div>
+                <div>感谢您的评价!</div>
             </div>
-            <div class="comment-impression wrap">
-                <div class="title">印象点评<span>(最多3项)</span></div>
-                <div class="comment-labels"><div v-for="item in impressionList" :key="item.id" @click="doClickImpressionItem(item)" :class="{ active : item.selected }">{{ item.tag }}</div></div>
-                <div class="comment-text" v-show="!(orderType == 1 && commentInputText.length == 0)">
-                    <textarea maxlength="200" @focus="onTextareaFocus()" @blur="onTextareaBlur()" v-model="commentInputText" :readonly="orderType==1"></textarea>
-                    <div>200字以内哦~</div>
-                    <span :class="{ none : !showTextareaPlaceholder }">亲，点击这里，留句好评哦，么么哒~</span>
-                </div>
-                <div class="submit-btn" @click="doClickSubmitBtn()" :class="{ processing : inProcessing }">提交{{ inProcessing ? "中..." : "" }}</div>
-            </div>
-            <attention></attention>
         </div>
+        <router-link class="wrap top-info" :to="{ name : 'technicianDetail' , query : { id : techId }}" tag="div">
+            <div class="tech-header" :style="{ backgroundImage : 'url('+techHeader+')' }"></div>
+            <div class="tech-info">
+                <div>
+                    <div>{{ techName }}</div>
+                    <div>
+                        <div class="stars"><div :style="{ width : techStars+'%'}"></div></div>
+                        <div>{{ commentCount }}评论</div>
+                    </div>
+                </div>
+                <div>编号【<span>{{ techNo }}</span>】</div>
+            </div>
+            <div class="right-arrow"></div>
+        </router-link>
+        <div class="comment-info wrap">
+            <div class="title">服务评级</div>
+            <div></div>
+            <div class="item" v-for="item in commentItems">
+                <div>{{ item.label }}</div>
+                <div class="comment-stars">
+                    <div @click="doClickCommentStar($event,item)"><div :style="{ width : item.value+'%' }"></div></div>
+                </div>
+                <div>{{ item.value | commentFormatter(item.type) }}</div>
+            </div>
+        </div>
+        <div class="comment-impression wrap">
+            <div class="title">印象点评<span>(最多3项)</span></div>
+            <div class="comment-labels"><div v-for="item in impressionList" :key="item.id" @click="doClickImpressionItem(item)" :class="{ active : item.selected }">{{ item.tag }}</div></div>
+            <div class="comment-text" v-show="!(orderType == 1 && commentInputText.length == 0)">
+                <textarea maxlength="200" @focus="onTextareaFocus()" @blur="onTextareaBlur()" v-model="commentInputText" :readonly="orderType==1"></textarea>
+                <div>200字以内哦~</div>
+                <span :class="{ none : !showTextareaPlaceholder }">亲，点击这里，留句好评哦，么么哒~</span>
+            </div>
+            <div class="submit-btn" @click="doClickSubmitBtn()" :class="{ processing : inProcessing }">提交{{ inProcessing ? "中..." : "" }}</div>
+        </div>
+        <attention></attention>
     </div>
 </template>
 <script>
@@ -66,7 +63,6 @@
         },
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 queryImpressionListUrl : "../api/v2/club//impression/list",
                 queryTechData : "../api/v2/club//shared/technician",
@@ -114,13 +110,14 @@
                     Util.tipShow(res.msg || "查询印象标签数据出错！");
                 }
             });
-            _this.loading = true;
+            global.loading = true;
             _this.$http.get(_this.queryTechData, { params : {
                 id : _this.orderId || _this.techId,
                 type : _this.type,
                 commentId : _this.commentId
             }}).then(function(res){
                 res = res.body;
+                global.loading = false;
                 if(res.statusCode == 200){
                     res = res.respData;
                     var techInfo = res.tech, commentItems = _this.commentItems;
@@ -155,13 +152,13 @@
                     _this.techStars = techInfo.star || 0;
                 }
                 else{
-                    Util.tipShow(res.msg || _this.global.loadDataErrorTip);
+                    Util.tipShow(res.msg || global.loadError);
                     return _this.$router.back();
                 }
-                _this.loading = false;
             },function(){
-                Util.tipShow(_this.global.loadDataErrorTip);
-                return _this.$router.back();
+                Util.tipShow(global.loadError);
+                global.loading = false;
+                _this.$router.back();
             });
         },
         methods: {

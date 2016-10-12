@@ -3,8 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="tech-reward-page" v-show="!loading">
+        <div class="page" id="tech-reward-page" v-show="!global.loading">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>技师打赏</div>
             <div class="top-tip"><div></div></div>
             <div class="reward-list">
@@ -29,7 +28,6 @@
         },
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 getOpenIdUrl : "../api/v2/wx/oauth2/openid",
                 getTechInfoUrl : "../api/v2/club/technician/",
@@ -59,7 +57,7 @@
             var   _this = this, global = _this.global, params = global.currPageQuery;
             _this.techId = params.techId;
             if(!_this.techId){
-                Util.tipShow(global.visitPageErrorTipi);
+                Util.tipShow(global.visitErrori);
                 _this.$router.back();
             }
             else{

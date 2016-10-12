@@ -2,11 +2,9 @@
     @import '../styles/page/coupon.css';
 </style>
 <template>
-    <div>
-        <div class="loading" v-show="loading"><i></i><i></i><i></i></div>
-        <div class="page" id="coupon-page" v-show="!loading" :style="{ height : global.winHeight+'px' }">
-            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>优惠券</div>
-            <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
+    <div class="page" id="coupon-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
+        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>优惠券</div>
+        <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
                 <div class="list-item" v-for="singleClubData in dataList">
                     <div class='header' v-if="isQueryAll">{{ singleClubData.clubName }}</div>
                     <router-link v-for="item in singleClubData.list" class="item" :class="{ expire : item.isExpire }" :type="item.couponType" :to="{ name : item.couponType=='paid' ? 'paidCouponDetail' : 'couponDetail', query : { userActId : item.userActId }}" tag="div">
@@ -24,7 +22,6 @@
                 <div class="finish-load-tip border-top" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
                 <div class="nullData" v-show="dataList.length==0 && !isAddData"><div></div><div>暂无内容...</div></div>
             </div>
-        </div>
     </div>
 </template>
 <script>
@@ -34,7 +31,6 @@
     module.exports = {
         data: function(){
             return {
-                loading : false,
                 global : Global.data,
                 getRecordsUrl : "../api/v2/club/user_get_coupons",
                 dataList : [],
@@ -93,10 +89,10 @@
                         _this.showDataLoadTip = false;
                     }
                     else {
-                        Util.tipShow(global.loadDataErrorTip);
+                        Util.tipShow(global.loadError);
                     }
                 }, function () {
-                    Util.tipShow(global.loadDataErrorTip);
+                    Util.tipShow(global.loadError);
                 });
             },
             doHandlerListScroll : function(){
