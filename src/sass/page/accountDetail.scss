@@ -1,7 +1,8 @@
 @import "../common/mixin.scss";
 
 div#account-detail-page{
-  div.item{
+  div.item,a.item{
+    display: block;
     position: relative;
     height: 2.444rem;
     line-height: 2.444rem;
@@ -21,7 +22,7 @@ div#account-detail-page{
     }
   }
 
-  div.qrcode-item>div{
+  a.qrcode-item>div{
     position: absolute;
     width: .889rem;
     height: .889rem;

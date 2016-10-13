@@ -8,7 +8,7 @@
             <div class="club-info" @click="doClickClubInfo()"><div :style="{ backgroundImage : 'url('+(couponData.imageUrl || global.defaultClubLogo )+')' }"></div><span>{{ couponData.clubName }}</span></div>
             <div class="coupon-info">
                 <div>
-                    <router-link :style="{ backgroundImage : 'url('+(couponData.techs.avatarUrl || global.defaultHeader )+')' }" :to="{ name : 'chat', query : { techId : couponData.techs.id, clubId : couponData.clubId }}" tag="div"></router-link>
+                    <router-link :style="{ backgroundImage : 'url('+(couponData.techs.avatarUrl || global.defaultHeader )+')' }" :to="{ name : 'chat', query : { techId : couponData.techs.id, clubId : couponData.clubId }}"></router-link>
                     <div>{{ couponData.techs.name }}<span v-show="couponData.techs.serialNo">[<span>{{ couponData.techs.serialNo }}</span>]</span></div>
                 </div>
                 <div>

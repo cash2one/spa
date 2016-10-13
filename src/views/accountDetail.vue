@@ -3,8 +3,8 @@
 </style>
 <template>
     <div class="page" id="account-detail-page" v-show="!global.loading">
-            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>我的账户</div>
-            <div class="info-item item">
+        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>我的账户</div>
+        <div class="info-item item">
                 <div>
                     <div class="available-icon"></div>
                     <div>可用金额</div>
@@ -17,19 +17,19 @@
                 </div>
                 <a @click="doChargeClick()">充值</a>
             </div>
-            <router-link class="qrcode-item item" :to="{ name : 'qrPayCode' , query : { accountId : accountId }}" tag="div">
-                <span>付款二维码</span>
-                <div></div>
-            </router-link>
-            <router-link class="record-item item" :to="{ name : 'tradeRecords' , query : { accountId : accountId }}" tag="div">
-                <span>交易记录</span>
-                <div class="right-arrow"></div>
-            </router-link>
-            <router-link class="invite-item item" :to="{ name : 'treat' , query : { accountId : accountId }}" tag="div">
-                <span>我要请客</span>
-                <div class="right-arrow"></div>
-            </router-link>
-        </div>
+        <router-link class="qrcode-item item" :to="{ name : 'qrPayCode' , query : { accountId : accountId }}">
+            <span>付款二维码</span>
+            <div></div>
+        </router-link>
+        <router-link class="record-item item" :to="{ name : 'tradeRecords' , query : { accountId : accountId }}">
+            <span>交易记录</span>
+            <div class="right-arrow"></div>
+        </router-link>
+        <router-link class="invite-item item" :to="{ name : 'treat' , query : { accountId : accountId }}">
+            <span>我要请客</span>
+            <div class="right-arrow"></div>
+        </router-link>
+    </div>
 </template>
 <script>
     import { Global } from '../libs/global';
@@ -71,7 +71,7 @@
                 }
                 else{
                     Util.tipShow(global.loadError);
-                    return _this.$router.back();
+                    _this.$router.back();
                 }
             });
         },

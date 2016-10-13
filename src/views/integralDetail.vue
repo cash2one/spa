@@ -7,7 +7,7 @@
         <div class="total">
             <div>现有积分<router-link :to="{ name : 'integralExplain' }">积分规则</router-link><i></i></div><b>{{amount}}<span>(冻结:{{freezeAmount}})</span></b>
         </div>
-        <div class="tip" v-show="isNoIntegral">您没有积分了，<a>如何获取积分</a></div>
+        <div class="tip" v-show="isNoIntegral">您没有积分了，<router-link :to="{ name : 'integralExplain' }">如何获取积分</router-link></div>
         <div class="title" v-show="!isNoIntegral">积分记录</div>
         <div class="list" ref="listEle" v-show="!isNoIntegral" :style="{ height : (global.winHeight-10.36*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <div class="list-item" v-for="item in dataList">

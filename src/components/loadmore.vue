@@ -6,14 +6,14 @@
     <div class="mint-loadmore-content" :class="{ 'is-dropped': topDropped || bottomDropped}" :style="{ 'transform': 'translate3d(0, ' + translate + 'px, 0)' }" ref="loadmoreContent">
       <slot name="top">
         <div class="mint-loadmore-top">
-          <spinner v-if="topStatus === 'loading'" class="mint-loadmore-spinner" :size="20" type="fading-circle"></spinner>
+         <!-- <spinner v-if="topStatus === 'loading'" class="mint-loadmore-spinner" :size="20" type="fading-circle"></spinner>-->
           <span class="mint-loadmore-text">{{ topText }}</span>
         </div>
       </slot>
       <slot></slot>
       <slot name="bottom">
         <div class="mint-loadmore-bottom">
-          <spinner v-if="bottomStatus === 'loading'" class="mint-loadmore-spinner" :size="20" type="fading-circle"></spinner>
+          <!--<spinner v-if="bottomStatus === 'loading'" class="mint-loadmore-spinner" :size="20" type="fading-circle"></spinner>-->
           <span class="mint-loadmore-text">{{ bottomText }}</span>
         </div>
       </slot>
@@ -22,6 +22,8 @@
 </template>
 
 <script type="text/babel">
+  import { eventHub } from '../libs/hub';
+
   export default {
     name: 'mt-loadmore',
     props: {
@@ -48,10 +50,6 @@
       topMethod: {
         type: Function
       },
-      topStatus: {
-        type: String,
-        default: ''
-      },
       bottomPullText: {
         type: String,
         default: '上拉刷新'
@@ -70,10 +68,6 @@
       },
       bottomMethod: {
         type: Function
-      },
-      bottomStatus: {
-        type: String,
-        default: ''
       },
       bottomAllLoaded: {
         type: Boolean,
@@ -95,7 +89,10 @@
         direction: '',
         startY: 0,
         startScrollTop: 0,
-        currentY: 0
+        currentY: 0,
+
+        topStatus : "",
+        bottomStatus : ""
       };
     },
 
@@ -125,35 +122,6 @@
           case 'loading':
             this.bottomText = this.bottomLoadingText;
             break;
-        }
-      }
-    },
-
-    events: {
-      onTopLoaded(id) {
-        if (id === this.uuid) {
-          this.translate = 0;
-          setTimeout(() => {
-            this.topStatus = 'pull';
-          }, 200);
-        }
-      },
-
-      onBottomLoaded(id) {
-        this.bottomStatus = 'pull';
-        this.bottomDropped = false;
-        if (id === this.uuid) {
-          this.$nextTick(() => {
-            if (this.scrollEventTarget === window) {
-              document.body.scrollTop += 50;
-            } else {
-              this.scrollEventTarget.scrollTop += 50;
-            }
-            this.translate = 0;
-          });
-        }
-        if (!this.bottomAllLoaded && !this.containerFilled) {
-          this.fillContainer();
         }
       }
     },
@@ -293,12 +261,52 @@
           }
         }
         this.direction = '';
+      },
+
+      handlerTopLoaded(id){
+        if (id === this.uuid) {
+          this.translate = 0;
+          setTimeout(() => {
+            this.topStatus = 'pull';
+        }, 200);
+        }
+      },
+
+      handlerBottomLoaded(id){
+        this.bottomStatus = 'pull';
+        this.bottomDropped = false;
+        if (id === this.uuid) {
+          this.$nextTick(() => {
+            if (this.scrollEventTarget === window) {
+            document.body.scrollTop += 50;
+          } else {
+            this.scrollEventTarget.scrollTop += 50;
+          }
+          this.translate = 0;
+        });
+        }
+        if (!this.bottomAllLoaded && !this.containerFilled) {
+          this.fillContainer();
+        }
       }
     },
 
     mounted() {
-      this.uuid = Math.random().toString(36).substring(3, 8);
-      this.init();
+      var _this = this;
+      _this.uuid = Math.random().toString(36).substring(3, 8);
+      _this.$nextTick(function(){
+        _this.beforeCreate();
+      });
+    },
+
+    created() {
+      eventHub.$on("onTopLoaded",this.handlerTopLoaded);
+      eventHub.$on("onBottomLoaded",this.handlerBottomLoaded);
+    },
+
+    beforeDestroy() {
+      eventHub.$off("onTopLoaded",this.handlerTopLoaded);
+      eventHub.$off("onBottomLoaded",this.handlerBottomLoaded);
     }
   };
 </script>

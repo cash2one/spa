@@ -8,13 +8,12 @@
 </template>
 
 <script>
-    import { Global } from '../libs/global';
+    import { eventHub } from '../libs/hub';
 
     module.exports = {
         data : function(){
             return {
-                show : false,
-                eventHub : Global.eventHub
+                show : false
             }
         },
         props : {
@@ -24,8 +23,7 @@
             }
         },
         created : function(){
-            var _this = this;
-            _this.eventHub.$on("change-tel-detail",_this.doChangeVisible);
+            eventHub.$on("change-tel-detail",this.doChangeVisible);
         },
         methods: {
             doChangeVisible : function(type){
@@ -33,8 +31,7 @@
             }
         },
         beforeDestroy : function(){
-            var _this = this;
-            _this.eventHub.$off("change-tel-detail",_this.doChangeVisible);
+            eventHub.$off("change-tel-detail",this.doChangeVisible);
         }
     }
 </script>

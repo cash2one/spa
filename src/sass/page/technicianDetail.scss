@@ -180,13 +180,15 @@ div#technician-detail-page{
         display: flex;
         justify-content: flex-start;
         align-items: flex-start;
-        >div{
+        >a{
+          display: block;
           -webkit-flex-shrink: 0;
           -ms-flex: 0 0 auto;
           flex-shrink: 0;
         }
       }
-      &>div{
+      &>a{
+        display: block;
         width: 4.667rem;
         height: 4.667rem;
         margin-left: .444rem;
@@ -199,7 +201,8 @@ div#technician-detail-page{
     }
   }
 
-  div.comment,div.view{
+  a.comment,a.view{
+    display: block;
     height: 2.222rem;
     padding-left:1.889rem;
     background: #fff;
@@ -237,7 +240,7 @@ div#technician-detail-page{
     }
   }
 
-  div.comment{
+  a.comment{
     div.icon{
       background-image: url("../../images/technicianDetail/comment_icon.png");
     }
@@ -261,7 +264,7 @@ div#technician-detail-page{
     }
   }
 
-  div.view{
+  a.view{
     border-top-width:0;
     div.icon{
       background-image: url("../../images/technicianDetail/tech_icon.png");
@@ -371,7 +374,8 @@ div.tech-detail-footer-wrap{
   right:0;
   background-color: rgba(255,255,255,0.96);
   border-top: 1px solid #e0e0e0;
-  &>div{
+  &>a{
+    display: block;
     letter-spacing: 1px;
     float: left;
     margin:0;

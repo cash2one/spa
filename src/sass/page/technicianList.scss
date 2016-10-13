@@ -186,7 +186,8 @@ div#technician-list-page{
   div.tech-list{
     overflow-y: auto;
     background-color: #fff;
-    div.item{
+    a.item{
+      display: block;
       height: 5.083rem;
       background: #fff;
       border-bottom: 1px solid #f0f0f0;

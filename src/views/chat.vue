@@ -18,6 +18,7 @@
 </template>
 <script>
     import { Global } from '../libs/global';
+    import { eventHub } from '../libs/hub';
     import { IM } from '../libs/im';
     import Util from "../libs/util";
     import LoadMore from '../components/loadmore';
@@ -48,11 +49,11 @@
             _this.msgWrapHeight = global.winHeight-4.389*global.winScale*16;
         },
         mounted : function(){
-          /*var _this = this;
+          var _this = this;
             for(var i=0;i<10;i++){
                 _this.list.push(i);
             }
-            console.dir(_this.list);*/
+            console.dir(_this.list);
             window["webIM"] = WebIM;
         },
         methods: {
@@ -60,11 +61,11 @@
                 history.back();
             },
             loadMoreData : function(id){
-                /*var _this = this, last = _this.list[_this.list.length-1];
+                var _this = this, last = _this.list[_this.list.length-1];
                 for(var i=last+1;i<last+10;i++){
                     _this.list.unshift(i);
                 }
-                _this.$broadcast('onTopLoaded', id);*/
+                eventHub.$emit('onTopLoaded', id);
             },
             doClickOrderTip : function(){//点击预约（提示）
 

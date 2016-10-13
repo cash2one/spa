@@ -4,7 +4,8 @@ div#treat-records-page{
   div.list{
     overflow-y: auto;
   }
-  div.list-item{
+  a.list-item{
+    display: block;
     background-color: #fff;
     font-size: .778rem;
     color: #616161;

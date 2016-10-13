@@ -108,7 +108,6 @@
             }
         },
         created : function(){
-            console.log("personal created.....");
             var _this = this, global = _this.global;
             if(global.clubCfg.accountSwitch == null){//获取开关状态
                 Global.getClubSwitches();

@@ -2,7 +2,8 @@
 
 div#account-page{
 
-  div.jump-qrcode{
+  a.jump-qrcode{
+    display: block;
     @include sx();
     background-color: #fff;
     height: 2.444rem;
@@ -30,7 +31,8 @@ div#account-page{
     overflow-y: auto;
   }
 
-  div.list-item{
+  a.list-item{
+    display: block;
     margin-top: .667rem;
     background-color: #fff;
     border-top:1px solid #e0e0e0;

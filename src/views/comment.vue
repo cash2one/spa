@@ -10,7 +10,7 @@
                 <div>感谢您的评价!</div>
             </div>
         </div>
-        <router-link class="wrap top-info" :to="{ name : 'technicianDetail' , query : { id : techId }}" tag="div">
+        <router-link class="wrap top-info" :to="{ name : 'technicianDetail' , query : { id : techId }}">
             <div class="tech-header" :style="{ backgroundImage : 'url('+techHeader+')' }"></div>
             <div class="tech-info">
                 <div>
@@ -49,6 +49,7 @@
     </div>
 </template>
 <script>
+    import Vue from 'vue';
     import { Global } from '../libs/global';
     import Util from "../libs/util";
     import CommentFormatter from "../filters/comment-formatter";
@@ -74,6 +75,8 @@
                 orderType : 0,
                 techHeader : "",
                 techName : "",
+                techStars : 0,
+                techNo : "",
                 commentCount : 0,
                 commentInputText : "",
                 showTextareaPlaceholder : true,
@@ -138,7 +141,7 @@
                                 impressionIndex = impressionLabelObj[impressionArr[i]];
                                 impressionObj = _this.impressionList[impressionIndex];
                                 if(impressionObj){
-                                    _this.impressionList.$set(impressionIndex,{ tag : impressionObj.tag, id : impressionObj.id, selected : true });
+                                    Vue.set(_this.impressionList,impressionIndex,{ tag : impressionObj.tag, id : impressionObj.id, selected : true });
                                 }
                             }
                         }
@@ -153,7 +156,7 @@
                 }
                 else{
                     Util.tipShow(res.msg || global.loadError);
-                    return _this.$router.back();
+                    _this.$router.back();
                 }
             },function(){
                 Util.tipShow(global.loadError);

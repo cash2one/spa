@@ -26,7 +26,7 @@
                 <div><div></div>推荐技师<router-link :to="{ name : 'technicianList' }">全部技师</router-link></div>
                 <div>
                     <div>
-                        <router-link v-for="tech in techs" :to="{ name : 'technicianDetail', query : { id : tech.id } }" :style="{ backgroundImage : 'url('+(tech.avatarUrl || global.defaultHeader)+')' }" class="tech" tag="div">
+                        <router-link v-for="tech in techs" :to="{ name : 'technicianDetail', query : { id : tech.id } }" :style="{ backgroundImage : 'url('+(tech.avatarUrl || global.defaultHeader)+')' }" class="tech">
                             <div>{{tech.name}}</div>
                         </router-link>
                     </div>
@@ -52,6 +52,7 @@
 </template>
 <script>
     import { Global } from '../libs/global';
+    import { eventHub } from '../libs/hub';
     import Swipe from '../components/swipe';
     import SwipeItem from '../components/swipe-item';
     import TelDetail from '../components/tel-detail.vue';
@@ -66,7 +67,6 @@
         },
         data: function(){
             return {
-                eventHub : Global.eventHub,
                 //getHomeDataUrl : "../json/homeData.json",
                 getHomeDataUrl : "../api/v2/club/"+Global.data.clubId+"/homeData",
                 global : Global.data,
@@ -108,7 +108,7 @@
                     Util.tipShow("暂无会所电话！");
                 }
                 else{
-                    _this.eventHub.$emit("change-tel-detail",true);
+                    eventHub.$emit("change-tel-detail",true);
                 }
             },
             doClickServiceItem : function(id){

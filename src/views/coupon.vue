@@ -7,7 +7,7 @@
         <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
                 <div class="list-item" v-for="singleClubData in dataList">
                     <div class='header' v-if="isQueryAll">{{ singleClubData.clubName }}</div>
-                    <router-link v-for="item in singleClubData.list" class="item" :class="{ expire : item.isExpire }" :type="item.couponType" :to="{ name : item.couponType=='paid' ? 'paidCouponDetail' : 'couponDetail', query : { userActId : item.userActId }}" tag="div">
+                    <router-link v-for="item in singleClubData.list" class="item" :class="{ expire : item.isExpire }" :type="item.couponType" :to="{ name : item.couponType=='paid' ? 'paidCouponDetail' : 'couponDetail', query : { userActId : item.userActId }}">
                         <i></i>
                         <div>{{ item.actTitle }}</div>
                         <div>{{ item.useType == 'money' ? ( item.actValue+'元现金券') : '' }}<div v-html="item.consumeMoneyDescription"></div></div>

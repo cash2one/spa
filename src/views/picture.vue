@@ -4,11 +4,12 @@
 <template>
     <div class="page info-page" id="picture-page">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>裁剪图片<div @click="doClickSaveBtn()">保存</div></div>
-        <image-cut :all-w="global.winWidth" :all-h="global.winHeight" :v-w="global.winWidth*0.8" :v-h="global.winWidth*0.8"></image-cut>
+        <image-cut :all-w-prop="global.winWidth" :all-h-prop="global.winHeight" :v-w-prop="global.winWidth*0.8" :v-h-prop="global.winWidth*0.8"></image-cut>
     </div>
 </template>
 <script>
     import { Global } from '../libs/global';
+    import { eventHub } from '../libs/hub';
     import Util from "../libs/util";
     import ImageCut from 'components/image-cut.vue';
 
@@ -16,7 +17,6 @@
         data: function(){
             return {
                 global : Global.data,
-                eventHub : Global.eventHub,
                 saveUserPicUrl : "../api/v2/profile/user/avatar/eidt",
                 type : "",
                 inPostData : false
@@ -35,7 +35,7 @@
             }
 
             /////event on
-            _this.eventHub.$on("put-base64",_this.doPutBase64);
+            eventHub.$on("put-base64",_this.doPutBase64);
         },
         methods: {
             doClickPageBack : function(){
@@ -44,7 +44,7 @@
             doClickSaveBtn : function(){
                 var _this = this;
                 _this.inPostData = true;
-                _this.eventHub.$emit("get-base64",{ width : 160, height : 160 });
+                eventHub.$emit("get-base64",{ width : 160, height : 160 });
             },
             doPutBase64 : function(imgData){
                 var _this = this;
@@ -59,8 +59,7 @@
             }
         },
         beforeDestroy : function(){
-            var _this = this;
-            _this.eventHub.$off("put-base64",_this.doPutBase64);
+            eventHub.$off("put-base64",this.doPutBase64);
         }
     }
 </script>

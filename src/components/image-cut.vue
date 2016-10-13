@@ -30,13 +30,12 @@
     </div>
 </template>
 <script>
-    import { Global } from '../libs/global';
+    import { eventHub } from '../libs/hub';
 
     module.exports = {
-        props : [ 'allW','allH', 'vW','vH' ],
+        props : [ 'allWProp','allHProp', 'vWProp','vHProp' ],
         data: function() {
             return {
-                eventHub : Global.eventHub,
                 img : null,//图片源
                 imgX : 0,//图片当前坐标
                 imgY : 0,
@@ -44,14 +43,10 @@
                 imgH : 0,
                 imgWN : 0,//图片原始大小
                 imgHN : 0,
-                allW : 300,//容器大小
-                allH : 300,
                 _$ : null,//操作容器
                 _$$ : null,//导出容器
                 $ : null,//操作容器内容符
                 $$ : null,//导出容器内容符
-                vW :  0,//可视区域大小 parseInt(((dw-cw)/2).toFixed())
-                vH : 0,
                 vL :  0,//可视区域左上右下坐标
                 vT : 0,
                 vR : 0,
@@ -70,9 +65,22 @@
                 pZ : null
             }
         },
+        computed : {
+            allW : function(){
+                return this.allWProp;
+            },
+            allH : function(){
+                return this.allHProp;
+            },
+            vW : function(){
+                return this.vWProp;
+            },
+            vH : function(){
+                return this.vHProp;
+            }
+        },
         created : function(){
-          var _this = this;
-            _this.eventHub.$on("get-base64",_this.doGetBase64);
+            eventHub.$on("get-base64",this.doGetBase64);
         },
         mounted: function() {
             var _this = this;
@@ -103,7 +111,7 @@
         methods: {
             doGetBase64 : function(option){
                 var _this = this, imgData = _this.getImageBase64(option.width,option.height);
-                _this.eventHub.$emit('put-base64', imgData);
+                eventHub.$emit('put-base64', imgData);
             },
             doTouchStartHandler : function(e){
                 var _this = this;
@@ -245,8 +253,7 @@
             }
         },
         beforeDestroy: function() {
-            var _this = this;
-            _this.eventHub.$off("get-base64",_this.doGetBase64);
+            eventHub.$off("get-base64",this.doGetBase64);
         }
     }
 </script>

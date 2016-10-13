@@ -21,6 +21,7 @@
 </template>
 <script>
     import { Global } from '../libs/global';
+    import { eventHub } from '../libs/hub';
     import Swipe from '../components/swipe';
     import SwipeItem from '../components/swipe-item';
     import Util from "../libs/util";
@@ -32,7 +33,6 @@
         },
         data: function(){
             return {
-                eventHub : Global.eventHub,
                 getClubProfileDataUrl : "../api/v2/club/"+Global.data.clubId+"/item",
                 global : Global.data,
                 profileData : [],
@@ -62,7 +62,7 @@
                 global.loading = false;
                 _this.$router.back();
             });
-            _this.eventHub.$on("swipePageEnd",_this.doSwipePageEnd);
+            eventHub.$on("swipePageEnd",_this.doSwipePageEnd);
         },
         methods: {
             doClickPageBack : function(){//点击返回按钮
@@ -73,8 +73,7 @@
             }
         },
         beforeDestroy : function(){
-            var _this = this;
-            _this.eventHub.$off("swipePageEnd",_this.doSwipePageEnd);
+            eventHub.$off("swipePageEnd",this.doSwipePageEnd);
         }
     }
 </script>

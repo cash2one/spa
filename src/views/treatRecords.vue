@@ -5,7 +5,7 @@
     <div class="page" id="treat-records-page" v-show="!global.loading">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>请客记录</div>
             <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
-                <router-link class="list-item" v-for="item in dataList" :to="{ name : 'treatDetail' , query : { detailId : item.id }}" tag="div">
+                <router-link class="list-item" v-for="item in dataList" :to="{ name : 'treatDetail' , query : { detailId : item.id }}">
                     <div>
                         <div>{{ item.createDateStr }}</div>
                         <div :class="statusObj[item.status].value">{{ statusObj[item.status].name }}</div>

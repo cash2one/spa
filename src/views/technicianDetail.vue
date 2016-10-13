@@ -12,9 +12,9 @@
                 <div class="favorite" @click="doClickCollectBtn()" :class="{ collected : isFavorite }"><div></div><div>{{favoriteCount}}</div><span :class="{ active : showCollectedAni }">{{collectedText}}</span></div>
             </div>
             <div class="pics" v-show="techPics.length>0">
-                <div><router-link v-for="pic in techPics" :style="{ backgroundImage : 'url('+pic.imageUrl+')' }" :to="{ name : 'technicianImg' , query : { id : techId , index : pic.orders }}" tag="div"></router-link></div>
+                <div><router-link v-for="pic in techPics" :style="{ backgroundImage : 'url('+pic.imageUrl+')' }" :to="{ name : 'technicianImg' , query : { id : techId , index : pic.orders }}"></router-link></div>
             </div>
-            <router-link class="comment" :to="{ name : 'review' , query : { id : techId }}" tag="div">
+            <router-link class="comment" :to="{ name : 'review' , query : { id : techId }}">
                 <div class="icon"></div>
                 <div class="arrow"></div>
                 <div>所有评论</div>
@@ -23,7 +23,7 @@
                     <div>{{techCommentCount}}评论</div>
                 </div>
             </router-link>
-            <router-link class="view" :to="{ name : 'technicianList' }" tag="div">
+            <router-link class="view" :to="{ name : 'technicianList' }">
                 <div class="icon"></div>
                 <div class="arrow"></div>
                 <div>查看店内其他技师</div>
@@ -44,14 +44,12 @@
             </div>
         </div>
         <div class="tech-detail-footer-wrap">
-            <div @click="doClickCommentBtn()"><i></i>点评</div>
-            <div @click="doClickRewardBtn()"><i></i>打赏</div>
-            <router-link :to="{ name : 'chat', query : { techId : techId } }" tag="div"><i></i>聊天</router-link>
-            <div @click="doClickOrderBtn()" :class="{ active : canOrder }">预约</div>
+            <a @click="doClickCommentBtn()"><i></i>点评</a>
+            <a @click="doClickRewardBtn()"><i></i>打赏</a>
+            <router-link :to="{ name : 'chat', query : { techId : techId } }"><i></i>聊天</router-link>
+            <a @click="doClickOrderBtn()" :class="{ active : canOrder }">预约</a>
         </div>
-
-        <tel-detail ref="telDetail" v-if="telephone.length>0" :telephone="telephone"></tel-detail>
-
+        <tel-detail v-if="telephone.length>0" :telephone="telephone"></tel-detail>
         <div class="club-coupon" :class="{ hide : paidCoupons.length==0 && ordinaryCoupons.length==0 }" @click="switchCouponListStatus(true)"><div></div><span>抢优惠</span></div>
         <div class="coupon-list" :class="{ active : showCouponList }">
             <div>
@@ -233,7 +231,7 @@
                             Util.tipShow("暂无联系电话！");
                         }
                         else{
-                            _this.$refs.telDetail.$emit("change-visible",{ ope : "show" });
+                            eventHub.$emit("change-tel-detail",true);
                         }
                     }
                     else if(_this.appointment != "n"){

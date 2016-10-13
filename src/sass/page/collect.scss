@@ -24,7 +24,8 @@ div#collect-page{
       }
     }
 
-    div.item {
+    a.item {
+      display: block;
       height: 5.083rem;
       background: #fff;
       border-bottom: 1px solid #f0f0f0;

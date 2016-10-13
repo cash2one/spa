@@ -25,7 +25,8 @@ div#coupon-page{
       }
     }
 
-    div.item {
+    a.item {
+      display: block;
       margin: 0.667rem 0.667rem 0;
       border:1px solid #d9d9d9;
       border-radius: 0.222rem;

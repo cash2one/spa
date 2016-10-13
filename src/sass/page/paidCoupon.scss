@@ -46,7 +46,8 @@ div.paid-coupon-page{
     background-color: #fff;
     border-top:1px solid #d9d9d9;
     border-bottom:1px solid #d9d9d9;
-    >div:nth-of-type(1){
+    >a{
+      display: block;
       height:2.444rem;
       >div:nth-of-type(1){
         float: left;
@@ -72,7 +73,7 @@ div.paid-coupon-page{
       }
     }
 
-    >div:nth-of-type(2){
+    >div{
       position: relative;
       height:4.167rem;
       margin-top:0.667rem;
@@ -166,7 +167,8 @@ div.paid-coupon-page{
         width: 4.167rem;
         height: 100%;
         position: relative;
-        > div {
+        >a{
+          display: block;
           margin: 0 auto;
           &:nth-of-type(1){
             width: 2.778rem;
@@ -260,28 +262,26 @@ div.paid-coupon-page{
             bottom:0.25rem;
             width:15.15rem;
             > div {
-              &:nth-of-type(1) {
-                color:#666;
-                font-size: 0.889rem;
-                line-height: 1.667rem;
-                width: 11.2rem;
-                height:1.677rem;
-                padding-top:0.2rem;
-                @include sl();
-              }
-              &:nth-of-type(2) {
-                position: absolute;
-                right:0;
-                top:0;
-                width: 4rem;
-                height: 1.667rem;
-                background: #ff6666;
-                border-radius:0.25rem;
-                color: #fff;
-                font-size: 0.889rem;
-                line-height: 1.667rem;
-                text-align: center;
-              }
+              color:#666;
+              font-size: 0.889rem;
+              line-height: 1.667rem;
+              width: 11.2rem;
+              height:1.677rem;
+              padding-top:0.2rem;
+              @include sl();
+            }
+            >a{
+              position: absolute;
+              right:0;
+              top:0;
+              width: 4rem;
+              height: 1.667rem;
+              background: #ff6666;
+              border-radius:0.25rem;
+              color: #fff;
+              font-size: 0.889rem;
+              line-height: 1.667rem;
+              text-align: center;
             }
           }
         }

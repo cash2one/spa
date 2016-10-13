@@ -43,7 +43,6 @@
         data: function(){
             return {
                 global : Global.data,
-                eventHub : Global.eventHub,
                 queryDataUrl : "../api/v2/club/"+Global.data.clubId+"/service/item",
                 //queryDataUrl : "../json/serviceItem.json",
                 isQueryAll : true,
@@ -103,7 +102,7 @@
                     return _this.$router.back();
                 });
             }
-            _this.eventHub.$on("swipePageEnd",_this.doSwipePageEnd);
+            eventHub.$on("swipePageEnd",_this.doSwipePageEnd);
         },
         filters: {
             itemPriceFormatter : ItemPriceFormatter
@@ -172,7 +171,7 @@
                         Util.tipShow("暂无预约电话！");
                     }
                     else{
-                        _this.eventHub.$emit("change-tel-detail",true);
+                        eventHub.$emit("change-tel-detail",true);
                     }
                 }
                 else if(_this.payAppointment && !global.userAgent.isWX){
@@ -201,8 +200,7 @@
             }
         },
         beforeDestroy : function(){
-            var _this = this;
-            _this.eventHub.$off("swipePageEnd",_this.doSwipePageEnd);
+            eventHub.$off("swipePageEnd",this.doSwipePageEnd);
         }
     }
 </script>

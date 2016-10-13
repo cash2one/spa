@@ -29,7 +29,7 @@
             </div>
 
             <div class="tech-list" ref="listEle" :style="{ height : (global.winHeight-7.633*global.winScale*16)+'px' }" @scroll="doHandlerTechListScroll()">
-                <router-link class="item" :to="{ name : 'technicianDetail', query : { id : tech.id } }" v-for="tech in techList" :key="tech.id" tag="div">
+                <router-link class="item" :to="{ name : 'technicianDetail', query : { id : tech.id } }" v-for="tech in techList" :key="tech.id">
                     <div>
                         <div :style="{ backgroundImage : 'url('+(tech.avatarUrl || global.defaultHeader)+')' }"></div>
                         <div :class="tech['status']">{{ tech['status']=='free' ? '闲' : '忙' }}</div>

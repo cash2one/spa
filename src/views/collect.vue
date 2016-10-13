@@ -7,7 +7,7 @@
         <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <div class="list-item" v-for="singleClubData in dataList">
                 <div class='header' v-if="isQueryAll">{{ singleClubData.clubName }}</div>
-                <router-link class="item" v-for="item in singleClubData.list" :to="{ name : 'technicianDetail', query : { id : item.techId } }" tag="div">
+                <router-link class="item" v-for="item in singleClubData.list" :to="{ name : 'technicianDetail', query : { id : item.techId } }">
                     <div>
                         <div :style="{ backgroundImage : 'url('+(item.avatarUrl || global.defaultHeader)+')' }"></div>
                         <div :class="item.status">{{ item.status == 'free' ? '闲' : '忙' }}</div>

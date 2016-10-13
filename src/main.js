@@ -45,7 +45,7 @@ Vue.http.interceptors.push(function(request,next){
     });
 });
 
-//对于有:club参数的路径，对应的name是页面名称,否则加$(公众号模式)
+//页面列表
 var pageRouterList = [
     'home',                         //会所首页
     'message',                     //消息列表

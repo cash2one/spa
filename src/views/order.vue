@@ -6,7 +6,7 @@
     <div class="page" id="order-list-page" v-if="!$loadingRouteData">
         <div class="page-title"><a class="back" @click="doClickBackPage()"></a>我的订单</div>
         <div class="order-list" ref="listEle" :style="{ height : (global.winHeight-5.411*global.winScale*16)+'px'}" @scroll="doHandlerOrderListScroll()">
-            <router-link v-for="order in orderList" :key="order.id" :to="{name:'orderDetail',query:{id:order.id}" tag="div">
+            <router-link v-for="order in orderList" :key="order.id" :to="{name:'orderDetail',query:{id:order.id}">
                 <div>{{order.clubName}}<span>{{order.downPayment>0?('￥'+order.downPayment+'元'):''}}</span><span>{{order.status | orderStatusFilter('name')}}</span></div>
                 <div>
                     <div>选择技师<span>{{order.techId ? order.techName : '到店安排'}}<span v-if="order.techId">[<strong>{{order.techSerialNo || ""}}</strong>]</span></span></div>
@@ -62,10 +62,11 @@
             </div>
         </div>
     </div>
-    <tel-detail ref="telDetail" v-if="global.clubTelephone.length>0" :telephone="global.clubTelephone"></tel-detail>
+    <tel-detail v-if="global.clubTelephone.length>0" :telephone="global.clubTelephone"></tel-detail>
 </template>
 <script type="text/ecmascript-6">
-    import { GLOBAL } from '../libs/global';
+    import { Global } from '../libs/global';
+    import { eventHub } from '../libs/hub';
     import Util from "../libs/util";
     import OrderStatusFilter from '../filters/order-status-filter';
     import Date2FullDate from '../filters/order-date-to-full-date';
@@ -83,8 +84,7 @@
             return {
                 getOrderListUrl:'../api/v2/profile/user/order/list',
                 paidOrderUrl:'../api/v2/wx/pay/paid_order_immediately',
-                global:GLOBAL.data,
-
+                global:Global.data,
                 orderList:[],
 
                 listEle:null,
@@ -102,9 +102,6 @@
 
                 busyTechName:'',
                 showAppointDlg:false,
-
-                telDetail:null,
-
                 payAuthCode:'',     //微信授权码
                 paramData:null,     //自动支付的参数
             }
@@ -326,7 +323,7 @@
                 if(_this.global.clubTelephone.length==0){
                     Util.tipShow("暂无会所电话！");
                 }else{
-                    _this.$refs.telDetail.$emit("change-visible",{ ope : "show" });
+                    eventHub.$emit("change-tel-detail",true);
                 }
             },
             doClickInquiries(data){        //问询
@@ -343,7 +340,7 @@
                     if(_this.global.clubTelephone.length==0){
                         Util.tipShow("暂无会所电话！");
                     }else{
-                        _this.$refs.telDetail.$emit("change-visible",{ ope : "show" });
+                        eventHub.$emit("change-tel-detail",true);
                     }
                 }
             },

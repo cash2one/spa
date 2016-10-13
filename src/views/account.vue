@@ -4,13 +4,13 @@
 <template>
     <div class="page" id="account-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>所有账户</div>
-            <router-link class="jump-qrcode" v-show="dataList.length>0" :to="{ name : 'qrPayCode' }" tag="div">
+            <router-link class="jump-qrcode" v-show="dataList.length>0" :to="{ name : 'qrPayCode' }">
                 <div></div>
                 <div>付款二维码</div>
                 <div></div>
             </router-link>
             <div class="list" :style="{ height : (global.winHeight-(dataList.length>0 ? 5.722 : 2.611)*global.winScale*16)+'px' }">
-                <router-link class="list-item" v-for="item in dataList" :to="{ name : 'accountDetail', query : { accountId : item.id } }" tag="div">
+                <router-link class="list-item" v-for="item in dataList" :to="{ name : 'accountDetail', query : { accountId : item.id } }">
                     <div class="header">
                         <span :style="{ backgroundImage : 'url('+(item.clubImage || global.defaultClubLogo )+')' }"></span><span>{{ item.clubName }}</span><i></i>
                     </div>

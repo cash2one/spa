@@ -6,7 +6,8 @@ div#integral-all-page{
     overflow-y: auto;
   }
 
-  div.list-item{
+  a.list-item{
+    display: block;
     margin-top:0.556rem;
     border-top:1px solid #e0e0e0;
     border-bottom:1px solid #e0e0e0;

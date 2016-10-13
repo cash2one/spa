@@ -130,7 +130,8 @@ div.credit-tip-pop{
       height:3.222rem;
       line-height: 3.222rem;
       border-top:1px solid #e0e0e0;
-      &>div{
+      &>a{
+        display: block;
         float: left;
         width:50%;
         height: 100%;

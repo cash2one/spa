@@ -1,7 +1,7 @@
 @import "../common/mixin.scss";
 
 div#comment-page{
-  div.wrap{
+  div.wrap,a.wrap{
     margin-top: .556rem;
     padding-bottom:0.667rem;
     border-top:1px solid #d9d9d9;
@@ -47,7 +47,8 @@ div#comment-page{
     }
   }
 
-  div.top-info{
+  a.top-info{
+    display: block;
     height: 3.278rem;
     margin-top:0;
     padding-bottom:0;

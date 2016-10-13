@@ -5,17 +5,17 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import { Global } from '../libs/global';
+    import { eventHub } from '../libs/hub';
 
     export default {
         name: 'mt-swipe-item',
 
         mounted() {
-            Global.eventHub.$emit("swipeItemCreated",this);
+            eventHub.$emit("swipeItemCreated",this);
         },
 
         destroyed() {
-            Global.eventHub.$emit("swipeItemDestroyed",this);
+            eventHub.$emit("swipeItemDestroyed",this);
         }
     };
 </script>

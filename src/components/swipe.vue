@@ -15,7 +15,7 @@
 
 <script type="text/ecmascript-6">
     import { once, addClass, removeClass } from 'wind-dom';
-    import { Global } from '../libs/global';
+    import { eventHub } from '../libs/hub';
 
     export default {
         name: 'mt-swipe',
@@ -25,8 +25,8 @@
             _this.dragState = {};
 
             ///////on event
-            _this.eventHub.$on("swipeItemCreated",_this.doHandleSwipeItemCreated);
-            _this.eventHub.$on("swipeItemDestroyed",_this.doHandleSwipeItemDestroyed);
+            eventHub.$on("swipeItemCreated",_this.doHandleSwipeItemCreated);
+            eventHub.$on("swipeItemDestroyed",_this.doHandleSwipeItemDestroyed);
         },
 
         data() {
@@ -39,8 +39,7 @@
                 timer: null,
                 reInitTimer: null,
                 noDrag: false,
-                index : 0,
-                eventHub : Global.eventHub
+                index : 0
             };
         },
         watch : {
@@ -225,7 +224,7 @@
                     }
 
 					////////////////////////////////dispatch event
-                    this.eventHub.$emit("swipePageEnd",{ 'currIndex' : this.index });
+                    eventHub.$emit("swipePageEnd",{ 'currIndex' : this.index });
                 };
 
                 setTimeout(() => {
@@ -409,8 +408,8 @@
 
         beforeDestroy : function(){
             var _this = this;
-            _this.eventHub.$off("swipeItemCreated",_this.doHandleSwipeItemCreated);
-            _this.eventHub.$off("swipeItemDestroyed",_this.doHandleSwipeItemDestroyed);
+            eventHub.$off("swipeItemCreated",_this.doHandleSwipeItemCreated);
+            eventHub.$off("swipeItemDestroyed",_this.doHandleSwipeItemDestroyed);
         },
 
         mounted() {

@@ -7,7 +7,7 @@
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>点钟券详情</div>
             <div class="club-info" @click="doClickClubInfo()" v-show="global.pageMode != 'club'"><div :style="{ backgroundImage : 'url('+(couponData.imageUrl || global.defaultClubLogo )+')' }"></div><span>{{ couponData.clubName }}</span></div>
             <div class="detail-info">
-                <div><router-link :style="{ backgroundImage : 'url('+(couponData.techs.avatarUrl || global.defaultHeader )+')' }" :to="{ name : 'chat', query : { techId : couponData.techs.id, clubId : couponData.clubId }}" tag="div"></router-link></div>
+                <div><router-link :style="{ backgroundImage : 'url('+(couponData.techs.avatarUrl || global.defaultHeader )+')' }" :to="{ name : 'chat', query : { techId : couponData.techs.id, clubId : couponData.clubId }}"></router-link></div>
                 <div>
                     <div>
                         <div>
@@ -21,7 +21,7 @@
                     <div></div>
                     <div>
                         <div>{{ couponData.techs.description || "这个技师很懒，没有填写个人简介..." }}</div>
-                        <router-link :to="{ name : 'confirmOrder', query : { techId : couponData.techs.id , clubId : couponData.clubId }}" tag="div">预约</router-link>
+                        <router-link :to="{ name : 'confirmOrder', query : { techId : couponData.techs.id , clubId : couponData.clubId }}">预约</router-link>
                     </div>
                 </div>
             </div>
