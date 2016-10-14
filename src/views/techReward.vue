@@ -54,7 +54,7 @@
             }
         },
         created : function(){
-            var   _this = this, global = _this.global, params = global.currPageQuery;
+            var   _this = this, global = _this.global, params = global.currPage.query;
             _this.techId = params.techId;
             if(!_this.techId){
                 Util.tipShow(global.visitErrori);

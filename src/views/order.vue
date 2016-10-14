@@ -115,7 +115,7 @@
             }
 
             _this.paramData = Util.sessionStorage('order-list-param') || null;
-            _this.payAuthCode = _this.global.currPageQuery.code;
+            _this.payAuthCode = _this.global.currPage.query.code;
 
             if(_this.paramData && _this.payAuthCode){
                 _this.doClickPaid(+_this.paramData);

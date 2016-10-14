@@ -87,7 +87,7 @@
             }
         },
         created : function(){
-            var   _this = this, global = _this.global, query = global.currPageQuery, k, impressionLabelObj, selectedImpressionObj;
+            var   _this = this, global = _this.global, query = global.currPage.query, k, impressionLabelObj, selectedImpressionObj;
             _this.techId = query.techId;
             _this.orderId = query.orderId || query.id;
             _this.type = query.type || "";

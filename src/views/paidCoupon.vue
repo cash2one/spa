@@ -59,7 +59,7 @@
             }
         },
         created : function(){
-            var   _this = this, global = _this.global, query = global.currPageQuery;
+            var   _this = this, global = _this.global, query = global.currPage.query;
             _this.actId = query.actId;
             _this.techCode = query.techCode;
             _this.payAuthCode = query.code || global.authCode;

@@ -63,7 +63,7 @@
             'tel-detail' : TelDetail
         },
         created : function(){
-            var _this = this, global = _this.global,pageParam = global.currPageQuery;
+            var _this = this, global = _this.global,pageParam = global.currPage.query;
             _this.activeItemId = _this.currServiceItemId = pageParam.id;
             _this.isQueryAll = pageParam.top != 1;
             if(!_this.currServiceItemId){

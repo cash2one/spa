@@ -37,7 +37,7 @@
         created : function(){
             var   _this = this,
                     _userLoginParam = Util.localStorage("user-login-param"),
-                    pageParam = _this.global.currPageQuery,
+                    pageParam = _this.global.currPage.query,
                     global = _this.global;
             if(_userLoginParam){
                 _this.userLoginParam = JSON.parse(_userLoginParam);

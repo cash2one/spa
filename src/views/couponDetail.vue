@@ -77,7 +77,7 @@
         },
         created : function(){
             var _this = this, global = _this.global;
-            _this.userActId = global.currPageQuery.userActId;
+            _this.userActId = global.currPage.query.userActId;
             if(!_this.userActId){
                 return _this.$router.back();
             }

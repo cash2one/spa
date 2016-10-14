@@ -75,7 +75,7 @@
             }
         },
         created : function(){
-            var   _this = this, global = _this.global, query = global.currPageQuery;
+            var   _this = this, global = _this.global, query = global.currPage.query;
             _this.userActId = query.userActId;
             console.log("paid coupon detail userActId;"+_this.userActId);
             if(!_this.userActId){

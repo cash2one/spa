@@ -47,7 +47,7 @@
             }
         },
         created : function(){
-            var   _this = this, global = _this.global, pageParams = global.currPageQuery;
+            var   _this = this, global = _this.global, pageParams = global.currPage.query;
             _this.accountId = pageParams.accountId || "";
             if(!_this.accountId && !global.clubId){
                 return _this.$router.back();

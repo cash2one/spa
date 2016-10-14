@@ -68,7 +68,7 @@
                     _userLoginParam = Util.localStorage("user-register-param"),
                     _loginInfo = window["spa-login-info"],
                     global = _this.global,
-                    pageParam = global.currPageQuery;
+                    pageParam = global.currPage.query;
             if(_userLoginParam){
                 _this.userLoginParam = JSON.parse(_userLoginParam);
             }

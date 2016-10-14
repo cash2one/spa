@@ -47,7 +47,7 @@
                 pageSize : 20,
                 currPage : 1,
                 currType : "",
-                techId : Global.data.currPageQuery.id,
+                techId : Global.data.currPage.query.id,
                 comments : [],
 
                 showDataLoadTip : false, //显示数据正在加载
@@ -60,7 +60,7 @@
         },
         created : function(){
             var _this = this, global = _this.global;
-            if(global.currPageQuery.id == undefined){//链接上无技师id
+            if(global.currPage.query.id == undefined){//链接上无技师id
                 return _this.$router.back();
             }
             global.loading = true;

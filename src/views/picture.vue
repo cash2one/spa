@@ -31,7 +31,7 @@
                 _this.$router.redirect({ name : "info", query : {} });
             }
             else{
-                _this.type = _this.global.currPageQuery.type;
+                _this.type = _this.global.currPage.query.type;
             }
 
             /////event on

@@ -24,20 +24,20 @@
         data: function(){
             return {
                 global : Global.data,
-                queryTechDetailUrl : "../api/v2/club/technician/"+Global.data.currPageQuery.id,
+                queryTechDetailUrl : "../api/v2/club/technician/"+Global.data.currPage.query.id,
                 techId : "",
                 startIndex : 0,
                 pics : [] //相册
             };
         },
         created : function(){
-            var _this = this, global = _this.global, pageParam = global.currPageQuery;
+            var _this = this, global = _this.global, pageParam = global.currPage.query;
             if(pageParam.id == undefined){//链接上无技师id
                 return _this.$router.back();
             }
             _this.startIndex = parseInt((pageParam.index || 0));
             var pageData = global.pageData;
-            _this.techId = global.currPageQuery.id;
+            _this.techId = global.currPage.query.id;
             if(!pageData["technicianImg"]){
                 pageData["technicianImg"] = {};
             }

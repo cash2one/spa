@@ -30,7 +30,7 @@
             }
         },
         created : function(){
-            var   _this = this, global = _this.global, pageParams = global.currPageQuery;
+            var   _this = this, global = _this.global, pageParams = global.currPage.query;
             if(pageParams.isDirect != undefined) _this.isDirect = true;
             _this.refreshCode();
         },

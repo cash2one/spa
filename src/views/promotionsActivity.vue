@@ -58,7 +58,7 @@
             };
         },
         created: function(){
-            var _this = this, global = _this.global, query = global.currPageQuery;
+            var _this = this, global = _this.global, query = global.currPage.query;
             if(!query.id){
                 Util.tipShow(global.visitError);
                 return _this.$router.back();

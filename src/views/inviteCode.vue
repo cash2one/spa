@@ -51,7 +51,7 @@
                         clubInviteCode : _this.inviteCode,
                         techSerialNo : _this.techNo || "",
                         techInviteCode : global.techInviteCode,
-                        source : global.currPageQuery["tmp_clubSource"] || ""
+                        source : global.currPage.query["tmp_clubSource"] || ""
                     }}).then(function(res){
                         res = res.body;
                         if(res.statusCode == 200){

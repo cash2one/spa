@@ -50,7 +50,7 @@
             }
         },
         created : function(){
-            var   _this = this, global = _this.global, pageParams = global.currPageQuery;
+            var   _this = this, global = _this.global, pageParams = global.currPage.query;
             _this.clubId = pageParams.clubId;
             if(!_this.clubId && global.pageMode == "club"){
                 _this.clubId = global.clubId;
@@ -69,7 +69,7 @@
 
                 if(global.userAgent.isWX){
                     if(!_this.openId || _this.openId.length < 10){
-                        if(((+new Date())-(global.currPageQuery["_t"] || 0) > 2400) || !_this.payAuthCode){
+                        if(((+new Date())-(global.currPage.query["_t"] || 0) > 2400) || !_this.payAuthCode){
                             Global.getOauthCode('','9358','confirm-qrpay','base');
                         }
                         else{

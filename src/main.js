@@ -139,8 +139,10 @@ console.log("router obj：");
 console.dir(router);
 
 router.beforeEach(function (to,from,next) {
-    _global.currPageParams = to.params;
-    _global.currPageQuery = to.query;
+    var currPage = _global.currPage;
+    currPage.params = to.params;
+    currPage.query = to.query;
+    currPage.name = to.name;
     _global.showAppMenu = /(home|message|order|personal|technicianList)/.test(to.name);
     next();
 });

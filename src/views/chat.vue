@@ -51,7 +51,7 @@
 
         },
         created : function(){
-            var   _this = this, global = _this.global, params = global.currPageQuery;
+            var   _this = this, global = _this.global, params = global.currPage.query;
             if(!params.clubId && global.pageMode != "club"){
                 Util.tipShow(global.visitError);
                 return _this.$router.back();

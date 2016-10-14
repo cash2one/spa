@@ -34,8 +34,8 @@
         },
         created : function(){
             var   _this = this, global = _this.global;
-            _this.clubId = global.currPageQuery.clubId || global.clubId;
-            _this.techCode = global.currPageQuery.techCode;
+            _this.clubId = global.currPage.query.clubId || global.clubId;
+            _this.techCode = global.currPage.query.techCode;
             global.loading = true;
             _this.$http.get(_this.queryDataUrl, { params : { clubId : _this.clubId }}).then(function(res){
                 res = res.body;

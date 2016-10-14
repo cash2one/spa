@@ -47,7 +47,7 @@
         },
         mounted: function(){
             var _this = this;
-            _this.isQueryAll = _this.global.pageMode != "club" || _this.global.currPageQuery.all=="true";
+            _this.isQueryAll = _this.global.pageMode != "club" || _this.global.currPage.query.all=="true";
             _this.queryRecord();
         },
         methods: {

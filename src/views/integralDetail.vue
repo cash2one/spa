@@ -51,7 +51,7 @@
         },
         created : function(){
             var   _this = this, global = _this.global;
-            _this.clubId = global.currPageQuery.clubId || global.clubId;
+            _this.clubId = global.currPage.query.clubId || global.clubId;
 
             if(global.clubCfg.accountSwitch == null || _this.clubId != global.clubId){//获取开关状态
                 Global.getClubSwitches(_this.clubId,function(cfg){

@@ -49,7 +49,7 @@
         created : function(){
             var   _this = this,
                     global = _this.global,
-                    pageParams = global.currPageQuery,
+                    pageParams = global.currPage.query,
                     pageData = global.pageData["treatRecords"];
             _this.clubId = pageParams.clubId || global.clubId;
             if(pageData && _this.clubId == pageData.clubId){

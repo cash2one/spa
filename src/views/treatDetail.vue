@@ -97,7 +97,7 @@
             }
         },
         created : function(){
-            var   _this = this, global = _this.global, pageParams = global.currPageQuery;
+            var   _this = this, global = _this.global, pageParams = global.currPage.query;
             _this.detailId = pageParams.detailId;
             if(!_this.detailId){
                 Util.tipShow(global.visitError);

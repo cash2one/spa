@@ -12,8 +12,11 @@ exports.Global = {
         winHeight : null,                            //页面的高度
         winScale : 1,                                   //页面当前的font scale
 
-        currPageQuery : null,                      //当前页面query
-        currPageParams : null,                    //当前页面params
+        currPage : {                                   //当前页面信息
+            name : "",
+            query : null,
+            params : null
+        },
 
         showAppMenu : false,                   //是否显示底部菜单
         loading : false,                               //loading效果
@@ -311,8 +314,8 @@ exports.Global = {
         var _this = this.data;
         _this.loginPage = page;
         _this.loginPageQuery = {};
-        for(var item in _this.currPageQuery){
-            _this.loginPageQuery[item] = _this.currPageQuery[item];
+        for(var item in _this.currPage.query){
+            _this.loginPageQuery[item] = _this.currPage.query[item];
         }
     },
 

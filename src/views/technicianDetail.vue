@@ -95,7 +95,7 @@
         data: function(){
             return {
                 global : Global.data,
-                queryTechDetailUrl : "../api/v2/club/technician/"+Global.data.currPageQuery.id,
+                queryTechDetailUrl : "../api/v2/club/technician/"+Global.data.currPage.query.id,
                 queryClubCouponUrl : "../api/v2/club/"+Global.data.clubId+"/coupons",
                 updateFavoriteTechUrl : "../api/v2/profile/user/favorite/",
 
@@ -153,7 +153,7 @@
         },
         created : function(){
             var _this = this, global = _this.global;
-            if(global.currPageQuery.id == undefined){//链接上无技师id
+            if(global.currPage.query.id == undefined){//链接上无技师id
                 return _this.$router.back();
             }
             global.loading = true;
@@ -300,7 +300,7 @@
                 var _this = this, global = _this.global;
                 _this.$router.push({
                     name : "paidCoupon",
-                    query : { actId : coupon.actId , techCode : _this.techInviteCode, chanel : global.currPageQuery.chanel || "link" }
+                    query : { actId : coupon.actId , techCode : _this.techInviteCode, chanel : global.currPage.query.chanel || "link" }
                 });
             }
         },

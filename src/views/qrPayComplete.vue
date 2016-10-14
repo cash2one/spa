@@ -49,7 +49,7 @@
             }
         },
         created : function(){
-            var   _this = this, global = _this.global, pageParams = global.currPageQuery;
+            var   _this = this, global = _this.global, pageParams = global.currPage.query;
             _this.money = pageParams.money;
             _this.clubId = pageParams.clubId;
             _this.payToken = pageParams.payToken;
