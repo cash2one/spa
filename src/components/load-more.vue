@@ -25,7 +25,6 @@
   import { eventHub } from '../libs/hub';
 
   export default {
-    name: 'mt-loadmore',
     props: {
       autoFill: {
         type: Boolean,

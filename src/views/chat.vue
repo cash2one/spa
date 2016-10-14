@@ -7,12 +7,13 @@
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>{{ talker.name }}<span v-show="talker.userNo">[{{ talker.userNo }}]</span><i></i><i></i></div>
             <div class="order-tip" @click="doClickOrderTip()">如果技师没有回应，那就立即预约吧！<div></div></div>
             <div class="message-wrap" :style="{ height : msgWrapHeight+'px' }">
-                <loadmore :top-method="loadMoreData">
+                <!--<loadmore :top-method="loadMoreData">
                     <ul>
                         <li v-for="item in list">{{ item }}</li>
                     </ul>
-                </loadmore>
+                </loadmore>-->
             </div>
+            <chat-input></chat-input>
         </div>
     </div>
 </template>
@@ -21,11 +22,17 @@
     import { eventHub } from '../libs/hub';
     import { IM } from '../libs/im';
     import Util from "../libs/util";
-    import LoadMore from '../components/loadmore';
+    import TelDetail from '../components/tel-detail';
+    import CreditTip from '../components/credit-tip';
+    import ChatInput from '../components/chat-input';
+    import LoadMore from '../components/load-more';
 
     module.exports = {
         components : {
-            'loadmore' : LoadMore
+            'load-more' : LoadMore,
+            'tel-detail' : TelDetail,
+            'credit-tip' : CreditTip,
+            'chat-input' : ChatInput
         },
         data: function(){
             return {
@@ -40,20 +47,23 @@
                 giftListData : {} //积分礼物数据
             }
         },
+        beforeRouteEnter : function(to,from,next){
+
+        },
         created : function(){
             var   _this = this, global = _this.global, params = global.currPageQuery;
             if(!params.clubId && global.pageMode != "club"){
                 Util.tipShow(global.visitError);
                 return _this.$router.back();
             }
-            _this.msgWrapHeight = global.winHeight-4.389*global.winScale*16;
+            _this.msgWrapHeight = global.winHeight-8.858*global.winScale*16;
         },
         mounted : function(){
           var _this = this;
-            for(var i=0;i<10;i++){
+            /*for(var i=0;i<10;i++){
                 _this.list.push(i);
             }
-            console.dir(_this.list);
+            console.dir(_this.list);*/
             window["webIM"] = WebIM;
         },
         methods: {
@@ -62,9 +72,9 @@
             },
             loadMoreData : function(id){
                 var _this = this, last = _this.list[_this.list.length-1];
-                for(var i=last+1;i<last+10;i++){
+                /*for(var i=last+1;i<last+10;i++){
                     _this.list.unshift(i);
-                }
+                }*/
                 eventHub.$emit('onTopLoaded', id);
             },
             doClickOrderTip : function(){//点击预约（提示）

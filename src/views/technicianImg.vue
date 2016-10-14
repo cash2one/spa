@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="technician-img-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
-            <swipe class="pic-swipe" :auto="maxAutoTime" :index="startIndex">
+            <swipe class="pic-swipe" :auto="24*60*60*1000" :index="startIndex">
                 <swipe-item v-for="pic in pics">
                     <img :src="pic.bigImageUrl"/>
                 </swipe-item>
@@ -26,7 +26,6 @@
                 global : Global.data,
                 queryTechDetailUrl : "../api/v2/club/technician/"+Global.data.currPageQuery.id,
                 techId : "",
-                maxAutoTime : 24*60*60*1000,
                 startIndex : 0,
                 pics : [] //相册
             };

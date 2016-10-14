@@ -6,7 +6,7 @@
         <div class="page-back-btn" @click="doClickPageBack()" v-show="!global.loading"></div>
         <div class="confirm-btn" v-if="dataList.length>0"><a @click="doClickConfirmOrder()">确认预约</a></div>
         <div class="page" id="service-item-page" :style="{ height : (global.winHeight-3.333*global.winScale*16)+'px' }" v-if="!global.loading">
-            <swipe class="profile-swipe" :show-indicators="false" :continuous="false" :auto="maxAutoTime" :curr-index="swipeInitIndex" v-if="dataList.length>0">
+            <swipe class="profile-swipe" :show-indicators="false" :continuous="false" :auto="24*60*60*1000" :curr-index="swipeInitIndex" v-if="dataList.length>0">
                 <swipe-item v-for="item in dataList" :key="item.id">
                     <div class="service-item-top">
                         <div class="img" :style="{ backgroundImage : 'url('+(item.imageUrl || global.defaultServiceItemImgUrl)+')' }"></div>
@@ -54,8 +54,7 @@
                 phoneAppointment : false,
                 swipeInitIndex : 0,
                 swipeIndex : 0,
-                activeItemId : "",
-                maxAutoTime : 24*60*60*1000
+                activeItemId : ""
             }
         },
         components: {

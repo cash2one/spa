@@ -23,6 +23,12 @@ gulp.task('clean', function () {
         .pipe(clean());
 });
 
+//清理
+gulp.task('cls', function () {
+    return gulp.src(['dist/*'], {read: false})
+        .pipe(clean());
+});
+
 //启动server
 gulp.task('connect', function () {
     connect.server({

@@ -6,7 +6,7 @@
         <div class="page-back-btn" @click="doClickPageBack()" v-show="!global.loading"></div>
         <div class="club-profile-page-num" v-show="totalPage>0">{{pageIndex}}/{{totalPage}}</div>
         <div class="page" id="club-profile-page" :style="{ height : global.winHeight+'px'}" v-show="!global.loading">
-            <swipe class="profile-swipe" :show-indicators="false" :auto="maxAutoTime">
+            <swipe class="profile-swipe" :show-indicators="false" :auto="24*60*60*1000">
                 <swipe-item v-for="item in profileData">
                     <div class="profile-top">
                         <div>{{item.title || ""}}</div>
@@ -38,7 +38,6 @@
                 profileData : [],
                 currPage : 0,
                 totalPage : 0,
-                maxAutoTime : 24*60*60*1000,
                 pageIndex : 1
             };
         },
