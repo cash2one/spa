@@ -23,9 +23,6 @@
         currHistoryMsgCursor = -1,
         messageListScroller = $("#message-list-scroller")[0],
         messageListWrap = $("#message-list-wrapper")[0],
-        pullDownDiv = messageListScroller.querySelector("div:nth-of-type(1)"),
-        pullDownOffset = Math.round(1.387 * $.$.scale * 16),
-        scrollInProgress = false,
         listScroll,
         isTxtInputFocus=false,
         ordinaryCouponBtn = $("#chatInput>div:nth-of-type(2)>div.coupon"),
@@ -47,61 +44,6 @@
     function initPage() {
         //输入框获得焦点时
         var initDelay = 500,initH = $.$.winHeight;
-        txtInput.Event("focus", function () {
-            if (txtInput.Html().length == 0) {
-                inputTip.style.display = "none";
-            }
-            setTimeout(function () { scrollerToBottom(false) }, 300);
-            isTxtInputFocus = true;
-
-            if($.$.ua.isiPhone){
-                setTimeout(function () {
-                    expressionBtn[0].scrollIntoView(true);
-                    initDelay = 300;
-                },initDelay);
-            }else{
-                setTimeout(function (){
-                    if(initH - $.$.winHeight < 100){
-                        txtInput[0].scrollIntoView(true);       //上处滚动值为id=_content的元素的margin-bottom值
-                    }
-                },500);
-            }
-
-            if(giftDiv.ClassHave("active")){
-                doGiftBtnClick();
-            }
-        });
-
-        inputTip.onclick = function () {
-            inputTip.style.display = "none";
-            txtInput[0].focus();
-        };
-
-        //输入框失去焦点时
-        txtInput.Event("blur", function () {
-            if (txtInput.Html().replace(/<br>/,'').length == 0) {
-                txtInput[0].innerHTML = "";
-                inputTip.style.display = "block";
-                sendBtn[0].className = "disabled";
-            }
-            isTxtInputFocus=false;
-            setTimeout(function () {
-                $('#content')[0].scrollIntoView();
-            },300);
-        });
-
-        //监听输入框的输入
-        txtInput.Event("input", function () {
-            if ((txtInput.Html().length == 0)) {
-                if (sendBtn[0].className != "disabled") sendBtn[0].className = "disabled";
-            }
-            else{
-                if (sendBtn[0].className == "disabled") sendBtn[0].className = "";
-            }
-            var sel = window.getSelection();
-            lastSelection.node = sel.focusNode;
-            lastSelection.offset = sel.focusOffset;
-        });
 
         //点击输入框时定位光标
         txtInput.Event("click", function (e) {
@@ -170,59 +112,59 @@
                 else{//发送普通文字表情
                     var sendTxt = txtInput[0].innerHTML.replace(/<\/div>/g, '').replace(/<div>/g, '<br/>');
 
-                ////将表情图片转为编码
-                msgNode.innerHTML = sendTxt;
-                var imgNodes = msgNode.getElementsByTagName("img"), textNode, imgNodesLen =imgNodes.length;
-                for (var i = imgNodesLen - 1; i >= 0; i--) {
-                    textNode = document.createTextNode(imgNodes[i].getAttribute("data-exp"));
-                    msgNode.replaceChild(textNode, imgNodes[i]);
-                }
-                if(msgNode.innerHTML.length>1000){
-                    return $.tipShow("您输入的太多了，无法发送！");
-                }
-                if(msgNode.innerHTML.length != imgNodesLen *4 ) txtInput[0].focus();
-                //console.log("发送文本消息：" + msgNode.innerHTML);
+                    ////将表情图片转为编码
+                    msgNode.innerHTML = sendTxt;
+                    var imgNodes = msgNode.getElementsByTagName("img"), textNode, imgNodesLen =imgNodes.length;
+                    for (var i = imgNodesLen - 1; i >= 0; i--) {
+                        textNode = document.createTextNode(imgNodes[i].getAttribute("data-exp"));
+                        msgNode.replaceChild(textNode, imgNodes[i]);
+                    }
+                    if(msgNode.innerHTML.length>1000){
+                        return $.tipShow("您输入的太多了，无法发送！");
+                    }
+                    if(msgNode.innerHTML.length != imgNodesLen *4 ) txtInput[0].focus();
+                    //console.log("发送文本消息：" + msgNode.innerHTML);
 
-                var divItem = document.createElement("div");
-                divItem.className = "right";
-                divItem.innerHTML += "<span>" + $.formatMsgTime(Date.now(), true) + "</span><div style='background-image: url(" + chatHeader + ")'></div><div>" + sendTxt + "</div>";
-                talkDiv.appendChild(divItem);
+                    var divItem = document.createElement("div");
+                    divItem.className = "right";
+                    divItem.innerHTML += "<span>" + $.formatMsgTime(Date.now(), true) + "</span><div style='background-image: url(" + chatHeader + ")'></div><div>" + sendTxt + "</div>";
+                    talkDiv.appendChild(divItem);
 
-                ////滚动条移动到最下面
-                scrollerToBottom();
-                ////清除input
-                txtInput[0].innerHTML = "";
-                //inputTip.style.display = "block";
-                ////发送按钮失效
-                sendBtn[0].className = "disabled";
+                    ////滚动条移动到最下面
+                    scrollerToBottom();
+                    ////清除input
+                    txtInput[0].innerHTML = "";
+                    //inputTip.style.display = "block";
+                    ////发送按钮失效
+                    sendBtn[0].className = "disabled";
 
-                //保存-存储
-                var msgObj = {
-                    from: eb.userId,
-                    to: currChatTech.chatId,
-                    data: msgNode.innerHTML,
-                    ext: { name: currChatTech.name, header: currChatTech.header, avatar: currChatTech.avatar, no: currChatTech.no, techId: currChatTech.techId, clubId: currChatTech.clubId }
-                };
-                var sendFailTimer = setTimeout(function(){
-                    msgObj.status = "0";
-                    $.updateSessionList(msgObj, "text", false);
-                    $.addToMsgList(msgObj, "text");
-                },5000);
-
-                eb.conn.send({
-                    to: currChatTech.chatId,
-                    msg: msgNode.innerHTML,
-                    type: "chat",
-                    ext: { name: chatName, header: chatHeader, time: Date.now() , avatar : $.$.userAvatar },
-                    success : function(){
-                        divItem.querySelector("div:nth-of-type(2)").classList.add("success");
-                        clearTimeout(sendFailTimer);
-                        msgObj.status = "1";
+                    //保存-存储
+                    var msgObj = {
+                        from: eb.userId,
+                        to: currChatTech.chatId,
+                        data: msgNode.innerHTML,
+                        ext: { name: currChatTech.name, header: currChatTech.header, avatar: currChatTech.avatar, no: currChatTech.no, techId: currChatTech.techId, clubId: currChatTech.clubId }
+                    };
+                    var sendFailTimer = setTimeout(function(){
+                        msgObj.status = "0";
                         $.updateSessionList(msgObj, "text", false);
                         $.addToMsgList(msgObj, "text");
-                        $.sendFriend(currChatTech.chatId,'text',isManager?'manager':'tech');
-                    }
-                });
+                    },5000);
+
+                    eb.conn.send({
+                        to: currChatTech.chatId,
+                        msg: msgNode.innerHTML,
+                        type: "chat",
+                        ext: { name: chatName, header: chatHeader, time: Date.now() , avatar : $.$.userAvatar },
+                        success : function(){
+                            divItem.querySelector("div:nth-of-type(2)").classList.add("success");
+                            clearTimeout(sendFailTimer);
+                            msgObj.status = "1";
+                            $.updateSessionList(msgObj, "text", false);
+                            $.addToMsgList(msgObj, "text");
+                            $.sendFriend(currChatTech.chatId,'text',isManager?'manager':'tech');
+                        }
+                    });
 
                     //////设置lastSelection
                     lastSelection.node = txtInput[0];
@@ -795,7 +737,7 @@
         if(currChatTech.techId){
             $.ajax({
                 url: '../api/v1/profile/redpack/list',
-				isReplaceUrl:true,
+                isReplaceUrl:true,
                 data: { clubId : currChatTech.clubId },
                 success: function (couponData) {
                     if(couponData.statusCode==200){

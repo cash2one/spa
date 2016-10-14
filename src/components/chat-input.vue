@@ -4,13 +4,13 @@
 <template>
     <div class="chat-input-wrap">
         <div class="input">
-            <div contenteditable="true" ref="txtInput"></div>
-            <span>在此输入...</span>
-            <a class="disabled">发送</a>
+            <div contenteditable="true" ref="txtInput" @focus="onTextInputFocus()" @blur="onTextInputBlur()" @input="onInputOfText()"></div>
+            <span v-show="showInputTip" @click="onClickInputTip()">在此输入...</span>
+            <a :class="sendBtnStatus">发送</a>
         </div>
         <div class="menu">
             <div class="pic"><form><input name="file" type="file" accept="image/*"/></form></div>
-            <div class="expression"></div>
+            <div class="expression" ref="expressionBtn"></div>
             <div class="reward" @click="doClickRewardBtn()"></div>
             <div class="coupon"><ul></ul></div>
             <div class="dice"></div>
@@ -50,7 +50,12 @@
                 exps : [[],[]],
                 lastSelection : { node : null, offset : null },
                 showExpression : false, //显示表情区域
-                showGiftList : false //显示积分礼物区域
+                showGiftList : false, //显示积分礼物区域
+                initHeight : 0,
+                showInputTip : true, //显示在此输入的提示语
+                isTxtInputFocus : false,
+                initDelay : 500,
+                sendBtnStatus : "disabled" //发送按钮的状态
             };
         },
         created : function(){
@@ -61,6 +66,8 @@
                 _this.exps[parseInt(i/14)].push(item);
                 i++;
             }
+
+            _this.initHeight = global.winHeight;
         },
         methods: {
             doClickRewardBtn : function(){//点击打赏按钮
@@ -73,8 +80,81 @@
                     Util.tipShow('请打开微信登录"9358"公众号！');
                 }
             },
+
+
             changeToolClosed : function(type){
 
+            },
+
+            /*
+             输入框的on focus
+             */
+            onTextInputFocus : function(){
+                var _this = this, global = _this.global, txtInput = _this.$refs.txtInput;
+                if(txtInput.innerHTML.length == 0){
+                    _this.showInputTip = false;
+                }
+                ///scrollerToBottom
+                _this.isTxtInputFocus = true;
+                if(global.userAgent.isiPhone){
+                    setTimeout(function(){
+                        _this.$refs.expressionBtn.scrollIntoView(true);
+                        _this.initDelay = 300;
+                    },_this.initDelay)
+                }
+                else{
+                    setTimeout(function(){
+                        if(_this.initHeight - global.winHeight < 100){
+                            txtInput.scrollIntoView(true);
+                        }
+                    },500)
+                }
+
+              /*  if(giftDiv.ClassHave("active")){
+                    doGiftBtnClick();
+                }*/
+            },
+
+            /*
+             输入框的on blur
+             */
+            onTextInputBlur : function(){
+                var _this = this, txtInput = _this.$refs.txtInput;
+                if(txtInput.innerHTML.replace(/<br>/,'').length == 0){
+                    txtInput.innerHTML = "";
+                    _this.showInputTip = true;
+                    _this.sendBtnStatus = "disabled";
+                }
+                _this.isTxtInputFocus = false;
+
+              /*  setTimeout(function () {
+                    $('#content')[0].scrollIntoView();
+                },300);*/
+            },
+
+            /*
+             输入框的on input
+             */
+            onInputOfText : function(){
+                var _this = this, txtInput = _this.$refs.txtInput;
+                if(txtInput.innerHTML.length == 0){
+                    _this.sendBtnStatus = "disabled";
+                }
+                else{
+                    _this.sendBtnStatus = "";
+                }
+                var lastSelection = _this.lastSelection, sel = window.getSelection();
+                lastSelection.node = sel.focusNode;
+                lastSelection.offset = sel.focusOffset;
+            },
+
+            /*
+             点击输入提示
+             */
+            onClickInputTip : function(){
+                var _this = this;
+                _this.showInputTip = false;
+                _this.$refs.txtInput.focus();
             },
 
             /*

@@ -44,7 +44,8 @@ exports.Global = {
         techInviteCode : "",
 
         userAgent : {                                   //浏览器UA
-            isWX : false
+            isWX : false,
+            isiPhone : false
         },
 
         defaultClubLogo : 'images/home/logo_default.jpg',                       //默认的club logo
@@ -84,8 +85,11 @@ exports.Global = {
     init : function(){
         var ua = navigator.userAgent.toLowerCase(),
             _this = this,
-            data = _this.data;
-        data.userAgent.isWX = /micromessenger/.test(ua);
+            data = _this.data,
+            userAgent = data.userAgent;
+
+        userAgent.isWX = /micromessenger/.test(ua);
+        userAgent.isiPhone = /iPhone/i.test(ua);
 
         /////////////////////获取clubID
         var tArr = location.href.split("?")[0].split("/");
