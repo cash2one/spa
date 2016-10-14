@@ -2,7 +2,11 @@
 
 div#chat-page{
   div.page-title{
-    >i{
+    >span{
+      margin-left:0.222rem;
+      font-size:0.778rem;
+    }
+    >a.icon{
       position: absolute;
       display: block;
       width:1rem;
@@ -10,13 +14,16 @@ div#chat-page{
       top:50%;
       margin-top:-0.5rem;
       @include imgBgFix(1rem 1rem);
-      &:nth-of-type(1){
+      &.tech{
         right:0.667rem;
         background-image: url("../../images/chat/icon-tech.png");
       }
-      &:nth-of-type(2){
+      &.home{
         right:2.4rem;
         background-image: url("../../images/chat/home2.png");
+        &.once{
+          right:0.667rem;
+        }
       }
     }
   }

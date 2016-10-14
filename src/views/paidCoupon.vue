@@ -154,7 +154,7 @@
                         return;
                     }
                     if(!global.isLogin || !global.userTel){
-                        global.saveLoginPageParams("paidCoupon");
+                        Global.loginParams("paidCoupon");
                         if(!global.isLogin){
                             Util.tipShow("请您先登录！");
                             _this.$router.push({ name : "login" });

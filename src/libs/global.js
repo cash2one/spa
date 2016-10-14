@@ -118,6 +118,7 @@ exports.Global = {
                     IM.userId = data.userId;
                     IM.header = data.userHeader;
                     IM.name = (data.userName == data.defaultName && data.userTel) ? data.defaultName + "(" + data.userTel.substr(0, 3) + "****" + data.userTel.slice(-4) + ")" : data.userName;
+                    IM.createConn();///创建环信连接
 
                     data.isLogin = true;
                     _this.updateUserNameAndHeader();
@@ -310,7 +311,7 @@ exports.Global = {
 
     },
 
-    saveLoginPageParams : function(page){
+    loginParams : function(page){
         var _this = this.data;
         _this.loginPage = page;
         _this.loginPageQuery = {};

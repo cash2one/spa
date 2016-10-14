@@ -15,7 +15,8 @@ Vue.http.options.emulateJSON = true;
 
 Global.init();
 var _global = Global.data, isClubMode = _global.pageMode == "club";
-window["spa"] = _global;
+
+window["spa"] = _global;///调试用
 window["im"] = IM;
 
 //设置vue-resource的inteceptor
@@ -148,7 +149,9 @@ router.beforeEach(function (to,from,next) {
 });
 
 router.afterEach(function (to) {
-
+    if(to.name != "chat"){
+        IM.talker.id = "";///置空talker id
+    }
 });
 
 new Vue({ router, render : h => h(App) }).$mount("#app");

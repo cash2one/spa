@@ -83,7 +83,7 @@
                 _this.$router.back();
             }
             else if(!global.isLogin){
-                global.saveLoginPageParams("paidCouponDetail");
+                Global.loginParams("paidCouponDetail");
                 _this.$router.push({ name : "login" });
             }
             else{
@@ -191,7 +191,7 @@
                             return;
                         }
                         else if(!global.userTel){
-                            global.saveLoginPageParams("paidCouponDetail");
+                            Global.loginParams("paidCouponDetail");
                             _this.$router.push({ name : "bindPhone" });
                         }
                         else{

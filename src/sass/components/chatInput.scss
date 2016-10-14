@@ -197,8 +197,7 @@ div.chat-input-wrap{
       padding:0.2rem 0.7285rem;
       margin-bottom:1rem;
       position: relative;
-      &::after{
-        content: "";
+      &>div{
         display: block;
         width:1.4rem;
         height:1.4rem;
@@ -208,91 +207,91 @@ div.chat-input-wrap{
   }
 
   div.exp-wrap-0>div{
-    &:nth-of-type(1)::after{
+    &:nth-of-type(1)>div{
       background-image: url("../../images/chat/expression/1.png");
     }
-    &:nth-of-type(2)::after{
+    &:nth-of-type(2)>div{
       background-image: url("../../images/chat/expression/2.png");
     }
-    &:nth-of-type(3)::after{
+    &:nth-of-type(3)>div{
       background-image: url("../../images/chat/expression/3.png");
     }
-    &:nth-of-type(4)::after{
+    &:nth-of-type(4)>div{
       background-image: url("../../images/chat/expression/4.png");
     }
-    &:nth-of-type(5)::after{
+    &:nth-of-type(5)>div{
       background-image: url("../../images/chat/expression/5.png");
     }
-    &:nth-of-type(6)::after{
+    &:nth-of-type(6)>div{
       background-image: url("../../images/chat/expression/6.png");
     }
-    &:nth-of-type(7)::after{
+    &:nth-of-type(7)>div{
       background-image: url("../../images/chat/expression/7.png");
     }
-    &:nth-of-type(8)::after{
+    &:nth-of-type(8)>div{
       background-image: url("../../images/chat/expression/8.png");
     }
-    &:nth-of-type(9)::after{
+    &:nth-of-type(9)>div{
       background-image: url("../../images/chat/expression/9.png");
     }
-    &:nth-of-type(10)::after{
+    &:nth-of-type(10)>div{
       background-image: url("../../images/chat/expression/10.png");
     }
-    &:nth-of-type(11)::after{
+    &:nth-of-type(11)>div{
       background-image: url("../../images/chat/expression/11.png");
     }
-    &:nth-of-type(12)::after{
+    &:nth-of-type(12)>div{
       background-image: url("../../images/chat/expression/12.png");
     }
-    &:nth-of-type(13)::after{
+    &:nth-of-type(13)>div{
       background-image: url("../../images/chat/expression/13.png");
     }
-    &:nth-of-type(14)::after{
+    &:nth-of-type(14)>div{
       background-image: url("../../images/chat/expression/14.png");
     }
   }
 
   div.exp-wrap-1>div{
-    &:nth-of-type(1)::after{
+    &:nth-of-type(1)>div{
       background-image: url("../../images/chat/expression/201.png");
     }
-    &:nth-of-type(2)::after{
+    &:nth-of-type(2)>div{
       background-image: url("../../images/chat/expression/202.png");
     }
-    &:nth-of-type(3)::after{
+    &:nth-of-type(3)>div{
       background-image: url("../../images/chat/expression/203.png");
     }
-    &:nth-of-type(4)::after{
+    &:nth-of-type(4)>div{
       background-image: url("../../images/chat/expression/204.png");
     }
-    &:nth-of-type(5)::after{
+    &:nth-of-type(5)>div{
       background-image: url("../../images/chat/expression/205.png");
     }
-    &:nth-of-type(6)::after{
+    &:nth-of-type(6)>div{
       background-image: url("../../images/chat/expression/206.png");
     }
-    &:nth-of-type(7)::after{
+    &:nth-of-type(7)>div{
       background-image: url("../../images/chat/expression/207.png");
     }
-    &:nth-of-type(8)::after{
+    &:nth-of-type(8)>div{
       background-image: url("../../images/chat/expression/208.png");
     }
-    &:nth-of-type(9)::after{
+    &:nth-of-type(9)>div{
       background-image: url("../../images/chat/expression/209.png");
     }
-    &:nth-of-type(10)::after{
+    &:nth-of-type(10)>div{
       background-image: url("../../images/chat/expression/210.png");
     }
-    &:nth-of-type(11)::after{
+    &:nth-of-type(11)>div{
       background-image: url("../../images/chat/expression/211.png");
     }
-    &:nth-of-type(12)::after{
+    &:nth-of-type(12)>div{
       background-image: url("../../images/chat/expression/212.png");
     }
-    &:nth-of-type(13)::after{
+    &:nth-of-type(13)>div{
       background-image: url("../../images/chat/expression/213.png");
     }
-    &:nth-of-type(14)::after{
+    &:nth-of-type(14)>div{
       background-image: url("../../images/chat/expression/214.png");
     }
   }

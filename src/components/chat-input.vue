@@ -4,21 +4,21 @@
 <template>
     <div class="chat-input-wrap">
         <div class="input">
-            <div contenteditable="true"></div>
+            <div contenteditable="true" ref="txtInput"></div>
             <span>在此输入...</span>
             <a class="disabled">发送</a>
         </div>
         <div class="menu">
             <div class="pic"><form><input name="file" type="file" accept="image/*"/></form></div>
             <div class="expression"></div>
-            <div class="reward"></div>
+            <div class="reward" @click="doClickRewardBtn()"></div>
             <div class="coupon"><ul></ul></div>
             <div class="dice"></div>
             <div class="gift"></div>
         </div>
         <swipe class="exp-swipe" :auto="24*60*60*1000" v-show="showExpression">
-            <swipe-item class="exp-wrap-0"><div v-for="exp in exps[0]"></div></swipe-item>
-            <swipe-item class="exp-wrap-1"><div v-for="exp in exps[1]"></div></swipe-item>
+            <swipe-item class="exp-wrap-0"><div v-for="exp in exps[0]"><div></div></div></swipe-item>
+            <swipe-item class="exp-wrap-1"><div v-for="exp in exps[1]"><div></div></div></swipe-item>
         </swipe>
         <div class="gift-list" v-show="showGiftList">
             <div class="list">
@@ -33,6 +33,7 @@
     import { Global } from '../libs/global';
     import { IM } from '../libs/im';
     import { eventHub } from '../libs/hub';
+    import Util from "../libs/util";
     import Swipe from './swipe';
     import SwipeItem from './swipe-item';
 
@@ -45,9 +46,11 @@
             return {
                 global : Global.data,
                 im : IM,
+                talker : IM.talker,
                 exps : [[],[]],
-                showExpression : false,
-                showGiftList : false
+                lastSelection : { node : null, offset : null },
+                showExpression : false, //显示表情区域
+                showGiftList : false //显示积分礼物区域
             };
         },
         created : function(){
@@ -60,7 +63,50 @@
             }
         },
         methods: {
+            doClickRewardBtn : function(){//点击打赏按钮
+                var _this = this, global = _this.global;
+                _this.changeToolClosed("reward");
+                if(global.userAgent.isWX){
+                    _this.$router.push({ name : 'techReward' , query : { techId : _this.talker.userId }});
+                }
+                else if(Global.checkAccess("techReward")){
+                    Util.tipShow('请打开微信登录"9358"公众号！');
+                }
+            },
+            changeToolClosed : function(type){
 
+            },
+
+            /*
+             设定光标的位置
+            */
+            setCursorPosition : function(pNode, cursorIndex){
+                var _this = this,
+                        range = document.createRange(),
+                        selection = window.getSelection();
+
+                range.selectNodeContents(pNode);
+                range.collapse(true);
+                range.setEnd(pNode, cursorIndex);
+                range.setStart(pNode, cursorIndex);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                _this.lastSelection.offset = cursorIndex;
+                _this.lastSelection.node = pNode;
+            },
+
+            /*
+             递归检查当前节点是否在div.input节点下(上溯4层)
+             */
+            isFocusInText : function(node, layer){
+                var _this = this;
+                if (!node || layer > 4) return false;
+                if (node == _this.$refs.txtInput) return true;
+                else {
+                    node = node.parentNode;
+                    return _this.isFocusInText(node, layer + 1);
+                }
+            }
         }
     }
 </script>

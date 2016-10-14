@@ -10,6 +10,8 @@ exports.IM = {
     global : null, //全局数据对象的引用
     id : "", //聊天ID
     password : '', //登录密码
+    apiUrl : 'http://a1.easemob.com',
+    xmppUrl: 'im-api.easemob.com',
     appKey : "xiaomodo#spa"+( /spa.93wifi.com/.test(location.hostname) ? "" : "test" ), //环信AppKey
     userId : "", //用户id--在小摩豆系统中
     header : null, //用户头像
@@ -19,6 +21,8 @@ exports.IM = {
     secondId : "", //第二个账户
     secondConn : null,//第二个账户的连接
     reConnTimer : null, //重新连接的定时器
+    newMsgTotal : 0, //新消息总数
+
     sessionList : null, //会话列表
     messageList : {}, //从本地缓存中读取的消息列表暂存于此
 
@@ -31,6 +35,11 @@ exports.IM = {
         header : "", //对方用户头像
         avatar : "", //头像编号
         clubId : "", //对方所在的clubID
+        clubName : "", //对方所在的clubName
+        inviteCode : "",///邀请码
+        isAppointment : true,//是否可预约
+        isPhoneAppointment : false,//是否可以电话预约
+        telephone : [], //预约电话
         messageList : {} //当前聊天页面的消息列表
     },
 
@@ -39,13 +48,25 @@ exports.IM = {
         "/::I": "/可怜", "/::J": "/生气", "/::K": "/微笑", "/::L": "/冷汗", "/::M":"/困", "/::N":"/调皮", "/::Q":"/敲打", "/::R":"/疑问","/::S":"/猪头", "/::U": "/汽水", "/::V": "/西瓜", "/::W": "/鼓掌", "/::a": "/大拇指", "/::b": "/剪刀手"
     },
     decodeExpressionReg : new RegExp('/::[A-Zab]+', "g"),
+    expressionIndexObj : null, //索引
 
     //获取缓存中的会话列表
     getSessionList : function(reGet){
-        var _this = this;
+        var _this = this, item, global = _this.global, pageMode = global.pageMode;
         if(!_this.sessionList || reGet){
             var cacheStr = Util.localStorage(_this.userId+"_SessionList");
             _this.sessionList = cacheStr ? JSON.parse(cacheStr) : {};
+
+            ///////统计新消息数目
+            var newMsgCount = 0, sessionObj;
+            for(item in _this.sessionList){
+                sessionObj = _this.sessionList[item];
+                if(!(pageMode == "club" && sessionObj.clubId != global.clubId)){
+                    newMsgCount += sessionObj.new;
+                }
+            }
+            _this.newMsgTotal = newMsgCount;
+            _this.updateHeader();//更新头像
         }
         return _this.sessionList;
     },
@@ -286,13 +307,17 @@ exports.IM = {
 
     //创建环信连接
     createConn : function(connIndex){
+        console.log("创建环信连接");
         connIndex = connIndex || 0;
         var _this = this,
             conn = new WebIM.connection({
+                https : false,
+                url : _this.xmppUrl,
                 isMultiLoginSessions : true  //开启多页面同步收消息
             });
         conn.listen({
             onOpened : function(){
+                console.log("conn opened...");
                 if(connIndex == 0 && _this.reConnTimer){
                     clearTimeout(_this.reConnTimer);
                 }
@@ -302,7 +327,7 @@ exports.IM = {
                 _this.doReceiveTextMessage(msg,conn);
             },
             onPictureMessage : function(msg){
-                _this.doReceivePicMessage(msg,conn);
+                _this.doReceivePicMessage(msg);
             },
             onOnline : function(){
                 console.log("web im on online");
@@ -314,9 +339,28 @@ exports.IM = {
 
             },
             onClosed : function(){
-
+                console.log('与环信的连接关闭。。。');
             }
         });
+
+        /////尝试登陆
+        var loginId = (connIndex == 0 ? _this.id : _this.secondId);
+        if(loginId){
+            console.log("尝试open conn "+loginId);
+            conn.open({
+                user : loginId,
+                pwd : loginId,
+                appKey : _this.appKey,
+                apiUrl : _this.apiUrl,
+                success : function(){
+                    console.log(loginId+"conn success");
+                },
+                error : function(){
+                    console.log(loginId+"conn error");
+                }
+            });
+        }
+        connIndex == 0 ? _this.conn = conn : _this.secondConn = conn;
     },
 
     //处理接受到的文本消息
@@ -377,8 +421,8 @@ exports.IM = {
     },
 
     //处理接受到的图片消息
-    doReceivePicMessage : function(msg,conn){
-        var _this = this, ext = msg.ext, img = null;
+    doReceivePicMessage : function(msg){
+        var _this = this, img = null;
         if(msg.width == 0 && msg.height == 0){
             img = new Image();
             img.onload = function () {
@@ -444,6 +488,27 @@ exports.IM = {
         var _this = this;
         return msg.replace(_this.decodeExpressionReg, function () {
             return _this.expression[arguments[0]] || arguments[0];
+        });
+    },
+
+    ///解析文本消息，将里面的表情编码换成图片img标签
+    decodeExpressionToImg : function(msg,expElList){//expElList 表情dom元素列表
+        var _this = this, item, k;
+        if(!_this.expressionIndexObj){
+            _this.expressionIndexObj = {};
+            k = 1;
+            for(item in _this.expression){
+                _this.expressionIndexObj[item] = k++;
+            }
+        }
+        return msg.replace(_this.decodeExpressionReg, function () {
+            k = _this.expressionIndexObj[arguments[0]];
+            if(k){
+                var str = window.getComputedStyle(expElList[k-1].children[0],null)['backgroundImage'];
+                str = (str.charAt(4)=='"' || str.charAt(4)=="'") ? str.slice(5,-2) : str.slice(4,-1);
+                return "<img src='"+str+"' data-exp='" + arguments[0] + "'/>";
+            }
+            return arguments[0];
         });
     }
 };
