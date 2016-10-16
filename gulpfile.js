@@ -1,6 +1,5 @@
 var gulp = require('gulp'),
-    sass = require('gulp-ruby-sass'),
-    mincss = require('gulp-mini-css'),
+    sass = require('gulp-sass'),
     clean = require('gulp-clean'),
     connect = require('gulp-connect'),
     concat = require('gulp-concat'),
@@ -12,9 +11,12 @@ var raw_css = 'src/sass',
 //处理scss
 gulp.task('sass', function() {
     ////编译scss
-    sass(raw_css + '/**/*.scss')
+    /*sass(raw_css + '/!**!/!*.scss')
             .pipe(mincss())
-            .pipe(gulp.dest(com_css))
+            .pipe(gulp.dest(com_css))*/
+    return gulp.src(raw_css + '/**/*.scss')
+        .pipe(sass())
+        .pipe(gulp.dest(com_css));
 });
 
 //清理

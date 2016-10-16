@@ -12,8 +12,9 @@
                     </ul>
                 </loadmore>-->
         </div>
-        <chat-input></chat-input>
+        <chat-input :credit-config="creditConfig" :gifts="gifts"></chat-input>
         <tel-detail v-if="talker.telephone.length>0" :telephone="talker.telephone"></tel-detail>
+        <dice-setting></dice-setting>
     </div>
 </template>
 <script>
@@ -25,6 +26,7 @@
     import TelDetail from '../components/tel-detail';
     import CreditTip from '../components/credit-tip';
     import ChatInput from '../components/chat-input';
+    import DiceSetting from '../components/dice-setting';
     import LoadMore from '../components/load-more';
 
     module.exports = {
@@ -32,7 +34,8 @@
             'load-more' : LoadMore,
             'tel-detail' : TelDetail,
             'credit-tip' : CreditTip,
-            'chat-input' : ChatInput
+            'chat-input' : ChatInput,
+            'dice-setting' : DiceSetting
         },
         data: function(){
             return {
@@ -45,8 +48,10 @@
 
                 gameStatusObj : { request : "等待接受...", accept : "已接受", reject : "已拒绝", overtime : "已超时", cancel : "已取消" }, //游戏状态
                 gameOverTime : 24*60*60*1000, //游戏超时时间
-                giftListData : {}, //积分礼物数据
-                defaultGiftImg : "img/chat/gift_default.png" //默认的积分礼物图片
+                giftMapData : {}, //积分礼物数据
+                gifts : [],
+                defaultGiftImg : "img/chat/gift_default.png", //默认的积分礼物图片
+                creditConfig : null
             }
         },
         beforeRouteEnter : function(to,from,next){
@@ -91,7 +96,7 @@
             }
         },
         created : function(){
-            var   _this = this, global = _this.global, params = global.currPage.query;
+            var   _this = this, global = _this.global, params = global.currPage.query, talker = _this.talker;
             _this.clubId = params.clubId || global.clubId;
             _this.msgWrapHeight = global.winHeight-8.858*global.winScale*16;
 
@@ -100,6 +105,29 @@
                 Global.loginParams("chat");
                 return _this.$router.push({ name : "login" });
             }
+
+            //////获取积分系统开关
+            Global.getClubSwitches(talker.clubId,function(res){
+                _this.creditConfig = res;
+                if(res.creditSwitch){
+                    _this.$http.get("../api/v2/credit/gift/list").then(function(giftRes){
+                        giftRes = giftRes.body.respData;
+                        if(giftRes){
+                            var list = {};
+                            for(var i=0;i<giftRes.length;i++){
+                                list[giftRes[i]["id"]] = { url : giftRes[i]["gifUrl"] };
+                            }
+                            _this.giftMapData = list;
+                            _this.gifts = giftRes;
+                            //addRecentlyMsg
+                        }
+                    });
+                    eventHub.$emit("update-credit-account");
+                }
+                else{
+                    //addRecentlyMsg
+                }
+            });
         },
         mounted : function(){
           var _this = this;

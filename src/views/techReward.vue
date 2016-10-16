@@ -14,12 +14,13 @@
             </div>
             <div class="submit-button" :class="submitStatusCls" @click="doClickSubmitBtn()">{{ submitBtnText }}</div>
         </div>
-        <credit-tip ref="notEnoughTip" :gift-value="currSelectGiftValue"></credit-tip>
+        <credit-tip :gift-value="currSelectGiftValue"></credit-tip>
     </div>
 </template>
 <script>
     import { Global } from '../libs/global';
     import Util from "../libs/util";
+    import { eventHub } from '../libs/hub';
     import CreditTip from '../components/credit-tip';
 
     module.exports = {
@@ -146,7 +147,7 @@
                     var selectGift = _this.selectVal;
                     _this.currSelectGiftValue = selectGift.ratio;
                     if(_this.currSelectGiftValue>_this.currIntegralAccount){
-                        _this.$refs.notEnoughTip.$emit("change-visible",true);
+                        eventHub.$emit("change-credit-tip",true);
                     }
                     else{
                         _this.submitStatusCls = "processing";

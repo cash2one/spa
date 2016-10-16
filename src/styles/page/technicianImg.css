@@ -1,1 +1,19 @@
-div#technician-img-page{background-color:#383838}div#technician-img-page div.pic-swipe{position:relative;width:20rem;height:100%;background-color:#383838}div#technician-img-page div.pic-swipe div.swipe-items-wrap{position:absolute;width:20rem;height:20rem;top:50%;margin-top:-10rem}div#technician-img-page div.swipe-item>img{width:20rem;height:20rem}div#technician-img-page div.swipe-indicators .swipe-indicator.active{background-color:#007aff;opacity:1}
+div#technician-img-page {
+  background-color: #383838; }
+  div#technician-img-page div.pic-swipe {
+    position: relative;
+    width: 20rem;
+    height: 100%;
+    background-color: #383838; }
+    div#technician-img-page div.pic-swipe div.swipe-items-wrap {
+      position: absolute;
+      width: 20rem;
+      height: 20rem;
+      top: 50%;
+      margin-top: -10rem; }
+  div#technician-img-page div.swipe-item > img {
+    width: 20rem;
+    height: 20rem; }
+  div#technician-img-page div.swipe-indicators .swipe-indicator.active {
+    background-color: #007aff;
+    opacity: 1; }

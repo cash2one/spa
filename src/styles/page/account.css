@@ -1,1 +1,92 @@
-div#account-page a.jump-qrcode{display:block;display:-webkit-box;display:-moz-box;-webkit-box-align:center;-moz-box-align:center;background-color:#fff;height:2.444rem;margin-top:.667rem;border-top:1px solid #e0e0e0;border-bottom:1px solid #e0e0e0}div#account-page a.jump-qrcode>div:first-child{margin-left:.833rem}div#account-page a.jump-qrcode>div:nth-of-type(2){width:17.445rem;font-size:.889rem;color:#424242}div#account-page a.jump-qrcode>div:nth-of-type(3){width:.889rem;height:.889rem;-webkit-background-size:.889rem .889rem;-moz-background-size:.889rem .889rem;-o-background-size:.889rem .889rem;background-size:.889rem .889rem;background-image:url(../../images/account/icon_erweima.png);background-repeat:no-repeat}div#account-page div.list{overflow-y:auto}div#account-page a.list-item{display:block;margin-top:.667rem;background-color:#fff;border-top:1px solid #e0e0e0;border-bottom:1px solid #e0e0e0}div#account-page a.list-item>div.header{position:relative;height:1.167rem;line-height:1.167rem;padding:.361rem .667rem .361rem 2rem;box-sizing:content-box;font-size:.778rem;color:#333;border-bottom:1px solid #e0e0e0}div#account-page a.list-item>div.header>span:nth-of-type(1){display:inline-block;width:1.167rem;height:1.167rem;margin-right:.167rem;border-radius:50%;position:absolute;left:.667rem;-webkit-background-size:1.167rem 1.167rem;-moz-background-size:1.167rem 1.167rem;-o-background-size:1.167rem 1.167rem;background-size:1.167rem 1.167rem;background-repeat:no-repeat}div#account-page a.list-item>div.header>span:nth-of-type(2){display:inline-block;width:16rem;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}div#account-page a.list-item>div.header>i{width:.43rem;height:.43rem;border-left:.1rem solid #999;border-bottom:.1rem solid #999;-webkit-transform:translate(0,-50%) rotate(-135deg);-moz-transform:translate(0,-50%) rotate(-135deg);-ms-transform:translate(0,-50%) rotate(-135deg);transform:translate(0,-50%) rotate(-135deg);display:inline-block;position:absolute;right:.667rem;top:50%}div#account-page a.list-item>div.item{padding:.667rem;font-size:.889rem;color:#212121}div#account-page a.list-item>div.item>div{line-height:1}div#account-page a.list-item>div.item>div:last-child{margin-top:.5rem}div#account-page a.list-item>div.item>div>span:first-child{font-size:.778rem;color:#616161;margin-right:.556rem}
+div#account-page a.jump-qrcode {
+  display: block;
+  display: -webkit-box;
+  display: -moz-box;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  background-color: #fff;
+  height: 2.444rem;
+  margin-top: .667rem;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0; }
+  div#account-page a.jump-qrcode > div:first-child {
+    margin-left: .833rem; }
+  div#account-page a.jump-qrcode > div:nth-of-type(2) {
+    width: 17.445rem;
+    font-size: .889rem;
+    color: #424242; }
+  div#account-page a.jump-qrcode > div:nth-of-type(3) {
+    width: .889rem;
+    height: .889rem;
+    /*-webkit-background:url($url) 0 0/ $size no-repeat;
+  -moz-background:url($url) 0 0/ $size no-repeat;
+  -o-background:url($url) 0 0/ $size no-repeat;*/
+    -webkit-background-size: 0.889rem 0.889rem;
+    -moz-background-size: 0.889rem 0.889rem;
+    -o-background-size: 0.889rem 0.889rem;
+    background-size: 0.889rem 0.889rem;
+    background-image: url("../../images/account/icon_erweima.png");
+    background-repeat: no-repeat; }
+
+div#account-page div.list {
+  overflow-y: auto; }
+
+div#account-page a.list-item {
+  display: block;
+  margin-top: .667rem;
+  background-color: #fff;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0; }
+  div#account-page a.list-item > div.header {
+    position: relative;
+    height: 1.167rem;
+    line-height: 1.167rem;
+    padding: .361rem .667rem .361rem 2rem;
+    box-sizing: content-box;
+    font-size: .778rem;
+    color: #333;
+    border-bottom: 1px solid #e0e0e0; }
+    div#account-page a.list-item > div.header > span:nth-of-type(1) {
+      display: inline-block;
+      width: 1.167rem;
+      height: 1.167rem;
+      margin-right: .167rem;
+      border-radius: 50%;
+      position: absolute;
+      left: .667rem;
+      -webkit-background-size: 1.167rem 1.167rem;
+      -moz-background-size: 1.167rem 1.167rem;
+      -o-background-size: 1.167rem 1.167rem;
+      background-size: 1.167rem 1.167rem;
+      background-repeat: no-repeat; }
+    div#account-page a.list-item > div.header > span:nth-of-type(2) {
+      display: inline-block;
+      width: 16rem;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis; }
+    div#account-page a.list-item > div.header > i {
+      width: 0.43rem;
+      height: 0.43rem;
+      border-left: 0.1rem solid #999;
+      border-bottom: 0.1rem solid #999;
+      -webkit-transform: translate(0, -50%) rotate(-135deg);
+      -moz-transform: translate(0, -50%) rotate(-135deg);
+      -ms-transform: translate(0, -50%) rotate(-135deg);
+      transform: translate(0, -50%) rotate(-135deg);
+      display: inline-block;
+      position: absolute;
+      right: .667rem;
+      top: 50%; }
+  div#account-page a.list-item > div.item {
+    padding: .667rem;
+    font-size: .889rem;
+    color: #212121; }
+    div#account-page a.list-item > div.item > div {
+      line-height: 1; }
+      div#account-page a.list-item > div.item > div:last-child {
+        margin-top: .5rem; }
+      div#account-page a.list-item > div.item > div > span:first-child {
+        font-size: .778rem;
+        color: #616161;
+        margin-right: .556rem; }

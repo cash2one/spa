@@ -1,1 +1,256 @@
-a,article,aside,audio,blockquote,body,canvas,caption,cite,dd,details,div,dl,dt,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,html,img,label,legend,li,mark,menu,nav,ol,output,p,ruby,section,span,sub,summary,sup,table,tbody,td,tfoot,th,thead,time,tr,ul,video{border:0;font:inherit;margin:0;padding:0;font-weight:400;vertical-align:baseline;box-sizing:border-box}html{height:100%;width:100%;min-height:100%;overflow:hidden}body{position:relative;margin:0 auto;padding:0;width:20rem;height:100%;max-width:20rem;color:#b0b0b0;background-color:#fff;font:1rem/1.5rem "Microsoft Yahei",Arial;overflow-x:hidden;overflow-y:auto;-webkit-font-smoothing:antialiased}button{outline:0}ol,ul{margin:0;padding:0}li,ol,ul{list-style:none}em,i{font-style:normal}a{outline:0;text-decoration:none;transition:background-color .5s ease 0s,color .5s ease 0s,width .5s ease 0s,border-width .5s ease 0s,border-color .5s ease 0s;-webkit-transition:background-color .5s ease 0s,color .5s ease 0s,width .5s ease 0s,border-width .5s ease 0s,border-color .5s ease 0s;-moz-transition:background-color .5s ease 0s,color .5s ease 0s,width .5s ease 0s,border-width .5s ease 0s,border-color .5s ease 0s;-ms-transition:background-color .5s ease 0s,color .5s ease 0s,width .5s ease 0s,border-width .5s ease 0s,border-color .5s ease 0s;-o-transition:background-color .5s ease 0s,color .5s ease 0s,width .5s ease 0s,border-width .5s ease 0s,border-color .5s ease 0s}input,textarea{font-family:inherit;font-size:inherit;color:inherit;outline:0;border:0;margin:0;padding:0}option,select{font-family:inherit}.noselect{-webkit-user-select:none;user-select:none}.clear{clear:both}.clearfix:after,.clearfix:before{content:"";display:table}.clearfix:after{clear:both}div#page-container{position:relative;min-height:100%;background-color:#eee}div#page-container>div.page{width:100%;min-height:100%}div.stars{width:4.111rem;height:.694rem;display:-webkit-box;display:-moz-box;-webkit-box-align:center;-moz-box-align:center;-webkit-background-size:4.111rem .694rem;-moz-background-size:4.111rem .694rem;-o-background-size:4.111rem .694rem;background-size:4.111rem .694rem;background-image:url(../../images/common/star_null_icon.png);background-repeat:no-repeat}div.stars>div{width:0;height:100%;-webkit-background-size:4.111rem .694rem;-moz-background-size:4.111rem .694rem;-o-background-size:4.111rem .694rem;background-size:4.111rem .694rem;background-image:url(../../images/common/star_score_icon.png);background-repeat:no-repeat}div.right-arrow{width:.43rem;height:.43rem;border-left:.1rem solid #999;border-bottom:.1rem solid #999;-webkit-transform:rotate(-135deg);-moz-transform:rotate(-135deg);-ms-transform:rotate(-135deg);transform:rotate(-135deg)}div.submit-button{height:2.444rem;line-height:2.444rem;margin:0 .667rem;text-align:center;font-size:.889rem;border-radius:.222rem;background-color:#fb5549;color:#fff}div.submit-button.disabled{color:#bdbdbd;background-color:#e0e0e0}div.submit-button.processing{color:#bdbdbd;background:url(../../images/common/loading.gif) 30% 45% no-repeat #e0e0e0}div.data-load-tip,div.finish-load-tip{display:-webkit-box;display:-moz-box;-webkit-box-pack:center;-moz-box-pack:center;-webkit-box-align:center;-moz-box-align:center;height:2.4rem}div.data-load-tip div,div.finish-load-tip div{font-size:.778rem;margin-left:.2rem;line-height:2rem;color:#666}div.data-load-tip.none,div.finish-load-tip.none{display:none}div.data-load-tip.border-top,div.finish-load-tip.border-top{border-top:1px solid #e0e0e0}div.data-load-tip i{display:block;width:.778rem;height:.778rem;-webkit-background-size:.778rem .778rem;-moz-background-size:.778rem .778rem;-o-background-size:.778rem .778rem;background-size:.778rem .778rem;background-image:url(../../images/common/loading.gif);background-repeat:no-repeat}div.finish-load-tip{background-color:#fff}div.pop-modal{position:fixed;width:100%;height:100%;left:0;top:0;right:0;bottom:0;background:rgba(100,100,100,.7);z-index:3;-webkit-transition:all .5s;-moz-transition:all .5s;-ms-transition:all .5s;transition:all .5s;-webkit-transform-origin:50% 100%;-moz-transform-origin:50% 100%;-ms-transform-origin:50% 100%;transform-origin:50% 100%;-webkit-transform:scale(1,0);-moz-transform:scale(1,0);-o-transform:scale(1,0);-ms-transform:scale(1,0);transform:scale(1,0);opacity:0}div.pop-modal.active{opacity:1;-webkit-transform:scale(1,1);-moz-transform:scale(1,1);-o-transform:scale(1,1);-ms-transform:scale(1,1);transform:scale(1,1)}div.pop-modal>div.center-wrap{position:absolute;top:50%;left:50%}div.credit-tip-pop>div{width:16.389rem;height:9.889rem;margin-top:-4.944rem;margin-left:-8.194rem;border-radius:.22rem;background-color:#fff;overflow:hidden}div.credit-tip-pop>div>h3{height:2.5rem;line-height:2.5rem;margin-top:.5rem;text-align:center;color:#212121;font-weight:400;letter-spacing:1px;font-size:1.167rem}div.credit-tip-pop>div>div.tip{line-height:1.4rem;margin:0 1.222rem .9rem;color:#616161;font-size:.833rem}div.credit-tip-pop>div>div.btn{height:3.222rem;line-height:3.222rem;border-top:1px solid #e0e0e0}div.credit-tip-pop>div>div.btn>a{display:block;float:left;width:50%;height:100%;text-align:center;font-size:1rem;border-right:1px solid #e0e0e0}div.credit-tip-pop>div>div.btn>a.cancel{color:#616161}div.credit-tip-pop>div>div.btn>a.get{color:#f66;border-right-width:0}
+/*RESET v3*/
+html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, a, cite, img, sub, sup, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  border: 0;
+  font: inherit;
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+  vertical-align: baseline;
+  box-sizing: border-box; }
+
+html {
+  height: 100%;
+  width: 100%;
+  min-height: 100%;
+  overflow: hidden; }
+
+body {
+  position: relative;
+  margin: 0 auto;
+  padding: 0;
+  width: 20rem;
+  height: 100%;
+  max-width: 20rem;
+  color: #b0b0b0;
+  background-color: #fff;
+  font: 1rem/1.5rem "Microsoft Yahei",Arial;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-font-smoothing: antialiased; }
+
+button {
+  outline: none; }
+
+ol, ul {
+  margin: 0;
+  padding: 0; }
+
+ol, ul, li {
+  list-style: none; }
+
+i, em {
+  font-style: normal; }
+
+a {
+  outline: none;
+  text-decoration: none;
+  text-decoration: none;
+  text-decoration: none;
+  transition: background-color .5s ease 0s,color .5s ease 0s,width .5s ease 0s,border-width .5s ease 0s,border-color .5s ease 0s;
+  -webkit-transition: background-color .5s ease 0s,color .5s ease 0s,width .5s ease 0s,border-width .5s ease 0s,border-color .5s ease 0s;
+  -moz-transition: background-color .5s ease 0s,color .5s ease 0s,width .5s ease 0s,border-width .5s ease 0s,border-color .5s ease 0s;
+  -ms-transition: background-color .5s ease 0s,color .5s ease 0s,width .5s ease 0s,border-width .5s ease 0s,border-color .5s ease 0s;
+  -o-transition: background-color .5s ease 0s,color .5s ease 0s,width .5s ease 0s,border-width .5s ease 0s,border-color .5s ease 0s; }
+
+input, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  outline: none;
+  border: 0;
+  margin: 0;
+  padding: 0; }
+
+select, option {
+  font-family: inherit; }
+
+.noselect {
+  -webkit-user-select: none;
+  user-select: none; }
+
+.clear {
+  clear: both; }
+
+.clearfix:before, .clearfix:after {
+  content: "";
+  display: table; }
+
+.clearfix:after {
+  clear: both; }
+
+.clearfix {
+  *zoom: 1; }
+
+div#page-container {
+  position: relative;
+  min-height: 100%;
+  background-color: #eee; }
+  div#page-container > div.page {
+    width: 100%;
+    min-height: 100%; }
+
+div.stars {
+  width: 4.111rem;
+  height: 0.694rem;
+  display: -webkit-box;
+  display: -moz-box;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  /*-webkit-background:url($url) 0 0/ $size no-repeat;
+  -moz-background:url($url) 0 0/ $size no-repeat;
+  -o-background:url($url) 0 0/ $size no-repeat;*/
+  -webkit-background-size: 4.111rem 0.694rem;
+  -moz-background-size: 4.111rem 0.694rem;
+  -o-background-size: 4.111rem 0.694rem;
+  background-size: 4.111rem 0.694rem;
+  background-image: url("../../images/common/star_null_icon.png");
+  background-repeat: no-repeat; }
+  div.stars > div {
+    width: 0;
+    height: 100%;
+    /*-webkit-background:url($url) 0 0/ $size no-repeat;
+  -moz-background:url($url) 0 0/ $size no-repeat;
+  -o-background:url($url) 0 0/ $size no-repeat;*/
+    -webkit-background-size: 4.111rem 0.694rem;
+    -moz-background-size: 4.111rem 0.694rem;
+    -o-background-size: 4.111rem 0.694rem;
+    background-size: 4.111rem 0.694rem;
+    background-image: url("../../images/common/star_score_icon.png");
+    background-repeat: no-repeat; }
+
+div.right-arrow {
+  width: 0.43rem;
+  height: 0.43rem;
+  border-left: 0.1rem solid #999;
+  border-bottom: 0.1rem solid #999;
+  -webkit-transform: rotate(-135deg);
+  -moz-transform: rotate(-135deg);
+  -ms-transform: rotate(-135deg);
+  transform: rotate(-135deg); }
+
+div.submit-button {
+  height: 2.444rem;
+  line-height: 2.444rem;
+  margin: 0 .667rem;
+  text-align: center;
+  font-size: .889rem;
+  border-radius: .222rem;
+  background-color: #fb5549;
+  color: #fff; }
+  div.submit-button.disabled {
+    color: #bdbdbd;
+    background-color: #e0e0e0; }
+  div.submit-button.processing {
+    color: #bdbdbd;
+    background: #e0e0e0 url("../../images/common/loading.gif") no-repeat 30% 45%; }
+
+div.data-load-tip, div.finish-load-tip {
+  display: -webkit-box;
+  display: -moz-box;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  height: 2.4rem; }
+  div.data-load-tip div, div.finish-load-tip div {
+    font-size: 0.778rem;
+    margin-left: 0.2rem;
+    line-height: 2rem;
+    color: #666; }
+  div.data-load-tip.none, div.finish-load-tip.none {
+    display: none; }
+  div.data-load-tip.border-top, div.finish-load-tip.border-top {
+    border-top: 1px solid #e0e0e0; }
+
+div.data-load-tip i {
+  display: block;
+  width: 0.778rem;
+  height: 0.778rem;
+  /*-webkit-background:url($url) 0 0/ $size no-repeat;
+  -moz-background:url($url) 0 0/ $size no-repeat;
+  -o-background:url($url) 0 0/ $size no-repeat;*/
+  -webkit-background-size: 0.778rem 0.778rem;
+  -moz-background-size: 0.778rem 0.778rem;
+  -o-background-size: 0.778rem 0.778rem;
+  background-size: 0.778rem 0.778rem;
+  background-image: url("../../images/common/loading.gif");
+  background-repeat: no-repeat; }
+
+div.finish-load-tip {
+  background-color: #fff; }
+
+div.pop-modal {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(100, 100, 100, 0.7);
+  z-index: 3;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  transition: all 0.5s;
+  -webkit-transform-origin: 50% 100%;
+  -moz-transform-origin: 50% 100%;
+  -ms-transform-origin: 50% 100%;
+  transform-origin: 50% 100%;
+  -webkit-transform: scale(1, 0);
+  -moz-transform: scale(1, 0);
+  -o-transform: scale(1, 0);
+  -ms-transform: scale(1, 0);
+  transform: scale(1, 0);
+  opacity: 0; }
+  div.pop-modal.active {
+    opacity: 1;
+    -webkit-transform: scale(1, 1);
+    -moz-transform: scale(1, 1);
+    -o-transform: scale(1, 1);
+    -ms-transform: scale(1, 1);
+    transform: scale(1, 1); }
+  div.pop-modal > div.center-wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%; }
+
+div.credit-tip-pop > div {
+  width: 16.389rem;
+  height: 9.889rem;
+  margin-top: -4.944rem;
+  margin-left: -8.194rem;
+  border-radius: 0.22rem;
+  background-color: #fff;
+  overflow: hidden; }
+  div.credit-tip-pop > div > h3 {
+    height: 2.5rem;
+    line-height: 2.5rem;
+    margin-top: 0.5rem;
+    text-align: center;
+    color: #212121;
+    font-weight: normal;
+    letter-spacing: 1px;
+    font-size: 1.167rem; }
+  div.credit-tip-pop > div > div.tip {
+    line-height: 1.4rem;
+    margin: 0 1.222rem 0.9rem;
+    color: #616161;
+    font-size: 0.833rem; }
+  div.credit-tip-pop > div > div.btn {
+    height: 3.222rem;
+    line-height: 3.222rem;
+    border-top: 1px solid #e0e0e0; }
+    div.credit-tip-pop > div > div.btn > a {
+      display: block;
+      float: left;
+      width: 50%;
+      height: 100%;
+      text-align: center;
+      font-size: 1rem;
+      border-right: 1px solid #e0e0e0; }
+      div.credit-tip-pop > div > div.btn > a.cancel {
+        color: #616161; }
+      div.credit-tip-pop > div > div.btn > a.get {
+        color: #ff6666;
+        border-right-width: 0; }

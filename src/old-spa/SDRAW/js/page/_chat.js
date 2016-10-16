@@ -1,6 +1,4 @@
 (function () {
-    var techId = $.param("techId"), clubId = $.param("clubId") || $.$.clubID;
-
     var i,
         txtInput = $("#chatInput>div:nth-of-type(1)>div.input"),
         sendBtn = $("#chatInput>div:nth-of-type(1)>a"),
@@ -14,7 +12,6 @@
         giftAllItem = null,
         giftBtn = $("#chatInput>div:nth-of-type(2)>div.gift"),
         msgNode = document.createElement("div"),
-        lastSelection = { node: null, offset: null },
         expUl = $('#chatInput>div:nth-of-type(3)'),
         expPageIndex = 1,
         expPageEl = $('#chatInput>div:nth-of-type(3)>div:nth-of-type(2)>span'),
@@ -42,33 +39,6 @@
 
     //////////////////////初始化页面
     function initPage() {
-        //输入框获得焦点时
-        var initDelay = 500,initH = $.$.winHeight;
-
-        //点击输入框时定位光标
-        txtInput.Event("click", function (e) {
-            if (e.target.tagName.toLowerCase() == "img") {
-                var currNode = e.target, pNode = currNode.parentNode, currIndex;
-                for (var j = 0; j < pNode.childNodes.length; j++) {
-                    if (currNode == pNode.childNodes[j]) {
-                        currIndex = j + 1;
-                        break;
-                    }
-                }
-                if (document.createRange && window.getSelection && currIndex) {
-                    setCursorPosition(pNode, currIndex);
-                }
-            }
-            var sel = window.getSelection();
-            lastSelection.node = sel.focusNode;
-            lastSelection.offset = sel.focusOffset;
-
-            if(giftDiv.ClassHave("active")){
-                doGiftBtnClick();
-                txtInput[0].focus();
-            }
-        });
-
         //点击发送按钮
         sendBtn.Event("click", function (e, item) {
             inputTip.style.display = "none";
@@ -194,89 +164,6 @@
                 expressionBtn.Class("active");
             }
             scrollerToBottom();
-        });
-
-        //选择表情的时候
-        expUl.Delegate('click','li', function (e, item) {
-            if (lastSelection.node && isFocusInText(lastSelection.node)) {
-                var expressionNode = item.children[0];//选择的表情节点
-                var oldNode, newNode, currNode, nodeText, nextSibling, cursorIndex, splitNode;
-                newNode = document.createElement("img");
-                var imgData = window.getComputedStyle(expressionNode , null)['backgroundImage'];
-                if(imgData.charAt(4)=='"' || imgData.charAt(4)=="'"){
-                    imgData = imgData.slice(5,-2);
-                }
-                else{
-                    imgData = imgData.slice(4,-1);
-                }
-                newNode.src = imgData;
-                newNode.setAttribute("data-exp",expressionNode.getAttribute("data-exp"));
-                if (lastSelection.node.nodeType == 3) {//在文本节点中插入表情
-                    oldNode = lastSelection.node;
-                    if (lastSelection.offset == 0) {//在文本节点之前插入img节点
-                        oldNode.parentNode.insertBefore(newNode, oldNode);
-                    }
-                    else if (lastSelection.offset == oldNode.nodeValue.length) {//在文本节点之后插入img节点
-                        if (oldNode.nextSibling) {//当前文本节点是否还有下一个兄弟节点
-                            oldNode.parentNode.insertBefore(newNode, oldNode.nextSibling);
-                        }
-                        else {
-                            oldNode.parentNode.appendChild(newNode);
-                        }
-                    }
-                    else {//原文本节点被img节点截断成两个节点
-                        nodeText = oldNode.nodeValue;
-                        oldNode.nodeValue = nodeText.substr(0, lastSelection.offset);
-                        nextSibling = oldNode.nextSibling;
-                        if (nextSibling) {//当前文本节点是否还有下一个兄弟节点
-                            oldNode.parentNode.insertBefore(newNode, nextSibling);
-                            splitNode = document.createTextNode(nodeText.substr(lastSelection.offset));
-                            oldNode.parentNode.insertBefore(splitNode, nextSibling);
-                        }
-                        else {//直接append到最后
-                            oldNode.parentNode.appendChild(newNode);
-                            splitNode = document.createTextNode(nodeText.substr(lastSelection.offset));
-                            oldNode.parentNode.appendChild(splitNode);
-                        }
-                    }
-                }
-                else if (lastSelection.node.nodeType == 1) {//div节点
-                    if (lastSelection.offset == lastSelection.node.childNodes.length) {
-                        lastSelection.node.appendChild(newNode);
-                    }
-                    else {
-                        currNode = lastSelection.node.childNodes[lastSelection.offset];
-                        lastSelection.node.insertBefore(newNode, currNode);
-                    }
-                }
-
-                if (txtInput[0].innerHTML != "") {
-                    inputTip.style.display = "none";
-                    sendBtn[0].className = "";
-                }
-                else{
-                    inputTip.style.display = "block";
-                    sendBtn[0].className = "disabled";
-                }
-
-                //将光标定位到当前newNode之后
-                if (document.createRange) {
-                    var parentNode = newNode.parentNode;
-                    for (var j = 0; j < parentNode.childNodes.length; j++) {
-                        if (parentNode.childNodes[j] == newNode) {
-                            cursorIndex = j + 1;
-                            break;
-                        }
-                    }
-                    if (cursorIndex) {
-                        if(isTxtInputFocus) setCursorPosition(parentNode, cursorIndex);
-                        else{
-                            lastSelection.offset = cursorIndex;
-                            lastSelection.node = parentNode;
-                        }
-                    }
-                }
-            }
         });
 
         ////选中礼物的时候
@@ -408,40 +295,6 @@
                     });
                 }
             }
-        });
-
-        //点击骰子
-        $("#chatInput>div:nth-of-type(2)>div.dice").Click(function(){
-            changeToolClosed("dice");
-            doHandlerClickDiceBtn();
-        });
-
-        //游戏设置，选择分数
-        diceScoreItems.Click(function(e,item){
-            diceScoreItems.ClassClear("active");
-            currDiceScore = item.innerHTML+"";
-            item.className = "active";
-        });
-
-        ////游戏设置点击取消
-        $("#diceSetting div.cancel").Click(function(){
-            diceSetting.ClassClear("active");
-        });
-
-        /////游戏设置点击邀请
-        $("#diceSetting div.invite").Click(function(){
-            diceSetting.ClassClear("active");
-            doHandlerStartDiceGame();
-        });
-
-        /////积分不足提示界面点击取消
-        $("#notEnoughTip div.cancel").Click(function(){
-            notEnoughTip.ClassClear("active");
-        });
-
-        /////积分不足提示界面点击如何获取积分
-        $("#notEnoughTip div.get").Click(function(){
-            $.page("integralExplain");
         });
 
         function changeDiceGameMsgStatus(gameId){
@@ -596,51 +449,6 @@
             if(isNeedScroll !=false) scrollerToBottom();
         };
 
-        ///获取积分系统开关状态
-        $.ajax({
-            url : "../api/v2/credit/switch/status",
-            isReplaceUrl : true,
-            data : { clubId : clubId },
-            success : function(switchRes){
-                switchRes = switchRes.respData;
-                if(switchRes && switchRes.clubSwitch=="on"){
-                    if(switchRes.diceGameSwitch=="on" && !isManager){
-                        $("#chatInput>div:nth-of-type(2)>div.dice").Show();
-                        gameOverTime = switchRes.gameTimeoutSeconds*1000;
-                        //addRecentlyMsg(isChatThisDay);
-                    }
-                    giftBtn.Show();
-                    ///////获取积分礼物
-                    $.ajax({
-                        url : "../api/v2/credit/gift/list",
-                        isReplaceUrl : true,
-                        success : function(giftRes){
-                            giftRes = giftRes.respData;
-                            if(giftRes){
-                                var giftHtml = "",k;
-                                for(k=0;k<giftRes.length;k++){
-                                    giftListData[giftRes[k]["id"]] = { url : giftRes[k]["gifUrl"] };
-                                    giftHtml += "<div class='gift-item' gift-id='"+giftRes[k]["id"]+"' gift-name='"+giftRes[k]["name"]+"' gift-integral = '"+giftRes[k]["ratio"]+"' gift-url='"+giftRes[k]["gifUrl"]+"'>\
-                                                                <i></i>\
-                                                                <img src='"+giftRes[k]["iconUrl"]+"'/>\
-                                                                <div><span>"+giftRes[k]["ratio"]+"</span>积分</div>\
-                                                            </div>";
-                                }
-                                giftList[0].innerHTML = giftHtml;
-                                giftList.CSS("width",(5*giftRes.length)+"rem");
-                                giftAllItem = $("#chatInput>div.gift-list>div.list>div>div.gift-item");
-                            }
-                            addRecentlyMsg(isChatThisDay);
-                        }
-                    });
-                    updateUserAccount();
-                }
-                else{
-                    addRecentlyMsg(isChatThisDay);
-                }
-            }
-        });
-
         ///点击聊天消息列表中的消息
         $(talkDiv).Event("click",function(e){
             var node = e.target, pNode=node.parentNode, ppNode=pNode.parentNode;
@@ -729,130 +537,6 @@
                             doHandlerDiceGame(ope,itemObj,pNode.parentNode.children[0].children[0]);
                         }
                     }
-                }
-            }
-        });
-
-        //////获取技师的优惠券列表
-        if(currChatTech.techId){
-            $.ajax({
-                url: '../api/v1/profile/redpack/list',
-                isReplaceUrl:true,
-                data: { clubId : currChatTech.clubId },
-                success: function (couponData) {
-                    if(couponData.statusCode==200){
-                        var couponData= couponData.respData.coupons || [];
-                        var k, htmlStr="";
-
-                        //////////////////////构造技师的分享有礼券
-                        for(k=0;k<couponData.length;k++){
-                            if(couponData[k]["couponType"]=="paid"){
-                                if(k==couponData.length-1){
-                                    htmlStr+="<li type='paid' actId='"+couponData[k]["actId"]+"'>"+(couponData[k]["actTitle"].length>7 ? couponData[k]["actTitle"].substr(0,7)+"..." : couponData[k]["actTitle"])+"<i></i><i></i></li>";
-                                }
-                                else{
-                                    htmlStr+="<li type='paid' actId='"+couponData[k]["actId"]+"'>"+couponData[k]["actTitle"]+"</li>";
-                                }
-                            }
-                            else{
-                                if(k==couponData.length-1){
-                                    htmlStr+="<li type='"+couponData[k]["couponType"]+"' actId='"+couponData[k]["actId"]+"' techCode='"+currChatTech.inviteCode+"' actTitle='"+couponData[k]["actTitle"]+"'>"+(couponData[k]["actTitle"].length>7 ? couponData[k]["actTitle"].substr(0,7)+"..." : couponData[k]["actTitle"])+"<i></i><i></i></li>";
-                                }
-                                else{
-                                    htmlStr+="<li type='"+couponData[k]["couponType"]+"' actId='"+couponData[k]["actId"]+"' techCode='"+currChatTech.inviteCode+"' actTitle='"+couponData[k]["actTitle"]+"'>"+couponData[k]["actTitle"]+"</li>";
-                                }
-                            }
-                        }
-                        ordinaryCouponBtn[0].querySelector("ul").innerHTML=htmlStr;
-
-                        /////////////////////////////处理点击优惠券图标
-                        if(couponData.length>0){
-                            ////点击优惠券图标
-                            ordinaryCouponBtn.Click(function(){
-                                changeToolClosed("coupon");
-                                ordinaryCouponBtn.ClassHave("active") ? ordinaryCouponBtn.ClassClear("active") : ordinaryCouponBtn.Class("active");
-                            });
-                            ////领取技师的优惠券
-                            $("#chatInput>div:nth-of-type(2)>div.coupon>ul>li").Click(function(e,item) {
-                                var couponType = item.getAttribute("type");
-                                if(couponType == "paid"){
-                                    $.login("paidCoupon&actId="+item.getAttribute("actId")+"&techCode="+currChatTech.inviteCode,false,true,true);
-                                }
-                                else{
-                                    if(!$.$.userTel){
-                                        $.$.loginUrl = location.hash.substring(1).replace(/^\//, '').replace(/\/$/, '');
-                                        $.bindPhone(true);
-                                        //$.page($.$.loginUrl.replace(/\/[^\/]*$/, '/bindPhone'), 1, true, true);
-                                        return false;
-                                    }
-                                    $.ajax({////////领取
-                                        url: ($.$.clubID ? "../" : "")+"get/redpacket",
-                                        data: {
-                                            actId: item.getAttribute("actId"),
-                                            phoneNum: $.$.userTel,
-                                            openId: $.$.openId,
-                                            userCode : "",
-                                            techCode : item.getAttribute("techCode"),
-                                            chanel : "link"
-                                        },
-                                        success: function (res) {
-                                            //console.log("领取优惠券的返回："+JSON.stringify(res));
-                                            if(res.statusCode==200){
-                                                $.tipShow("成功领取一张优惠券！");
-                                                var getCouponMsgObj = {
-                                                    from: eb.userId,
-                                                    to: currChatTech.chatId,
-                                                    data: "您领取了"+currChatTech.name+'的"'+item.getAttribute("actTitle")+'"',
-                                                    ext: { name: currChatTech.name, header: currChatTech.header, avatar: currChatTech.avatar, no: currChatTech.no, techId: currChatTech.techId, clubId: currChatTech.clubId, msgType: "couponTip" },
-                                                    status : 1
-                                                };
-
-                                                eb.conn.send({
-                                                    to: currChatTech.chatId,
-                                                    msg: item.getAttribute("actTitle"),
-                                                    type: "chat",
-                                                    ext: { name: chatName, header: chatHeader, msgType: "couponTip", time: Date.now() , avatar : $.$.userAvatar },
-                                                    success: function(){
-                                                        $.sendFriend(currChatTech.chatId,'coupon',isManager?'manager':'tech');
-                                                        $.addMsgDiv(getCouponMsgObj,"couponTip",false,true,false);
-                                                        $.updateSessionList(getCouponMsgObj, "text", false);
-                                                        $.addToMsgList(getCouponMsgObj, "text");
-                                                    }
-                                                });
-                                            }
-                                            else{
-                                                $.tipShow(res.msg || "未能成功领取优惠券！");
-                                            }
-                                        }});
-                                }
-                            });
-                        }
-                        else{
-                            ordinaryCouponBtn.Click(function(){
-                                changeToolClosed("coupon");
-                                $.tipShow("抱歉！暂无优惠券！");
-                            });
-                        }
-                    }
-                }
-            });
-        }
-    }
-
-    function updateUserAccount(){
-        //////查询当前账户积分
-        $.ajax({
-            url : "../api/v2/credit/user/account",
-            isReplaceUrl : true,
-            data : {
-                clubId : clubId,
-                userType : "user"
-            },
-            success : function(res){
-                if(res.statusCode == 200) {
-                    res = res.respData;
-                    currIntegralAccount = (res && res[0] ? res[0].amount : 0);
-                    currIntegralText.Text(currIntegralAccount);
                 }
             }
         });
@@ -987,34 +671,6 @@
                 }
             });
         }
-    }
-
-    ////点击骰子之后的处理
-    function doHandlerClickDiceBtn(amount){
-        $.ajax({////获取当前账号积分
-            url : "../api/v2/credit/user/account",
-            isReplaceUrl : true,
-            data : {
-                clubId : clubId,
-                userType : "user"
-            },
-            success : function(res){
-                if(res.statusCode == 200){
-                    currIntegralAccount = (res.respData && res.respData[0] ? res.respData[0].amount : 0);
-                    currIntegralText.Text(currIntegralAccount);
-                    if(parseInt(currIntegralAccount)<=0 || (amount && parseInt(amount)>parseInt(currIntegralAccount))){
-                        $("#notEnoughTip>div>div.tip").Text("玩骰子需要"+(amount || "")+"积分，当前您的积分不足。");
-                        notEnoughTip.Class("active");
-                    }
-                    else if(amount){
-                        doHandlerStartDiceGame(amount);
-                    }
-                    else{
-                        diceSetting.Class("active");
-                    }
-                }
-            }
-        });
     }
 
     ///处理点击拒绝接受游戏邀请
