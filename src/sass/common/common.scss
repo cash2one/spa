@@ -81,7 +81,6 @@ div.finish-load-tip{
   background-color: #fff;
 }
 
-/////弹窗样式
 div.pop-modal{
   @include mask();
   z-index:3;
@@ -100,7 +99,6 @@ div.pop-modal{
   }
 }
 
-///积分不足的弹出提示框
 div.credit-tip-pop{
   >div{
     width:16.389rem;
