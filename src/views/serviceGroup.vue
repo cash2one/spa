@@ -18,13 +18,13 @@
         data: function(){
             return {
                 global : Global.data,
-                queryDataUrl : "../api/v2/club/"+Global.data.clubId+"/service",
+                queryDataUrl : "../api/v2/club/{clubId}/service",
                 dataList : []
             }
         },
         created : function(){
             var   _this = this, global = _this.global;
-            _this.$http.get(_this.queryDataUrl).then(function(res){
+            _this.$http.get(_this.queryDataUrl,{ params : { clubId : global.clubId }}).then(function(res){
                 res = res.body;
                 if(res.length){
                     _this.dataList = res;

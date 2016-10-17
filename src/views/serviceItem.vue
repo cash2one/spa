@@ -43,7 +43,7 @@
         data: function(){
             return {
                 global : Global.data,
-                queryDataUrl : "../api/v2/club/"+Global.data.clubId+"/service/item",
+                queryDataUrl : "../api/v2/club/{clubId}/service/item",
                 //queryDataUrl : "../json/serviceItem.json",
                 isQueryAll : true,
                 currServiceItemId : "",
@@ -71,7 +71,7 @@
             }
             else if(!_this.isQueryAll && _this.dataList.length==0){
                 global.loading = true;
-                _this.$http.get(_this.queryDataUrl, { params : { top : 1 }}).then(function(res){
+                _this.$http.get(_this.queryDataUrl, { params : { top : 1, clubId : global.clubId }}).then(function(res){
                     res = res.body;
                     if(res.statusCode == 200){
                         global.loading = false;

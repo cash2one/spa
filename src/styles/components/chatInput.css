@@ -154,19 +154,20 @@ div.chat-input-wrap {
             div.chat-input-wrap div.menu > div.coupon > ul > li:last-child {
               position: relative;
               overflow: visible; }
-              div.chat-input-wrap div.menu > div.coupon > ul > li:last-child > i {
+              div.chat-input-wrap div.menu > div.coupon > ul > li:last-child:before, div.chat-input-wrap div.menu > div.coupon > ul > li:last-child:after {
+                content: "";
                 display: block;
+                position: absolute;
+                height: 0;
+                left: 2.8rem;
                 border-left: 10px solid transparent;
                 border-right: 10px solid transparent;
-                height: 0;
-                position: absolute;
-                left: 2.8rem; }
-                div.chat-input-wrap div.menu > div.coupon > ul > li:last-child > i:nth-of-type(1) {
-                  border-top: 10px solid #fb5549;
-                  bottom: -10px; }
-                div.chat-input-wrap div.menu > div.coupon > ul > li:last-child > i:nth-of-type(2) {
-                  border-top: 10px solid #fff;
-                  bottom: -8px; }
+                border-top: 10px solid #fff; }
+              div.chat-input-wrap div.menu > div.coupon > ul > li:last-child:before {
+                border-top-color: #fb5549;
+                bottom: -10px; }
+              div.chat-input-wrap div.menu > div.coupon > ul > li:last-child:after {
+                bottom: -8px; }
         div.chat-input-wrap div.menu > div.coupon.active > ul {
           opacity: 1;
           -webkit-transform: scale(1, 1);
@@ -267,7 +268,8 @@ div.chat-input-wrap {
     position: relative;
     height: 8.389rem;
     background-color: #fff;
-    border-top: 1px solid #bdbdbd; }
+    border-top: 1px solid #bdbdbd;
+    overflow-y: hidden; }
     div.chat-input-wrap div.gift-list div.list {
       margin: 1.139rem 0 1rem;
       height: 4.8rem;

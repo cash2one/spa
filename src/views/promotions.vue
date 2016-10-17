@@ -35,7 +35,7 @@
         data: function(){
             return {
                 global : Global.data,
-                getActivitiesDataUrl : "../api/v2/club/"+Global.data.clubId+"/activities",
+                getActivitiesDataUrl : "../api/v2/club/{clubId}/activities",
                 coupons : [],
                 activities : []
             };
@@ -43,7 +43,7 @@
         created : function(){
             var _this = this, global = _this.global;
             global.loading = true;
-            _this.$http.get(_this.getActivitiesDataUrl).then(function(res){
+            _this.$http.get(_this.getActivitiesDataUrl,{ params : { clubId : global.clubId }}).then(function(res){
                 res = res.body;
                 if(res.statusCode == 200){
                     global.loading = false;

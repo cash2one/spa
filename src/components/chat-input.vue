@@ -9,27 +9,27 @@
             <a :class="sendBtnStatus">发送</a>
         </div>
         <div class="menu">
-            <div class="pic"><form><input name="file" type="file" accept="image/*"/></form></div>
-            <div class="expression" ref="expressionBtn"></div>
-            <div class="reward" @click="doClickRewardBtn()"></div>
-            <div class="coupon" @click="doClickCouponBtn()" :class="{ active : showCoupons }">
+            <div class="pic"><form><input type="file" accept="image/*" ref="imgFile" @change="doChangeFileInput()"/></form></div>
+            <div class="expression" :class="{ active : showExpression }" @click="doClickExpressionBtn()" ref="expressionBtn"></div>
+            <div class="reward" @click="doClickRewardBtn()" v-show="talker.userType=='tech'"></div>
+            <div class="coupon" @click="doClickCouponBtn()" :class="{ active : showCoupons }" v-show="talker.userType=='tech'">
                 <ul>
-                    <li v-for="(item,index) in coupons" @click="doClickCouponItem(item)"><i v-if="index==coupons.length-1"></i><i v-if="index==coupons.length-1"></i>{{ item.actTitle }}</li>
+                    <li v-for="coupon in coupons" @click="doClickCouponItem(coupon)">{{ coupon.actTitle }}</li>
                 </ul>
             </div>
-            <div class="dice" @click="doClickDiceBtn()" v-show="creditConfig.diceGameSwitch && talker.userType=='tech'"></div>
-            <div class="gift" v-show="creditConfig.creditSwitch"></div>
+            <div class="dice" v-show="creditConfig.diceGameSwitch && talker.userType=='tech'" @click="doClickDiceBtn()"></div>
+            <div class="gift" v-show="creditConfig.creditSwitch" @click="doClickGiftBtn()" :class="{ active : showGiftList }"></div>
         </div>
         <swipe class="exp-swipe" :auto="24*60*60*1000" v-show="showExpression">
-            <swipe-item class="exp-wrap-0"><div v-for="exp in exps[0]" @doSelectedExp($event)><div></div></div></swipe-item>
-            <swipe-item class="exp-wrap-1"><div v-for="exp in exps[1]" @doSelectedExp($event)><div></div></div></swipe-item>
+            <swipe-item class="exp-wrap-0"><div v-for="exp in exps[0]" @click="doSelectedExp($event)"><div></div></div></swipe-item>
+            <swipe-item class="exp-wrap-1"><div v-for="exp in exps[1]" @click="doSelectedExp($event)"><div></div></div></swipe-item>
         </swipe>
         <div class="gift-list" v-show="showGiftList">
             <div class="list" :style="{ width : gifts.length*5+'rem' }">
-                <div class='gift-item' @click="doClickGift(gift)" v-for="gift in gifts">
+                <div class='gift-item' @click="doClickGiftItem(gift)" v-for="gift in gifts" :class="{ active : currSelectGift == gift }">
                     <i></i>
                     <img :src='gift.iconUrl'/>
-                    <div><span>gift.ratio</span>积分</div>
+                    <div><span>{{ gift.ratio }}</span>积分</div>
                 </div>
             </div>
             <div class="info"><span>*</span>&nbsp;当前剩余<b>{{ currIntegralAccount }}</b>积分</div>
@@ -55,24 +55,40 @@
                 global : Global.data,
                 im : IM,
                 talker : IM.talker,
-                exps : [[],[]],
+                exps : [[],[]], //表情数据
                 lastSelection : { node : null, offset : null },
+                initHeight : 0,
+                initDelay : 500,
+
                 showExpression : false, //显示表情区域
                 showGiftList : false, //显示积分礼物区域
-                initHeight : 0,
                 showInputTip : true, //显示在此输入的提示语
                 isTxtInputFocus : false,
-                initDelay : 500,
-                sendBtnStatus : "disabled", //发送按钮的状态
-                currIntegralAccount : 0, //当前账户积分
+                showCoupons : false, //显示优惠券列表
 
-                coupons : [],
-                showCoupons : false
+                sendBtnStatus : "disabled", //发送按钮的状态
+                currSelectGift : null //当前选择的积分礼物
             };
         },
-        props : [ 'creditConfig','gifts'],
+        props : {
+            creditConfig : { //系统积分配置
+                type : Object
+            },
+            gifts : { //积分礼物数据
+                type : Array,
+                default : []
+            },
+            coupons : { //优惠券数据
+                type : Array,
+                default : []
+            },
+            currIntegralAccount : { //当前账户积分
+                type : Number,
+                default : 0
+            }
+        },
         created : function(){
-            var i = 0,  _this = this, global = _this.global, im = _this.im, talker = _this.talker;
+            var i = 0,  _this = this, global = _this.global, im = _this.im;
 
             /////////////////////////////////////////构造exps
             for(var item in im.expression){
@@ -80,28 +96,13 @@
                 i++;
             }
 
-            /////////////////////////////////////////获取优惠券
-            if(talker.userType == "tech"){
-                _this.$http.get("../api/v1/profile/redpack/list",{ params : { clubId : talker.clubId }}).then(function(res){
-                    res = res.body;
-                    if(res.statusCode == 200){
-                        var couponData= res.respData.coupons || [];
-                        if(couponData.length>0){
-                            var lastObj = couponData[couponData.length-1];
-                            if(lastObj.actTitle.length>7) lastObj.actTitle = lastObj.actTitle.substr(0,7)+"...";
-                        }
-                        _this.coupons = couponData;
-                    }
-                });
-            }
-
-            //////on events
-            eventHub.$on("update-credit-account",_this.updateCreditAccount);
-
             _this.initHeight = global.winHeight;
         },
         methods: {
-            doClickRewardBtn : function(){//点击打赏按钮
+            /*
+             点击打赏按钮
+             */
+            doClickRewardBtn : function(){
                 var _this = this, global = _this.global;
                 _this.changeToolClosed("reward");
                 if(global.userAgent.isWX){
@@ -110,11 +111,6 @@
                 else if(Global.checkAccess("techReward")){
                     Util.tipShow('请打开微信登录"9358"公众号！');
                 }
-            },
-
-
-            changeToolClosed : function(type){
-
             },
 
             /*
@@ -247,10 +243,25 @@
             },
 
             /*
+             点击表情按钮
+             */
+            doClickExpressionBtn : function(){
+                var _this = this, txtInput = _this.$refs.txtInput, lastSelection = _this.lastSelection;
+                if(!_this.showExpression){
+                    _this.changeToolClosed("expression");
+                    lastSelection.offset = txtInput.childNodes.length;
+                    lastSelection.node = txtInput;
+                }
+                _this.showExpression = !_this.showExpression;
+                ///scrollerToBottom();
+            },
+
+            /*
              选择表情的时候
              */
             doSelectedExp : function(event){
-                var _this = this, lastSelection = _this.lastSelection, item = event.target, txtInput = _this.$refs.txtInput;
+                var _this = this, lastSelection = _this.lastSelection, item = event.currentTarget, txtInput = _this.$refs.txtInput;
+
                 if (lastSelection.node && _this.isFocusInText(lastSelection.node)) {
                     var expressionNode = item.children[0];//选择的表情节点
                     var oldNode, newNode, currNode, nodeText, nextSibling, cursorIndex, splitNode;
@@ -434,24 +445,148 @@
             },
 
             /*
-            更新当前账户积分
+            点击礼物
              */
-            updateCreditAccount : function(){
-                var _this = this, talker = _this.talker;
-                Global.getCreditAccount(talker.clubId,function(res){
-                    _this.currIntegralAccount = (res[0] ? res[0].amount : 0);
-                });
+            doClickGiftItem : function(gift){
+                var _this = this, txtInput = _this.$refs.txtInput;
+                if(_this.currSelectGift == gift){
+                    _this.currSelectGift = null;
+                    _this.showInputTip = true;
+                    txtInput.innerHTML = "";
+                    _this.sendBtnStatus = "disabled";
+                }
+                else{
+                    _this.currSelectGift = gift;
+                    txtInput.innerHTML = "[礼物："+gift.name+"]";
+                    _this.showInputTip = false;
+                    _this.sendBtnStatus = "";
+                }
             },
 
             /*
-            点击礼物
+            点击积分礼物按钮
              */
-            doClickGift : function(gift){
+            doClickGiftBtn : function(){
+                var _this = this , txtInput = _this.$refs.txtInput;
+                if(_this.gifts.length == 0){
+                    return Util.tipShow("当前无积分礼物可发送！");
+                }
+                if(_this.showGiftList){
+                    txtInput.innerHTML = "";
+                }
+                else{
+                    _this.changeToolClosed("gift");
+                }
+                _this.showGiftList = !_this.showGiftList;
+                //scrollerToBottom();
+            },
 
+            /*
+            image input 发送图片按钮
+             */
+            doChangeFileInput : function(){
+                var _this = this, imgFile = _this.$refs.imgFile, file = imgFile.files[0];
+                _this.changeToolClosed("pic");
+                if(file.size > 10*1024*1024){
+                    return Util.tipShow("抱歉！所选图片超过10M，太大无法发送！");
+                }
+                var fileName = file.name, dotIndex = fileName.lastIndexOf("."), fileType;
+                if(dotIndex<0) return;
+                fileType = fileName.substring(dotIndex+1);
+                if (!/^(jpg|jpeg|gif|png|bmp)$/i.test(fileType)) {
+                    return Util.tipShow("请选择图片进行发送！");
+                }
+                var fileObj = WebIM.utils.getFileUrl(imgFile);
+                if (!fileObj.url || fileObj.url.length == 0) {
+                    return ;
+                }
+
+                //在聊天界面上显示图片
+                /*var divItem = document.createElement("div");
+                divItem.className = "right";
+                divItem.innerHTML = "<span>" + $.formatMsgTime(new Date(), true) + "</span><div style='background-image: url(" + chatHeader + ")'></div><div class='img'><img /></div>";
+                var imgItem = divItem.children[2].children[0];
+                imgItem.src = window.URL.createObjectURL(imgFile);
+                imgItem.onload = function () {
+                    window.URL.revokeObjectURL(this.src);
+                    //console.log("发送图片的宽高：" + this.width + "--" + this.height);
+                    imgItem.setAttribute("w",this.width);
+                    imgItem.setAttribute("h",this.height);
+                    var rawWidth = this.width, rawHeight = this.height;
+                    var w = this.width / (16 * $.$.scale), h = this.height / (16 * $.$.scale), ratio;
+                    if (!(w < 10 && h < 9)) {
+                        w = this.width / 10 , h = this.height / 9, ratio = w > h ? w : h;
+                        w = this.width / ratio;
+                        h = this.height / ratio;
+                    }
+                    imgItem.style.width = w + "rem";
+                    imgItem.style.height = h + "rem";
+                    talkDiv.appendChild(divItem);
+                    scrollerToBottom();
+
+                    eb.conn.send({
+                        file: fileObj,
+                        to: currChatTech.chatId,
+                        type: 'img',
+                        width: rawWidth,
+                        height: rawHeight,
+                        file_length: imgFile.size,
+                        onFileUploadComplete: function (data) {
+                            $.tipShow("图片发送成功！");
+                            $.sendFriend(currChatTech.chatId,'image',isManager?'manager':'tech');
+                            //console.log("图片发送成功！" + JSON.stringify(data));
+                            imgItem.onload = null;
+                            imgItem.src= data.uri + "/" + data.entities[0].uuid;
+                            divItem.querySelector("div:nth-of-type(2)").classList.add("success");
+                            //保存-存储
+                            var msgObj = {
+                                from: eb.userId,
+                                to: currChatTech.chatId,
+                                url: data.uri + "/" + data.entities[0].uuid,
+                                width: rawWidth,
+                                height: rawHeight,
+                                status:1,
+                                ext: {  //技师的名称和头像
+                                    name: currChatTech.name,
+                                    header: currChatTech.header,
+                                    avatar: currChatTech.avatar,
+                                    no: currChatTech.no,
+                                    techId: currChatTech.techId,
+                                    clubId: currChatTech.clubId
+                                }
+                            };
+                            $.updateSessionList(msgObj, "pic", false);
+                            $.addToMsgList(msgObj, "pic");
+                        },
+                        onFileUploadError: function (error) {
+                            $.tipShow("图片发送失败，请稍后重试！" + JSON.stringify(error));
+                        },
+                        ext: {
+                            name: chatName, header: chatHeader, time: Date.now() , avatar : $.$.userAvatar
+                        }
+                    });
+                }*/
+            },
+
+            changeToolClosed : function(type){
+                var _this = this;
+                if(type != "expression"){
+                    _this.showExpression = false;
+                }
+                if(type != "coupon"){
+                    _this.showCoupons = false;
+                }
+                if(type != "gift"){
+                    _this.showGiftList = false;
+                    _this.currSelectGift = null;
+                    _this.showInputTip = true;
+                    _this.$refs.txtInput.innerHTML = "";
+                    _this.sendBtnStatus = "disabled";
+                }
             }
         },
         beforeDestroy : function(){
-            eventHub.$off("update-credit-account",this.updateCreditAccount);
+
         }
     }
 </script>

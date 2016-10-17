@@ -68,7 +68,7 @@
         data: function(){
             return {
                 //getHomeDataUrl : "../json/homeData.json",
-                getHomeDataUrl : "../api/v2/club/"+Global.data.clubId+"/homeData",
+                getHomeDataUrl : "../api/v2/club/{clubId}/homeData",
                 global : Global.data,
                 bannerPics : [],
                 serviceItems : [],
@@ -78,7 +78,8 @@
         created : function(){
             var _this = this,global = _this.global;
             global.loading = true;
-            _this.$http.get(_this.getHomeDataUrl).then(function(res){
+            console.log("param club id");
+            _this.$http.get(_this.getHomeDataUrl,{ params : { clubId : global.clubId } }).then(function(res){
                 res = res.body;
                 global.loading = false;
                 if(res.statusCode == 200){

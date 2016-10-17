@@ -32,7 +32,7 @@
         data: function(){
             return {
                 //getServiceListDataUrl : "../json/serviceList.json",
-                getServiceListDataUrl : "../api/v2/club/"+Global.data.clubId+"/categoryService",
+                getServiceListDataUrl : "../api/v2/club/{clubId}/categoryService",
                 global : Global.data,
                 serviceList : []
             };
@@ -40,7 +40,7 @@
         created : function(){
             var _this = this, global = _this.global;
             global.loading = true;
-            _this.$http.get(_this.getServiceListDataUrl).then(function(res){
+            _this.$http.get(_this.getServiceListDataUrl,{ params : { clubId : global.clubId }}).then(function(res){
                 global.loading = false;
                 res = res.body;
                 if(res){

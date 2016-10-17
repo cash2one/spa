@@ -90,8 +90,8 @@
     module.exports = {
         data: function(){
             return {
-                getTechListUrl : "../api/v2/club/"+Global.data.clubId+"/technician",
-                getServiceItemUrl : "../api/v2/club/"+Global.data.clubId+"/service/select",
+                getTechListUrl : "../api/v2/club/{clubId}/technician",
+                getServiceItemUrl : "../api/v2/club/{clubId}/service/select",
                 global : Global.data,
 
                 techList : [],
@@ -122,7 +122,7 @@
             };
         },
         mounted : function(){
-            var _this = this,pageData = _this.global.pageData["technicianList"];
+            var _this = this,global = _this.global, pageData = global.pageData["technicianList"];
             if(pageData){
                 setTimeout(function(){
                     _this.$refs.listEle.scrollTop = pageData["scrollTop"];
@@ -130,7 +130,7 @@
                 },100)
             }
             //////获取服务项目数据
-            _this.$http.get(_this.getServiceItemUrl).then(function(res){
+            _this.$http.get(_this.getServiceItemUrl,{ params : {clubId : global.clubId }}).then(function(res){
                 res = res.body;
                 if(res && res.length){
                     _this.serviceItems = res;
@@ -149,6 +149,7 @@
             else{
                 global.loading = true;
                 _this.$http.get(_this.getTechListUrl,{ params : {
+                    clubId : global.clubId,
                     page : _this.currPage,
                     pageSize : _this.pageSize,
                     stateActiveId : _this.stateActiveId,
@@ -178,7 +179,7 @@
                 this.showSearchInput = !this.showSearchInput;
             },
             queryTechList : function(page){//查询列表数据
-                var _this = this;
+                var _this = this, global = _this.global;
                 if(_this.isAddData){
                     return;
                 }
@@ -191,6 +192,7 @@
                 _this.isDataAddEnd = false;
 
                 _this.$http.get(_this.getTechListUrl, { params: {
+                    clubId : global.clubId,
                     page: page,
                     pageSize: _this.pageSize,
                     stateActiveId: _this.stateActiveId,
@@ -223,10 +225,10 @@
                         //console.log((+new Date())+"---_this.showFinishLoadTip："+_this.showFinishLoadTip+"--_this.isDataAddEnd："+_this.isDataAddEnd);
                     }
                     else {
-                        Util.tipShow(_this.global.loadError);
+                        Util.tipShow(global.loadError);
                     }
                 }, function () {
-                    Util.tipShow(_this.global.loadError);
+                    Util.tipShow(global.loadError);
                 });
             },
             doHandlerTechListScroll : function(){//数据列表往下滑动加载的处理

@@ -95,8 +95,8 @@
         data: function(){
             return {
                 global : Global.data,
-                queryTechDetailUrl : "../api/v2/club/technician/"+Global.data.currPage.query.id,
-                queryClubCouponUrl : "../api/v2/club/"+Global.data.clubId+"/coupons",
+                queryTechDetailUrl : "../api/v2/club/technician/{techId}",
+                queryClubCouponUrl : "../api/v2/club/{clubId}/coupons",
                 updateFavoriteTechUrl : "../api/v2/profile/user/favorite/",
 
                 techId : '', //技师ID
@@ -131,9 +131,9 @@
             };
         },
         mounted : function(){
-            var _this = this;
+            var _this = this, global = _this.global;
             ////////////////////////////////////获取优惠券数据
-            _this.$http.get(_this.queryClubCouponUrl).then(function(res) {
+            _this.$http.get(_this.queryClubCouponUrl,{ params : { clubId : global.clubId }}).then(function(res) {
                 res = res.body;
                 if (res && res.statusCode==200){
                     res = res.respData.coupons || [];
@@ -157,7 +157,7 @@
                 return _this.$router.back();
             }
             global.loading = true;
-            _this.$http.get(_this.queryTechDetailUrl).then(function(res){
+            _this.$http.get(_this.queryTechDetailUrl,{ params : { techId : global.currPage.query.id }}).then(function(res){
                 res = res.body;
                 global.loading = false;
                 if(res && res.info){

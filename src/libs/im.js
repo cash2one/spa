@@ -25,6 +25,7 @@ exports.IM = {
 
     sessionList : null, //会话列表
     messageList : {}, //从本地缓存中读取的消息列表暂存于此
+    expElList : null, //表情列表--dom元素
 
     talker : { //当前聊天对方信息
         name : "",//对方名称
@@ -492,7 +493,7 @@ exports.IM = {
     },
 
     ///解析文本消息，将里面的表情编码换成图片img标签
-    decodeExpressionToImg : function(msg,expElList){//expElList 表情dom元素列表
+    decodeExpressionToImg : function(msg){//expElList 表情dom元素列表
         var _this = this, item, k;
         if(!_this.expressionIndexObj){
             _this.expressionIndexObj = {};
@@ -504,7 +505,7 @@ exports.IM = {
         return msg.replace(_this.decodeExpressionReg, function () {
             k = _this.expressionIndexObj[arguments[0]];
             if(k){
-                var str = window.getComputedStyle(expElList[k-1].children[0],null)['backgroundImage'];
+                var str = window.getComputedStyle(_this.expElList[k-1].children[0],null)['backgroundImage'];
                 str = (str.charAt(4)=='"' || str.charAt(4)=="'") ? str.slice(5,-2) : str.slice(4,-1);
                 return "<img src='"+str+"' data-exp='" + arguments[0] + "'/>";
             }

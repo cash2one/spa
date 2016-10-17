@@ -5,7 +5,6 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import VueResource from 'vue-resource';
 import App from './app.vue';
-import Env from './config/env';
 import { Global } from './libs/global';
 import { IM } from './libs/im';
 

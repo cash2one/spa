@@ -24,7 +24,7 @@
         data: function(){
             return {
                 global : Global.data,
-                queryTechDetailUrl : "../api/v2/club/technician/"+Global.data.currPage.query.id,
+                queryTechDetailUrl : "../api/v2/club/technician/{techId}",
                 techId : "",
                 startIndex : 0,
                 pics : [] //相册
@@ -47,7 +47,7 @@
             }
             else{
                 global.loading = true;
-                _this.$http.get(_this.queryTechDetailUrl).then(function(res){
+                _this.$http.get(_this.queryTechDetailUrl,{ params : { techId : global.currPage.query.id }}).then(function(res){
                     res = res.body;
                     global.loading = false;
                     if(res && res.albums && res.albums.length>0){

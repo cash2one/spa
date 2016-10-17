@@ -1,6 +1,8 @@
 @import "../common/mixin.scss";
 
 div#chat-page{
+  position: relative;
+
   div.page-title{
     >span{
       margin-left:0.222rem;

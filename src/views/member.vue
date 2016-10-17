@@ -22,14 +22,14 @@
         data: function(){
             return {
                 global : Global.data,
-                queryDataUrl : "../api/v2/club/"+Global.data.clubId+"/memberinfo",
+                queryDataUrl : "../api/v2/club/{clubId}/memberinfo",
                 dataList : []
             }
         },
         created : function(){
             var   _this = this, global = _this.global;
             global.loading = true;
-            _this.$http.get(_this.queryDataUrl).then(function(res){
+            _this.$http.get(_this.queryDataUrl,{ params : { clubId : global.clubId }}).then(function(res){
                 res = res.body;
                 global.loading = false;
                 if(res.length){

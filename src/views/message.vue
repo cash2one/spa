@@ -10,7 +10,7 @@
                     <div>
                         <div>{{ item.name }}<span v-if="item.no"><span>[</span>{{ item.no }}<span>]</span></span></div>
                         <div>{{ item.msgStr }}</div>
-                        <div>{{ item.time | MsgTimeFormatter}}</div>
+                        <div>{{ item.time | MsgTimeFormatter }}</div>
                         <div v-show="item.new>0">{{ item.new }}</div>
                     </div>
                     <div :class="{ active : inEdit }" @click="doClickDelRecord(item)">删除记录</div>

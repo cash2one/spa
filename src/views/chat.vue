@@ -2,7 +2,7 @@
     @import '../styles/page/chat.css';
 </style>
 <template>
-    <div class="page" id="chat-page" v-show="!global.loading">
+    <div class="page" id="chat-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>{{ talker.name }}<span v-show="talker.userNo">[{{ talker.userNo }}]</span><a class="icon home" :class="{ once : talker.userType=='manager' }" @click="doClickHomeIcon()"></a><router-link class="icon tech" v-show="talker.userType=='tech'" :to="{ name : 'technicianDetail', query : { id : talker.userId } }"></router-link></div>
         <div class="order-tip" @click="doClickOrderTip()" v-show="talker.userType=='tech'">如果技师没有回应，那就立即预约吧！<div></div></div>
         <div class="message-wrap" :style="{ height : msgWrapHeight+'px' }">
@@ -12,7 +12,7 @@
                     </ul>
                 </loadmore>-->
         </div>
-        <chat-input :credit-config="creditConfig" :gifts="gifts"></chat-input>
+        <chat-input :credit-config="creditConfig" :gifts="gifts" :coupons="coupons" :curr-integral-account="currIntegralAccount"></chat-input>
         <tel-detail v-if="talker.telephone.length>0" :telephone="talker.telephone"></tel-detail>
         <dice-setting></dice-setting>
     </div>
@@ -27,6 +27,7 @@
     import CreditTip from '../components/credit-tip';
     import ChatInput from '../components/chat-input';
     import DiceSetting from '../components/dice-setting';
+    import MessageNode from '../components/message-node';
     import LoadMore from '../components/load-more';
 
     module.exports = {
@@ -35,7 +36,8 @@
             'tel-detail' : TelDetail,
             'credit-tip' : CreditTip,
             'chat-input' : ChatInput,
-            'dice-setting' : DiceSetting
+            'dice-setting' : DiceSetting,
+            'message-node' : MessageNode
         },
         data: function(){
             return {
@@ -46,12 +48,16 @@
                 list : [], //聊天页面的消息列表数据
                 msgWrapHeight : null,
 
-                gameStatusObj : { request : "等待接受...", accept : "已接受", reject : "已拒绝", overtime : "已超时", cancel : "已取消" }, //游戏状态
-                gameOverTime : 24*60*60*1000, //游戏超时时间
                 giftMapData : {}, //积分礼物数据
                 gifts : [],
-                defaultGiftImg : "img/chat/gift_default.png", //默认的积分礼物图片
-                creditConfig : null
+                creditConfig : {
+                    diceGameSwitch : false,
+                    creditSwitch : false,
+                    diceGameTimeout : 24*60*60*1000
+                },
+                currIntegralAccount : 0, //当前账户积分
+
+                coupons : [] //优惠券数据
             }
         },
         beforeRouteEnter : function(to,from,next){
@@ -80,6 +86,7 @@
                             talker.isAppointment = res.appointment != "N";
                             talker.isPhoneAppointment = res.phoneAppointment != "N";
                             talker.telephone = (res.telephone ? res.telephone.split(",") : []);
+                            vm.init();
                         });
                     }
                     else{
@@ -92,52 +99,62 @@
                 next(false);
             }
             else{
-                next();
+                next(function(vm){ vm.init() });
             }
         },
         created : function(){
-            var   _this = this, global = _this.global, params = global.currPage.query, talker = _this.talker;
-            _this.clubId = params.clubId || global.clubId;
-            _this.msgWrapHeight = global.winHeight-8.858*global.winScale*16;
-
+            var _this = this;
             if(!_this.im.id){
                 Util.tipShow("请您先登录！");
                 Global.loginParams("chat");
-                return _this.$router.push({ name : "login" });
+                _this.$router.push({ name : "login" });
             }
-
-            //////获取积分系统开关
-            Global.getClubSwitches(talker.clubId,function(res){
-                _this.creditConfig = res;
-                if(res.creditSwitch){
-                    _this.$http.get("../api/v2/credit/gift/list").then(function(giftRes){
-                        giftRes = giftRes.body.respData;
-                        if(giftRes){
-                            var list = {};
-                            for(var i=0;i<giftRes.length;i++){
-                                list[giftRes[i]["id"]] = { url : giftRes[i]["gifUrl"] };
-                            }
-                            _this.giftMapData = list;
-                            _this.gifts = giftRes;
-                            //addRecentlyMsg
-                        }
-                    });
-                    eventHub.$emit("update-credit-account");
-                }
-                else{
-                    //addRecentlyMsg
-                }
-            });
-        },
-        mounted : function(){
-          var _this = this;
-            /*for(var i=0;i<10;i++){
-                _this.list.push(i);
-            }
-            console.dir(_this.list);*/
-            window["webIM"] = WebIM;
         },
         methods: {
+            init : function(){
+                var   _this = this, global = _this.global, params = global.currPage.query, talker = _this.talker;
+                _this.clubId = params.clubId || global.clubId;
+                _this.msgWrapHeight = global.winHeight-8.858*global.winScale*16;
+
+                //////获取积分系统开关
+                Global.getClubSwitches(talker.clubId,function(res){
+                    _this.creditConfig = res;
+
+                    if(res.creditSwitch){
+                        _this.$http.get("../api/v2/credit/gift/list").then(function(giftRes){
+                            giftRes = giftRes.body.respData;
+                            if(giftRes){
+                                var list = {};
+                                for(var i=0;i<giftRes.length;i++){
+                                    list[giftRes[i]["id"]] = { url : giftRes[i]["gifUrl"] };
+                                }
+                                _this.giftMapData = list;
+                                _this.gifts = giftRes;
+                                //addRecentlyMsg
+                            }
+                        });
+                        _this.updateCreditAccount();//获取当前账户积分
+                    }
+                    else{
+                        //addRecentlyMsg
+                    }
+                });
+
+                /////获取优惠券数据
+                if(talker.userType == "tech"){
+                    _this.$http.get("../api/v1/profile/redpack/list",{ params : { clubId : talker.clubId }}).then(function(couponRes){
+                        couponRes = couponRes.body;
+                        if(couponRes.statusCode == 200){
+                            var couponData= couponRes.respData.coupons || [];
+                            if(couponData.length>0){
+                                var lastObj = couponData[couponData.length-1];
+                                if(lastObj.actTitle.length>7) lastObj.actTitle = lastObj.actTitle.substr(0,7)+"...";
+                            }
+                            _this.coupons = couponData;
+                        }
+                    });
+                }
+            },
             doClickPageBack : function(){
                 history.back();
             },
@@ -174,6 +191,12 @@
                     location.href = location.origin+location.pathname+"#/"+_this.talker.clubId+"/home";
                     location.reload(true);
                 }
+            },
+            updateCreditAccount : function(){ //更新当前账户积分
+                var _this = this, talker = _this.talker;
+                Global.getCreditAccount(talker.clubId,function(res){
+                    _this.currIntegralAccount = (res[0] ? res[0].amount : 0);
+                });
             }
         }
     }

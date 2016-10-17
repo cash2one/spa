@@ -3,6 +3,7 @@
 * */
 
 module.exports = function(timeStr, tag) {
+    if(!timeStr) timeStr = new Date();
     //如果是今天，显示 hh:mm 昨天、前天特殊处理，其他显示MM-DD
     var time = (timeStr instanceof Date ? timeStr : new Date(timeStr)),
         month = time.getMonth(), day = time.getDate(),

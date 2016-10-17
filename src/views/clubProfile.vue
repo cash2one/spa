@@ -33,7 +33,7 @@
         },
         data: function(){
             return {
-                getClubProfileDataUrl : "../api/v2/club/"+Global.data.clubId+"/item",
+                getClubProfileDataUrl : "../api/v2/club/{clubId}/item",
                 global : Global.data,
                 profileData : [],
                 currPage : 0,
@@ -44,7 +44,7 @@
         created: function(){
             var _this = this, global = _this.global;
             global.loading = true;
-            _this.$http.get(_this.getClubProfileDataUrl).then(function(res){
+            _this.$http.get(_this.getClubProfileDataUrl,{ params : { clubId : global.clubId }}).then(function(res){
                 res = res.body;
                 global.loading = false;
                 if(res){

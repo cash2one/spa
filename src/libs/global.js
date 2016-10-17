@@ -197,7 +197,7 @@ exports.Global = {
 
                 cfg.accountSwitch = (res.account.switch == "on");
                 cfg.creditSwitch = (res.credit.systemSwitch == "on" && res.credit.clubSwitch == "on");
-                cfg.diceGameSwitch = (cfg.creditSwitch == "on" && res.credit.diceGameSwitch == "on");
+                cfg.diceGameSwitch = (cfg.creditSwitch && res.credit.diceGameSwitch == "on");
                 if(cfg.diceGameSwitch) cfg.diceGameTimeout = res.credit.gameTimeoutSeconds * 1000;
 
                 cfg.paidCouponSwitch = (res.paidCoupon.couponSwitch == "on");
