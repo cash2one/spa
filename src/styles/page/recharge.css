@@ -46,9 +46,6 @@ div#recharge-page {
             right: 0;
             top: 50%;
             transform: translate(0, -50%);
-            /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
             -webkit-background-size: 1.056rem 1.056rem;
             -moz-background-size: 1.056rem 1.056rem;
             -o-background-size: 1.056rem 1.056rem;

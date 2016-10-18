@@ -121,6 +121,7 @@ exports.Global = {
                     IM.password = IM.id;
                     IM.userId = data.userId;
                     IM.header = data.userHeader;
+                    IM.avatar = data.userAvatar;
                     IM.name = (data.userName == data.defaultName && data.userTel) ? data.defaultName + "(" + data.userTel.substr(0, 3) + "****" + data.userTel.slice(-4) + ")" : data.userName;
                     IM.createConn();///创建环信连接
 

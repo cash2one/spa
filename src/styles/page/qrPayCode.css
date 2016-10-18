@@ -29,9 +29,6 @@ div#qrpay-code-page {
           padding-left: 1.111rem;
           font-size: .778rem;
           color: #616161;
-          /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
           -webkit-background-size: 0.667rem 0.667rem;
           -moz-background-size: 0.667rem 0.667rem;
           -o-background-size: 0.667rem 0.667rem;

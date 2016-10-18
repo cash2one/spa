@@ -12,9 +12,6 @@ div#promotions-activity-page div.act-detail {
       right: -15.667rem;
       width: 2.222rem;
       height: 3rem;
-      /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
       -webkit-background-size: 2.222rem 3rem;
       -moz-background-size: 2.222rem 3rem;
       -o-background-size: 2.222rem 3rem;
@@ -38,9 +35,6 @@ div#promotions-activity-page div.act-detail {
         height: 1.056rem;
         left: 0;
         top: 0.55rem;
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 1.056rem 1.056rem;
         -moz-background-size: 1.056rem 1.056rem;
         -o-background-size: 1.056rem 1.056rem;
@@ -137,9 +131,6 @@ div#promotions-activity-page div.other-act a {
       height: 1.056rem;
       left: 0.667rem;
       top: 0;
-      /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
       -webkit-background-size: 1.056rem 1.056rem;
       -moz-background-size: 1.056rem 1.056rem;
       -o-background-size: 1.056rem 1.056rem;

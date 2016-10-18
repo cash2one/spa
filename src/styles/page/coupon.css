@@ -29,9 +29,6 @@ div#coupon-page {
       div#coupon-page div.list-item a.item > i {
         display: block;
         height: 0.5278rem;
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 0.333rem 0.5278rem;
         -moz-background-size: 0.333rem 0.5278rem;
         -o-background-size: 0.333rem 0.5278rem;
@@ -94,9 +91,6 @@ div#coupon-page {
         div#coupon-page div.list-item a.item > span.expire {
           display: inline; }
     div#coupon-page div.list-item div.expire > i {
-      /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
       -webkit-background-size: 0.333rem 0.5278rem;
       -moz-background-size: 0.333rem 0.5278rem;
       -o-background-size: 0.333rem 0.5278rem;

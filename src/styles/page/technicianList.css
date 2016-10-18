@@ -13,9 +13,6 @@ div#technician-list-page div.page-title > a.search {
     display: block;
     width: 100%;
     height: 100%;
-    /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
     -webkit-background-size: 1.167rem 1.167rem;
     -moz-background-size: 1.167rem 1.167rem;
     -o-background-size: 1.167rem 1.167rem;
@@ -179,9 +176,6 @@ div#technician-list-page div.menu {
       margin-right: 0.278rem;
       width: 0.8rem;
       height: 0.8rem;
-      /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
       -webkit-background-size: 0.8rem 0.8rem;
       -moz-background-size: 0.8rem 0.8rem;
       -o-background-size: 0.8rem 0.8rem;

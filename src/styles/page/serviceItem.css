@@ -45,9 +45,6 @@ div#service-item-page div.service-item-top {
       div#service-item-page div.service-item-top > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1) {
         width: 0.9167rem;
         height: 0.8889rem;
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 0.9167rem 0.8889rem;
         -moz-background-size: 0.9167rem 0.8889rem;
         -o-background-size: 0.9167rem 0.8889rem;
@@ -61,9 +58,6 @@ div#service-item-page div.service-item-top {
         font-size: 0.778rem;
         line-height: 1.167rem;
         padding: 0 0.7rem 0 0.4rem;
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 100% 1.167rem;
         -moz-background-size: 100% 1.167rem;
         -o-background-size: 100% 1.167rem;
@@ -99,9 +93,6 @@ div#service-item-page div.service-item-desc {
       top: 50%;
       margin-top: -0.4855rem;
       left: 0;
-      /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
       -webkit-background-size: 0.971rem 0.971rem;
       -moz-background-size: 0.971rem 0.971rem;
       -o-background-size: 0.971rem 0.971rem;

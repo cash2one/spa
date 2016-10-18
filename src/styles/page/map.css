@@ -4,9 +4,6 @@ div#map-page {
   div#map-page div.gd_marker {
     width: 30px;
     height: 40px;
-    /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
     -webkit-background-size: 30px 40px;
     -moz-background-size: 30px 40px;
     -o-background-size: 30px 40px;
@@ -49,9 +46,6 @@ div#map-page {
         top: 50%;
         margin-top: -0.385rem;
         left: 0.28rem;
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 0.88rem 0.77rem;
         -moz-background-size: 0.88rem 0.77rem;
         -o-background-size: 0.88rem 0.77rem;

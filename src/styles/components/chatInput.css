@@ -62,9 +62,6 @@ div.chat-input-wrap {
         top: 45%;
         margin-top: -0.486rem;
         left: 0.35rem;
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 1.056rem 0.972rem;
         -moz-background-size: 1.056rem 0.972rem;
         -o-background-size: 1.056rem 0.972rem;
@@ -230,33 +227,33 @@ div.chat-input-wrap {
   div.chat-input-wrap div.exp-wrap-0 > div:nth-of-type(14) > div {
     background-image: url("../../images/chat/expression/14.png"); }
   div.chat-input-wrap div.exp-wrap-1 > div:nth-of-type(1) > div {
-    background-image: url("../../images/chat/expression/201.png"); }
+    background-image: url("../../images/chat/expression/15.png"); }
   div.chat-input-wrap div.exp-wrap-1 > div:nth-of-type(2) > div {
-    background-image: url("../../images/chat/expression/202.png"); }
+    background-image: url("../../images/chat/expression/16.png"); }
   div.chat-input-wrap div.exp-wrap-1 > div:nth-of-type(3) > div {
-    background-image: url("../../images/chat/expression/203.png"); }
+    background-image: url("../../images/chat/expression/17.png"); }
   div.chat-input-wrap div.exp-wrap-1 > div:nth-of-type(4) > div {
-    background-image: url("../../images/chat/expression/204.png"); }
+    background-image: url("../../images/chat/expression/18.png"); }
   div.chat-input-wrap div.exp-wrap-1 > div:nth-of-type(5) > div {
-    background-image: url("../../images/chat/expression/205.png"); }
+    background-image: url("../../images/chat/expression/19.png"); }
   div.chat-input-wrap div.exp-wrap-1 > div:nth-of-type(6) > div {
-    background-image: url("../../images/chat/expression/206.png"); }
+    background-image: url("../../images/chat/expression/20.png"); }
   div.chat-input-wrap div.exp-wrap-1 > div:nth-of-type(7) > div {
-    background-image: url("../../images/chat/expression/207.png"); }
+    background-image: url("../../images/chat/expression/21.png"); }
   div.chat-input-wrap div.exp-wrap-1 > div:nth-of-type(8) > div {
-    background-image: url("../../images/chat/expression/208.png"); }
+    background-image: url("../../images/chat/expression/22.png"); }
   div.chat-input-wrap div.exp-wrap-1 > div:nth-of-type(9) > div {
-    background-image: url("../../images/chat/expression/209.png"); }
+    background-image: url("../../images/chat/expression/23.png"); }
   div.chat-input-wrap div.exp-wrap-1 > div:nth-of-type(10) > div {
-    background-image: url("../../images/chat/expression/210.png"); }
+    background-image: url("../../images/chat/expression/24.png"); }
   div.chat-input-wrap div.exp-wrap-1 > div:nth-of-type(11) > div {
-    background-image: url("../../images/chat/expression/211.png"); }
+    background-image: url("../../images/chat/expression/25.png"); }
   div.chat-input-wrap div.exp-wrap-1 > div:nth-of-type(12) > div {
-    background-image: url("../../images/chat/expression/212.png"); }
+    background-image: url("../../images/chat/expression/26.png"); }
   div.chat-input-wrap div.exp-wrap-1 > div:nth-of-type(13) > div {
-    background-image: url("../../images/chat/expression/213.png"); }
+    background-image: url("../../images/chat/expression/27.png"); }
   div.chat-input-wrap div.exp-wrap-1 > div:nth-of-type(14) > div {
-    background-image: url("../../images/chat/expression/214.png"); }
+    background-image: url("../../images/chat/expression/28.png"); }
   div.chat-input-wrap div.swipe-indicators {
     bottom: -4px; }
   div.chat-input-wrap div.swipe-indicator {
@@ -309,9 +306,6 @@ div.chat-input-wrap {
         height: 0.556rem;
         right: 0.667rem;
         top: 0;
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 0.556rem 0.556rem;
         -moz-background-size: 0.556rem 0.556rem;
         -o-background-size: 0.556rem 0.556rem;

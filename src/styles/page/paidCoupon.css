@@ -101,9 +101,6 @@ div.paid-coupon-page {
         line-height: 1.5rem;
         right: 0.667rem;
         top: 1.056rem;
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 5.056rem 1.5rem;
         -moz-background-size: 5.056rem 1.5rem;
         -o-background-size: 5.056rem 1.5rem;
@@ -139,9 +136,6 @@ div.paid-coupon-page {
         margin-top: -0.4445rem;
         width: 0.778rem;
         height: 0.889rem;
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 0.778rem 0.889rem;
         -moz-background-size: 0.778rem 0.889rem;
         -o-background-size: 0.778rem 0.889rem;

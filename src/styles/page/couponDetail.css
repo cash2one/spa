@@ -128,9 +128,6 @@ div.share-coupons-pop > div:nth-of-type(1) {
   right: 0.611rem;
   padding-left: 0.42rem;
   padding-right: 0.42rem;
-  /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
   -webkit-background-size: 9.222rem 5rem;
   -moz-background-size: 9.222rem 5rem;
   -o-background-size: 9.222rem 5rem;

@@ -148,9 +148,7 @@ router.beforeEach(function (to,from,next) {
 });
 
 router.afterEach(function (to) {
-    if(to.name != "chat"){
-        IM.talker.id = "";///置空talker id
-    }
+
 });
 
 new Vue({ router, render : h => h(App) }).$mount("#app");

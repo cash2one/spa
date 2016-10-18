@@ -19,9 +19,6 @@ div#integral-detail-page {
         width: 0.778rem;
         height: 0.778rem;
         margin-right: 0.2rem;
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 0.778rem 0.778rem;
         -moz-background-size: 0.778rem 0.778rem;
         -o-background-size: 0.778rem 0.778rem;

@@ -24,9 +24,6 @@ div#service-list-page div.category {
     div#service-list-page div.category > div.fp {
       border-bottom-color: #f17186; }
       div#service-list-page div.category > div.fp > div:nth-of-type(1) {
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 1.639rem 1.556rem;
         -moz-background-size: 1.639rem 1.556rem;
         -o-background-size: 1.639rem 1.556rem;
@@ -38,9 +35,6 @@ div#service-list-page div.category {
     div#service-list-page div.category > div.mp {
       border-bottom-color: #ff6902; }
       div#service-list-page div.category > div.mp > div:nth-of-type(1) {
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 1.639rem 1.556rem;
         -moz-background-size: 1.639rem 1.556rem;
         -o-background-size: 1.639rem 1.556rem;
@@ -52,9 +46,6 @@ div#service-list-page div.category {
     div#service-list-page div.category > div.sp {
       border-bottom-color: #8ebe5f; }
       div#service-list-page div.category > div.sp > div:nth-of-type(1) {
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 1.639rem 1.556rem;
         -moz-background-size: 1.639rem 1.556rem;
         -o-background-size: 1.639rem 1.556rem;
@@ -66,9 +57,6 @@ div#service-list-page div.category {
     div#service-list-page div.category > div.tm {
       border-bottom-color: #bc6b08; }
       div#service-list-page div.category > div.tm > div:nth-of-type(1) {
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 1.639rem 1.556rem;
         -moz-background-size: 1.639rem 1.556rem;
         -o-background-size: 1.639rem 1.556rem;
@@ -80,9 +68,6 @@ div#service-list-page div.category {
     div#service-list-page div.category > div.op {
       border-bottom-color: #fe5858; }
       div#service-list-page div.category > div.op > div:nth-of-type(1) {
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 1.639rem 1.556rem;
         -moz-background-size: 1.639rem 1.556rem;
         -o-background-size: 1.639rem 1.556rem;
@@ -94,9 +79,6 @@ div#service-list-page div.category {
     div#service-list-page div.category > div.lp {
       border-bottom-color: #c0ac4f; }
       div#service-list-page div.category > div.lp > div:nth-of-type(1) {
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 1.639rem 1.556rem;
         -moz-background-size: 1.639rem 1.556rem;
         -o-background-size: 1.639rem 1.556rem;

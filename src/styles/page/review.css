@@ -140,9 +140,6 @@ div#review-list-page div.comment-item {
       width: 6.665rem;
       height: 1.111rem;
       float: left;
-      /*-webkit-background:url($url) 0 0/ $size repeat;
-  -moz-background:url($url) 0 0/ $size repeat;
-  -o-background:url($url) 0 0/ $size repeat;*/
       -webkit-background-size: 1.333rem 1.111rem;
       -moz-background-size: 1.333rem 1.111rem;
       -o-background-size: 1.333rem 1.111rem;
@@ -152,9 +149,6 @@ div#review-list-page div.comment-item {
       div#review-list-page div.comment-item > div:nth-of-type(2) > div:nth-of-type(1) > div {
         width: 0;
         height: 100%;
-        /*-webkit-background:url($url) 0 0/ $size repeat;
-  -moz-background:url($url) 0 0/ $size repeat;
-  -o-background:url($url) 0 0/ $size repeat;*/
         -webkit-background-size: 1.333rem 1.111rem;
         -moz-background-size: 1.333rem 1.111rem;
         -o-background-size: 1.333rem 1.111rem;
@@ -173,9 +167,6 @@ div#review-list-page div.comment-item {
         height: 0.944rem;
         margin-right: 0.2rem;
         float: left;
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 0.944rem 0.944rem;
         -moz-background-size: 0.944rem 0.944rem;
         -o-background-size: 0.944rem 0.944rem;

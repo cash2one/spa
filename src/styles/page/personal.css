@@ -2,9 +2,6 @@ div#personal-page {
   overflow-y: auto; }
   div#personal-page div.top {
     height: 4.722rem;
-    /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
     -webkit-background-size: 20rem 4.722rem;
     -moz-background-size: 20rem 4.722rem;
     -o-background-size: 20rem 4.722rem;
@@ -60,9 +57,6 @@ div#personal-page {
       height: 1.167rem;
       margin-top: 1.7775rem;
       margin-left: 0.8rem;
-      /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
       -webkit-background-size: 1.222rem 1.167rem;
       -moz-background-size: 1.222rem 1.167rem;
       -o-background-size: 1.222rem 1.167rem;

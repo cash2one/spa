@@ -7,9 +7,6 @@ div#tech-reward-page div.top-tip {
     margin-left: 3.194rem;
     width: 13.472rem;
     height: 5.056rem;
-    /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
     -webkit-background-size: 13.472rem 5.056rem;
     -moz-background-size: 13.472rem 5.056rem;
     -o-background-size: 13.472rem 5.056rem;

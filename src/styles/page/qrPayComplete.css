@@ -15,9 +15,6 @@ div#qrpay-complete-page div.success-info {
           display: inline-block;
           width: 1.556rem;
           height: 1.556rem;
-          /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
           -webkit-background-size: cover;
           -moz-background-size: cover;
           -o-background-size: cover;

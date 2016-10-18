@@ -23,9 +23,6 @@ div#account-detail-page a.qrcode-item > div {
   right: 0.833rem;
   top: 50%;
   margin-top: -0.4445rem;
-  /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
   -webkit-background-size: 0.889rem 0.889rem;
   -moz-background-size: 0.889rem 0.889rem;
   -o-background-size: 0.889rem 0.889rem;

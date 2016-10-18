@@ -135,9 +135,6 @@ div#technician-detail-page {
   div#technician-detail-page div.top {
     height: 8rem;
     position: relative;
-    /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
     -webkit-background-size: 20rem 100%;
     -moz-background-size: 20rem 100%;
     -o-background-size: 20rem 100%;
@@ -231,9 +228,6 @@ div#technician-detail-page {
         height: 1.416rem;
         background-position: center;
         float: left;
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 0.916rem 0.916rem;
         -moz-background-size: 0.916rem 0.916rem;
         -o-background-size: 0.916rem 0.916rem;
@@ -264,9 +258,6 @@ div#technician-detail-page {
           -o-animation: colledAni 3s;
           animation: colledAni 3s; }
       div#technician-detail-page div.top div.favorite.collected > div:nth-of-type(1) {
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 0.916rem 0.916rem;
         -moz-background-size: 0.916rem 0.916rem;
         -o-background-size: 0.916rem 0.916rem;
@@ -396,9 +387,6 @@ div#technician-detail-page {
         top: 50%;
         margin-top: -.4722rem;
         left: .611rem;
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 0.9444rem 0.9444rem;
         -moz-background-size: 0.9444rem 0.9444rem;
         -o-background-size: 0.9444rem 0.9444rem;
@@ -507,9 +495,6 @@ div.tech-detail-footer-wrap {
     div.tech-detail-footer-wrap > a:nth-of-type(1) > i {
       width: 1rem;
       height: 1rem;
-      /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
       -webkit-background-size: 100%;
       -moz-background-size: 100%;
       -o-background-size: 100%;
@@ -521,9 +506,6 @@ div.tech-detail-footer-wrap {
       div.tech-detail-footer-wrap > a:nth-of-type(2) > i {
         width: 1rem;
         height: 1.083rem;
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 100%;
         -moz-background-size: 100%;
         -o-background-size: 100%;
@@ -537,9 +519,6 @@ div.tech-detail-footer-wrap {
         width: 1.138rem;
         height: 1rem;
         transform: translate(-54%, 0);
-        /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
         -webkit-background-size: 100%;
         -moz-background-size: 100%;
         -o-background-size: 100%;
@@ -576,9 +555,6 @@ div.club-coupon {
     width: 3.139rem;
     height: 3.806rem;
     transform-origin: center 65%;
-    /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
     -webkit-background-size: 3.139rem 3.806rem;
     -moz-background-size: 3.139rem 3.806rem;
     -o-background-size: 3.139rem 3.806rem;

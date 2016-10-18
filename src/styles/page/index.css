@@ -96,9 +96,6 @@ div.stars {
   display: -moz-box;
   -webkit-box-align: center;
   -moz-box-align: center;
-  /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
   -webkit-background-size: 4.111rem 0.694rem;
   -moz-background-size: 4.111rem 0.694rem;
   -o-background-size: 4.111rem 0.694rem;
@@ -108,9 +105,6 @@ div.stars {
   div.stars > div {
     width: 0;
     height: 100%;
-    /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
     -webkit-background-size: 4.111rem 0.694rem;
     -moz-background-size: 4.111rem 0.694rem;
     -o-background-size: 4.111rem 0.694rem;
@@ -166,9 +160,6 @@ div.data-load-tip i {
   display: block;
   width: 0.778rem;
   height: 0.778rem;
-  /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
   -webkit-background-size: 0.778rem 0.778rem;
   -moz-background-size: 0.778rem 0.778rem;
   -o-background-size: 0.778rem 0.778rem;
@@ -510,9 +501,6 @@ div.nullData {
     margin: 0 auto;
     width: 7.028rem;
     height: 6.861rem;
-    /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
     -webkit-background-size: 7.028rem 6.861rem;
     -moz-background-size: 7.028rem 6.861rem;
     -o-background-size: 7.028rem 6.861rem;

@@ -14,7 +14,7 @@
             </div>
             <div class="submit-button" :class="submitStatusCls" @click="doClickSubmitBtn()">{{ submitBtnText }}</div>
         </div>
-        <credit-tip :gift-value="currSelectGiftValue"></credit-tip>
+        <credit-tip></credit-tip>
     </div>
 </template>
 <script>
@@ -147,7 +147,7 @@
                     var selectGift = _this.selectVal;
                     _this.currSelectGiftValue = selectGift.ratio;
                     if(_this.currSelectGiftValue>_this.currIntegralAccount){
-                        eventHub.$emit("change-credit-tip",true);
+                        eventHub.$emit("set-credit-tip",{ amount : _this.currSelectGiftValue, show : true });
                     }
                     else{
                         _this.submitStatusCls = "processing";

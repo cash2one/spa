@@ -3,7 +3,7 @@
 </style>
 <template>
   <div class="mint-loadmore">
-    <div class="mint-loadmore-content" :class="{ 'is-dropped': topDropped || bottomDropped}" :style="{ 'transform': 'translate3d(0, ' + translate + 'px, 0)' }" ref="loadmoreContent">
+    <div class="mint-loadmore-content" :class="{ 'is-dropped': topDropped}" :style="{ 'transform': 'translate3d(0, ' + translate + 'px, 0)' }" ref="loadmoreContent">
       <slot name="top">
         <div class="mint-loadmore-top">
          <!-- <spinner v-if="topStatus === 'loading'" class="mint-loadmore-spinner" :size="20" type="fading-circle"></spinner>-->
@@ -11,12 +11,6 @@
         </div>
       </slot>
       <slot></slot>
-      <slot name="bottom">
-        <div class="mint-loadmore-bottom">
-          <!--<spinner v-if="bottomStatus === 'loading'" class="mint-loadmore-spinner" :size="20" type="fading-circle"></spinner>-->
-          <span class="mint-loadmore-text">{{ bottomText }}</span>
-        </div>
-      </slot>
     </div>
   </div>
 </template>
@@ -48,29 +42,6 @@
       },
       topMethod: {
         type: Function
-      },
-      bottomPullText: {
-        type: String,
-        default: '上拉刷新'
-      },
-      bottomDropText: {
-        type: String,
-        default: '释放更新'
-      },
-      bottomLoadingText: {
-        type: String,
-        default: '加载中...'
-      },
-      bottomDistance: {
-        type: Number,
-        default: 70
-      },
-      bottomMethod: {
-        type: Function
-      },
-      bottomAllLoaded: {
-        type: Boolean,
-        default: false
       }
     },
 
@@ -82,16 +53,11 @@
         containerFilled: false,
         topText: '',
         topDropped: false,
-        bottomText: '',
-        bottomDropped: false,
-        bottomReached: false,
         direction: '',
         startY: 0,
         startScrollTop: 0,
         currentY: 0,
-
-        topStatus : "",
-        bottomStatus : ""
+        topStatus : ""
       };
     },
 
@@ -106,20 +72,6 @@
             break;
           case 'loading':
             this.topText = this.topLoadingText;
-            break;
-        }
-      },
-
-      bottomStatus(val) {
-        switch (val) {
-          case 'pull':
-            this.bottomText = this.bottomPullText;
-            break;
-          case 'drop':
-            this.bottomText = this.bottomDropText;
-            break;
-          case 'loading':
-            this.bottomText = this.bottomLoadingText;
             break;
         }
       }
@@ -154,13 +106,8 @@
 
       beforeCreate() {
         this.topStatus = 'pull';
-        this.bottomStatus = 'pull';
         this.topText = this.topPullText;
         this.scrollEventTarget = this.getScrollEventTarget(this.$el);
-        if (typeof this.bottomMethod === 'function') {
-          this.fillContainer();
-          this.bindTouchEvents();
-        }
         if (typeof this.topMethod === 'function') {
           this.bindTouchEvents();
         }
@@ -175,8 +122,6 @@
               this.containerFilled = this.$el.getBoundingClientRect().bottom >= this.scrollEventTarget.getBoundingClientRect().bottom;
             }
             if (!this.containerFilled) {
-              this.bottomStatus = 'loading';
-              this.bottomMethod(this.uuid);
             }
           });
         }
@@ -193,14 +138,9 @@
       handleTouchStart(event) {
         this.startY = event.touches[0].clientY;
         this.startScrollTop = this.getScrollTop(this.scrollEventTarget);
-        this.bottomReached = false;
         if (this.topStatus !== 'loading') {
           this.topStatus = 'pull';
           this.topDropped = false;
-        }
-        if (this.bottomStatus !== 'loading') {
-          this.bottomStatus = 'pull';
-          this.bottomDropped = false;
         }
       },
 
@@ -220,19 +160,6 @@
           }
           this.topStatus = this.translate >= this.topDistance ? 'drop' : 'pull';
         }
-
-        if (this.direction === 'up') {
-          this.bottomReached = this.bottomReached || this.checkBottomReached();
-        }
-        if (typeof this.bottomMethod === 'function' && this.direction === 'up' && this.bottomReached && this.bottomStatus !== 'loading' && !this.bottomAllLoaded) {
-          event.preventDefault();
-          event.stopPropagation();
-          this.translate = this.getScrollTop(this.scrollEventTarget) - this.startScrollTop + distance;
-          if (this.translate > 0) {
-            this.translate = 0;
-          }
-          this.bottomStatus = -this.translate >= this.bottomDistance ? 'drop' : 'pull';
-        }
       },
 
       handleTouchEnd() {
@@ -247,18 +174,6 @@
             this.topStatus = 'pull';
           }
         }
-        if (this.direction === 'up' && this.bottomReached && this.translate < 0) {
-          this.bottomDropped = true;
-          this.bottomReached = false;
-          if (this.bottomStatus === 'drop') {
-            this.translate = '-50';
-            this.bottomStatus = 'loading';
-            this.bottomMethod(this.uuid);
-          } else {
-            this.translate = '0';
-            this.bottomStatus = 'pull';
-          }
-        }
         this.direction = '';
       },
 
@@ -268,24 +183,6 @@
           setTimeout(() => {
             this.topStatus = 'pull';
         }, 200);
-        }
-      },
-
-      handlerBottomLoaded(id){
-        this.bottomStatus = 'pull';
-        this.bottomDropped = false;
-        if (id === this.uuid) {
-          this.$nextTick(() => {
-            if (this.scrollEventTarget === window) {
-            document.body.scrollTop += 50;
-          } else {
-            this.scrollEventTarget.scrollTop += 50;
-          }
-          this.translate = 0;
-        });
-        }
-        if (!this.bottomAllLoaded && !this.containerFilled) {
-          this.fillContainer();
         }
       }
     },
@@ -300,12 +197,10 @@
 
     created() {
       eventHub.$on("onTopLoaded",this.handlerTopLoaded);
-      eventHub.$on("onBottomLoaded",this.handlerBottomLoaded);
     },
 
     beforeDestroy() {
       eventHub.$off("onTopLoaded",this.handlerTopLoaded);
-      eventHub.$off("onBottomLoaded",this.handlerBottomLoaded);
     }
   };
 </script>

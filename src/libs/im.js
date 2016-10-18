@@ -16,6 +16,7 @@ exports.IM = {
     userId : "", //用户id--在小摩豆系统中
     header : null, //用户头像
     name : "", //聊天时的用户名称
+    avatar : "",//用户头像ID
     conn : null, //与环信的连接
 
     secondId : "", //第二个账户
@@ -25,7 +26,6 @@ exports.IM = {
 
     sessionList : null, //会话列表
     messageList : {}, //从本地缓存中读取的消息列表暂存于此
-    expElList : null, //表情列表--dom元素
 
     talker : { //当前聊天对方信息
         name : "",//对方名称
@@ -41,7 +41,7 @@ exports.IM = {
         isAppointment : true,//是否可预约
         isPhoneAppointment : false,//是否可以电话预约
         telephone : [], //预约电话
-        messageList : {} //当前聊天页面的消息列表
+        messageList : [] //当前聊天页面的消息列表
     },
 
     expression : {
@@ -127,7 +127,7 @@ exports.IM = {
                     list.splice(0,30);
                     Util.localStorage(_this.userId + '_MsgList_' + talkerId, JSON.stringify(messageList[talkerId]));//存储
                 }
-                if (_this.sessionList[talkerId]) {//以sessionList的header为准
+                if (_this.sessionList && _this.sessionList[talkerId]) {//以sessionList的header为准
                     messageList[talkerId].header = _this.sessionList[talkerId].header;
                 }
             }
@@ -294,15 +294,15 @@ exports.IM = {
     },
 
     //保存好友关系
-    makeFriend : function(toChatId, msgType, toType, fromChatId, fromType){
-        if (!toChatId) return;
+    makeFriend : function(option){
+        if (!option.toChatId) return;
         var _this = this;
         Vue.http.post("../api/v1/emchat/markchattouser",{
-            currentChatId : fromChatId || _this.id,
-            currentUserType : fromType || 'user',
-            friendChatId : toChatId,
-            friendUserType : toType || 'tech',
-            msgType : msgType || "text"
+            currentChatId : option.fromChatId || _this.id,
+            currentUserType : option.fromType || 'user',
+            friendChatId : option.toChatId,
+            friendUserType : option.toType || 'tech',
+            msgType : option.msgType || "text"
         });
     },
 
@@ -457,26 +457,117 @@ exports.IM = {
         }
     },
 
-    //发送文本消息
-    sendTextMessage : function(option){
+    //发送文本消息 talkerType--tech或者manager
+    sendTextMessage : function(option,talker,callback){
         var _this = this,
             msgId = _this.conn.getUniqueId(),
-            msg = new WebIM.message('txt',msgId);//创建文本消息
+            msg = new WebIM.message('txt',msgId),
+            storeMsg = Object.assign({
+                from : _this.id, data : option.msg, status : 0
+            },option),
+            storeMsgExt = storeMsg.ext;
+
+        storeMsgExt.name = talker.name;
+        storeMsgExt.header = talker.header;
+        storeMsgExt.avatar = talker.avatar;
+        storeMsgExt.no = talker.userNo;
+        storeMsgExt.techId = talker.userType=="tech" ? talker.userId : "";
+        storeMsgExt.clubId = talker.clubId;
+
+        console.log("1-storeMsg：");
+        console.dir(storeMsg);
+
+        var sendFailTimer = setTimeout(function(){
+            storeMsg.status = 0;
+            _this.updateSessionList(storeMsg, "text", false);
+            _this.storeMessage(storeMsg,"text");
+        },10000);
 
         Object.assign(option,{
             type : "chat",
             ext : {
                 name : _this.name,
                 header : _this.header,
+                avatar : _this.avatar,
                 time : (+new Date())
             },
             success : function(id,serviceId){
                 console.log("消息："+id+"发送成功！serviceId："+serviceId);
+                clearTimeout(sendFailTimer);
+                storeMsg.status = 1;
+                _this.updateSessionList(storeMsg, "text", false);
+                _this.storeMessage(storeMsg,"text");
+                _this.makeFriend({ toChatId : option.to, toType : talker.userType });
+                if(callback) callback();
             }
         });
 
         msg.set(option);
         _this.conn.send(msg.body);
+
+        ////如果此消息正是发给当前的聊天者，则需要在聊天页面上显示出来
+        if(_this.talker.id == option.to){
+            _this.talker.messageList.push(storeMsg);
+        }
+    },
+
+    ///发送图片
+    sendPicMessage : function(fileObj,imgFile,talker){
+        var _this = this,
+            img = new Image();
+        img.src = window.URL.createObjectURL(imgFile);
+        img.onload = function(){
+            var rawWidth = this.width, rawHeight = this.height;
+            var storeMsg = {
+                from : _this.id,
+                to : talker.id,
+                url : img.src,
+                type : "pic",
+                width : rawWidth,
+                height : rawHeight,
+                status : 0,
+                ext : {
+                    name : talker.name,
+                    header : talker.header,
+                    avatar : talker.avatar,
+                    no : talker.userNo,
+                    techId : talker.userType == "tech" ? talker.userId : "",
+                    clubId : talker.clubId
+                }
+            };
+            _this.conn.send({
+                apiUrl : _this.apiUrl,
+                file : fileObj,
+                to : talker.id,
+                type : 'img',
+                width : rawWidth,
+                height : rawHeight,
+                file_length : imgFile.size,
+                onFileUploadComplete: function (data) {
+                    Util.tipShow("图片发送成功！");
+                    console.dir(data);
+                    _this.makeFriend({ toChatId : talker.id, toType : talker.userType, msgType : "image" });
+                    storeMsg.url = data.uri + "/" + data.entities[0].uuid;
+                    _this.updateSessionList(storeMsg, "pic", false);
+                    _this.storeMessage(storeMsg,"pic");
+                    window.URL.revokeObjectURL(img.src);
+                },
+                onFileUploadError: function (error) {
+                    Util.tipShow("图片发送失败，请稍后重试！" + JSON.stringify(error));
+                },
+                ext : {
+                    name : _this.name,
+                    header : _this.header,
+                    avatar : _this.avatar,
+                    time : (+new Date())
+                }
+            });
+
+            ////如果此消息正是发给当前的聊天者，则需要在聊天页面上显示出来
+            if(_this.talker.id == talker.id){
+                _this.talker.messageList.push(storeMsg);
+            }
+        }
     },
 
     //删除与某人的会话记录和聊天记录
@@ -494,6 +585,7 @@ exports.IM = {
 
     ///解析文本消息，将里面的表情编码换成图片img标签
     decodeExpressionToImg : function(msg){//expElList 表情dom元素列表
+        console.log("decodeExpressionToImg msg："+msg);
         var _this = this, item, k;
         if(!_this.expressionIndexObj){
             _this.expressionIndexObj = {};
@@ -505,9 +597,7 @@ exports.IM = {
         return msg.replace(_this.decodeExpressionReg, function () {
             k = _this.expressionIndexObj[arguments[0]];
             if(k){
-                var str = window.getComputedStyle(_this.expElList[k-1].children[0],null)['backgroundImage'];
-                str = (str.charAt(4)=='"' || str.charAt(4)=="'") ? str.slice(5,-2) : str.slice(4,-1);
-                return "<img src='"+str+"' data-exp='" + arguments[0] + "'/>";
+                return "<img src='images/chat/expression/"+k+".png' data-exp='" + arguments[0] + "'/>";
             }
             return arguments[0];
         });

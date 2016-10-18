@@ -26,6 +26,7 @@
             return {
                 diceValues : [1,10,50,100,500,1000],
                 selectedDice : 1,
+                integralAccount : 0,
                 show : false, //控制是否弹出
             };
         },
@@ -41,10 +42,20 @@
                 this.show = false;
             },
             doClickInviteBtn : function(){ //点击邀请按钮
-                eventHub.$emit("invite-dice",this.selectedDice);
+                var _this = this;
+                _this.show = false;
+                if(_this.selectedDice<=_this.integralAccount){
+                    /////可以 start game
+                    eventHub.$emit("start-dice-game",_this.selectedDice);
+                }
+                else{
+                    ////弹出积分不足的提示
+                    eventHub.$emit("set-credit-tip",{ amount : _this.selectedDice, show : true, type : "game" });
+                }
             },
-            doChangeVisible : function(type){
-                this.show = type;
+            doChangeVisible : function(option){
+                this.show = option.show;
+                this.integralAccount = option.integralAccount;
             }
         },
         beforeDestroy : function(){

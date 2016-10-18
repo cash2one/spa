@@ -18,9 +18,6 @@ div#account-page a.jump-qrcode {
   div#account-page a.jump-qrcode > div:nth-of-type(3) {
     width: .889rem;
     height: .889rem;
-    /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
     -webkit-background-size: 0.889rem 0.889rem;
     -moz-background-size: 0.889rem 0.889rem;
     -o-background-size: 0.889rem 0.889rem;

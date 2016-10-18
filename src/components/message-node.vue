@@ -13,12 +13,12 @@
             <div :class='contentCls'>
                 <h4>邀请{{ talker.name }}玩骰子<span>{{ msg.data }}积分</span></h4>
                 <div>
-                    <div class='other'><div>{{ talker.name }}</div>(<div :class="game.status == 'request' ? 'wait' : 'reject'">{{ gameStatusObj[gameStatus] }}<a class='cancel dice-game' v-if="gameStatus == 'request'">取消</a></div>)</div>
+                    <div class='other'><div>{{ talker.name }}</div><div :class="game.status == 'request' ? 'wait' : 'reject'">{{ gameStatusObj[game.status] }}<a class='cancel dice-game' v-if="game.status == 'request'">取消</a></div></div>
                     <div class='dice'></div>
-                    <div class='mine'><div>{{ im.name }}</div><div :style="backgroundImage : 'url('+im.header+')'"></div></div>
+                    <div class='mine'><div>{{ im.name }}</div><div :style="{ backgroundImage : 'url('+im.header+')' }"></div></div>
                 </div>
             </div>
-            <div :class="{ hide : !(gameStatus == 'reject' || gameStatus == 'cancel' || gameStatus == 'overtime') }"><span>{{ game.status == "reject" ? "对方拒绝游戏" : (game.status == "cancel" ? "游戏已取消" : "游戏超时") }}，返还{{ msg.data }}积分</span></div>
+            <div :class="{ hide : !(game.status == 'reject' || game.status == 'cancel' || game.status == 'overtime') }"><span>{{ game.status == "reject" ? "对方拒绝游戏" : (game.status == "cancel" ? "游戏已取消" : "游戏超时") }}，返还{{ msg.data }}积分</span></div>
         </template>
         <template v-if="msgType=='diceGame' && game.status != 'over' && !game.isMineInvite">
             <span>{{ msg.time | MsgTimeFormatter }}</span>
@@ -83,11 +83,16 @@
         },
         computed : {
             msgType : function(){
-                var msg = this.msg;
-                return msg.ext && msg.ext.msgType ? msg.ext.msgType : ""
+                var msg = this.msg, ext = msg.ext;
+                if(ext && ext.msgType){
+                    return ext.msgType;
+                }
+                else{
+                    return msg.msgType || "";
+                }
             },
             category : function(){
-              return (this.msg.type || "text")
+              return this.msg.type ? this.msg.type : "text"
             },
             messageCls : function(){
                 var _this = this, type = _this.msgType, msg = _this.msg;
@@ -150,6 +155,7 @@
             },
             msgData : function(){
                 var _this = this;
+                console.log("_this.category："+_this.category);
                 if(_this.category == "text"){
                     return IM.decodeExpressionToImg(_this.msg.data);
                 }
@@ -173,7 +179,7 @@
                 var _this = this, msg = _this.msg;
                 if(_this.msgType == "gift"){
                     var giftImg = _this.giftMapData[msg.giftId || msg.ext.giftId];
-                    return giftImg ? (giftImg.url || defaultGiftImg) : defaultGiftImg;
+                    return giftImg ? (giftImg.url || _this.defaultGiftImg) : _this.defaultGiftImg;
                 }
             },
             game : function(){
@@ -191,24 +197,19 @@
                         obj.techPoint = (obj.isMineInvite ? gameResult[1] : gameResult[0]);
                         obj.userPoint = (obj.isMineInvite ? gameResult[0] : gameResult[1]);
                         obj.techDice = "img/chat/dice/dice"+obj.techPoint+(msg.ext ? ".gif" : ".png");
-                        obj.userDice = "img/chat/dice/dice"+userPoint+(msg.ext ? ".gif" : ".png");
+                        obj.userDice = "img/chat/dice/dice"+obj.userPoint+(msg.ext ? ".gif" : ".png");
                     }
+                    console.dir(obj);
                     return obj
                 }
             }
         },
         props : {
-            gifts : {  //积分礼物数据
-                type : Array,
-                default : []
-            },
             msg : {  //消息
-                type : Object,
-                default : {}
+                type : Object
             },
             giftMapData : {
-                type : Object,
-                default : {}
+                type : Object
             },
             creditConfig : {
                 type : Object

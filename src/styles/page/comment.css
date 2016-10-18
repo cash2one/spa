@@ -29,9 +29,6 @@ div#comment-page div.thanks {
     div#comment-page div.thanks > div > div:nth-of-type(1) {
       width: 3.056rem;
       height: 3.056rem;
-      /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
       -webkit-background-size: 3.056rem 3.056rem;
       -moz-background-size: 3.056rem 3.056rem;
       -o-background-size: 3.056rem 3.056rem;
@@ -187,9 +184,6 @@ div#comment-page div.comment-impression {
           display: inline-block;
           width: 8.611rem;
           height: 1.111rem;
-          /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
           -webkit-background-size: 8.611rem 1.111rem;
           -moz-background-size: 8.611rem 1.111rem;
           -o-background-size: 8.611rem 1.111rem;
@@ -198,9 +192,6 @@ div#comment-page div.comment-impression {
           background-repeat: no-repeat; }
           div#comment-page div.comment-impression > div:nth-of-type(2) > div.comment-score > .comment-stars > div > div {
             height: 1.111rem;
-            /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
             -webkit-background-size: 8.611rem 1.111rem;
             -moz-background-size: 8.611rem 1.111rem;
             -o-background-size: 8.611rem 1.111rem;
@@ -273,9 +264,6 @@ div#comment-page div.comment-impression {
       color: #999;
       line-height: 1;
       pointer-events: none;
-      /*-webkit-background:url($url) 0 0/ $size no-repeat;
-  -moz-background:url($url) 0 0/ $size no-repeat;
-  -o-background:url($url) 0 0/ $size no-repeat;*/
       -webkit-background-size: 0.639rem 0.861rem;
       -moz-background-size: 0.639rem 0.861rem;
       -o-background-size: 0.639rem 0.861rem;
