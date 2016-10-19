@@ -118,9 +118,11 @@ exports.IM = {
     //获取与某个聊天者的messageList
     getMessageList : function(talkerId){
         var _this = this, messageList = _this.messageList;
+        console.log("messageList："+JSON.stringify(messageList));
         if(!messageList[talkerId]){//从localStorage中读取
             var cacheMsg = Util.localStorage(_this.userId + '_MsgList_' + talkerId);
-            if(cacheMsg){
+            console.log("cacheMsg："+cacheMsg);
+            if(cacheMsg && cacheMsg !="{}"){
                 messageList[talkerId] = JSON.parse(cacheMsg);
                 var list = messageList[talkerId].list;
                 if (list.length > 100) {
@@ -138,8 +140,18 @@ exports.IM = {
         return messageList[talkerId];
     },
 
+    //序列化到localStorage里面
+    serialMessage : function(talkerId){
+        var _this = this,
+            messageList = _this.getMessageList(talkerId);
+        console.log("序列化到localStorage里面");
+        console.log("messageList："+JSON.stringify(messageList));
+        Util.localStorage(_this.userId+ '_MsgList_' + talkerId,JSON.stringify(messageList));
+    },
+
     //存储接收到的消息
     storeMessage : function(msg,type){
+        console.log("store message："+JSON.stringify(msg));
         var _this = this,
             talkerId = ((msg.from == _this.id || msg.from== _this.secondId) ? msg.to : msg.from),
             messageListObj = _this.getMessageList(talkerId),
@@ -201,6 +213,8 @@ exports.IM = {
         }
         messageListObj.list.push(dataObj);
         Util.localStorage(_this.userId + '_MsgList_' + talkerId, JSON.stringify(messageListObj));//存储
+        _this.messageList[talkerId] = messageListObj;
+        return dataObj;
     },
 
     //更新会话列表里面用户的头像
@@ -366,6 +380,9 @@ exports.IM = {
 
     //处理接受到的文本消息
     doReceiveTextMessage : function(msg,conn){
+        console.log("im 收到一条消息：");
+        console.log(JSON.stringify(msg));
+
         if(msg.data.toLowerCase()=="debug"){
             return console.dir(msg);
         }
@@ -407,6 +424,31 @@ exports.IM = {
             }
         }
         else{
+            if(ext.msgType == "diceGame" && ext.gameStatus != "request"){
+                ////查找gameMessageObj,更改其状态
+                var gameMessageObj, messageList = _this.getMessageList(msg.from).list, item;
+                if(messageList){
+                    for(var k=messageList.length-1;k>=0;k--){
+                        item = messageList[k];
+                        if(item.msgType == "diceGame" && item.gameId == ext.gameId && item.gameStatus=="request"){
+                            gameMessageObj = item;
+                            break;
+                        }
+                    }
+                    if(gameMessageObj){
+                        if(/(reject|overtime|cancel)/.test(ext.gameStatus)){
+                            gameMessageObj.gameStatus = "handled";
+                        }
+                        else{
+                            gameMessageObj.gameStatus = ext.gameStatus;
+                            if(ext.gameStatus=="accept"){
+                                ext.gameStatus = "handled";
+                            }
+                        }
+                        _this.serialMessage(msg.from);
+                    }
+                }
+            }
             _this.doHandlerMessage(msg,"text");
         }
 
@@ -423,9 +465,9 @@ exports.IM = {
 
     //处理接受到的图片消息
     doReceivePicMessage : function(msg){
-        var _this = this, img = null;
+        var _this = this;
         if(msg.width == 0 && msg.height == 0){
-            img = new Image();
+            var img = new Image();
             img.onload = function () {
                 msg.width = this.width;
                 msg.height = this.height;
@@ -438,14 +480,15 @@ exports.IM = {
         }
     },
 
-    //处理消息
+    //处理收到的消息
     doHandlerMessage : function(msg,type){
         var _this = this, global = _this.global;
-        _this.storeMessage(msg,"text");
+        var storeMsg = _this.storeMessage(msg,"text");
         if(global.currPage.name == "chat"){///当前是聊天页面
             if(_this.talker.id == msg.from){
                 _this.updateSessionList(msg,type,false);
-                ///////***********///////////
+                console.log("添加到当前message list："+JSON.stringify(storeMsg));
+                _this.talker.messageList.push(storeMsg);
             }
             else{
                 _this.updateSessionList(msg,type);
@@ -458,32 +501,44 @@ exports.IM = {
     },
 
     //发送文本消息 talkerType--tech或者manager
-    sendTextMessage : function(option,talker,callback){
+    sendTextMessage : function(option,talker,callback,needStore){
         var _this = this,
             msgId = _this.conn.getUniqueId(),
             msg = new WebIM.message('txt',msgId),
-            storeMsg = Object.assign({
-                from : _this.id, data : option.msg, status : 0
-            },option),
-            storeMsgExt = storeMsg.ext;
+            storeMsg,
+            needStore = needStore !== false,
+            sendFailTimer;
 
-        storeMsgExt.name = talker.name;
-        storeMsgExt.header = talker.header;
-        storeMsgExt.avatar = talker.avatar;
-        storeMsgExt.no = talker.userNo;
-        storeMsgExt.techId = talker.userType=="tech" ? talker.userId : "";
-        storeMsgExt.clubId = talker.clubId;
-
-        console.log("1-storeMsg：");
-        console.dir(storeMsg);
-
-        var sendFailTimer = setTimeout(function(){
-            storeMsg.status = 0;
+        if(needStore){
+            storeMsg = {
+                to : option.to,
+                from : _this.id,
+                data : option.msg,
+                status : 0,
+                ext : {
+                    name: talker.name,
+                    header: talker.header,
+                    avatar: talker.avatar,
+                    no: talker.userNo,
+                    techId: talker.userType == "tech" ? talker.userId : "",
+                    clubId: talker.clubId
+                }
+            };
+            if(option.ext){
+                Object.assign(storeMsg.ext,option.ext);
+            }
             _this.updateSessionList(storeMsg, "text", false);
-            _this.storeMessage(storeMsg,"text");
-        },10000);
+            storeMsg = _this.storeMessage(storeMsg,"text");
 
-        Object.assign(option,{
+            sendFailTimer = setTimeout(function(){
+                storeMsg.status = 0;
+                _this.serialMessage(talker.id);
+            },10000);
+        }
+
+        var sendOption = {
+            to : option.to,
+            msg : option.msg,
             type : "chat",
             ext : {
                 name : _this.name,
@@ -493,20 +548,27 @@ exports.IM = {
             },
             success : function(id,serviceId){
                 console.log("消息："+id+"发送成功！serviceId："+serviceId);
-                clearTimeout(sendFailTimer);
-                storeMsg.status = 1;
-                _this.updateSessionList(storeMsg, "text", false);
-                _this.storeMessage(storeMsg,"text");
+                if(needStore){
+                    clearTimeout(sendFailTimer);
+                    storeMsg.status = 1;
+                    console.log("serialMessage.....");
+                    _this.serialMessage(talker.id);
+                }
                 _this.makeFriend({ toChatId : option.to, toType : talker.userType });
                 if(callback) callback();
             }
-        });
+        };
+        if(option.ext){
+            Object.assign(sendOption.ext,option.ext);
+        }
+        console.log("send text message option：");
+        console.dir(sendOption);
 
-        msg.set(option);
+        msg.set(sendOption);
         _this.conn.send(msg.body);
 
         ////如果此消息正是发给当前的聊天者，则需要在聊天页面上显示出来
-        if(_this.talker.id == option.to){
+        if(_this.talker.id == option.to && needStore){
             _this.talker.messageList.push(storeMsg);
         }
     },

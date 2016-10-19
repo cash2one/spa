@@ -103,6 +103,10 @@
             }
 
             _this.initHeight = global.winHeight;
+
+            //////////////event on
+            eventHub.$on("goto-reward-tech",_this.doClickRewardBtn);//跳转到打赏页面
+            eventHub.$on("before-dice-game",_this.doBeforeDiceGame);
         },
         methods: {
             /*
@@ -618,7 +622,9 @@
             }
         },
         beforeDestroy : function(){
-
+            var _this = this;
+            eventHub.$off("goto-reward-tech",_this.doClickRewardBtn);
+            eventHub.$off("before-dice-game",_this.doBeforeDiceGame);
         }
     }
 </script>

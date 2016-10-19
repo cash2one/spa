@@ -19,7 +19,9 @@ module.exports = {
     },
     localStorage : function(key, value, prefix){
         key = (prefix || this.data.defaultPrefix) + key;
-        if (value) localStorage.setItem(key, value);
+        if (value){
+            localStorage.setItem(key, value);
+        }
         else return localStorage.getItem(key);
     },
     removeLocalStorage : function(key, prefix){

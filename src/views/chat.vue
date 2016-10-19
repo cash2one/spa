@@ -113,6 +113,7 @@
             ////////////////////////event on
             eventHub.$on("update-credit-account",_this.updateCreditAccount);
             eventHub.$on("start-dice-game",_this.startDiceGame);
+            eventHub.$on("handler-dice-game",_this.doReceiveHandlerDiceGameEvent);
         },
         methods: {
             init : function(){
@@ -183,9 +184,10 @@
                 history.back();
             },
             loadMoreData : function(id){
+                console.log("loadMoreData...."+this.isLoadOver);
                 var _this = this, talker = _this.talker, im = _this.im;
                 if(!_this.isLoadOver){
-                    var loadCount = 0, lastLoadMsgTime = talker.messageList[0].time, list = im.getMessageList(talker.id), cursor = list.length-1;
+                    var loadCount = 0, lastLoadMsgTime = talker.messageList[0].time, list = im.getMessageList(talker.id).list, cursor = list.length-1;
                     while(loadCount<_this.onceLoadCount && cursor>=0){
                         if(list[cursor].time<lastLoadMsgTime){
                             loadCount++;
@@ -226,10 +228,11 @@
                     location.reload(true);
                 }
             },
-            updateCreditAccount : function(){ //更新当前账户积分
+            updateCreditAccount : function(callback){ //更新当前账户积分
                 var _this = this, talker = _this.talker;
                 Global.getCreditAccount(talker.clubId,function(res){
                     _this.currIntegralAccount = (res[0] ? res[0].amount : 0);
+                    if(callback) callback();
                 });
             },
             startDiceGame : function(amount){
@@ -254,14 +257,121 @@
                         Util.tipShow(res.msg || "游戏创建失败！")
                     }
                 });
+            },
+            doReceiveHandlerDiceGameEvent : function(option){
+                console.log("handler dice game");
+                console.dir(option);
+                var _this = this,
+                        talker = _this.talker,
+                        game = option.game,
+                        talkerMessageList = talker.messageList,
+                        k = talkerMessageList.length-1,
+                        messageObj,
+                        item;
+
+                ///先找到gameid一致的messageObj
+                for(;k>=0;k--){
+                    item = talkerMessageList[k];
+                    if(item.msgType == "diceGame" && item.gameId == game.id && item.gameStatus == "request"){
+                        messageObj = item;
+                        break;
+                    }
+                }
+
+                if(messageObj){
+                    if(option.ope == "accept"){//接受对方游戏邀请
+                        /////查询当前账户积分
+                        _this.updateCreditAccount(function(){
+                            if(parseInt(game.value)>_this.currIntegralAccount){//积分不足
+                                eventHub.$emit("set-credit-tip",{ amount : game.value, show : true, tipType : "game" });
+                            }
+                            else{
+                                _this.doHandlerDiceGame(option,messageObj);
+                            }
+                        });
+                    }
+                    else{
+                        _this.doHandlerDiceGame(option,messageObj);
+                    }
+                }
+            },
+            doHandlerDiceGame : function(option,messageObj){
+                console.log("doHandlerDiceGame...... messageObj");
+                console.dir(messageObj);
+                var _this = this,
+                        game = option.game;
+                if((+new Date())-messageObj.time>_this.creditConfig.diceGameTimeout){///超时
+                    option.ope = "overtime";
+                    _this.doHandlerSendGameStatus(option,messageObj);
+                }
+                else{////接受、拒绝、取消
+                    _this.$http.get("../api/v2/credit/game/dice/accept",{ params : { gameId : game.id.substr(5), status : option.ope }}).then(function(res){
+                        res = res.body;
+                        if(res.statusCode == 200){
+                            res = res.respData;
+                            _this.doHandlerSendGameStatus(option,messageObj,res);
+                        }
+                        else{
+                            Util.tipShow(res.msg || "处理游戏操作异常！");
+                            if(option.ope == "accept"){
+                                option.ope = "overtime";
+                                _this.doHandlerSendGameStatus(option,messageObj);
+                            }
+                        }
+                    });
+                }
+            },
+            doHandlerSendGameStatus : function(option,messageObj,res){
+                var _this = this,
+                        talker = _this.talker,
+                        im = _this.im,
+                        game = option.game,
+                        messageList = im.getMessageList(talker.id);
+                if(option.ope == "overtime"){
+                    messageObj.gameStatus = option.ope;
+                    Util.localStorage(im.userId+ '_MsgList_' + talker.id,JSON.stringify(messageList));
+                }
+                else{
+                    im.sendTextMessage({
+                        to : talker.id,
+                        msg : messageObj.data,
+                        ext : {
+                            msgType : "diceGame",
+                            gameInvite : messageObj.gameInvite,
+                            gameStatus : option.ope,
+                            gameId : messageObj.gameId,
+                            gameResult : "0:0"
+                        }
+                    },talker,function(){
+                        messageObj.gameStatus = option.ope;
+                        Util.localStorage(im.userId+ '_MsgList_' + talker.id,JSON.stringify(messageList));
+                    },false);
+                }
+
+                //接受了对方的邀请，发送游戏结果
+                if(res && res.status == "accept"){
+                    im.sendTextMessage({
+                        to : talker.id,
+                        msg : res.belongingsAmount+"",
+                        ext : {
+                            msgType : "diceGame",
+                            gameStatus : "over",
+                            gameInvite : talker.id,
+                            gameId : game.id,
+                            gameResult : res.srcPoint+":"+res.dstPoint
+                        }
+                    },talker);
+                }
             }
         },
         beforeDestroy : function(){ //销毁数据
             var _this = this, talker = _this.talker;
             talker.id = "";///置空talker id
+            talker.messageList = [];
 
             eventHub.$off("update-credit-account",_this.updateCreditAccount);
             eventHub.$off("start-dice-game",_this.startDiceGame);
+            eventHub.$off("handler-dice-game",_this.doReceiveHandlerDiceGameEvent);
         }
     }
 </script>

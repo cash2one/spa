@@ -7,6 +7,7 @@ import VueResource from 'vue-resource';
 import App from './app.vue';
 import { Global } from './libs/global';
 import { IM } from './libs/im';
+import Util from "./libs/util";
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
@@ -17,6 +18,7 @@ var _global = Global.data, isClubMode = _global.pageMode == "club";
 
 window["spa"] = _global;///调试用
 window["im"] = IM;
+window["util"] = Util;
 
 //设置vue-resource的inteceptor
 Vue.http.interceptors.push(function(request,next){

@@ -76,7 +76,6 @@ exports.Global = {
 
         techList : [],                                                                                 //暂存的技师列表页面数据
         techListID : {},                                                                              //暂存的技师列表ID值
-
         pageData : {}                                                                               //缓存(在内存)的页面数据，切换回来的时候可以恢复状态
     },
     /*

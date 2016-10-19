@@ -30,9 +30,9 @@ div.messageNode {
         -o-background-size: 0.889rem 0.889rem;
         background-size: 0.889rem 0.889rem;
         background-repeat: no-repeat; }
-    div.messageNode.center.paidCouponTip > span > i {
+    div.messageNode.center.paidCouponTip > span:nth-of-type(2) > i {
       background-image: url("../../images/chat/paid_tip.png"); }
-    div.messageNode.center.couponTip > span > i {
+    div.messageNode.center.couponTip > span:nth-of-type(2) > i {
       background-image: url("../../images/chat/coupon_Tip.png"); }
   div.messageNode.left, div.messageNode.right {
     margin-top: 0.667rem;
