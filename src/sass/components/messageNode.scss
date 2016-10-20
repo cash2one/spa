@@ -11,6 +11,9 @@ div.messageNode{
     text-align: center;
     line-height: 1.277rem;
     &>span{
+      display: block;
+    }
+    &>span:nth-of-type(2){
       display: inline-block;
       position: relative;
       padding:0.1rem 0.5rem 0.1rem 1.6rem;
@@ -143,6 +146,8 @@ div.messageNode{
         }
       }
       &.paidCoupon,&.ordinaryCoupon{
+        min-width: 9rem;
+        box-sizing: content-box;
         background-color: #ff9c0a !important;
         color:#fff !important;
         padding-bottom:1.5rem !important;
@@ -181,8 +186,7 @@ div.messageNode{
           color:#a9a9a9;
           text-indent: 0;
           font-weight: normal;
-          text-align: right;
-          padding-right:0.5rem;
+          text-align: center;
           border-bottom-left-radius: 0.38rem;
           border-bottom-right-radius: 0.38rem;
         }
@@ -193,7 +197,6 @@ div.messageNode{
         }
       }
       &.ordinaryCoupon{
-        min-width: 8.5rem;
         &>i{
           background-image: url("../../images/chat/ordinaryCoupon.png");
         }
@@ -346,6 +349,9 @@ div.messageNode{
         max-width:15rem;
         background-color: #90d4d3;
         overflow: hidden;
+        div{
+          box-sizing: content-box;
+        }
         &>div.left,&>div.right{
           position: relative;
           float: left;

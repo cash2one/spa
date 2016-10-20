@@ -78,10 +78,7 @@ exports.Global = {
         techListID : {},                                                                              //暂存的技师列表ID值
         pageData : {}                                                                               //缓存(在内存)的页面数据，切换回来的时候可以恢复状态
     },
-    /*
-     * 初始化一些数据
-     */
-    init : function(){
+    beforeInit : function(){
         var ua = navigator.userAgent.toLowerCase(),
             _this = this,
             data = _this.data,
@@ -91,12 +88,22 @@ exports.Global = {
         userAgent.isiPhone = /iPhone/i.test(ua);
 
         /////////////////////获取clubID
-        var tArr = location.href.split("?")[0].split("/");
-        if(tArr.length>=3 && /^\d{18,18}$/.test(tArr[tArr.length-2])){
+        var tArr = location.href.toString().match(/\/(\d{18,18})\/?/);
+        if(tArr && tArr[1]){
             data.pageMode = 'club';
-            data.clubId = tArr[tArr.length-2];
+            data.clubId = tArr[1];
+        }
+        else{
+            data.pageMode = "9358";
         }
         console.log("init club id："+data.clubId);
+    },
+    /*
+     * 初始化一些数据
+     */
+    init : function(resolve, reject){
+        var _this = this,
+            data = _this.data;
 
         ////////////////////
         data.token = Util.localStorage("token") || Util.localStorage("userToken");
@@ -127,7 +134,21 @@ exports.Global = {
                     data.isLogin = true;
                     _this.updateUserNameAndHeader();
                 }
+                resolve();
             });
+        }
+        else{
+            resolve();
+        }
+
+        //加载会所的基本信息
+        if(data.clubId){
+            Vue.http.get('../api/v2/club/'+data.clubId+'/clubName').then((res)=>{
+                res = res.body;
+                data.clubLogoUrl = res.logo || '';
+                data.clubName = res.name;
+                data.clubTelephone = res.telephone ? res.telephone.split(',') : [];
+            })
         }
 
         //////添加Object.assign 方法，合并两个对象
@@ -137,9 +158,7 @@ exports.Global = {
                 configurable: true,
                 writable: true,
                 value: function(target, firstSource) {
-                    "use strict";
-                    if (target === undefined || target === null)
-                        throw new TypeError("Cannot convert first argument to object");
+                    if (target === undefined || target === null) return;
                     var to = Object(target);
                     for (var i = 1; i < arguments.length; i++) {
                         var nextSource = arguments[i];

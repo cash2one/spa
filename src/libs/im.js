@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Util from "./util";
+import { eventHub } from './hub';
 import "./websdk-1.1.2";
 
 /**
@@ -26,6 +27,8 @@ exports.IM = {
 
     sessionList : null, //会话列表
     messageList : {}, //从本地缓存中读取的消息列表暂存于此
+
+    needShowEffectDiceGames : {}, //需要在创建骰子游戏结果时显示动态效果的 游戏id数组
 
     talker : { //当前聊天对方信息
         name : "",//对方名称
@@ -118,10 +121,8 @@ exports.IM = {
     //获取与某个聊天者的messageList
     getMessageList : function(talkerId){
         var _this = this, messageList = _this.messageList;
-        console.log("messageList："+JSON.stringify(messageList));
         if(!messageList[talkerId]){//从localStorage中读取
             var cacheMsg = Util.localStorage(_this.userId + '_MsgList_' + talkerId);
-            console.log("cacheMsg："+cacheMsg);
             if(cacheMsg && cacheMsg !="{}"){
                 messageList[talkerId] = JSON.parse(cacheMsg);
                 var list = messageList[talkerId].list;
@@ -144,14 +145,11 @@ exports.IM = {
     serialMessage : function(talkerId){
         var _this = this,
             messageList = _this.getMessageList(talkerId);
-        console.log("序列化到localStorage里面");
-        console.log("messageList："+JSON.stringify(messageList));
         Util.localStorage(_this.userId+ '_MsgList_' + talkerId,JSON.stringify(messageList));
     },
 
     //存储接收到的消息
     storeMessage : function(msg,type){
-        console.log("store message："+JSON.stringify(msg));
         var _this = this,
             talkerId = ((msg.from == _this.id || msg.from== _this.secondId) ? msg.to : msg.from),
             messageListObj = _this.getMessageList(talkerId),
@@ -391,18 +389,20 @@ exports.IM = {
 
         //收到一张技师发来的优惠券
         if(ext.msgType == "ordinaryCoupon" && ext.actId && ext.techCode){
-            if(!_this.userTel){ //未绑定手机号
+            console.log("收到一张技师发来的优惠券");
+            if(!_this.global.userTel){ //未绑定手机号
                 return _this.sendTextMessage({
                     to : msg.from,
                     msg : "我还未绑定手机号码，暂无法领取您发送的券！",
                     ext : { msgType: "tip" }
-                });
+                },{},null,false);
             }
             else{
+                console.log("领取这张券");
                 /////领取这张券
                 Vue.http.get("../api/v2/club/get/redpacket",{ params : {
                     actId : ext.actId,
-                    phoneNum : _this.userTel,
+                    phoneNum : _this.global.userTel,
                     openId : _this.global.openId,
                     userCode : "",
                     techCode : ext.techCode,
@@ -418,7 +418,33 @@ exports.IM = {
 
                     if(msg.userActId) {//回送已领取消息
                         console.log("回送已领取消息");
-                        ////////**********////////
+                        var couponName = msg.data.split("元<b>")[0],
+                            strArr = couponName.split("</i><span>");
+                        couponName = strArr[1].slice(0, -7) + "元" + strArr[0].substr(3);
+                        _this.sendTextMessage({
+                            to : msg.from,
+                            msg : couponName,
+                            data : "您领取了" + ext.name + '的"' + couponName + '"',
+                            ext : {
+                                msgType: "couponTip"
+                            }
+                        },{
+                            id : msg.from,
+                            name : ext.name,
+                            header : ext.header,
+                            avatar : ext.avatar,
+                            userNo : ext.no,
+                            userId : ext.techId,
+                            clubId : ext.clubId,
+                            userType : "tech"
+                        },null,true);
+                    }
+                    else if(res.statusCode == 206){
+                        _this.sendTextMessage({ /////已结领取过了
+                            to : msg.from,
+                            msg : "已经领取过这张券了！",
+                            ext : { msgType: "tip" }
+                        },{},null,false);
                     }
                 })
             }
@@ -435,19 +461,23 @@ exports.IM = {
                             break;
                         }
                     }
-                    if(gameMessageObj){
-                        if(/(reject|overtime|cancel)/.test(ext.gameStatus)){
-                            gameMessageObj.gameStatus = "handled";
-                        }
-                        else{
-                            gameMessageObj.gameStatus = ext.gameStatus;
-                            if(ext.gameStatus=="accept"){
-                                ext.gameStatus = "handled";
-                            }
-                        }
-                        _this.serialMessage(msg.from);
+                }
+
+                //////////////////////////////
+                if(/(reject|overtime|cancel)/.test(ext.gameStatus)){
+                    if(gameMessageObj) gameMessageObj.gameStatus = "handled";
+                }
+                else{
+                    if(gameMessageObj) gameMessageObj.gameStatus = ext.gameStatus;
+                    if(ext.gameStatus=="accept"){
+                        ext.gameStatus = "handled";
+                    }
+                    else if(ext.gameStatus=="over"){
+                        eventHub.$emit("update-credit-account");
+                        _this.needShowEffectDiceGames[ext.gameId] = true;//显示结果动画
                     }
                 }
+                _this.serialMessage(msg.from);
             }
             _this.doHandlerMessage(msg,"text");
         }
@@ -465,6 +495,9 @@ exports.IM = {
 
     //处理接受到的图片消息
     doReceivePicMessage : function(msg){
+        console.log("收到图片消息：");
+        console.log(JSON.stringify(msg));
+
         var _this = this;
         if(msg.width == 0 && msg.height == 0){
             var img = new Image();
@@ -483,12 +516,12 @@ exports.IM = {
     //处理收到的消息
     doHandlerMessage : function(msg,type){
         var _this = this, global = _this.global;
-        var storeMsg = _this.storeMessage(msg,"text");
+        var storeMsg = _this.storeMessage(msg,type);
         if(global.currPage.name == "chat"){///当前是聊天页面
             if(_this.talker.id == msg.from){
                 _this.updateSessionList(msg,type,false);
-                console.log("添加到当前message list："+JSON.stringify(storeMsg));
                 _this.talker.messageList.push(storeMsg);
+                setTimeout(function(){ eventHub.$emit("message-wrap-to-bottom") },300);
             }
             else{
                 _this.updateSessionList(msg,type);
@@ -513,7 +546,7 @@ exports.IM = {
             storeMsg = {
                 to : option.to,
                 from : _this.id,
-                data : option.msg,
+                data : option.data || option.msg,
                 status : 0,
                 ext : {
                     name: talker.name,
@@ -546,12 +579,10 @@ exports.IM = {
                 avatar : _this.avatar,
                 time : (+new Date())
             },
-            success : function(id,serviceId){
-                console.log("消息："+id+"发送成功！serviceId："+serviceId);
+            success : function(){
                 if(needStore){
                     clearTimeout(sendFailTimer);
                     storeMsg.status = 1;
-                    console.log("serialMessage.....");
                     _this.serialMessage(talker.id);
                 }
                 _this.makeFriend({ toChatId : option.to, toType : talker.userType });
@@ -561,8 +592,6 @@ exports.IM = {
         if(option.ext){
             Object.assign(sendOption.ext,option.ext);
         }
-        console.log("send text message option：");
-        console.dir(sendOption);
 
         msg.set(sendOption);
         _this.conn.send(msg.body);
@@ -570,6 +599,7 @@ exports.IM = {
         ////如果此消息正是发给当前的聊天者，则需要在聊天页面上显示出来
         if(_this.talker.id == option.to && needStore){
             _this.talker.messageList.push(storeMsg);
+            setTimeout(function(){ eventHub.$emit("message-wrap-to-bottom") },300);
         }
     },
 
@@ -607,7 +637,6 @@ exports.IM = {
                 file_length : imgFile.size,
                 onFileUploadComplete: function (data) {
                     Util.tipShow("图片发送成功！");
-                    console.dir(data);
                     _this.makeFriend({ toChatId : talker.id, toType : talker.userType, msgType : "image" });
                     storeMsg.url = data.uri + "/" + data.entities[0].uuid;
                     _this.updateSessionList(storeMsg, "pic", false);
@@ -628,6 +657,7 @@ exports.IM = {
             ////如果此消息正是发给当前的聊天者，则需要在聊天页面上显示出来
             if(_this.talker.id == talker.id){
                 _this.talker.messageList.push(storeMsg);
+                setTimeout(function(){ eventHub.$emit("message-wrap-to-bottom") },300);
             }
         }
     },
@@ -647,7 +677,6 @@ exports.IM = {
 
     ///解析文本消息，将里面的表情编码换成图片img标签
     decodeExpressionToImg : function(msg){//expElList 表情dom元素列表
-        console.log("decodeExpressionToImg msg："+msg);
         var _this = this, item, k;
         if(!_this.expressionIndexObj){
             _this.expressionIndexObj = {};

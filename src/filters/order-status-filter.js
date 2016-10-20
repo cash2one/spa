@@ -27,5 +27,6 @@ var statusObj = {
  * @param type      取tag值，还是name值
  */
 export default (status,type)=>{
+  if(!status || !statusObj[status]) return '状态值错误';
   return statusObj[status][type];
 }

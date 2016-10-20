@@ -5,7 +5,7 @@
     <div class="messageNode" :class="messageCls" v-if="!(msgType=='diceGame' && game.status=='handled')">
         <span>{{ msg.time | msgTimeFormatter(true) }}</span>
         <template v-if="msgType=='paidCouponTip' || msgType == 'couponTip'">
-            <span><i></i>{{ msg.data }}<a>点击查看</a></span>
+            <span @click="doClickMsgContent('couponTip')"><i></i>{{ msg.data }}<a>点击查看</a></span>
         </template>
         <template v-if="msgType=='diceGame'">
             <template v-if="game.status != 'over' && game.isMineInvite">
@@ -36,10 +36,10 @@
             <template v-if="game.status == 'over'">
                 <div :style="{ backgroundImage : 'url('+im.header+')' }"></div>
                 <div :class='contentCls'>
-                    <div class='left'><div>{{ talker.name }}</div><div :class="{ act : !game.isVictory }"><img :src="game.techDice"/></div></div>
+                    <div class='left'><div>{{ talker.name }}</div><div :class="{ act : !game.isVictory }"><img :src="game.techDice" ref="techDiceImg"/></div></div>
                     <div class='right'>
                         <div :class="game.isVictory ? 'victory' : 'failure'">{{ im.name }}</div>
-                        <div :class="{ act : game.isVictory }"><img :src="game.userDice"/></div>
+                        <div :class="{ act : game.isVictory }"><img :src="game.userDice" ref="userDiceImg"/></div>
                         <span>{{ game.isVictory ? "+" : "-" }}{{ msg.data }}</span>
                     </div>
                     <div class='split'><i>vs</i></div>
@@ -109,7 +109,7 @@
                         }
                     }
                     else{
-                        return "right dice-result"+(msg.ext ? "" : " show")
+                        return "right dice-result"+(game.needShow ? "" : " show")
                     }
                 }
                 else if(type == "gift"){
@@ -178,7 +178,7 @@
                 }
             },
             game : function(){
-                var _this = this, msg = _this.msg;
+                var _this = this, msg = _this.msg, im = _this.im;
                 if(_this.msgType == "diceGame"){
                     var obj = {
                         status : msg.gameStatus || msg.ext.gameStatus,
@@ -189,13 +189,15 @@
                     var isMineInvite = obj.isMineInvite = obj.invite == _this.im.id;
                     if(obj.status == "over"){
                         var gameResult = (msg.gameResult || msg.ext.gameResult).split(":");
+                        obj.needShow = !!im.needShowEffectDiceGames[obj.id];
+
+                        console.log("dice game："+obj.id+"--need show："+obj.needShow);
                         obj.isVictory = (isMineInvite ? (gameResult[0] > gameResult[1]) : (gameResult[0] < gameResult[1]));
                         obj.techPoint = (isMineInvite ? gameResult[1] : gameResult[0]);
                         obj.userPoint = (isMineInvite ? gameResult[0] : gameResult[1]);
-                        obj.techDice = "images/chat/dice/dice"+obj.techPoint+(msg.ext ? ".gif" : ".png");
-                        obj.userDice = "images/chat/dice/dice"+obj.userPoint+(msg.ext ? ".gif" : ".png");
+                        obj.techDice = "images/chat/dice/dice"+obj.techPoint+(obj.needShow ? ".gif" : ".png");
+                        obj.userDice = "images/chat/dice/dice"+obj.userPoint+(obj.needShow ? ".gif" : ".png");
                     }
-                    console.dir(obj);
                     return obj
                 }
             }
@@ -215,17 +217,23 @@
             }
         },
         mounted : function(){
-            var _this = this;
+          var _this = this, im = _this.im;
             _this.$nextTick(function(){
-                if(_this.msgType=='diceGame' && _this.game.status == 'over'){
+                var game = _this.game;
+                if(game && game.needShow){
                     setTimeout(function(){
-                        var game = _this.game;
-                        game.techDice = game.techDice.slice(0,-3)+"png";
-                        game.userDice = game.userDice.slice(0,-3)+"png";
-                        _this.messageCls = "right dice-result show";
+                        if(game.isVictory){
+                            eventHub.$emit("show-golden-effect");
+                        }
+                        im.needShowEffectDiceGames[game.id] = false;
+                        _this.$el.classList.add("show");
+                        var techDiceImg = _this.$refs.techDiceImg,
+                                userDiceImg = _this.$refs.userDiceImg;
+                        techDiceImg.src = techDiceImg.src.slice(0,-3)+"png";
+                        userDiceImg.src = userDiceImg.src.slice(0,-3)+"png";
                     },2100);
                 }
-            });
+            })
         },
         methods: {
             doClickTechHeader : function(id){
@@ -242,6 +250,27 @@
                 else if(/dice-game-tip/.test(cls)){ //点击'再来一局'
                     eventHub.$emit("before-dice-game",_this.game.value);
                 }
+                else if(/couponTip/.test(cls)){
+                    _this.$router.push({ name : "coupon" });
+                }
+                else if(/ordinaryCoupon/.test(cls)){
+                    //console.log("do click ordinaryCoupon");
+                    if(_this.msg.userActId){
+                        _this.$router.push({ name : "couponDetail", query : { userActId : _this.msg.userActId }});
+                    }
+                    else{
+                        _this.$router.push({ name : "coupon" });
+                    }
+                }
+                else if(/paidCoupon/.test(cls)){//点钟券
+                    if(!_this.global.userTel){
+                        ///////提示绑定
+                    }
+                    else{
+                        console.log("点击点钟券");
+                        _this.$router.push({ name : "paidCoupon" , query : { actId : _this.msg.actId, techCode : _this.msg.techCode, chanel : "link" }});
+                    }
+                }
             },
             doHandlerDiceGame : function(ope){//点击处理骰子游戏操作
                 var _this = this;
@@ -251,9 +280,6 @@
                     setTimeout(function(){ _this.inProcessing = false },3500)
                 }
             }
-        },
-        beforeDestroy : function(){
-
         }
     }
 </script>

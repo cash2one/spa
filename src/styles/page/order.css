@@ -1,16 +1,16 @@
 div#order-list-page div.order-list {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch; }
-  div#order-list-page div.order-list > a {
+  div#order-list-page div.order-list > div {
     display: block;
     border-top: 1px solid #d9d9d9;
     border-bottom: 1px solid #d9d9d9;
     margin-bottom: 0.444rem;
     background: #fff;
     position: relative; }
-    div#order-list-page div.order-list > a:nth-of-type(1) {
+    div#order-list-page div.order-list > div:nth-of-type(1) {
       border-top-width: 0; }
-    div#order-list-page div.order-list > a > a {
+    div#order-list-page div.order-list > div > a {
       display: block;
       position: absolute;
       right: 0.667rem;
@@ -20,22 +20,22 @@ div#order-list-page div.order-list {
       font-size: 0.889rem;
       padding: 0 0.861rem;
       border-radius: 0.222rem; }
-      div#order-list-page div.order-list > a > a.paid, div#order-list-page div.order-list > a > a.reAppoint {
+      div#order-list-page div.order-list > div > a.paid, div#order-list-page div.order-list > div > a.reAppoint {
         background-color: #66cc66; }
-      div#order-list-page div.order-list > a > a.reminder {
+      div#order-list-page div.order-list > div > a.reminder {
         background-color: #ff9d09; }
-      div#order-list-page div.order-list > a > a.refund, div#order-list-page div.order-list > a > a.refunded {
+      div#order-list-page div.order-list > div > a.refund, div#order-list-page div.order-list > div > a.refunded {
         background-color: #78909C; }
-      div#order-list-page div.order-list > a > a:nth-of-type(2) {
+      div#order-list-page div.order-list > div > a:nth-of-type(2) {
         top: 4.2rem; }
-    div#order-list-page div.order-list > a > span {
+    div#order-list-page div.order-list > div > span {
       color: #999999;
       position: absolute;
       bottom: .26rem;
       right: .667rem;
       padding-right: .8rem;
       font-size: .8986rem; }
-      div#order-list-page div.order-list > a > span:after {
+      div#order-list-page div.order-list > div > span:after {
         content: ' ';
         display: inline-block;
         width: .4444rem;
@@ -50,9 +50,9 @@ div#order-list-page div.order-list {
         right: 0;
         transform: rotate(-135deg);
         transition: .3s transform; }
-      div#order-list-page div.order-list > a > span.expand:after {
+      div#order-list-page div.order-list > div > span.expand:after {
         transform: rotate(45deg); }
-    div#order-list-page div.order-list > a > div:nth-of-type(1) {
+    div#order-list-page div.order-list > div > div:nth-of-type(1) {
       font-size: 0.778rem;
       color: #333;
       height: 1.667rem;
@@ -62,49 +62,49 @@ div#order-list-page div.order-list {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap; }
-      div#order-list-page div.order-list > a > div:nth-of-type(1) > span {
+      div#order-list-page div.order-list > div > div:nth-of-type(1) > span {
         color: #fb5549; }
-      div#order-list-page div.order-list > a > div:nth-of-type(1) > span:nth-of-type(1) {
+      div#order-list-page div.order-list > div > div:nth-of-type(1) > span:nth-of-type(1) {
         margin-left: .5556rem; }
-      div#order-list-page div.order-list > a > div:nth-of-type(1) > span:nth-of-type(2) {
+      div#order-list-page div.order-list > div > div:nth-of-type(1) > span:nth-of-type(2) {
         float: right;
         margin-right: .667rem; }
-    div#order-list-page div.order-list > a > div:nth-of-type(2) {
+    div#order-list-page div.order-list > div > div:nth-of-type(2) {
       position: relative;
       padding: 0.222rem 0; }
-      div#order-list-page div.order-list > a > div:nth-of-type(2) > div:not(:nth-of-type(4)) {
+      div#order-list-page div.order-list > div > div:nth-of-type(2) > div:not(:nth-of-type(4)) {
         height: 1.4rem;
         line-height: 1.4rem;
         padding: 0 0.667rem;
         color: #999;
         font-size: 0.778rem;
         margin-right: 5rem; }
-        div#order-list-page div.order-list > a > div:nth-of-type(2) > div:not(:nth-of-type(4)) > span {
+        div#order-list-page div.order-list > div > div:nth-of-type(2) > div:not(:nth-of-type(4)) > span {
           margin-left: 0.778rem;
           color: #333333; }
-          div#order-list-page div.order-list > a > div:nth-of-type(2) > div:not(:nth-of-type(4)) > span > span {
+          div#order-list-page div.order-list > div > div:nth-of-type(2) > div:not(:nth-of-type(4)) > span > span {
             font-size: 0.667rem;
             margin-left: 0.444rem; }
-            div#order-list-page div.order-list > a > div:nth-of-type(2) > div:not(:nth-of-type(4)) > span > span > strong {
+            div#order-list-page div.order-list > div > div:nth-of-type(2) > div:not(:nth-of-type(4)) > span > span > strong {
               color: #ff9d09; }
-        div#order-list-page div.order-list > a > div:nth-of-type(2) > div:not(:nth-of-type(4)) > strong {
+        div#order-list-page div.order-list > div > div:nth-of-type(2) > div:not(:nth-of-type(4)) > strong {
           float: right;
           font-size: 0.889rem;
           color: #fb5549;
           font-weight: normal; }
-          div#order-list-page div.order-list > a > div:nth-of-type(2) > div:not(:nth-of-type(4)) > strong.fail {
+          div#order-list-page div.order-list > div > div:nth-of-type(2) > div:not(:nth-of-type(4)) > strong.fail {
             color: #999; }
-      div#order-list-page div.order-list > a > div:nth-of-type(2) > div:nth-of-type(4) {
+      div#order-list-page div.order-list > div > div:nth-of-type(2) > div:nth-of-type(4) {
         text-align: center;
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
         border-top: 1px solid #e0e0e0;
         padding-top: .667rem; }
-        div#order-list-page div.order-list > a > div:nth-of-type(2) > div:nth-of-type(4) > img {
+        div#order-list-page div.order-list > div > div:nth-of-type(2) > div:nth-of-type(4) > img {
           width: 7.222rem;
           height: 7.222rem; }
-        div#order-list-page div.order-list > a > div:nth-of-type(2) > div:nth-of-type(4) > div {
+        div#order-list-page div.order-list > div > div:nth-of-type(2) > div:nth-of-type(4) > div {
           font-size: .8889rem;
           color: #fb6257; }
 

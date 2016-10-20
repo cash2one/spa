@@ -19,9 +19,7 @@ module.exports = {
     },
     localStorage : function(key, value, prefix){
         key = (prefix || this.data.defaultPrefix) + key;
-        if (value){
-            localStorage.setItem(key, value);
-        }
+        if (value) localStorage.setItem(key, value);
         else return localStorage.getItem(key);
     },
     removeLocalStorage : function(key, prefix){
@@ -138,7 +136,7 @@ module.exports = {
             }
         }
 
-        url = baseStr+"#!/"+(paramObj.club ? paramObj.club+"/" : "")+page;
+        url = baseStr+"?#/"+(paramObj.club ? paramObj.club+"/" : "")+page;
 
         if(queryObj){
             url += "?";
@@ -158,7 +156,7 @@ module.exports = {
         }
     },
     pageReload : function(clubId,pageName,params){
-        var url = location.host+location.pathname+"#!",
+        var url = location.host+location.pathname+"?#",
             paramsStr = "";
         if(clubId){
             url += "/"+clubId;

@@ -5,7 +5,7 @@
     <div class="page" id="chat-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>{{ talker.name }}<span v-show="talker.userNo">[{{ talker.userNo }}]</span><a class="icon home" :class="{ once : talker.userType=='manager' }" @click="doClickHomeIcon()"></a><router-link class="icon tech" v-show="talker.userType=='tech'" :to="{ name : 'technicianDetail', query : { id : talker.userId } }"></router-link></div>
         <div class="order-tip" @click="doClickOrderTip()" v-show="talker.userType=='tech'">如果技师没有回应，那就立即预约吧！<div></div></div>
-        <div class="message-wrap" :style="{ height : msgWrapHeight+'px' }">
+        <div class="message-wrap" :style="{ height : msgWrapHeight+'px' }" ref="wrapList">
             <load-more :top-method="loadMoreData">
                 <message-node v-for="msg in talker.messageList" :msg="msg" :gift-map-data="giftMapData" :credit-config="creditConfig"></message-node>
             </load-more>
@@ -14,6 +14,7 @@
         <tel-detail v-if="talker.telephone.length>0" :telephone="talker.telephone"></tel-detail>
         <dice-setting></dice-setting>
         <credit-tip></credit-tip>
+        <golden-effect></golden-effect>
     </div>
 </template>
 <script>
@@ -27,6 +28,7 @@
     import ChatInput from '../components/chat-input';
     import DiceSetting from '../components/dice-setting';
     import MessageNode from '../components/message-node';
+    import GoldenEffect from '../components/golden-effect';
     import LoadMore from '../components/load-more';
 
     module.exports = {
@@ -36,7 +38,8 @@
             'credit-tip' : CreditTip,
             'chat-input' : ChatInput,
             'dice-setting' : DiceSetting,
-            'message-node' : MessageNode
+            'message-node' : MessageNode,
+            'golden-effect' : GoldenEffect
         },
         data: function(){
             return {
@@ -114,6 +117,7 @@
             eventHub.$on("update-credit-account",_this.updateCreditAccount);
             eventHub.$on("start-dice-game",_this.startDiceGame);
             eventHub.$on("handler-dice-game",_this.doReceiveHandlerDiceGameEvent);
+            eventHub.$on("message-wrap-to-bottom",_this.scrollToBottom);
         },
         methods: {
             init : function(){
@@ -173,6 +177,14 @@
                     _this.isLoadOver = true;
                 }
                 talker.messageList.push({ from: talker.id, to: im.id, type: "text", data: talker.clubName+"欢迎您！", time: (+new Date()) });
+
+                _this.$nextTick(function(){
+                    var wrapList = _this.$refs.wrapList;
+                    if(wrapList){
+                        console.log("init scroll bottom");
+                        wrapList.scrollTop = wrapList.scrollHeight-wrapList.clientHeight;
+                    }
+                });
 
                 if(sessionObj){//更新新消息数目
                     im.newMsgTotal -= sessionObj.new;
@@ -239,6 +251,7 @@
                 var _this = this, talker = _this.talker, im = _this.im;
                 _this.$http.get("../api/v2/credit/game/dice/submit",{ params : { clubId : talker.clubId, amount : amount +"", emchatId : talker.id }}).then(function(res){
                     res = res.body;
+                    console.log("startDiceGame："+JSON.stringify(res));
                     if(res.statusCode == 200){
                         res = res.respData;
                         IM.sendTextMessage({
@@ -256,6 +269,7 @@
                     else{
                         Util.tipShow(res.msg || "游戏创建失败！")
                     }
+                    _this.updateCreditAccount();
                 });
             },
             doReceiveHandlerDiceGameEvent : function(option){
@@ -345,23 +359,38 @@
                     },talker,function(){
                         messageObj.gameStatus = option.ope;
                         Util.localStorage(im.userId+ '_MsgList_' + talker.id,JSON.stringify(messageList));
+
+                        //接受了对方的邀请，发送游戏结果
+                        if(res && res.status == "accept"){
+                            //console.log("接受了对方的邀请，发送游戏结果："+res.srcPoint+":"+res.dstPoint);
+                            im.needShowEffectDiceGames[game.id] = true;
+                            im.sendTextMessage({
+                                to : talker.id,
+                                msg : res.belongingsAmount+"",
+                                ext : {
+                                    msgType : "diceGame",
+                                    gameStatus : "over",
+                                    gameInvite : talker.id,
+                                    gameId : game.id,
+                                    gameResult : res.srcPoint+":"+res.dstPoint
+                                }
+                            },talker);
+                        }
                     },false);
                 }
+            },
+            scrollToBottom : function(){
+                var   _this = this,
+                        wrapList = _this.$refs.wrapList;
+                if(!wrapList) return;
+                var bottom = wrapList.scrollHeight-wrapList.clientHeight;
 
-                //接受了对方的邀请，发送游戏结果
-                if(res && res.status == "accept"){
-                    im.sendTextMessage({
-                        to : talker.id,
-                        msg : res.belongingsAmount+"",
-                        ext : {
-                            msgType : "diceGame",
-                            gameStatus : "over",
-                            gameInvite : talker.id,
-                            gameId : game.id,
-                            gameResult : res.srcPoint+":"+res.dstPoint
-                        }
-                    },talker);
-                }
+                var timer = setInterval(function(){
+                            wrapList.scrollTop += 10;
+                            if(wrapList.scrollTop>=bottom){
+                                clearInterval(timer)
+                            }
+                },10);
             }
         },
         beforeDestroy : function(){ //销毁数据
@@ -372,6 +401,7 @@
             eventHub.$off("update-credit-account",_this.updateCreditAccount);
             eventHub.$off("start-dice-game",_this.startDiceGame);
             eventHub.$off("handler-dice-game",_this.doReceiveHandlerDiceGameEvent);
+            eventHub.$off("message-wrap-to-bottom",_this.scrollToBottom);
         }
     }
 </script>

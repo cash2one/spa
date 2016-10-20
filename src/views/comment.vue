@@ -253,13 +253,13 @@
                     if(selectedList.length == 3){
                         for(k=0;k<impressionList.length;k++){
                             if(impressionList[k].id == selectedList[0]){
-                                impressionList.$set(k,{ id : impressionList[k].id, tag : impressionList[k].tag, selected : false });
+                                Vue.set(impressionList,k,{ id : impressionList[k].id, tag : impressionList[k].tag, selected : false });
                                 break;
                             }
                         }
                         selectedList.splice(0,1);
                     }
-                    impressionList.$set(index,{ id : impressionItem.id, tag : impressionItem.tag, selected : true });
+                    Vue.set(impressionList,impressionList.indexOf(impressionItem),{ id : impressionItem.id, tag : impressionItem.tag, selected : true });
                     selectedList.push(impressionItem.id);
                 }
             }
