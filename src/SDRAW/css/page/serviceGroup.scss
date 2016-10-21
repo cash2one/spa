@@ -1,0 +1,49 @@
+@import "../common/common.scss";
+
+#_content>#serviceGroup {
+  #content {
+    color: #fefefe;
+    > div {
+      width: 20rem;
+      height: 12.389rem;
+      @include imgBgFix(20rem 12.389rem);
+      /*@include wq();
+      > div {
+        background: rgba(87, 35, 3, .35);;
+        width: 7.222rem;
+        height: 7.222rem;
+        border-radius: 100%;
+        > div {
+          margin: 0 auto;
+          text-align: center;
+          position: relative;
+          top: 1.3463rem;
+          &:nth-of-type(1) {
+            border: .0625rem solid #fdfcfb;
+            width: 0.739rem;
+            height: .739rem;
+            border-radius: 100%;
+            @include wq();
+            > div {
+              border: 0.0625rem solid #fdfcfb;
+              width: 0.497rem;
+              height: 0.497rem;
+              border-radius: 100%;
+            }
+          }
+          &:nth-of-type(2) {
+            margin: 0.6444rem 0 0.20rem;
+            font-size: 1.522rem;
+          }
+          &:nth-of-type(3) {
+            //margin-top: 1rem;
+            font-size: 0.556rem;
+            &:before, &:after {
+              content: '-';
+            }
+          }
+        }
+      }*/
+    }
+  }
+}

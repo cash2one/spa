@@ -1,0 +1,343 @@
+@import "../common/common.scss";
+#_content>#shareTechnician{
+  #content{
+    >div{
+      width: 20rem;
+      background: #ffffff;
+      &:nth-of-type(1){
+        height: 12.361rem;
+        @supports (display: -moz-box) {
+          margin-bottom: -0.22rem;
+        }
+        >div{
+          &:nth-of-type(1){
+            width: 100%;
+            height: 12.361rem;
+            overflow: hidden;
+            //@include wq();
+            >div{
+              //clear: both;
+              &:nth-of-type(1){
+                width: 20rem;
+                height: 12.361rem;
+                @include dhyc(0ms);
+                @include wy(0,0,0);
+                position: relative;
+                @include gpu();
+                @include syzj();
+                @supports (display: -moz-box) {
+                  display: flex;
+                }
+                >img{
+                  width: 20rem;
+                  //height: 100%;
+                  float: left;
+
+                  @include gpu();
+                  -webkit-flex-shrink: 0;
+                  -ms-flex: 0 0 auto;
+                  flex-shrink: 0;
+                  position: relative;
+
+                  text-align: center;
+                  -webkit-box-pack: center;
+                  -ms-flex-pack: center;
+                  -webkit-justify-content: center;
+                  justify-content: center;
+                  -webkit-box-align: center;
+                  -ms-flex-align: center;
+                  -webkit-align-items: center;
+                  align-items: center;
+                }
+              }
+              &:nth-of-type(2){
+                position: relative;
+                width: 20rem;
+                height: 12.361rem;
+                top: -12.76rem;
+                @supports (display: -moz-box) {
+                  top: -12.361rem;
+                }
+                //background:-webkit-gradient(linear, 0 0, 0 100%, from(#2074af), to(#2c91d2));
+                @include jb(0,100%,rgba(0,0,0,0.5),0,60%,rgba(0,0,0,0));
+                //background: greenyellow;
+              }
+              &:nth-of-type(3){
+                position: relative;
+                text-align: right;
+                //bottom: 1.9rem;
+                //top: -117%;
+                //margin-top: -13.828rem;
+                //margin-top: -14.15rem;
+                //padding-right: 0.667rem;
+                //left: -200%;
+                width: 19.5rem;
+                top: -14rem;
+                >span{
+                  margin-left:0.278rem;
+                  width: 0.4rem;
+                  height: 0.4rem;
+                  display: inline-block;
+                  border-radius: 100%;
+                  border: 0.1rem solid #ffffff;
+                  &.active{
+                    background: #ffffff;
+                  }
+                }
+              }
+            }
+          }
+          &:nth-of-type(2){
+            position: relative;
+            top: -4.444rem;
+            left: 0.667rem;
+            width: 3.778rem;
+            height: 3.778rem;
+            border-radius: 100%;
+            background: rgba(255,255,255,0.5);
+            //@include wq();
+            padding: 0.111rem;
+            >div{
+              width: 3.778rem;
+              height: 3.778rem;
+              border-radius: 100%;
+              @include imgBgFix(3.778rem 3.778rem);
+              //@include img('../../../img/logo_default.jpg',3.778rem 3.778rem);
+            }
+          }
+          &:nth-of-type(3){
+            position: relative;
+            //height: 1rem;
+            line-height: 1rem;
+            top: -7.8rem;
+            left: 5.334rem;
+            color: #ffffff;
+            //display: inline-block;
+            width: 14rem;
+            height: 3rem;
+            @include sx();
+            @supports (display: -moz-box) {
+              display: flex;
+            }
+          }
+        }
+      }
+      &:nth-of-type(2){
+        height: 2.5rem;
+        border-bottom: 1px solid #d9d9d9;
+        margin-bottom: 0.444rem;
+        //padding: 0.667rem;
+        width: 20rem;
+        @include sx();
+        >div{
+          &:nth-of-type(1){
+            @include sx();
+            >div {
+              &:nth-of-type(1) {
+                width: 0.805rem;
+                height: 1rem;
+                @include img('../../../img/home/local_icon.png',0.805rem 1rem);
+                margin:0 0.667rem;
+                //@include imgBgFix(1.883rem);
+              }
+              &:nth-of-type(2) {
+                @include sx();
+                //padding:0 1rem;
+                height: 1.111rem;
+                width: 15.027rem;
+                font-size: 0.778rem;
+                line-height: 1.167rem;
+                color: #666666;
+                border-right: 1px solid #f0f0f0;
+
+                >div{
+                  //max-width: 15.027rem;
+                  //max-height: 2.444rem;
+                  display: -webkit-box;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  -webkit-line-clamp: 1;
+                  -webkit-box-orient: block-axis;
+                  word-break: break-all;
+                }
+              }
+            }
+          }
+          &:nth-of-type(2){
+            width: 0.805rem;
+            height: 1rem;
+            @include img('../../../img/home/tel_icon.png',0.805rem 1rem);
+            margin-left:0.667rem;
+          }
+        }
+      }
+      &:nth-of-type(3){
+        height: 3.972rem;
+        border-top: 1px solid #d9d9d9;
+        border-bottom: 1px solid #d9d9d9;
+        width: 20rem;
+        color:#666666;
+        @include sx();
+        >div{
+          &:nth-of-type(1){
+            margin:0 0.667rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            @include imgBgFix(2.5rem 2.5rem);
+            border-radius: 100%;
+          }
+          &:nth-of-type(2){
+            width: 14.415rem;
+            >div{
+              &:nth-of-type(1){
+                //width: 6.5rem;
+                @include sx();
+                >div{
+                  height: 1.4rem;
+                  &:nth-of-type(1){
+                    font-size: 0.889rem;
+                    width: 5.415rem;
+                  }
+                  &:nth-of-type(2){
+                    font-size: 0.75rem;
+                    width: 9rem;
+                    @include sx();
+                    @include y();
+                    >div:nth-of-type(2){
+                      color: #999999;
+                      margin-left: 0.667rem;
+                    }
+                  }
+                }
+              }
+              &:nth-of-type(2){
+                @include sx();
+                font-size: 0.75rem;
+                >span{
+                  color: #ff9d09;
+                }
+              }
+            }
+          }
+          &:nth-of-type(3){
+            width: 0.417rem;
+            height: 0.639rem;
+            margin-left: 0.667rem;
+            @include img('../../../img/right_icon.png',0.417rem 0.639rem)
+          }
+        }
+      }
+
+      &:nth-of-type(4){
+        margin-top: 0.667rem;
+        margin-bottom: 0.6rem;
+        border-bottom: 1px solid #d9d9d9;
+        color: #666666;
+        display: inline-block;
+        >div{
+          width: 100%;
+          &:nth-of-type(1){
+            height: 2.222rem;
+            @include sx();
+            border-bottom: 1px solid #d9d9d9;
+            border-top: 1px solid #d9d9d9;
+            border-left: 0.333rem solid #ff9d09;
+            >div{
+              height: 100%;
+              @include sx();
+              color: #4d4d4d;
+              font-size: 0.889rem;
+              padding-left: 0.334rem;
+            }
+          }
+          &:nth-of-type(2){
+            margin-top: 1.389rem;
+            @include sx();
+            >div{
+              &:nth-of-type(1){
+                color:#4d4d4d;
+                font-size: 0.889rem;
+                margin:0 0.667rem;
+                width: 2.222rem;
+              }
+              &:nth-of-type(2){
+                width: 10.944rem;
+                height: 1.667rem;
+                @include img('../../../img/starNull_icon.png',10.944rem 1.667rem);
+                >div{
+                  width: 0;
+                  height: 1.667rem;
+                  @include img('../../../img/starScore_icon.png',10.944rem 1.667rem);
+                }
+              }
+            }
+          }
+          &:nth-of-type(3){
+            margin-top: 1.111rem;
+            @include s();
+            >div{
+              &:nth-of-type(1){
+                color:#4d4d4d;
+                font-size: 0.889rem;
+                margin:0 0.667rem;
+                width: 2.222rem;
+              }
+              &:nth-of-type(2){
+                width: 15.777rem;
+                //height: 1.667rem;
+                font-size: 0.778rem;
+                color: #666666;
+                padding-bottom: 0.667rem;
+              }
+            }
+          }
+        }
+      }
+      &:nth-of-type(5){
+        height: 3rem;
+        background: none;
+      }
+    }
+  }
+
+  #footer {
+    position: absolute;
+    border-top: 1px solid #e0e0e0;
+    margin-top: -3.4rem;
+    width: 100%;
+    height: 3.305rem;
+    background: rgba(255, 255, 255, 0.8);
+    @include wq();
+    > div {
+      width: 19.111rem;
+      height: 2.444rem;
+      background: #d9d9d9;
+      color: #ffffff;
+      border-radius: 3px;
+      @include wq();
+      &.active {
+        background: #fb5549;
+      }
+    }
+  }
+
+  #telDetail{
+    @include mask();
+    z-index:3;
+    @include x();
+    >div{
+      >div{
+        width: 18.666rem;
+        height: 2.444rem;
+        color: #007aff;
+        background: #ffffff;
+        border-radius: .3rem;
+        //margin: 1rem auto;
+        @include wq();
+        position: relative;
+        margin: 0.667rem;
+        font-size: 1.111rem;
+      }
+    }
+  }
+}

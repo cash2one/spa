@@ -31,100 +31,169 @@ div.page-title{
   }
 }
 
-div#menu-container{
+div.menu-container{
   position: fixed;
-  height:2.8rem;
   width:20rem;
   bottom:0;
-  left:50%;
+  left:0;
   right:0;
-  margin-left:-10rem;
   font-size:0.611rem;
   border-top:1px solid #d9d9d9;
   background-color: #fff;
-  &>a{
+  >a{
     display: block;
     float: left;
-    width:4rem;
-    text-align: center;
     color:#4d4d4d;
-    &>div:nth-of-type(1){
-      width:1.861rem;
-      height:1.333rem;
-      margin:0.111rem auto;
-      @include imgBgFix(1.861rem 1.333rem);
-    }
-    &>div:nth-of-type(2){
-      line-height: 1.1rem;
-    }
+    text-align: center;
     &.active{
       color:#fb5549;
     }
+    &.message>div:nth-of-type(1){
+      position: relative;
+      >i{
+        position: absolute;
+        display: inline-block;
+        top:-0.111rem;
+        left:1.1rem;
+        height:0.889rem;
+        line-height: 0.889rem;
+        min-width: 0.55rem;
+        padding:0 0.111rem;
+        color:#fff;
+        font-size:0.5rem;
+        font-style: normal;
+        background-color: #fb5549;
+        border-radius: 0.4rem;
+        text-align: center;
+      }
+    }
+  }
 
-    &:nth-of-type(1){
-      &>div:nth-of-type(1){
+  &.club{
+    height:2.8rem;
+    >a{
+      width:4rem;
+      >div:nth-of-type(1){
+        width:1.861rem;
+        height:1.333rem;
+        margin:0.111rem auto;
+        @include imgBgFix(1.861rem 1.333rem);
+      }
+      >div:nth-of-type(2){
+        line-height: 1.1rem;
+      }
+    }
+    >a.home{
+      >div:nth-of-type(1){
         background-image: url("../../images/common/nav_001.png");
       }
       &.active{
-        &>div:nth-of-type(1){
+        >div:nth-of-type(1){
           background-image: url("../../images/common/nav_000.png");
         }
       }
     }
-    &:nth-of-type(2){
-      &>div:nth-of-type(1){
-        position: relative;
+    >a.message{
+      >div:nth-of-type(1){
         background-image: url("../../images/common/nav_011.png");
-        &>i{
-          position: absolute;
-          display: inline-block;
-          top:-0.111rem;
-          left:1.1rem;
-          height:0.889rem;
-          line-height: 0.889rem;
-          min-width: 0.55rem;
-          padding:0 0.111rem;
-          color:#fff;
-          font-size:0.5rem;
-          font-style: normal;
-          background-color: #fb5549;
-          border-radius: 0.4rem;
-          text-align: center;
-        }
       }
       &.active{
-        &>div:nth-of-type(1){
+        >div:nth-of-type(1){
           background-image: url("../../images/common/nav_010.png");
         }
       }
     }
-    &:nth-of-type(3){
-      &>div:nth-of-type(1){
+    >a.technicianList{
+      >div:nth-of-type(1){
         background-image: url("../../images/common/nav_021.png");
       }
       &.active{
-        &>div:nth-of-type(1){
+        >div:nth-of-type(1){
           background-image: url("../../images/common/nav_020.png");
         }
       }
     }
-    &:nth-of-type(4){
-      &>div:nth-of-type(1){
+    >a.order{
+      >div:nth-of-type(1){
         background-image: url("../../images/common/nav_031.png");
       }
       &.active{
-        &>div:nth-of-type(1){
+        >div:nth-of-type(1){
           background-image: url("../../images/common/nav_030.png");
         }
       }
     }
-    &:nth-of-type(5){
-      &>div:nth-of-type(1){
+    >a.personal{
+      >div:nth-of-type(1){
         background-image: url("../../images/common/nav_041.png");
       }
       &.active{
-        &>div:nth-of-type(1){
+        >div:nth-of-type(1){
           background-image: url("../../images/common/nav_040.png");
+        }
+      }
+    }
+  }
+
+  &.public{
+    height:2.667rem;
+    padding-top:0.194rem;
+    >a{
+      position: relative;
+      width:33.3%;
+      height:2.491rem;
+      border-right:1px solid #d9d9d9;
+      border-bottom:0.194rem solid #fff;
+      &:last-child{
+        border-right:0;
+      }
+      >div:nth-of-type(1){
+        width:1.138rem;
+        height:1.138rem;
+        margin:0.111rem auto;
+        @include imgBgFix(1.138rem 1.138rem);
+      }
+      >div:nth-of-type(2){
+        position: absolute;
+        bottom:0.12rem;
+        width:100%;
+        line-height: 0.7rem;
+        font-size:0.611rem;
+      }
+      &.active{
+        border-bottom-color: #fb5549;
+      }
+    }
+    >a.clubList{
+      >div:nth-of-type(1){
+        background-image: url("../../images/home/club_icon.png");
+      }
+      &.active{
+        >div:nth-of-type(1){
+          background-image: url("../../images/home/club_icon_active.png");
+        }
+      }
+    }
+    >a.message{
+      >div:nth-of-type(1){
+        width:1.361rem;
+        @include imgBgFix(1.361rem 1.138rem);
+        background-image: url("../../images/home/msg_icon.png");
+      }
+      &.active{
+        >div:nth-of-type(1){
+          width:1.361rem;
+          background-image: url("../../images/home/msg_icon_active.png");
+        }
+      }
+    }
+    >a.personal{
+      >div:nth-of-type(1){
+        background-image: url("../../images/home/personal_icon.png");
+      }
+      &.active{
+        >div:nth-of-type(1){
+          background-image: url("../../images/home/personal_icon_active.png");
         }
       }
     }

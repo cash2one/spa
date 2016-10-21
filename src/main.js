@@ -46,78 +46,101 @@ Vue.http.interceptors.push(function(request,next){
 
 //页面列表，true表示需要checkLogin
 var pageRouterList = {
-    'home' : '',                 //会所首页
-    'message' : true,                    //消息列表
-    'technicianList' : '',              //技师列表
+    'home' : '',                         //会所首页
+    'message' : true,                //消息列表
+    'technicianList' : '',             //技师列表
     'technicianDetail' : '',          //技师详情
-    'order' : true,                       //订单列表
-    'orderDetail' : true,                 //订单详情
-    'personal': '',                     //个人中心
-    'clubProfile': '',                  //会所简介
-    'promotions': '',                 //优惠活动
-    'serviceList': '',                   //服务项目列表
-    'serviceItem': '',                 //服务项目详情
+    'order' : true,                     //订单列表
+    'orderDetail' : true,            //订单详情
+    'personal': '',                      //个人中心
+    'clubProfile': '',                   //会所简介
+    'promotions': '',                  //优惠活动
+    'serviceList': '',                    //服务项目列表
+    'serviceItem': '',                  //服务项目详情
     'map': '',                            //会所地址
     'comment': '',                     //技师评论
     'review': '',                          //技师评论列表
     'technicianImg': '',              //技师相册
     'chat': true,                         //聊天页面
-    'login': '',                             //登录
-    'confirmLogin': '',                 //确认登录
-    'recoverPassword': '',            //找回密码
-    'register': '',                          //注册
-    'promotionsActivity': '',          //会所活动详情
-    'accountDetail': true,                 //个人账户
-    'account': true,                        //个人账户
-    'integralDetail': true,                 //积分中心
-    'integral': true,                          //
-    'coupon': true,                          //我的优惠券
-    'couponDetail': true,              //优惠券详情
+    'login': '',                            //登录
+    'confirmLogin': '',                //确认登录
+    'recoverPassword': '',           //找回密码
+    'register': '',                         //注册
+    'promotionsActivity': '',        //会所活动详情
+    'accountDetail': true,           //个人账户
+    'account': true,                    //个人账户
+    'integralDetail': true,            //积分中心
+    'integral': true,                     //
+    'coupon': true,                     //我的优惠券
+    'couponDetail': true,            //优惠券详情
     'confirmOrder': '',                 //预约页面
     'paidCouponDetail': '',           //点钟券详情
     'paidCoupon': '',                   //点钟券
-    'collect': true,                            //技师收藏
-    'contacts': true,                         //最近联系人
-    'techReward': true,                   //打赏技师
-    'info': true,                                //用户信息
-    'picture': true,                           //用户修改头像
-    'integralDetail': true,                //积分中心详情
-    'integral': true,                          //积分中心--所有账户
-    'integralExplain': '',               //积分规则说明
-    'suggestions': true,                   //投诉建议
-    'qrPayCode': true,                        //我的账户-付款二维码
-    'tradeRecords': true,                      //我的账户--交易记录
-    'treat': true,                               //我的账户--交易记录
-    'recharge': true,                               //我的账户--充值
-    'treatExplain': '',                           //我的账户--请客说明
-    'treatRecords': true,                        //我的账户--请客记录
-    'treatDetail': true,                             //我的账户--请客详情
-    'bindPhone': '',                            //绑定手机
-    'inviteCode': '',                            //输入邀请码
-    'hourTicketList': '',                       //点钟券列表页
-    'serviceGroup': '',                          //服务列表
-    'member': '',                                  //会员活动
-    'qrPay': '',                                     //支付
-    'qrPayComplete': ''                      //支付完成
+    'collect': true,                        //技师收藏
+    'contacts': true,                     //最近联系人
+    'techReward': true,                //打赏技师
+    'info': true,                            //用户信息
+    'picture': true,                        //用户修改头像
+    'integralDetail': true,              //积分中心详情
+    'integral': true,                       //积分中心--所有账户
+    'integralExplain': '',                  //积分规则说明
+    'suggestions': true,                 //投诉建议
+    'qrPayCode': true,                   //我的账户-付款二维码
+    'tradeRecords': true,                //我的账户--交易记录
+    'treat': true,                             //我的账户--交易记录
+    'recharge': true,                       //我的账户--充值
+    'treatExplain': '',                        //我的账户--请客说明
+    'treatRecords': true,                  //我的账户--请客记录
+    'treatDetail': true,                      //我的账户--请客详情
+    'bindPhone': '',                           //绑定手机
+    'inviteCode': '',                           //输入邀请码
+    'hourTicketList': '',                      //点钟券列表页
+    'serviceGroup': '',                        //服务列表
+    'member': '',                               //会员活动
+    'qrPay': '',                                   //支付
+    'qrPayComplete': '',                     //支付完成
+    'follow9358' : '',
+    'clubList' : {                                  //会所列表，配置子页面
+        children : [ 'clubList-nearby', 'clubList-all', 'clubList-search', 'clubList-searchAll' ]
+    }
 };
 
 var isClubMode = _global.pageMode == "club",
     pageRouterOption = [],         //构造router
     prefixPath = isClubMode ? "" : "/",
-    clubPageRouterOption = [];
+    clubPageRouterOption = [],
+    itemContent,
+    optionItem;
 
 function RouterOption(path, name, isCheckLogin) {
     this.path = path;
     this.name = name;
-    this.meta = {checkLogin: isCheckLogin};
+    this.meta = { checkLogin : isCheckLogin };
     this.component = function (resolve) {
         require(['./views/' + name + '.vue'], resolve);
     };
 }
 
 for (var pageName in pageRouterList) {
-    pageRouterOption.push(new RouterOption(prefixPath + pageName, pageName, !!pageRouterList[pageName]));
+    itemContent = pageRouterList[pageName];
+    optionItem = new RouterOption(prefixPath + pageName, pageName, !!itemContent);
+    if(itemContent && itemContent.children){
+        optionItem.children = [];
+        itemContent.children.forEach(function(subPage){
+            optionItem.children.push(new RouterOption(subPage.split("-")[1],subPage,false));
+        });
+        optionItem.children.push({ //增加默认
+            path : "", redirect : { name : itemContent.children[0] }
+        });
+    }
+    pageRouterOption.push(optionItem);
 }
+
+pageRouterOption.push({
+    path : "*", redirect : { name : isClubMode ? "home" : "clubList" }
+});
+
+console.dir(pageRouterOption);
 
 if (isClubMode) {//设置嵌套路由
     clubPageRouterOption.push({
@@ -128,6 +151,9 @@ if (isClubMode) {//设置嵌套路由
         },
         children: pageRouterOption
     });
+}
+else{
+
 }
 
 // 路由配置
@@ -159,10 +185,10 @@ router.beforeEach(function (to, from, next) {
     }
 
     var currPage = _global.currPage;
-    currPage.params = to.params;
     currPage.query = to.query;
     currPage.name = to.name;
-    _global.showAppMenu = /^(home|message|order|personal|technicianList)$/.test(to.name);
+    _global.showAppMenu = isClubMode && /^(home|message|order|personal|technicianList)$/.test(to.name);
+    _global.show9358Menu = !isClubMode && /(clubList|message|personal)/.test(to.name);
     next();
 });
 

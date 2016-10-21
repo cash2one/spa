@@ -7,7 +7,7 @@
         <div class="swipe-items-wrap" ref="wrap">
             <slot></slot>
         </div>
-        <div class="swipe-indicators" v-show="showIndicators">
+        <div class="swipe-indicators" v-if="showIndicators">
             <div class="swipe-indicator" v-for="page in pages" :class="{ active: page.index === index }"></div>
         </div>
     </div>

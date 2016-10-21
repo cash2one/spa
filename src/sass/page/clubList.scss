@@ -1,0 +1,84 @@
+@import "../common/mixin.scss";
+
+div.club-list-page {
+  div.search{
+    position: relative;
+    font-size: .778rem;
+    padding: 0 .667rem;
+    border-bottom: 1px solid #d9d9d9;
+  }
+  div.list{
+    overflow-y: auto;
+  }
+}
+
+div#club-list-nearby-page{
+  div.search{
+    padding-top: .444rem;
+    padding-bottom: .444rem;
+    >a,div{
+      border-radius: 4px;
+      border: 1px solid #999;
+      height: 1.667rem;
+      line-height: 1.667rem;
+      text-align: center;
+    }
+    >a{
+      position: absolute;
+      width: 3.972rem;
+      background: #fff;
+      border-color: #f66;
+      color: #f66;
+    }
+    >div{
+      margin-left: 4.444rem;
+      background-color: #fff;
+      color: #8e8e93;
+      >span{
+        display: inline-block;
+        @include img('../../images/clubList/search2.png',.833rem .833rem);
+        background-position: left center;
+        padding-left:1.2rem;
+      }
+    }
+  }
+
+  div.title{
+    height: 2.222rem;
+    line-height: 2.222rem;
+    font-size: .889rem;
+    color: #616161;
+    border-bottom: 1px solid #d8d8d8;
+    background-color: #fff;
+    padding: 0 .667rem;
+    >a{
+      float: right;
+      font-size: .778rem;
+      color: #999;
+      padding-right:.2rem;
+      &:after{
+        content: "";
+        display: inline-block;
+        width: .43rem;
+        height: .43rem;
+        border-left: .1rem solid #999;
+        border-bottom: .1rem solid #999;
+        @include rotate(-135deg);
+      }
+    }
+  }
+
+  div.list{
+    div.view-all{
+      margin-top: .556rem;
+      background: #fff;
+      height: 2rem;
+      text-align: center;
+      border-top: 1px solid #d9d9d9;
+      border-bottom: 1px solid #d9d9d9;
+      color: #666;
+      font-size: .887rem;
+      line-height: 2rem;
+    }
+  }
+}

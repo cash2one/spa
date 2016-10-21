@@ -13,36 +13,40 @@ div#home-page{
   div.banner{
     position: relative;
   }
-  div.swipe-indicators{
-    bottom: 0;
-    left: auto;
-    right:0.5rem;
-    -webkit-transform: translateX(0);
-    transform: translateX(0);
-    &>div.swipe-indicator{
-      width:10px;
-      height:10px;
-      margin-right:0;
-      margin-left:6px;
-      opacity: 0.4;
-      &:first-child{
-        margin-left:0;
+  div.banner-swipe{
+    div.swiper-slide{
+      &>div:nth-of-type(1){
+        height:12.361rem;
+        @include imgBgFix(20rem 12.361rem);
+      }
+      &>div:nth-of-type(2){
+        position: relative;
+        width: 20rem;
+        height: 12.361rem;
+        top: -12.361rem;
+        @include jb(0,100%,rgba(0,0,0,0.5),0,60%,rgba(0,0,0,0));
+      }
+    }
+    div.swiper-pagination{
+      bottom: 0;
+      text-align: right;
+      padding-right:0.5rem;
+      >span{
+        width:10px;
+        height:10px;
+        margin-right:0;
+        margin-left:6px;
+        opacity: 0.4;
+        &:first-child{
+          margin-left:0;
+        }
+        &.swiper-pagination-bullet-active{
+          background-color: #fff;
+        }
       }
     }
   }
-  div.swipe-items-wrap>div.swipe-item{
-    &>div:nth-of-type(1){
-      height:12.361rem;
-      @include imgBgFix(20rem 12.361rem);
-    }
-    &>div:nth-of-type(2){
-      position: relative;
-      width: 20rem;
-      height: 12.361rem;
-      top: -12.361rem;
-      @include jb(0,100%,rgba(0,0,0,0.5),0,60%,rgba(0,0,0,0));
-    }
-  }
+
   div.logo{
     position: absolute;
     left:0.667rem;
@@ -53,6 +57,7 @@ div#home-page{
     border-radius: 50%;
     background: rgba(255,255,255,0.5);
     @include boxsizing(content-box);
+    z-index: 10;
     >div {
       width: 3.778rem;
       height: 3.778rem;

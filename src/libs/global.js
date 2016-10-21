@@ -14,11 +14,11 @@ exports.Global = {
 
         currPage : {                                   //当前页面信息
             name : "",
-            query : null,
-            params : null
+            query : null
         },
 
-        showAppMenu : false,                   //是否显示底部菜单
+        showAppMenu : false,                   //是否显示底部菜单--club模式下
+        show9358Menu : false,                  //9358公众号模式下
         loading : false,                               //loading效果
         pageMode : 'club',                         //当前模式，club--会所网站 9358--公众号
         sessionType : 'web',                        //sessionType
@@ -42,6 +42,9 @@ exports.Global = {
         clubInviteCode : "",
         techSerialNo : "",
         techInviteCode : "",
+
+        currLngx : "",
+        currLaty : "",
 
         userAgent : {                                   //浏览器UA
             isWX : false,
@@ -392,5 +395,9 @@ exports.Global = {
                 }
             }
         });
+    },
+
+    getOpenId : function(resolve,reject){
+        //Vue.http.get("../api/v2/wx/oauth2/openid",{ })
     }
 };

@@ -276,44 +276,25 @@ div.page-title {
       -ms-transform: rotate(45deg);
       transform: rotate(45deg); }
 
-div#menu-container {
+div.menu-container {
   position: fixed;
-  height: 2.8rem;
   width: 20rem;
   bottom: 0;
-  left: 50%;
+  left: 0;
   right: 0;
-  margin-left: -10rem;
   font-size: 0.611rem;
   border-top: 1px solid #d9d9d9;
   background-color: #fff; }
-  div#menu-container > a {
+  div.menu-container > a {
     display: block;
     float: left;
-    width: 4rem;
-    text-align: center;
-    color: #4d4d4d; }
-    div#menu-container > a > div:nth-of-type(1) {
-      width: 1.861rem;
-      height: 1.333rem;
-      margin: 0.111rem auto;
-      -webkit-background-size: 1.861rem 1.333rem;
-      -moz-background-size: 1.861rem 1.333rem;
-      -o-background-size: 1.861rem 1.333rem;
-      background-size: 1.861rem 1.333rem;
-      background-repeat: no-repeat; }
-    div#menu-container > a > div:nth-of-type(2) {
-      line-height: 1.1rem; }
-    div#menu-container > a.active {
+    color: #4d4d4d;
+    text-align: center; }
+    div.menu-container > a.active {
       color: #fb5549; }
-    div#menu-container > a:nth-of-type(1) > div:nth-of-type(1) {
-      background-image: url("../../images/common/nav_001.png"); }
-    div#menu-container > a:nth-of-type(1).active > div:nth-of-type(1) {
-      background-image: url("../../images/common/nav_000.png"); }
-    div#menu-container > a:nth-of-type(2) > div:nth-of-type(1) {
-      position: relative;
-      background-image: url("../../images/common/nav_011.png"); }
-      div#menu-container > a:nth-of-type(2) > div:nth-of-type(1) > i {
+    div.menu-container > a.message > div:nth-of-type(1) {
+      position: relative; }
+      div.menu-container > a.message > div:nth-of-type(1) > i {
         position: absolute;
         display: inline-block;
         top: -0.111rem;
@@ -328,20 +309,88 @@ div#menu-container {
         background-color: #fb5549;
         border-radius: 0.4rem;
         text-align: center; }
-    div#menu-container > a:nth-of-type(2).active > div:nth-of-type(1) {
+  div.menu-container.club {
+    height: 2.8rem; }
+    div.menu-container.club > a {
+      width: 4rem; }
+      div.menu-container.club > a > div:nth-of-type(1) {
+        width: 1.861rem;
+        height: 1.333rem;
+        margin: 0.111rem auto;
+        -webkit-background-size: 1.861rem 1.333rem;
+        -moz-background-size: 1.861rem 1.333rem;
+        -o-background-size: 1.861rem 1.333rem;
+        background-size: 1.861rem 1.333rem;
+        background-repeat: no-repeat; }
+      div.menu-container.club > a > div:nth-of-type(2) {
+        line-height: 1.1rem; }
+    div.menu-container.club > a.home > div:nth-of-type(1) {
+      background-image: url("../../images/common/nav_001.png"); }
+    div.menu-container.club > a.home.active > div:nth-of-type(1) {
+      background-image: url("../../images/common/nav_000.png"); }
+    div.menu-container.club > a.message > div:nth-of-type(1) {
+      background-image: url("../../images/common/nav_011.png"); }
+    div.menu-container.club > a.message.active > div:nth-of-type(1) {
       background-image: url("../../images/common/nav_010.png"); }
-    div#menu-container > a:nth-of-type(3) > div:nth-of-type(1) {
+    div.menu-container.club > a.technicianList > div:nth-of-type(1) {
       background-image: url("../../images/common/nav_021.png"); }
-    div#menu-container > a:nth-of-type(3).active > div:nth-of-type(1) {
+    div.menu-container.club > a.technicianList.active > div:nth-of-type(1) {
       background-image: url("../../images/common/nav_020.png"); }
-    div#menu-container > a:nth-of-type(4) > div:nth-of-type(1) {
+    div.menu-container.club > a.order > div:nth-of-type(1) {
       background-image: url("../../images/common/nav_031.png"); }
-    div#menu-container > a:nth-of-type(4).active > div:nth-of-type(1) {
+    div.menu-container.club > a.order.active > div:nth-of-type(1) {
       background-image: url("../../images/common/nav_030.png"); }
-    div#menu-container > a:nth-of-type(5) > div:nth-of-type(1) {
+    div.menu-container.club > a.personal > div:nth-of-type(1) {
       background-image: url("../../images/common/nav_041.png"); }
-    div#menu-container > a:nth-of-type(5).active > div:nth-of-type(1) {
+    div.menu-container.club > a.personal.active > div:nth-of-type(1) {
       background-image: url("../../images/common/nav_040.png"); }
+  div.menu-container.public {
+    height: 2.667rem;
+    padding-top: 0.194rem; }
+    div.menu-container.public > a {
+      position: relative;
+      width: 33.3%;
+      height: 2.491rem;
+      border-right: 1px solid #d9d9d9;
+      border-bottom: 0.194rem solid #fff; }
+      div.menu-container.public > a:last-child {
+        border-right: 0; }
+      div.menu-container.public > a > div:nth-of-type(1) {
+        width: 1.138rem;
+        height: 1.138rem;
+        margin: 0.111rem auto;
+        -webkit-background-size: 1.138rem 1.138rem;
+        -moz-background-size: 1.138rem 1.138rem;
+        -o-background-size: 1.138rem 1.138rem;
+        background-size: 1.138rem 1.138rem;
+        background-repeat: no-repeat; }
+      div.menu-container.public > a > div:nth-of-type(2) {
+        position: absolute;
+        bottom: 0.12rem;
+        width: 100%;
+        line-height: 0.7rem;
+        font-size: 0.611rem; }
+      div.menu-container.public > a.active {
+        border-bottom-color: #fb5549; }
+    div.menu-container.public > a.clubList > div:nth-of-type(1) {
+      background-image: url("../../images/home/club_icon.png"); }
+    div.menu-container.public > a.clubList.active > div:nth-of-type(1) {
+      background-image: url("../../images/home/club_icon_active.png"); }
+    div.menu-container.public > a.message > div:nth-of-type(1) {
+      width: 1.361rem;
+      -webkit-background-size: 1.361rem 1.138rem;
+      -moz-background-size: 1.361rem 1.138rem;
+      -o-background-size: 1.361rem 1.138rem;
+      background-size: 1.361rem 1.138rem;
+      background-repeat: no-repeat;
+      background-image: url("../../images/home/msg_icon.png"); }
+    div.menu-container.public > a.message.active > div:nth-of-type(1) {
+      width: 1.361rem;
+      background-image: url("../../images/home/msg_icon_active.png"); }
+    div.menu-container.public > a.personal > div:nth-of-type(1) {
+      background-image: url("../../images/home/personal_icon.png"); }
+    div.menu-container.public > a.personal.active > div:nth-of-type(1) {
+      background-image: url("../../images/home/personal_icon_active.png"); }
 
 div.telDetail {
   display: -webkit-box;

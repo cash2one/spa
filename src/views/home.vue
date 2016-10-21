@@ -5,12 +5,13 @@
     <div>
         <div class="page" id="home-page" v-show="!global.loading">
             <div class="banner">
-                <swipe class="banner-swipe">
-                    <swipe-item v-for="pic in bannerPics">
+                <swiper class="banner-swipe" :options="swiperOption">
+                    <swiper-slide v-for="pic in bannerPics">
                         <div :style="{ backgroundImage : 'url('+(pic.imageUrl || global.defaultBannerImgUrl )+')' }"></div>
                         <div></div>
-                    </swipe-item>
-                </swipe>
+                    </swiper-slide>
+                    <div class="swiper-pagination" slot="pagination"></div>
+                </swiper>
                 <div class="logo" v-if="global.clubLogoUrl"><div :style="{ backgroundImage : 'url('+global.clubLogoUrl+')' }"></div></div>
                 <div class="club-name">{{global.clubName}}</div>
             </div>
@@ -53,16 +54,15 @@
 <script>
     import { Global } from '../libs/global';
     import { eventHub } from '../libs/hub';
-    import Swipe from '../components/swipe';
-    import SwipeItem from '../components/swipe-item';
+    import { swiper, swiperSlide } from 'vue-awesome-swiper'
     import TelDetail from '../components/tel-detail.vue';
     import Util from "../libs/util";
     import ItemPriceFormatter from "../filters/item-price-formatter";
 
     module.exports = {
         components: {
-            'swipe' : Swipe,
-            'swipe-item' : SwipeItem,
+            'swiper' : swiper,
+            'swiper-slide' : swiperSlide,
             'tel-detail' : TelDetail
         },
         data: function(){
@@ -72,7 +72,14 @@
                 global : Global.data,
                 bannerPics : [],
                 serviceItems : [],
-                techs : []
+                techs : [],
+                swiperOption : {
+                    autoplay : 5000,
+                    pagination : '.swiper-pagination',
+                    paginationClickable :true,
+                    loop : true,
+                    autoplayDisableOnInteraction : false
+                }
             };
         },
         created : function(){

@@ -7,34 +7,34 @@ div#home-page {
     height: 12.361rem; }
   div#home-page div.banner {
     position: relative; }
-  div#home-page div.swipe-indicators {
-    bottom: 0;
-    left: auto;
-    right: 0.5rem;
-    -webkit-transform: translateX(0);
-    transform: translateX(0); }
-    div#home-page div.swipe-indicators > div.swipe-indicator {
-      width: 10px;
-      height: 10px;
-      margin-right: 0;
-      margin-left: 6px;
-      opacity: 0.4; }
-      div#home-page div.swipe-indicators > div.swipe-indicator:first-child {
-        margin-left: 0; }
-  div#home-page div.swipe-items-wrap > div.swipe-item > div:nth-of-type(1) {
+  div#home-page div.banner-swipe div.swiper-slide > div:nth-of-type(1) {
     height: 12.361rem;
     -webkit-background-size: 20rem 12.361rem;
     -moz-background-size: 20rem 12.361rem;
     -o-background-size: 20rem 12.361rem;
     background-size: 20rem 12.361rem;
     background-repeat: no-repeat; }
-  div#home-page div.swipe-items-wrap > div.swipe-item > div:nth-of-type(2) {
+  div#home-page div.banner-swipe div.swiper-slide > div:nth-of-type(2) {
     position: relative;
     width: 20rem;
     height: 12.361rem;
     top: -12.361rem;
     background: -webkit-gradient(linear, 0 100%, 0 60%, from(rgba(0, 0, 0, 0.5)), to(transparent));
     background: -moz-linear-gradient(top, transparent 60%, rgba(0, 0, 0, 0.5) 100%); }
+  div#home-page div.banner-swipe div.swiper-pagination {
+    bottom: 0;
+    text-align: right;
+    padding-right: 0.5rem; }
+    div#home-page div.banner-swipe div.swiper-pagination > span {
+      width: 10px;
+      height: 10px;
+      margin-right: 0;
+      margin-left: 6px;
+      opacity: 0.4; }
+      div#home-page div.banner-swipe div.swiper-pagination > span:first-child {
+        margin-left: 0; }
+      div#home-page div.banner-swipe div.swiper-pagination > span.swiper-pagination-bullet-active {
+        background-color: #fff; }
   div#home-page div.logo {
     position: absolute;
     left: 0.667rem;
@@ -46,7 +46,8 @@ div#home-page {
     background: rgba(255, 255, 255, 0.5);
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
-    box-sizing: content-box; }
+    box-sizing: content-box;
+    z-index: 10; }
     div#home-page div.logo > div {
       width: 3.778rem;
       height: 3.778rem;
