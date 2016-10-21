@@ -33,6 +33,7 @@
 <script>
     import Vue from 'vue';
     import { Global } from '../libs/global';
+    import { eventHub } from '../libs/hub';
     import Swipe from '../components/swipe';
     import SwipeItem from '../components/swipe-item';
     import TelDetail from '../components/tel-detail.vue';

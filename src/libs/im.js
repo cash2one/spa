@@ -29,7 +29,6 @@ exports.IM = {
     messageList : {}, //从本地缓存中读取的消息列表暂存于此
 
     needShowEffectDiceGames : {}, //需要在创建骰子游戏结果时显示动态效果的 游戏id数组
-
     talker : { //当前聊天对方信息
         name : "",//对方名称
         id : "",//对方环信ID
