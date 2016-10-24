@@ -129,11 +129,15 @@ for (var pageName in pageRouterList) {
         itemContent.children.forEach(function(subPage){
             optionItem.children.push(new RouterOption(subPage.split("-")[1],subPage,false));
         });
-        optionItem.children.push({ //增加默认
-            path : "", redirect : { name : itemContent.children[0] }
-        });
     }
     pageRouterOption.push(optionItem);
+}
+
+//用于跳转
+if(!isClubMode){
+    pageRouterOption.push({
+        path : "/:clubId/*", component : { template : "<div></div>" }
+    });
 }
 
 pageRouterOption.push({

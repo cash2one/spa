@@ -433,5 +433,26 @@ exports.Global = {
                 reject("获取openId失败！");
             });
         });
+    },
+
+    waitAMapInit : function(){///等待高德地图初始化完成
+        return new Promise(function(resolve,reject){
+            if(AMap && AMap.LngLat){
+                resolve();
+            }
+            else{
+                var waitCount = 0,
+                    waitAMapReady = setInterval(function(){
+                        waitCount++;
+                        if(AMap && AMap.LngLat){
+                            clearInterval(waitAMapReady);
+                            resolve();
+                        }
+                        else if(waitCount>30){
+                            reject();
+                        }
+                    },200);
+            }
+        });
     }
 };

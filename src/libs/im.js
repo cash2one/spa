@@ -675,7 +675,7 @@ exports.IM = {
     },
 
     ///解析文本消息，将里面的表情编码换成图片img标签
-    decodeExpressionToImg : function(msg){//expElList 表情dom元素列表
+    decodeExpressionToImg : function(msg){
         var _this = this, item, k;
         if(!_this.expressionIndexObj){
             _this.expressionIndexObj = {};
@@ -686,10 +686,7 @@ exports.IM = {
         }
         return msg.replace(_this.decodeExpressionReg, function () {
             k = _this.expressionIndexObj[arguments[0]];
-            if(k){
-                return "<img src='images/chat/expression/"+k+".png' data-exp='" + arguments[0] + "'/>";
-            }
-            return arguments[0];
+            return k ? "<img src='images/chat/expression/"+k+".png' data-exp='" + arguments[0] + "'/>" : arguments[0];
         });
     }
 };

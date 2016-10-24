@@ -54,7 +54,7 @@
 <script>
     import { Global } from '../libs/global';
     import { eventHub } from '../libs/hub';
-    import { swiper, swiperSlide } from 'vue-awesome-swiper'
+    import { swiper, swiperSlide } from 'vue-awesome-swiper';
     import TelDetail from '../components/tel-detail.vue';
     import Util from "../libs/util";
     import ItemPriceFormatter from "../filters/item-price-formatter";

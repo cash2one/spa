@@ -164,7 +164,7 @@
                     _this.$router.push({ name : "home" });
                 }
                 else{
-                    Util.pageReload(couponData.clubId,"home");
+                    Util.pageReload(_this.$router,couponData.clubId,"home");
                 }
             },
             getQrCodeImg : function(){//获取二维码图片

@@ -155,35 +155,14 @@ module.exports = {
             url : url
         }
     },
-    pageReload : function(clubId,pageName,params){
-        var url = location.host+location.pathname+"?#",
-            paramsStr = "";
-        if(clubId){
-            url += "/"+clubId;
-        }
-        if(pageName){
-            url += "/"+pageName;
-        }
-        if(params){
-            var item, paramArr = [];
-            for(item in params){
-                paramArr.push(item+"="+params[item]);
-            }
-            paramsStr = paramArr.join("&");
-            if(paramsStr){
-                url += "?"+paramsStr;
-            }
-        }
-        if(!/^http/.test(url)){
-            url = "http://"+url;
-        }
-        location.href = url;
-        location.reload(true);
-    },
     assignIndex : function(arr){//给数组中的对象增加index属性
         for(var i=0;i<arr.length;i++){
             arr[i].index = i;
         }
         return arr;
+    },
+    pageReload : function(router,clubId,pageName,query){
+        router.push({ path : "/"+clubId+"/"+pageName , query : query });
+        location.reload(true);
     }
 };
