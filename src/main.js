@@ -125,7 +125,7 @@ for (var pageName in pageRouterList) {
     itemContent = pageRouterList[pageName];
     optionItem = new RouterOption(prefixPath + pageName, pageName, !!itemContent);
     if(itemContent && itemContent.children){
-        optionItem.children = [];
+        optionItem.children = []; //增加子页面配置
         itemContent.children.forEach(function(subPage){
             optionItem.children.push(new RouterOption(subPage.split("-")[1],subPage,false));
         });
@@ -151,9 +151,6 @@ if (isClubMode) {//设置嵌套路由
         },
         children: pageRouterOption
     });
-}
-else{
-
 }
 
 // 路由配置
@@ -197,6 +194,6 @@ router.afterEach(function (to) {
 
 });
 
-new Promise(Global.init.bind(Global)).then(()=>{
+Global.init().then(function(){
     new Vue({router, render: h => h(App)}).$mount("#app");
-}).catch((e)=>console.error(e));
+});

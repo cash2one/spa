@@ -23,17 +23,11 @@
             if(global.userAgent.isWX && (!global.openId || global.openId.length<10)){
                 if(authCode){
                     Global.getOpenId().then(function(res){
-                        if(res.statusCode == 200){
-                            next(function(vm){
-                                vm.init();
-                            });
-                        }
-                        else if(res.statusCode == 40029){
-                            Global.getOauthCode('','9358','9358','base');
-                        }
-                        else{
-                            Util.tipShow(res.msg || "未能获取OpenId！")
-                        }
+                        next(function(vm){
+                            vm.init();
+                        });
+                    },function(err){
+                        Util.tipShow(err);
                     });
                 }
                 else{

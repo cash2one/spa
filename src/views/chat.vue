@@ -126,7 +126,8 @@
                 _this.msgWrapHeight = global.winHeight-8.858*global.winScale*16;
 
                 //////获取积分系统开关
-                Global.getClubSwitches(talker.clubId,function(res){
+                Global.getClubSwitches(talker.clubId).then(function (res){
+                    console.log("获取积分系统开关 promise "+JSON.stringify(res));
                     _this.creditConfig = res;
 
                     if(res.creditSwitch){
@@ -242,7 +243,7 @@
             },
             updateCreditAccount : function(callback){ //更新当前账户积分
                 var _this = this, talker = _this.talker;
-                Global.getCreditAccount(talker.clubId,function(res){
+                Global.getCreditAccount(talker.clubId).then(function(res){
                     _this.currIntegralAccount = (res[0] ? res[0].amount : 0);
                     if(callback) callback();
                 });

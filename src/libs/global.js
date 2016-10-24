@@ -104,7 +104,7 @@ exports.Global = {
     /*
      * 初始化一些数据
      */
-    init : function(resolve, reject){
+    init : function(){
         var _this = this,
             data = _this.data;
 
@@ -116,33 +116,6 @@ exports.Global = {
         data.userTel = Util.localStorage("userTel");
         data.userName = Util.localStorage("userName") || data.defaultName;
         data.loginName = Util.localStorage("userLoginName");
-
-        /////check login
-        if(data.token){
-            Vue.http.get("../api/v1/check_login/"+data.sessionType+"/"+data.token).then(function(res){
-                res = res.body;
-                if(res.msg != "Y"){
-                    _this.clearLoginInfo();
-                }
-                else{
-                    ///////
-                    IM.id = Util.md5(data.userId);
-                    IM.password = IM.id;
-                    IM.userId = data.userId;
-                    IM.header = data.userHeader;
-                    IM.avatar = data.userAvatar;
-                    IM.name = (data.userName == data.defaultName && data.userTel) ? data.defaultName + "(" + data.userTel.substr(0, 3) + "****" + data.userTel.slice(-4) + ")" : data.userName;
-                    IM.createConn();///创建环信连接
-
-                    data.isLogin = true;
-                    _this.updateUserNameAndHeader();
-                }
-                resolve();
-            });
-        }
-        else{
-            resolve();
-        }
 
         //加载会所的基本信息
         if(data.clubId){
@@ -180,6 +153,35 @@ exports.Global = {
 
         ////////////////////////////////
         IM.global = _this.data;
+
+        return new Promise(function(resolve,reject){
+            /////check login
+            if(data.token){
+                Vue.http.get("../api/v1/check_login/"+data.sessionType+"/"+data.token).then(function(res){
+                    res = res.body;
+                    if(res.msg != "Y"){
+                        _this.clearLoginInfo();
+                    }
+                    else{
+                        ///////
+                        IM.id = Util.md5(data.userId);
+                        IM.password = IM.id;
+                        IM.userId = data.userId;
+                        IM.header = data.userHeader;
+                        IM.avatar = data.userAvatar;
+                        IM.name = (data.userName == data.defaultName && data.userTel) ? data.defaultName + "(" + data.userTel.substr(0, 3) + "****" + data.userTel.slice(-4) + ")" : data.userName;
+                        IM.createConn();///创建环信连接
+
+                        data.isLogin = true;
+                        _this.updateUserNameAndHeader();
+                    }
+                    resolve();
+                });
+            }
+            else{
+                resolve();
+            }
+        });
     },
     /*
      * 删除用户登录信息
@@ -207,42 +209,52 @@ exports.Global = {
     /*
      * 获取会所的开关信息
      */
-    getClubSwitches : function(clubId,callback){
+    getClubSwitches : function(clubId){
         var _this = this;
         clubId = clubId || _this.data.clubId;
 
-        Vue.http.get("../api/v2/user/switches",{ params : { clubId : clubId }}).then(function(res){
-            res = res.body;
-            if(res.statusCode == 200){
-                res = res.respData;
-                var cfg = (clubId == _this.data.clubId ? _this.data.clubCfg : {} ) ;
+        return new Promise(function(resolve,reject){
+            Vue.http.get("../api/v2/user/switches",{ params : { clubId : clubId }}).then(function(res){
+                res = res.body;
+                if(res.statusCode == 200){
+                    res = res.respData;
+                    var cfg = (clubId == _this.data.clubId ? _this.data.clubCfg : {}) ;
 
-                cfg.accountSwitch = (res.account.switch == "on");
-                cfg.creditSwitch = (res.credit.systemSwitch == "on" && res.credit.clubSwitch == "on");
-                cfg.diceGameSwitch = (cfg.creditSwitch && res.credit.diceGameSwitch == "on");
-                if(cfg.diceGameSwitch) cfg.diceGameTimeout = res.credit.gameTimeoutSeconds * 1000;
+                    cfg.accountSwitch = (res.account.switch == "on");
+                    cfg.creditSwitch = (res.credit.systemSwitch == "on" && res.credit.clubSwitch == "on");
+                    cfg.diceGameSwitch = (cfg.creditSwitch && res.credit.diceGameSwitch == "on");
+                    if(cfg.diceGameSwitch) cfg.diceGameTimeout = res.credit.gameTimeoutSeconds * 1000;
 
-                cfg.paidCouponSwitch = (res.paidCoupon.couponSwitch == "on");
-                if(cfg.paidCouponSwitch) cfg.paidCouponFee = res.paidCoupon.couponPlatformFee;
+                    cfg.paidCouponSwitch = (res.paidCoupon.couponSwitch == "on");
+                    if(cfg.paidCouponSwitch) cfg.paidCouponFee = res.paidCoupon.couponPlatformFee;
 
-                cfg.paidOrderSwitch = (res.paidOrder.switch == "on");
-                if(cfg.paidOrderSwitch) cfg.paidOrderFee = res.paidOrder.platformFee;
+                    cfg.paidOrderSwitch = (res.paidOrder.switch == "on");
+                    if(cfg.paidOrderSwitch) cfg.paidOrderFee = res.paidOrder.platformFee;
 
-                if(callback) callback(cfg);
-            }
+                    resolve(cfg);
+                }
+                else{
+                    reject();
+                }
+            });
         });
     },
     /*
      * 获取当前用户积分
      */
-    getCreditAccount : function(clubId,callback){
+    getCreditAccount : function(clubId){
         var _this = this;
         clubId = clubId || _this.data.clubId;
-        Vue.http.get("../api/v2/credit/user/account",{ params : { clubId : clubId , userType : "user" }}).then(function(res){
-            res = res.body;
-            if(res.statusCode == 200){
-                if(callback) callback(res.respData);
-            }
+        return new Promise(function(resolve,reject){
+            Vue.http.get("../api/v2/credit/user/account",{ params : { clubId : clubId , userType : "user" }}).then(function(res){
+                res = res.body;
+                if(res.statusCode == 200){
+                    resolve(res.respData);
+                }
+                else{
+                    reject();
+                }
+            });
         });
     },
     /*
@@ -397,7 +409,29 @@ exports.Global = {
         });
     },
 
-    getOpenId : function(resolve,reject){
-        //Vue.http.get("../api/v2/wx/oauth2/openid",{ })
+    getOpenId : function(option){
+        return new Promise(function(resolve,reject){
+            Vue.http.get("../api/v2/wx/oauth2/openid",{ params : {
+                code : option.authCode,
+                scope : 'snsapi_base',
+                sessionType : '9358',
+                openId : option.openId || '',
+                webSessionId : option.sessionId || ''
+            }}).then(function(res){
+                res = res.body;
+                if(res.statusCode == 200){
+                    resolve(res.respData);
+                }
+                else if(res.statusCode == 40029){
+                    Global.getOauthCode('','9358','9358','base');
+                    reject("重新获取授权！");
+                }
+                else{
+                    reject(res.msg || "获取openId失败！");
+                }
+            },function(){
+                reject("获取openId失败！");
+            });
+        });
     }
 };

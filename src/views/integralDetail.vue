@@ -54,7 +54,7 @@
             _this.clubId = global.currPage.query.clubId || global.clubId;
 
             if(global.clubCfg.accountSwitch == null || _this.clubId != global.clubId){//获取开关状态
-                Global.getClubSwitches(_this.clubId,function(cfg){
+                Global.getClubSwitches(_this.clubId).then(function(cfg){
                     if(!cfg.creditSwitch){
                         Util.tipShow("积分系统未开启！");
                         return _this.$router.back();

@@ -44,15 +44,15 @@
         },
         methods: {
             initWindowWidth : function(){
-                var global = this.global, win = window, doc = document;
+                var global = this.global, win = window, doc = document, htmlEl = doc.documentElement;
                 if (!global.baseWidth){
                     global.baseWidth = doc.body.clientWidth || 320;
                 }
-                global.winWidth = doc.documentElement.clientWidth || win.innerWidth || doc.body.clientWidth;
-                global.winHeight = doc.documentElement.clientHeight || win.innerHeight;
+                global.winWidth = htmlEl.clientWidth || win.innerWidth || doc.body.clientWidth;
+                global.winHeight = htmlEl.clientHeight || win.innerHeight;
                 global.winWidth = global.winWidth>720 ? 720 : (global.winWidth<320 ? 320 : global.winWidth);
                 global.winScale = global.winWidth / global.baseWidth;
-                doc.querySelector("html").style.fontSize = doc.documentElement.style.fontSize = global.winScale * 16 + 'px';
+                htmlEl.style.fontSize = global.winScale * 16 + 'px';
             }
         }
     }

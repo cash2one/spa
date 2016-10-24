@@ -363,7 +363,7 @@
 
             doBeforeDiceGame : function(amount){
                 var _this = this, talker = _this.talker;
-                Global.getCreditAccount(talker.clubId,function(res){
+                Global.getCreditAccount(talker.clubId).then(function(res){
                     _this.integralAccount = (res[0] ? res[0].amount : 0);
                     if(parseInt(_this.integralAccount)<=0 || (amount && parseInt(amount)>parseInt(_this.integralAccount))){
                         eventHub.$emit("set-credit-tip",{ amount : amount || "", show : true, type : "game" });
@@ -537,7 +537,7 @@
                 if(_this.showGiftList && _this.currSelectGift){///发送积分礼物
                     var giftVal = _this.currSelectGift.ratio || 0;
                     if(giftVal>0){
-                        Global.getCreditAccount(talker.clubId,function(res){
+                        Global.getCreditAccount(talker.clubId).then(function(res){
                             _this.integralAccount=parseInt(res[0] ? res[0].amount : 0);
                             if(_this.integralAccount<=0 || giftVal>_this.integralAccount){
                                 eventHub.$emit("set-credit-tip",{ amount : giftVal, show : true, tipType : "gift" });

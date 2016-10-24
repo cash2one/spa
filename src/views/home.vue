@@ -67,20 +67,13 @@
         },
         data: function(){
             return {
-                getHomeDataUrl : "../json/homeData.json",
-                //getHomeDataUrl : "../api/v2/club/{clubId}/homeData",
+                //getHomeDataUrl : "../json/homeData.json",
+                getHomeDataUrl : "../api/v2/club/{clubId}/homeData",
                 global : Global.data,
-                /*bannerPics : [
-                        {"imageUrl":"http://sdcm163.stonebean.com:8489/s/group00/M00/04/02/oYYBAFeXQ-WAW9FsAACYzzrQjj4522.jpg?st=mdXfMa0TQ6gJZYd0K3v3Wg&e=1477241003","link":""},
-                        {"imageUrl":"http://sdcm164.stonebean.com:8489/s/group00/M00/02/00/oYYBAFcZlEqAcdEwAACVM3Jhw8o331.jpg?st=qBZ03IympL4Njov1NHYGjA&e=1477241003","link":"http://t.cn/R5esGOk"},
-                        {"imageUrl":"http://sdcm162.stonebean.com:8489/s/group00/M00/02/59/oIYBAFcZk_-AFy7yAAC27iTa9xI918.jpg?st=6EvYvZzzGhpP7R9Y-VwMgQ&e=1477241003","link":""},
-                        {"imageUrl":"http://sdcm163.stonebean.com:8489/s/group00/M00/02/35/oIYBAFbzzHaAE25YAAB2PEwOa_0465.jpg?st=XF0zlBJLx2krMlCgEGu-Dg&e=1477241003","link":""}
-                        ],*/
                 bannerPics : [],
                 serviceItems : [],
                 techs : [],
                 swiperOption : {
-                    name: 'bannerSwiper',
                     autoplay : 5000,
                     pagination : '.swiper-pagination',
                     paginationClickable :true,
@@ -91,19 +84,10 @@
                         setTimeout(function(){
                             swiper.reLoop();
                             swiper.slideNext(null,0);
-                        },100)
-                    },
-                    onSlideChangeEnd : function(swiper){
-                        console.log("slide end....");
-                        console.log(swiper.activeIndex);
+                        },500)
                     }
                 }
             };
-        },
-        computed: {
-            swiper : function(){
-                return (this.$children.find(children => children.options.name == 'bannerSwiper').swiper)
-            }
         },
         mounted : function(){
             var _this = this,global = _this.global;
@@ -119,9 +103,6 @@
                     global.clubTelephone = res.club.telephone.split(",");
 
                     _this.bannerPics = res.sliderPic;
-                    /*res.sliderPic.forEach(function(item){
-                     _this.bannerPics.push(item);
-                     });*/
                     _this.serviceItems = res.serviceItems;
                     _this.techs = res.techs;
                 }

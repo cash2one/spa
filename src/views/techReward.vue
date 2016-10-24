@@ -103,7 +103,7 @@
             });
 
             //////获取积分系统开关
-            Global.getClubSwitches(_this.clubId,function(cfg){
+            Global.getClubSwitches(_this.clubId).then(function(cfg){
                 if(cfg.creditSwitch){
                     ///获取积分礼物数据
                     _this.$http.get(_this.getGiftListUrl).then(function(giftRes){
@@ -113,7 +113,7 @@
                         }
                     });
                     ///获取当前账户积分
-                    Global.getCreditAccount(_this.clubId,function(creditRes){
+                    Global.getCreditAccount(_this.clubId).then(function(creditRes){
                         if(creditRes && creditRes[0]){
                             _this.currIntegralAccount = creditRes[0].amount;
                         }
