@@ -2,13 +2,12 @@
     @import '../styles/page/clubList.css';
 </style>
 <template>
-    <div class="page" id="club-list-page" v-show="!global.loading">
-        <router-view></router-view>
-    </div>
+    <router-view></router-view>
 </template>
 <script>
     import Vue from 'vue';
     import { Global } from '../libs/global';
+    import { eventHub } from '../libs/hub';
     import Util from "../libs/util";
 
     module.exports = {
@@ -17,9 +16,7 @@
                 global : Global.data,
                 currCity : "",
                 currRegion : "",
-                isOldUser : Util.localStorage('viewClubType') == 4,
-                clubTags : [],
-                techTags : []
+                isOldUser : Util.localStorage('viewClubType') == 4
             }
         },
         beforeRouteEnter : function(to,from,next){
@@ -46,7 +43,7 @@
             }
         },
         created : function(){
-
+            eventHub.$on("get-curr-city-region",this.doGetCurrCityRegion);
         },
         methods: {
             init : function(){
@@ -91,7 +88,8 @@
                                 var address = data.regeocode.addressComponent;
                                 _this.currCity = address.city || address.province;
                                 _this.currRegion = address.district;
-                                _this.queryClubTags();///查询会所标签
+                                ////////////////主动触发事件
+                                eventHub.$emit("put-curr-city-region",{ city : _this.currCity, region : _this.currRegion });
                             });
                             //逆地理编码
                             geocoder.getAddress(lnglatXY);
@@ -106,41 +104,15 @@
                 }
             },
 
-            //查询会所标签
-            queryClubTags : function(){
-                var _this = this, global = _this.global;
-                _this.$http.post("../api/v2/club/tags",{
-                    city : encodeURIComponent(_this.currCity || ''),
-                    region : encodeURIComponent(_this.currRegion || ''),
-                    laty : global.currLaty || 0,
-                    lngx : global.currLngx || 0
-                }).then(function(res){
-                    res = res.body;
-                    if(res.statusCode == 200){
-                        res = res.respData;
-                        if(res && res instanceof Array){
-                            _this.clubTags = res;
-                        }
-                    }
-                    else{
-                        Util.tipShow(res.msg || "查询会所标签数据出错！");
-                    }
-                });
-            },
-
-            //查询技师标签
-            queryTechTags : function(){
+            doGetCurrCityRegion : function(){
                 var _this = this;
-                _this.$http.get("../api/v2/club/impression/list").then(function(res){
-                    res = res.body;
-                    if(res.statusCode == 200){
-                        _this.techTags = res.respData;
-                    }
-                    else{
-                        Util.tipShow(res.msg || "查询印象标签数据出错！");
-                    }
-                });
+                if(_this.currCity !="" || _this.currRegion !=""){
+                    eventHub.$emit("put-curr-city-region",{ city : _this.currCity, region : _this.currRegion });
+                }
             }
+        },
+        beforeDestroy : function(){
+            eventHub.$off("get-curr-city-region",this.doGetCurrCityRegion);
         }
     }
 </script>

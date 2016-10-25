@@ -160,9 +160,5 @@ module.exports = {
             arr[i].index = i;
         }
         return arr;
-    },
-    pageReload : function(router,clubId,pageName,query){
-        router.push({ path : "/"+clubId+"/"+pageName , query : query });
-        location.reload(true);
     }
 };

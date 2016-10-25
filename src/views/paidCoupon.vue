@@ -128,7 +128,7 @@
                     _this.$router.push({ name : "home" });
                 }
                 else{
-                    Util.pageReload(_this.$router,couponData.clubId,"home");
+                    _this.$router.push({ path : "/"+couponData.clubId+"/home" });
                 }
             },
             doClickChangeCount : function(isAdd){

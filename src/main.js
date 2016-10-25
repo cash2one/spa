@@ -101,7 +101,7 @@ var pageRouterList = {
     'qrPayComplete': '',                     //支付完成
     'follow9358' : '',
     'clubList' : {                                  //会所列表，配置子页面
-        children : [ 'clubList-nearby', 'clubList-all', 'clubList-search', 'clubList-searchAll' ]
+        children : [ 'clubList-nearby', 'clubList-all', 'clubList-search' ]
     }
 };
 
@@ -110,7 +110,13 @@ var isClubMode = _global.pageMode == "club",
     prefixPath = isClubMode ? "" : "/",
     clubPageRouterOption = [],
     itemContent,
-    optionItem;
+    optionItem,
+    switchComponent = {
+        template : "<div></div>",
+        created : function(){
+            location.reload(true);
+        }
+    };
 
 function RouterOption(path, name, isCheckLogin) {
     this.path = path;
@@ -134,12 +140,10 @@ for (var pageName in pageRouterList) {
 }
 
 //用于跳转
-if(!isClubMode){
-    pageRouterOption.push({
-        path : "/:clubId/*", component : { template : "<div></div>" }
-    });
-}
-
+pageRouterOption.push({
+    path : !isClubMode ? "/:clubId/*" : "/clubList/*", component : switchComponent
+});
+//其他链接
 pageRouterOption.push({
     path : "*", redirect : { name : isClubMode ? "home" : "clubList" }
 });

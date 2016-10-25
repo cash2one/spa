@@ -63,31 +63,40 @@
             DistanceFormatter : DistanceFormatter
         },
         mounted : function(){
-          var _this = this;
+          var _this = this,
+                  count = 0,
+                  waitSwiperInitTimer;
             _this.$nextTick(function(){
-                _this.swiperContainer = _this.$el.querySelector("div.swiper-container");
-                if(_this.swiperContainer){
-                    _this.swiperContainer.addEventListener("click",_this.doClickSwiper);
-                }
+                waitSwiperInitTimer = setInterval(function(){
+                    count++;
+                    _this.swiperContainer = _this.$el.querySelector("div.swiper-container");
+                    if(_this.swiperContainer){
+                        _this.swiperContainer.addEventListener("click",_this.doClickSwiper);
+                        clearInterval(waitSwiperInitTimer);
+                    }
+                    if(count>10){
+                        clearInterval(waitSwiperInitTimer);
+                    }
+                },300);
             });
         },
         methods: {
             doClickClub : function(){
                 var _this = this;
-                Util.pageReload(_this.$router,_this.clubObj.id,"home");
+                _this.$router.push({ path : "/"+_this.clubObj.id+"/home"});
             },
             doClickSwiper : function(event){
                 var el = event.target || event.srcElement,
                         swipeIndex = el.dataset["swiperSlideIndex"],
                         _this = this;
                 if(swipeIndex && swipeIndex<_this.techs.length){
-                    Util.pageReload(_this.$router,_this.clubObj.id,"technicianDetail",{ id : _this.techs[swipeIndex-0].id });
+                    _this.$router.push({ path : "/"+_this.clubObj.id+"/technicianDetail", query : { id : _this.techs[swipeIndex-0].id }});
                 }
                 event.stopPropagation();
             },
             doClickGetCoupon : function(){
                 var _this = this;
-                Util.pageReload(_this.$router,_this.clubObj.id,"promotions")
+                _this.$router.push({ path : "/"+_this.clubObj.id+"/promotions"});
             }
         },
         beforeDestroy : function(){

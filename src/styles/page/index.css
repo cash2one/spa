@@ -68,18 +68,12 @@ select, option {
   -webkit-user-select: none;
   user-select: none; }
 
-.clear {
-  clear: both; }
-
-.clearfix:before, .clearfix:after {
+.clear-fix:before, .clear-fix:after {
   content: "";
-  display: table; }
+  display: block; }
 
-.clearfix:after {
+.clear-fix:after {
   clear: both; }
-
-.clearfix {
-  *zoom: 1; }
 
 div#page-container {
   position: relative;

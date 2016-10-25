@@ -7,6 +7,67 @@ div.club-list-page div.search {
 div.club-list-page div.list {
   overflow-y: auto; }
 
+div.club-list-page div.search-title > input {
+  position: absolute;
+  height: 1.6rem;
+  width: 13.278rem;
+  left: 45%;
+  top: 50%;
+  padding: 0 .5rem 0 1.5rem;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transform: translate(-50%, -50%);
+  font-size: .667rem;
+  -webkit-background-size: 0.778rem 0.75rem;
+  -moz-background-size: 0.778rem 0.75rem;
+  -o-background-size: 0.778rem 0.75rem;
+  background-size: 0.778rem 0.75rem;
+  background-image: url("../../images/clubList/search2.png?base64");
+  background-repeat: no-repeat;
+  background-position: .3rem center; }
+
+div.club-list-page div.search-title > div {
+  position: absolute;
+  top: 50%;
+  right: .667rem;
+  height: 1.6rem;
+  padding: 0 .7rem;
+  margin-top: -0.8rem;
+  line-height: 1.6rem;
+  border-radius: 5px;
+  background-color: #fb5549;
+  color: #fff;
+  font-size: .778rem; }
+
+div.club-list-page div.tags {
+  background-color: #fff;
+  margin-bottom: .667rem; }
+  div.club-list-page div.tags > div {
+    padding: 0 .667rem;
+    height: 1.722rem;
+    line-height: 1.722rem;
+    font-size: .778rem;
+    color: #616161;
+    border-bottom: 1px solid #d8d8d8; }
+  div.club-list-page div.tags > ul {
+    padding: 1.056rem .667rem .389rem; }
+    div.club-list-page div.tags > ul > li {
+      display: inline-block;
+      text-align: center;
+      height: 1.722rem;
+      line-height: 1.722rem;
+      margin-right: .667rem;
+      margin-bottom: .667rem;
+      padding: 0 .5rem;
+      border: 1px solid #d2d2d2;
+      -webkit-border-radius: .833rem;
+      -moz-border-radius: .833rem;
+      border-radius: .833rem;
+      font-size: .833rem;
+      color: #4d4d4d;
+      float: left; }
+
 div#club-list-nearby-page div.search {
   padding-top: .444rem;
   padding-bottom: .444rem; }
@@ -146,7 +207,7 @@ div#club-list-all-page div.filter-title {
         div#club-list-all-page div.filter-title > div:nth-of-type(1) > ul > li:nth-of-type(1), div#club-list-all-page div.filter-title > div:nth-of-type(2) > ul > li:nth-of-type(1), div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul > li:nth-of-type(1) {
           position: relative;
           border-top: 1px solid #fb5549; }
-          div#club-list-all-page div.filter-title > div:nth-of-type(1) > ul > li:nth-of-type(1):before, div#club-list-all-page div.filter-title > div:nth-of-type(1) > ul > li:nth-of-type(1).after, div#club-list-all-page div.filter-title > div:nth-of-type(2) > ul > li:nth-of-type(1):before, div#club-list-all-page div.filter-title > div:nth-of-type(2) > ul > li:nth-of-type(1).after, div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul > li:nth-of-type(1):before, div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul > li:nth-of-type(1).after {
+          div#club-list-all-page div.filter-title > div:nth-of-type(1) > ul > li:nth-of-type(1):before, div#club-list-all-page div.filter-title > div:nth-of-type(1) > ul > li:nth-of-type(1):after, div#club-list-all-page div.filter-title > div:nth-of-type(2) > ul > li:nth-of-type(1):before, div#club-list-all-page div.filter-title > div:nth-of-type(2) > ul > li:nth-of-type(1):after, div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul > li:nth-of-type(1):before, div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul > li:nth-of-type(1):after {
             content: "";
             display: block;
             border-left: 10px solid transparent;
@@ -199,3 +260,47 @@ div#club-list-all-page div.filter-title {
         width: 6.5rem; }
       div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul > li:nth-of-type(1):before, div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul > li:nth-of-type(1):after {
         left: 3.7rem; }
+
+div#club-list-search-page {
+  overflow-y: auto; }
+  div#club-list-search-page div.club-list, div#club-list-search-page div.tech-list {
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0; }
+  div#club-list-search-page div.club-list {
+    margin-bottom: 0.667rem; }
+    div#club-list-search-page div.club-list div.finish-load-tip {
+      border-top: 1px solid #e0e0e0; }
+  div#club-list-search-page div.tech-list {
+    border-top: 1px solid #e0e0e0; }
+  div#club-list-search-page div.list-title {
+    height: 2.222rem;
+    line-height: 2.222rem;
+    font-size: .889rem;
+    color: #616161;
+    padding-left: .667rem;
+    border-bottom: 1px solid #e0e0e0; }
+  div#club-list-search-page div.view-more {
+    height: 1.944rem;
+    line-height: 1.944rem;
+    margin-top: -0.222rem;
+    text-align: center;
+    background-color: #fff; }
+    div#club-list-search-page div.view-more > span {
+      display: inline-block;
+      padding-left: 1.5rem;
+      color: #5a6c7e;
+      font-size: .778rem;
+      -webkit-background-size: 0.778rem 0.75rem;
+      -moz-background-size: 0.778rem 0.75rem;
+      -o-background-size: 0.778rem 0.75rem;
+      background-size: 0.778rem 0.75rem;
+      background-image: url("../../images/clubList/search2.png");
+      background-repeat: no-repeat;
+      background-position: 0 center; }
+    div#club-list-search-page div.view-more.loading-data > span {
+      -webkit-background-size: 0.778rem 0.778rem;
+      -moz-background-size: 0.778rem 0.778rem;
+      -o-background-size: 0.778rem 0.778rem;
+      background-size: 0.778rem 0.778rem;
+      background-image: url("../../images/common/loading.gif");
+      background-repeat: no-repeat; }

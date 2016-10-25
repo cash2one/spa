@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="list" ref="listEle" :style="{ height : (global.winHeight-7.507*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
-            <club v-for="item in dataList" :club-obj="item"></club>
+            <club v-for="item in dataList" :club-obj="item" key="item.id"></club>
             <div class="data-load-tip" :class="{ none : !dataLoading }"><i></i><div>加载数据</div></div>
             <div class="finish-load-tip" :class="{ none : !showFinish }"><div>已经加载全部数据</div></div>
             <div class="nullData" v-show="dataList.length==0 && !dataLoading"><div></div><div>暂无内容...</div></div>
@@ -59,7 +59,13 @@
         },
         methods: {
             doActiveFilterType : function(type,event){
-                this.activeFilterType = type;
+                var _this = this;
+                if(_this.activeFilterType == type){
+                    _this.activeFilterType = "";
+                }
+                else{
+                    _this.activeFilterType = type;
+                }
                 event.stopPropagation();
             },
             doClickPageBack : function(){
@@ -70,7 +76,7 @@
                 _this.activeFilterType = "";
                 _this["selected"+type] = val;
                 event.stopPropagation();
-                _this.queryData();
+                _this.queryData(1);
             },
             doClickPage : function(){
                 this.activeFilterType = "";
