@@ -7,6 +7,7 @@ import VueResource from 'vue-resource';
 import App from './app.vue';
 import { Global } from './libs/global';
 import { IM } from './libs/im';
+import Util from './libs/util';
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
@@ -17,6 +18,7 @@ var _global = Global.data;
 
 window["spa"] = _global;///调试用，代码中勿使用
 window["im"] = IM;
+window["util"] = Util;
 
 //设置vue-resource的inteceptor
 Vue.http.interceptors.push(function(request,next){
@@ -100,6 +102,7 @@ var pageRouterList = {
     'qrPay': '',                                   //支付
     'qrPayComplete': '',                     //支付完成
     'follow9358' : '',
+    'plumflowers' : '',                         //一元夺美女
     'clubList' : {                                  //会所列表，配置子页面
         children : [ 'clubList-nearby', 'clubList-all', 'clubList-search' ]
     }

@@ -49,13 +49,15 @@
             </div>
         </div>
         <tel-detail v-if="global.clubTelephone.length>0" :telephone="global.clubTelephone"></tel-detail>
+       <plumflowers-pop :share-url="plumShareUrl"></plumflowers-pop>
     </div>
 </template>
 <script>
     import { Global } from '../libs/global';
     import { eventHub } from '../libs/hub';
     import { swiper, swiperSlide } from 'vue-awesome-swiper';
-    import TelDetail from '../components/tel-detail.vue';
+    import TelDetail from '../components/tel-detail';
+    import PlumflowersPop from '../components/plumflowers-pop';
     import Util from "../libs/util";
     import ItemPriceFormatter from "../filters/item-price-formatter";
 
@@ -63,7 +65,8 @@
         components: {
             'swiper' : swiper,
             'swiper-slide' : swiperSlide,
-            'tel-detail' : TelDetail
+            'tel-detail' : TelDetail,
+            'plumflowers-pop' : PlumflowersPop
         },
         data: function(){
             return {
@@ -73,6 +76,7 @@
                 bannerPics : [],
                 serviceItems : [],
                 techs : [],
+                plumShareUrl : "",
                 swiperOption : {
                     autoplay : 5000,
                     pagination : '.swiper-pagination',
@@ -92,7 +96,6 @@
         mounted : function(){
             var _this = this,global = _this.global;
             global.loading = true;
-            console.log("param club id");
             _this.$http.get(_this.getHomeDataUrl,{ params : { clubId : global.clubId } }).then(function(res){
                 res = res.body;
                 global.loading = false;
@@ -112,6 +115,21 @@
             }, function(){
                 Util.tipShow(global.loadError);
             });
+
+            /////请求优惠券或者一元夺美女数据
+            _this.$http.get("../api/v2/club/{clubId}/top_popup/data",{ params : { clubId : global.clubId } }).then(function(popRes){
+                popRes = popRes.body;
+                if(popRes.statusCode == 200){
+                    popRes = popRes.respData;
+                    if(popRes.type == "coupon"){
+
+                    }
+                    else if(popRes.type == "plumFlower"){
+                        _this.plumShareUrl = popRes.shareUrl;
+                        eventHub.$emit("change-plumflowers-pop",true);
+                    }
+                }
+            })
         },
         filters: {
             itemPriceFormatter : ItemPriceFormatter

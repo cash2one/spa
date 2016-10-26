@@ -304,6 +304,7 @@ exports.Global = {
             _this.weiXinCfgSignature(option);
         }
     },
+
     weiXinCfgSignature : function(option){
         var signUrl = "",///////////////////////////
             win = window, wx = win["wx"], _this = this;
@@ -360,7 +361,6 @@ exports.Global = {
 
     getOauthCode : function(pageUrl, sessionType, state, scope, msg, errorCallBack, isReplaceUrl){
         var loc = location, _this = this;
-        window.URL = window.URL || window.webkitURL;
         scope = ( scope == "base" ? "snsapi_base" : "snsapi_userinfo" );
         var _tmpSearch = loc.search;
         if(isReplaceUrl){
@@ -393,8 +393,7 @@ exports.Global = {
             state : state,
             pageUrl : encodeURIComponent(pageUrl),
             scope : scope
-        }
-        }).then(function(res){
+        }}).then(function(res){
             res = res.body;
             if(res && res.statusCode == 200){
                 loc.href = res.respData;
@@ -454,5 +453,23 @@ exports.Global = {
                     },200);
             }
         });
+    },
+
+    //设置页面标题
+    setDocumentTitle : function(title){
+        document.title = title;
+        var _this = this, doc = document, frame = null, ua = _this.data.userAgent;
+        if(ua.isWX || ua.isiPhone){
+            frame = doc.createElement('iframe');
+            frame.style.display = 'none';
+            frame.onload= function () {
+                frame.onload=null;
+                setTimeout(function () {
+                    doc.body.removeChild(frame);
+                },0);
+            };
+            frame.src= _this.data.defaultClubLogo;
+            doc.body.appendChild(frame);
+        }
     }
 };
