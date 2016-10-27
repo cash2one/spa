@@ -310,6 +310,335 @@ div#plumflowers-page{
     }
   }
 
+  .join-info{
+    >div{
+      position: absolute;
+      bottom:0;
+      background-color: #fff;
+      width: 100%;
+      .close-btn{
+        position: absolute;
+        width: 1.667rem;
+        height: 1.667rem;
+        border: 3px solid #fff;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 1.667rem;
+        background-color: #fb5549;
+        color: #fff;
+        font-size: 1.5rem;
+        left: 50%;
+        transform: translate(-50%,-50%);
+      }
+      .sure-btn{
+        padding: .556rem 0;
+        text-align: center;
+        >div{
+          height: 2.111rem;
+          line-height: 2.111rem;
+          width: 14.556rem;
+          font-size: .889rem;
+          display: inline-block;
+          -webkit-border-radius: .333rem;
+          -moz-border-radius: .333rem;
+          border-radius: .333rem;
+          background-color: #fb5549;
+          color:#fff;
+        }
+      }
+      >.join{
+        >div{
+          padding:0 2.722rem;
+          &:nth-of-type(1){
+            padding-top:1.5rem;
+            padding-bottom:.667rem;
+            color: #fb5549;
+            font-size:.944rem;
+            line-height: 1;
+            >span{
+              font-size:.722rem;
+              margin-left: .578rem;
+            }
+          }
+        }
+      }
+      >.join-first{
+        >div{
+          &:nth-of-type(2){
+            border: 1px solid #e0e0e0;
+            border-left: none;
+            border-right: none;
+            padding-top: 1.167rem;
+            padding-bottom: .944rem;
+            >.input-item{
+              overflow: hidden;
+              color: #999;
+              position: relative;
+              >div{
+                line-height:1;
+                font-size: .889rem;
+                &:nth-of-type(1){
+                  position: absolute;
+                  top:50%;
+                  -webkit-transform: translate(0, -50%);
+                  -moz-transform: translate(0, -50%);
+                  -ms-transform: translate(0, -50%);
+                  -o-transform: translate(0, -50%);
+                  transform: translate(0, -50%);
+                }
+                &:nth-of-type(2){
+                  margin-left: 3.889rem;
+                }
+              }
+              &:nth-of-type(1){
+                >div:nth-of-type(1){
+                  line-height: 1rem !important;
+                  font-size: .889rem;
+                }
+                >div:nth-of-type(2){
+                  border-bottom: 1px solid #e0e0e0;
+                  >input{
+                    width: 10.583rem;
+                    padding: 0;
+                    margin: 0;
+                    font-size: .889rem;
+                    color: #666;
+                  }
+                }
+              }
+              &:nth-of-type(2){
+                margin-top: 1.194rem;
+                >div:nth-of-type(1){
+                  line-height: 1.8rem;
+                }
+                >div:nth-of-type(2){
+                  float: left;
+                  >div:nth-of-type(1){
+                    display: table;
+                    min-width: 4.333rem;
+                    height: 1.8rem;
+                    font-size: 1.1rem;
+                    border: 1px solid #ececec;
+                    -webkit-border-radius: .167rem;
+                    -moz-border-radius: .167rem;
+                    border-radius: .167rem;
+                    >span{
+                      display: table-cell;
+                      min-width:1.8rem;
+                      vertical-align: middle;
+                      text-align: center;
+                      -webkit-user-select: none;
+                      -moz-user-select: none;
+                      -ms-user-select: none;
+                      user-select: none;
+                      &:nth-of-type(1){
+                        background-color: #ececec;
+                        color: #a1a1a1;
+                        -webkit-border-top-left-radius: .167rem;
+                        -moz-border-radius-topleft: .167rem;
+                        border-top-left-radius: .167rem;
+                        -webkit-border-bottom-left-radius: .167rem;
+                        -moz-border-radius-bottomleft: .167rem;
+                        border-bottom-left-radius: .167rem;
+                        >span{
+                          display: inline-block;
+                          @include scale(1.5,1);
+                        }
+                      }
+                      &:nth-of-type(2){
+                        padding:0 .167rem;
+                        color: #444;
+                        min-height: 2.5rem;
+                        font-size: .778rem;
+                      }
+                      &:nth-of-type(3){
+                        background-color: #ececec;
+                        color: #a1a1a1;
+                        -webkit-border-top-right-radius: .167rem;
+                        -moz-border-radius-topright: .167rem;
+                        border-top-right-radius: .167rem;
+                        -webkit-border-bottom-right-radius: .167rem;
+                        -moz-border-radius-bottomright: .167rem;
+                        border-bottom-right-radius: .167rem;
+                      }
+                    }
+                  }
+                }
+                >div:nth-of-type(3){
+                  float: right;
+                  color: #666;
+                  font-size: .722rem;
+                  background: url('../../images/plumflowers/uncheck.png') .2rem center no-repeat;
+                  -webkit-background-size:.5rem .5rem;
+                  background-size:.5rem .5rem;
+                  padding-left: 1rem;
+                  line-height: 1.8rem;
+                  &.checked{
+                    background-image: url('../../images/plumflowers/checked.png');
+                  }
+                }
+              }
+            }
+            >div:nth-of-type(3){
+              text-align: right;
+              font-size: .667rem;
+              margin-top: .722rem;
+              line-height: 1;
+              >span:nth-of-type(2){
+                margin-left: .3rem;
+                color: #fa4f47;
+              }
+            }
+          }
+        }
+      }
+      >.join-success{
+        >div{
+          &:nth-of-type(2){
+            font-size:.722rem;
+            color: #666;
+            border: 1px solid #e0e0e0;
+            border-left: none;
+            border-right: none;
+            padding-top:.944rem;
+            padding-bottom:.944rem;
+            line-height: 1;
+            >div{
+              overflow: hidden;
+              &:not(:first-child){
+                margin-top:.556rem;
+              }
+              &:nth-of-type(3){
+                >div:nth-of-type(2){
+                  max-height: 10rem;
+                  overflow: auto;
+                  -webkit-overflow-scrolling: touch;
+                  &:after{
+                    content: ' ';
+                    display: block;
+                    clear: both;
+                    height: 0;
+                  }
+                  >span{
+                    float: left;
+                    display: inline-block;
+                    padding: 0 .556rem .556rem 0;
+                  }
+                }
+              }
+              >div{
+                &:nth-of-type(1){
+                  color: #999;
+                  position: absolute;
+                }
+                &:nth-of-type(2){
+                  margin-left:3.889rem;
+                }
+                &.join-times{
+                  >span{
+                    color: #fb5549;
+                    padding-right:.3rem;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      >.join-notice{
+        >div{
+          &:nth-of-type(1){
+            font-size:1rem;
+          }
+          &:nth-of-type(2){
+            border: 1px solid #e0e0e0;
+            border-left: none;
+            border-right: none;
+            padding-top: 2.389rem;
+            padding-bottom: 2.389rem;
+            >.input-item{
+              overflow: hidden;
+              color: #999;
+              position: relative;
+              >div:nth-of-type(2){
+                border-bottom: 1px solid #e0e0e0;
+                >input{
+                  width: 10.583rem;
+                  padding: 0;
+                  margin: 0;
+                  font-size: .889rem;
+                  color: #666;
+                }
+              }
+              >div{
+                line-height:1rem;
+                font-size: .889rem;
+                &:nth-of-type(1){
+                  position: absolute;
+                  display: inline-block;
+                  top:.1rem;
+                }
+                &:nth-of-type(2){
+                  margin-left: 3.889rem;
+                }
+              }
+            }
+          }
+          &:nth-of-type(3){
+            border: 1px solid #e0e0e0;
+            border-left: none;
+            border-right: none;
+            text-align: center;
+            padding-top: .833rem;
+            padding-bottom:1.611rem;
+            >div{
+              line-height: 1;
+              &:nth-of-type(1){
+                height: 1.056rem;
+                @include img('../../../img/plumflowers/chenggong.png',1.421rem 1.056rem);
+                background-position: center;
+                background-repeat:no-repeat;
+              }
+              &:nth-of-type(2){
+                margin:.722rem 0 .778rem 0;
+                font-size: .778rem;
+                color: #666;
+              }
+              &:nth-of-type(3){
+                font-size: .833rem;
+                color: #333;
+              }
+            }
+          }
+        }
+      }
+      >.join-search{
+        >div{
+          &:nth-of-type(1){
+            font-size:1rem;
+          }
+          &:nth-of-type(2){
+            border: 1px solid #e0e0e0;
+            border-left: none;
+            border-right: none;
+            padding-top: 2.389rem;
+            padding-bottom: 2.389rem;
+            >div{
+              border-bottom: 1px solid #e0e0e0;
+              line-height: 1;
+              padding-left: 1.2rem;
+              @include img('../../images/plumflowers/tel_phone.png',.722rem .972rem);
+              background-position: left center;
+              >input{
+                font-size: .889rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   .foot-btn{
     position: fixed;
     bottom:0;
