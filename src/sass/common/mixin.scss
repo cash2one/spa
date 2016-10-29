@@ -145,6 +145,12 @@
   -o-animation-iteration-count: $count;
 }
 
+@mixin boxFlex($flex){
+  -moz-box-flex: $flex;
+  -webkit-box-flex: $flex;
+  box-flex:$flex;
+}
+
 @mixin dhyc($time){
   transition-duration: $time;
   -webkit-transition-duration: $time;

@@ -42,6 +42,18 @@ Vue.http.interceptors.push(function(request,next){
 
     ///回调响应函数之前的处理
     next(function(response){
+        var resBody = response.body;
+        if(typeof resBody == "string"){
+            try{
+                response.body = resBody = JSON.parse(resBody);
+            }
+            catch(e){}
+        }
+
+        if(resBody && resBody.statusCode == 500){
+            Util.tipShow(resBody.msg || "服务端异常！");
+            console.log("请求异常："+response.url);
+        }
         return response;
     });
 });
@@ -102,7 +114,8 @@ var pageRouterList = {
     'qrPay': '',                                   //支付
     'qrPayComplete': '',                     //支付完成
     'follow9358' : '',
-    'plumflowers' : '',                         //一元夺美女
+    'plumflowers' : '',                         //一元夺
+    'robProjectDetail' : '',                    //
     'clubList' : {                                  //会所列表，配置子页面
         children : [ 'clubList-nearby', 'clubList-all', 'clubList-search' ]
     }

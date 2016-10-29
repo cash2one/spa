@@ -124,7 +124,7 @@ div#home-page{
 
   div.recommend-tech,div.recommend-item{
     margin-top:0.417rem;
-    &>div:nth-of-type(1){
+    >div:nth-of-type(1){
       height:1.667rem;
       position: relative;
       text-indent: 1.722rem;
@@ -210,6 +210,104 @@ div#home-page{
         color: #fff;
         border-bottom-left-radius: 0.5rem;
         border-bottom-right-radius: 0.5rem;
+      }
+    }
+  }
+
+  div.paid-service-item{
+    background-color: #fff;
+    padding-top:0.667rem;
+    div.item-title{
+      font-size: .889rem;
+      color: #333;
+      border-left: .111rem solid #f66;
+      padding-left: .444rem;
+      margin:0 0.667rem;
+      line-height: 1;
+    }
+    div.paid-item{
+      padding: .889rem .667rem;
+      position: relative;
+      @include sx();
+      &:before{
+        content: ' ';
+        position: absolute;
+        width: 2.028rem;
+        height: 1.75rem;
+        left: .4rem;
+        top: .4rem;
+        @include img('../../images/home/rob-project.png',2.028rem 1.75rem);
+      }
+      >div:nth-of-type(1){
+        width: 3.833rem;
+        height: 3.833rem;
+        @include imgBgFix(3.833rem 3.833rem);
+        -webkit-border-radius: .278rem;
+        -moz-border-radius: .278rem;
+        border-radius: .278rem;
+        margin-right: .5rem;
+      }
+      >div:nth-of-type(2){
+        @include boxFlex(1);
+        >div{
+          &:nth-of-type(1){
+            line-height: 1;
+            @include s();
+            >div{
+              &:nth-of-type(1){
+                font-size: .944rem;
+                color: #212121;
+                line-height: 1.1;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                @include boxFlex(1);
+              }
+              &:nth-of-type(2){
+                font-size: .722rem;
+                color: #999;
+                &.act-end{
+                  width: 4.028rem;
+                  height: 1.389rem;
+                  line-height: 1.389rem;
+                  text-align: right;
+                  padding-right: .667rem;
+                  color: #fff;
+                  @include img('../../images/robProject/act-end-bg.png',4.028rem 1.389rem);
+                }
+                >span{
+                  color: #FF9A0C;
+                }
+              }
+            }
+          }
+          &:nth-of-type(2){
+            line-height: 1;
+            font-size: 1.056rem;
+            color: #FB5549;
+            margin-top: .556rem;
+            >span{
+              margin-left: .556rem;
+              font-size: .611rem;
+              color: #757575;
+              text-decoration: line-through;
+            }
+            >a{
+              position: relative;
+              top: -.4rem;
+              padding: 0 .5rem;
+              line-height: 1.8;
+              float: right;
+              border-radius: 4px;
+              background-color: #fb5549;
+              color: #fff;
+              font-size: .833rem;
+            }
+          }
+          &:nth-of-type(3){
+            margin-top: 1rem;
+          }
+        }
       }
     }
   }

@@ -131,11 +131,15 @@
     import Share from "../components/share";
     import DateFormatter from "../filters/date-formatter";
     import PlumNumber from "../filters/plum-number";
+    import TelInput from "../directives/tel-input";
 
     module.exports = {
         filters : {
             DateFormatter : DateFormatter,
             PlumNumber : PlumNumber
+        },
+        directives: {
+            "tel-input" : TelInput
         },
         components : {
             share : Share
@@ -180,7 +184,8 @@
                 checkedAll : false,
                 noticeTel : "",
                 reduceTimer : null,
-                plusTimer : null
+                plusTimer : null,
+                joinNums : []
             };
         },
         computed : {
@@ -351,12 +356,12 @@
                 var _this = this;
                 _this.popJoin = true;
                 if(_this.isComplete){ //next-time
-                    _this.showJoinName = "first";
+                    _this.showJoinName = "notice";
                     _this.showJoinNoticeTelInput = true;
                     _this.showJoinNoticeTelList = false;
                 }
                 else{
-                    _this.showJoinName = "notice";
+                    _this.showJoinName = "first";
                 }
             },
 

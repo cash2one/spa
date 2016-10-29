@@ -174,7 +174,9 @@ div#plumflowers-page{
         padding-left:.8rem;
         line-height: 1.3;
         margin:0;
+        list-style: disc;
         >li{
+          list-style: disc;
           margin-bottom: .556rem;
           color: #fc776d;
           >span,>div{
@@ -308,6 +310,9 @@ div#plumflowers-page{
         height: 7rem;
       }
     }
+    li{
+      line-height: 1.2rem;
+    }
   }
 
   .join-info{
@@ -323,16 +328,18 @@ div#plumflowers-page{
         border: 3px solid #fff;
         border-radius: 50%;
         text-align: center;
-        line-height: 1.667rem;
+        line-height: 1.45rem;
         background-color: #fb5549;
         color: #fff;
         font-size: 1.5rem;
         left: 50%;
+        box-sizing: content-box;
         transform: translate(-50%,-50%);
       }
       .sure-btn{
-        padding: .556rem 0;
+        padding: .556rem 0 !important;
         text-align: center;
+        box-sizing: content-box;
         >div{
           height: 2.111rem;
           line-height: 2.111rem;
@@ -595,7 +602,7 @@ div#plumflowers-page{
               line-height: 1;
               &:nth-of-type(1){
                 height: 1.056rem;
-                @include img('../../../img/plumflowers/chenggong.png',1.421rem 1.056rem);
+                @include img('../../images/plumflowers/chenggong.png',1.421rem 1.056rem);
                 background-position: center;
                 background-repeat:no-repeat;
               }
@@ -644,6 +651,7 @@ div#plumflowers-page{
     bottom:0;
     height: 2.667rem;
     padding: 0 1.278rem;
+    border-top:1px solid #e0e0e0;
     background: rgba(255,255,255,.96);
     >div{
       width: 8.444rem;
@@ -653,12 +661,13 @@ div#plumflowers-page{
       border:1px solid #fb5549;
       -webkit-border-radius: .333rem;
       -moz-border-radius: .333rem;
-      border-radius: .333rem;
+      border-radius: 4px;
       margin:.268rem 0;
       background: none;
       color: #fb5549;
       float: left;
       font-size: .889rem;
+      text-align: center;
       &:nth-of-type(1){
         margin-right: .556rem;
         color: #fff;
@@ -676,5 +685,9 @@ div#plumflowers-page{
         }
       }
     }
+  }
+
+  .disabled{
+    opacity: .3;
   }
 }

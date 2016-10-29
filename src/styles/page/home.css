@@ -210,6 +210,108 @@ div#home-page {
         color: #fff;
         border-bottom-left-radius: 0.5rem;
         border-bottom-right-radius: 0.5rem; }
+  div#home-page div.paid-service-item {
+    background-color: #fff;
+    padding-top: 0.667rem; }
+    div#home-page div.paid-service-item div.item-title {
+      font-size: .889rem;
+      color: #333;
+      border-left: .111rem solid #f66;
+      padding-left: .444rem;
+      margin: 0 0.667rem;
+      line-height: 1; }
+    div#home-page div.paid-service-item div.paid-item {
+      padding: .889rem .667rem;
+      position: relative;
+      display: -webkit-box;
+      display: -moz-box;
+      -webkit-box-align: center;
+      -moz-box-align: center; }
+      div#home-page div.paid-service-item div.paid-item:before {
+        content: ' ';
+        position: absolute;
+        width: 2.028rem;
+        height: 1.75rem;
+        left: .4rem;
+        top: .4rem;
+        -webkit-background-size: 2.028rem 1.75rem;
+        -moz-background-size: 2.028rem 1.75rem;
+        -o-background-size: 2.028rem 1.75rem;
+        background-size: 2.028rem 1.75rem;
+        background-image: url("../../images/home/rob-project.png");
+        background-repeat: no-repeat; }
+      div#home-page div.paid-service-item div.paid-item > div:nth-of-type(1) {
+        width: 3.833rem;
+        height: 3.833rem;
+        -webkit-background-size: 3.833rem 3.833rem;
+        -moz-background-size: 3.833rem 3.833rem;
+        -o-background-size: 3.833rem 3.833rem;
+        background-size: 3.833rem 3.833rem;
+        background-repeat: no-repeat;
+        -webkit-border-radius: .278rem;
+        -moz-border-radius: .278rem;
+        border-radius: .278rem;
+        margin-right: .5rem; }
+      div#home-page div.paid-service-item div.paid-item > div:nth-of-type(2) {
+        -moz-box-flex: 1;
+        -webkit-box-flex: 1;
+        box-flex: 1; }
+        div#home-page div.paid-service-item div.paid-item > div:nth-of-type(2) > div:nth-of-type(1) {
+          line-height: 1;
+          display: -webkit-box;
+          display: -moz-box;
+          -webkit-box-align: start;
+          -moz-box-align: start; }
+          div#home-page div.paid-service-item div.paid-item > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) {
+            font-size: .944rem;
+            color: #212121;
+            line-height: 1.1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            -moz-box-flex: 1;
+            -webkit-box-flex: 1;
+            box-flex: 1; }
+          div#home-page div.paid-service-item div.paid-item > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) {
+            font-size: .722rem;
+            color: #999; }
+            div#home-page div.paid-service-item div.paid-item > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2).act-end {
+              width: 4.028rem;
+              height: 1.389rem;
+              line-height: 1.389rem;
+              text-align: right;
+              padding-right: .667rem;
+              color: #fff;
+              -webkit-background-size: 4.028rem 1.389rem;
+              -moz-background-size: 4.028rem 1.389rem;
+              -o-background-size: 4.028rem 1.389rem;
+              background-size: 4.028rem 1.389rem;
+              background-image: url("../../images/robProject/act-end-bg.png");
+              background-repeat: no-repeat; }
+            div#home-page div.paid-service-item div.paid-item > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) > span {
+              color: #FF9A0C; }
+        div#home-page div.paid-service-item div.paid-item > div:nth-of-type(2) > div:nth-of-type(2) {
+          line-height: 1;
+          font-size: 1.056rem;
+          color: #FB5549;
+          margin-top: .556rem; }
+          div#home-page div.paid-service-item div.paid-item > div:nth-of-type(2) > div:nth-of-type(2) > span {
+            margin-left: .556rem;
+            font-size: .611rem;
+            color: #757575;
+            text-decoration: line-through; }
+          div#home-page div.paid-service-item div.paid-item > div:nth-of-type(2) > div:nth-of-type(2) > a {
+            position: relative;
+            top: -.4rem;
+            padding: 0 .5rem;
+            line-height: 1.8;
+            float: right;
+            border-radius: 4px;
+            background-color: #fb5549;
+            color: #fff;
+            font-size: .833rem; }
+        div#home-page div.paid-service-item div.paid-item > div:nth-of-type(2) > div:nth-of-type(3) {
+          margin-top: 1rem; }
   div#home-page div.recommend-item {
     width: 20rem;
     overflow-x: hidden; }

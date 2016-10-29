@@ -1,7 +1,7 @@
 @import "../common/mixin.scss";
 
 div.share-pop{
-  >div:nth-of-type(1){
+  >div.top{
     width:9.222rem;
     height:5rem;
     position: absolute;
@@ -15,7 +15,7 @@ div.share-pop{
     text-align: center;
     padding-top:1.4rem;
   }
-  >div:nth-of-type(2){
+  >div.center{
     width:94%;
     background-color: #fff;
     color:#4d4d4d;

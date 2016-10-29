@@ -1,8 +1,8 @@
 <template>
-    <div class="telDetail pop-modal" :class="{ active : show }" v-if="telephone.length>0">
-        <div>
+    <div class="telDetail pop-modal" :class="{ active : show }" v-if="telephone.length>0" @click="doChange(false)">
+        <div @click="doClickWrap($event)">
             <a v-for="tel in telephone" :href="'tel:'+tel">{{tel}}</a>
-            <a @click="doChangeVisible(false)">取消</a>
+            <a @click="doChange(false)">取消</a>
         </div>
     </div>
 </template>
@@ -23,15 +23,18 @@
             }
         },
         created : function(){
-            eventHub.$on("change-tel-detail",this.doChangeVisible);
+            eventHub.$on("change-tel-detail",this.doChange);
         },
         methods: {
-            doChangeVisible : function(type){
+            doChange : function(type){
                 this.show = type;
+            },
+            doClickWrap : function(e){
+                e.stopPropagation();
             }
         },
         beforeDestroy : function(){
-            eventHub.$off("change-tel-detail",this.doChangeVisible);
+            eventHub.$off("change-tel-detail",this.doChange);
         }
     }
 </script>

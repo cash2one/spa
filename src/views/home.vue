@@ -34,6 +34,18 @@
                 </div>
             </div>
 
+            <div class="paid-service-item" v-show="paidServiceItems.length>0">
+                <div class="item-title">热门活动</div>
+                <div class="paid-item" v-for="item in paidServiceItems">
+                    <div :style="{ backgroundImage : 'url('+(item.imageUrl || global.defaultServiceItemImgUrl )+')' }"></div>
+                    <div>
+                        <div><div>{{ item.name }}</div><div>剩余<span>{{ item.canPaidCount }}</span>份</div></div>
+                        <div>￥{{ item.amount }}<span>原价{{ item.price }}元</span><router-link :to="{ name : 'robProjectDetail' , query : { robProjectId : item.id }}">去抢购</router-link></div>
+                        <counter :start="item.startDate" :end="item.endDate"></counter>
+                    </div>
+                </div>
+            </div>
+
             <div class="recommend-item">
                 <div><div></div>推荐项目<router-link :to="{name : 'serviceList'}">全部项目</router-link></div>
                 <div>
@@ -60,13 +72,15 @@
     import PlumflowersPop from '../components/plumflowers-pop';
     import Util from "../libs/util";
     import ItemPriceFormatter from "../filters/item-price-formatter";
+    import Counter from "../components/counter";
 
     module.exports = {
         components: {
             'swiper' : swiper,
             'swiper-slide' : swiperSlide,
             'tel-detail' : TelDetail,
-            'plumflowers-pop' : PlumflowersPop
+            'plumflowers-pop' : PlumflowersPop,
+            'counter' : Counter
         },
         data: function(){
             return {
@@ -77,6 +91,7 @@
                 serviceItems : [],
                 techs : [],
                 plumShareUrl : "",
+                paidServiceItems : [],
                 swiperOption : {
                     autoplay : 5000,
                     pagination : '.swiper-pagination',
@@ -129,7 +144,15 @@
                         eventHub.$emit("change-plumflowers-pop",true);
                     }
                 }
-            })
+            });
+
+            //////抢购项目数据
+            _this.$http.get("../api/v2/club/paid_service_item/list",{ params : { clubId : global.clubId }}).then(function(paidItemRes){
+                paidItemRes = paidItemRes.body;
+                if(paidItemRes.statusCode == 200){
+                    _this.paidServiceItems = paidItemRes.respData || [];
+                }
+            });
         },
         filters: {
             itemPriceFormatter : ItemPriceFormatter

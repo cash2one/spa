@@ -234,7 +234,7 @@ exports.Global = {
                     resolve(cfg);
                 }
                 else{
-                    reject();
+                    reject("请求异常！");
                 }
             });
         });
@@ -351,11 +351,11 @@ exports.Global = {
     },
 
     loginParams : function(page){
-        var _this = this.data;
-        _this.loginPage = page;
+        var _this = this.data, currPage = _this.currPage;
+        _this.loginPage = page || currPage.name;
         _this.loginPageQuery = {};
-        for(var item in _this.currPage.query){
-            _this.loginPageQuery[item] = _this.currPage.query[item];
+        for(var item in currPage.query){
+            _this.loginPageQuery[item] = currPage.query[item];
         }
     },
 
