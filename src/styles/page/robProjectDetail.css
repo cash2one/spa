@@ -247,7 +247,7 @@ div.rob-project-confirm-btn {
       color: #fb5549; }
   div.rob-project-confirm-btn.processing > div {
     background-color: #ccc; }
-    div.rob-project-confirm-btn.processing > div.loading {
+    div.rob-project-confirm-btn.processing > div.processing {
       background: url("../../images/common/loading.gif") no-repeat 15% 45%; }
   div.rob-project-confirm-btn.disabled > div {
     background-color: #CCC; }

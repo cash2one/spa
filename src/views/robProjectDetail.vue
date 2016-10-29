@@ -50,8 +50,8 @@
             </div>
         </div>
         <div class="rob-project-confirm-btn" :class="{ 'disabled' : status != 'started', 'processing' : isProcessing }">
-            <div v-show="isCredits" @click="doClickPayBtnOfCredit()" :class="{ loading : creditProcessing }">{{ creditProcessing ? '购买中...' : '积分购买' }}</div>
-            <div @click="doClickPayBtnOfCash()" :class="{ loading : cashProcessing }">{{ cashProcessing ? '购买中...' : '现金购买' }}</div>
+            <div v-show="isCredits" @click="doClickPayBtnOfCredit()" :class="{ processing : creditProcessing }">{{ creditProcessing ? '购买中...' : '积分购买' }}</div>
+            <div @click="doClickPayBtnOfCash()" :class="{ processing : cashProcessing }">{{ cashProcessing ? '购买中...' : '现金购买' }}</div>
         </div>
     </div>
 </template>
@@ -188,7 +188,7 @@
                     _this.isProcessing = true;
                     _this.creditProcessing = true;
                     _this.$http.get("../api/v2/club/credits/paid/service_item",{ params : {
-                        id : _this.item.id ,
+                        id : _this.itemId,
                         techCode : global.techInviteCode || query.techCode || "",
                         userCode : query.userCode || ""
                     }}).then(function(res){

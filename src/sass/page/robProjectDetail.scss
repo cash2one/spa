@@ -262,7 +262,7 @@ div.rob-project-confirm-btn{
   &.processing{
     >div{
       background-color: #ccc;
-      &.loading{
+      &.processing{
         background: url("../../images/common/loading.gif") no-repeat 15% 45%;
       }
     }

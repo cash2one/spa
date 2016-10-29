@@ -115,7 +115,8 @@ var pageRouterList = {
     'qrPayComplete': '',                     //支付完成
     'follow9358' : '',
     'plumflowers' : '',                         //一元夺
-    'robProjectDetail' : '',                    //
+    'robProjectDetail' : '',                    //抢购项目详情
+    'robProjectSuccess' : true,                 //抢购项目成功
     'clubList' : {                                  //会所列表，配置子页面
         children : [ 'clubList-nearby', 'clubList-all', 'clubList-search' ]
     }

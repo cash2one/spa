@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="club-item-wrap" :class="{ 'no-techs' : techs.length>0 }" @click="doClickClub()">
-        <div class="club-info">
+        <div class="club-info" v-if="clubObj.name">
             <i :style="{ backgroundImage : 'url('+(clubObj.imageUrl || global.defaultClubLogo )+')' }"></i>
             <div>
                 <div><span>{{ clubObj.name }}</span><span v-show="clubObj.couponCount>0" @click="doClickGetCoupon($event)">抢优惠</span></div>
@@ -83,7 +83,9 @@
         methods: {
             doClickClub : function(){
                 var _this = this;
-                _this.$router.push({ path : "/"+_this.clubObj.id+"/home"});
+                if(_this.clubObj.name){
+                    _this.$router.push({ path : "/"+_this.clubObj.id+"/home"});
+                }
             },
             doClickSwiper : function(event){
                 var el = event.target || event.srcElement,
