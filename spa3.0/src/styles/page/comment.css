@@ -1,0 +1,309 @@
+div#comment-page div.wrap, div#comment-page a.wrap {
+  margin-top: .556rem;
+  padding-bottom: 0.667rem;
+  border-top: 1px solid #d9d9d9;
+  border-bottom: 1px solid #d9d9d9;
+  background-color: #fff; }
+  div#comment-page div.wrap > div.title, div#comment-page a.wrap > div.title {
+    height: 1.778rem;
+    font-size: .889rem;
+    color: #333;
+    line-height: 1.778rem;
+    padding-left: 1.278rem;
+    padding-right: 1.278rem;
+    padding-bottom: 0;
+    margin: 0 0 0.667rem;
+    border-bottom: 1px solid #d9d9d9; }
+    div#comment-page div.wrap > div.title > span, div#comment-page a.wrap > div.title > span {
+      font-size: .778rem;
+      color: #999; }
+
+div#comment-page div.thanks {
+  display: none;
+  margin-bottom: 0.667rem;
+  padding: 1.4305rem 0;
+  margin-top: 0;
+  border-top: none; }
+  div#comment-page div.thanks > div > div {
+    margin: 0 auto; }
+    div#comment-page div.thanks > div > div:nth-of-type(1) {
+      width: 3.056rem;
+      height: 3.056rem;
+      -webkit-background-size: 3.056rem 3.056rem;
+      -moz-background-size: 3.056rem 3.056rem;
+      -o-background-size: 3.056rem 3.056rem;
+      background-size: 3.056rem 3.056rem;
+      background-image: url("../../images/common/loading_page.png");
+      background-repeat: no-repeat; }
+    div#comment-page div.thanks > div > div:nth-of-type(2) {
+      font-size: 0.889rem;
+      color: #fb5549;
+      text-align: center; }
+
+div#comment-page a.top-info {
+  display: block;
+  height: 3.278rem;
+  margin-top: 0;
+  padding-bottom: 0;
+  border-top: 0 solid #d9d9d9;
+  color: #666;
+  display: -webkit-box;
+  display: -moz-box;
+  -webkit-box-align: center;
+  -moz-box-align: center; }
+  div#comment-page a.top-info div.right-arrow {
+    margin-left: 0.667rem; }
+
+div#comment-page div.tech-header {
+  margin: 0 0.667rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  -webkit-background-size: 2.5rem 2.5rem;
+  -moz-background-size: 2.5rem 2.5rem;
+  -o-background-size: 2.5rem 2.5rem;
+  background-size: 2.5rem 2.5rem;
+  background-repeat: no-repeat;
+  border-radius: 100%; }
+
+div#comment-page div.tech-info {
+  width: 14.415rem; }
+  div#comment-page div.tech-info > div:nth-of-type(1) {
+    display: -webkit-box;
+    display: -moz-box;
+    -webkit-box-align: center;
+    -moz-box-align: center; }
+    div#comment-page div.tech-info > div:nth-of-type(1) > div {
+      height: 1.4rem; }
+      div#comment-page div.tech-info > div:nth-of-type(1) > div:nth-of-type(1) {
+        font-size: 0.889rem;
+        width: 7rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap; }
+      div#comment-page div.tech-info > div:nth-of-type(1) > div:nth-of-type(2) {
+        font-size: 0.75rem;
+        width: 7.7rem;
+        -webkit-transform: translate(0, 50%);
+        -moz-transform: translate(0, 50%);
+        -ms-transform: translate(0, 50%);
+        -o-transform: translate(0, 50%);
+        transform: translate(0, 50%);
+        display: -webkit-box;
+        display: -moz-box;
+        -webkit-box-align: center;
+        -moz-box-align: center;
+        display: -webkit-box;
+        display: -moz-box;
+        -webkit-box-pack: end;
+        -moz-box-pack: end; }
+        div#comment-page div.tech-info > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) {
+          color: #999;
+          margin-left: 0.667rem; }
+  div#comment-page div.tech-info > div:nth-of-type(2) {
+    display: -webkit-box;
+    display: -moz-box;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    font-size: 0.75rem;
+    color: #666; }
+    div#comment-page div.tech-info > div:nth-of-type(2) > span {
+      color: #ff9d09; }
+
+div#comment-page div.comment-info > div.item {
+  padding: 0 1.278rem;
+  margin-top: .667rem;
+  height: 1.111rem;
+  line-height: 1.111rem;
+  display: table;
+  width: 100%; }
+  div#comment-page div.comment-info > div.item:nth-of-type(1) {
+    margin-top: 0; }
+  div#comment-page div.comment-info > div.item > div {
+    font-size: .833rem;
+    color: #4d4d4d;
+    height: 1.111rem;
+    line-height: 1.111rem;
+    display: table-cell;
+    vertical-align: middle; }
+  div#comment-page div.comment-info > div.item > .comment-stars {
+    text-align: center; }
+    div#comment-page div.comment-info > div.item > .comment-stars > div, div#comment-page div.comment-info > div.item > .comment-stars > div > div {
+      height: 1.111rem;
+      -webkit-background-size: 8.611rem 1.111rem;
+      -moz-background-size: 8.611rem 1.111rem;
+      -o-background-size: 8.611rem 1.111rem;
+      background-size: 8.611rem 1.111rem;
+      background-repeat: no-repeat; }
+    div#comment-page div.comment-info > div.item > .comment-stars > div {
+      display: inline-block;
+      width: 8.611rem;
+      background-image: url("../../images/comment/star-null-2.png"); }
+      div#comment-page div.comment-info > div.item > .comment-stars > div > div {
+        background-image: url("../../images/comment/star-selected-2.png"); }
+  div#comment-page div.comment-info > div.item > div:nth-of-type(3) {
+    color: #ff9d09;
+    width: 4rem;
+    text-align: right; }
+
+div#comment-page div.comment-impression {
+  margin-top: .556rem;
+  margin-bottom: 0.667rem; }
+  div#comment-page div.comment-impression > div:nth-of-type(1) {
+    height: 1.778rem;
+    font-size: .889rem;
+    color: #333;
+    line-height: 1.778rem;
+    margin: 0;
+    padding-left: 1.278rem;
+    padding-right: 1.278rem;
+    padding-bottom: 0;
+    border-bottom: 1px solid #d9d9d9; }
+    div#comment-page div.comment-impression > div:nth-of-type(1) > span {
+      font-size: .778rem;
+      color: #999; }
+  div#comment-page div.comment-impression > div:nth-of-type(2) {
+    padding: .667rem 1.278rem; }
+    div#comment-page div.comment-impression > div:nth-of-type(2) > div.comment-score {
+      margin-top: .667rem;
+      height: 1.111rem;
+      line-height: 1.111rem;
+      display: table;
+      width: 100%; }
+      div#comment-page div.comment-impression > div:nth-of-type(2) > div.comment-score:nth-of-type(1) {
+        margin-top: 0; }
+      div#comment-page div.comment-impression > div:nth-of-type(2) > div.comment-score > div {
+        font-size: .833rem;
+        color: #4d4d4d;
+        height: 1.111rem;
+        line-height: 1.111rem;
+        display: table-cell;
+        vertical-align: middle; }
+      div#comment-page div.comment-impression > div:nth-of-type(2) > div.comment-score > .comment-stars {
+        text-align: center; }
+        div#comment-page div.comment-impression > div:nth-of-type(2) > div.comment-score > .comment-stars > div {
+          display: inline-block;
+          width: 8.611rem;
+          height: 1.111rem;
+          -webkit-background-size: 8.611rem 1.111rem;
+          -moz-background-size: 8.611rem 1.111rem;
+          -o-background-size: 8.611rem 1.111rem;
+          background-size: 8.611rem 1.111rem;
+          background-image: url("../../images/comment/star-null-2.png");
+          background-repeat: no-repeat; }
+          div#comment-page div.comment-impression > div:nth-of-type(2) > div.comment-score > .comment-stars > div > div {
+            height: 1.111rem;
+            -webkit-background-size: 8.611rem 1.111rem;
+            -moz-background-size: 8.611rem 1.111rem;
+            -o-background-size: 8.611rem 1.111rem;
+            background-size: 8.611rem 1.111rem;
+            background-image: url("../../images/comment/star-selected-2.png");
+            background-repeat: no-repeat; }
+      div#comment-page div.comment-impression > div:nth-of-type(2) > div.comment-score > div:nth-of-type(3) {
+        color: #ff9d09;
+        width: 4rem;
+        text-align: right; }
+  div#comment-page div.comment-impression > div.comment-labels {
+    padding-bottom: 0; }
+    div#comment-page div.comment-impression > div.comment-labels:after {
+      content: ' ';
+      display: block;
+      height: 0;
+      clear: both; }
+    div#comment-page div.comment-impression > div.comment-labels > div {
+      display: inline-block;
+      text-align: center;
+      height: 1.778rem;
+      line-height: 1.778rem;
+      margin-right: .667rem;
+      margin-bottom: .5rem;
+      padding: 0 .5rem;
+      border: 1px solid #d9d9d9;
+      -webkit-border-radius: .833rem;
+      -moz-border-radius: .833rem;
+      border-radius: .833rem;
+      font-size: .833rem;
+      color: #4d4d4d;
+      float: left; }
+      div#comment-page div.comment-impression > div.comment-labels > div.active {
+        border-color: #ffbc56;
+        color: #fff;
+        background-color: #ffbc56; }
+  div#comment-page div.comment-impression > div.comment-text {
+    position: relative;
+    width: 17.361rem;
+    height: 5.389rem;
+    border: 1px solid #d9d9d9;
+    border-radius: .333rem;
+    margin: 0 1.278rem;
+    /*border-bottom:none;*/ }
+    div#comment-page div.comment-impression > div.comment-text > div {
+      text-align: right;
+      font-size: .722rem;
+      line-height: 1;
+      padding-right: .556rem; }
+    div#comment-page div.comment-impression > div.comment-text > textarea {
+      font-size: 0.889rem;
+      display: block;
+      height: 3.549rem;
+      width: 100%;
+      padding: .528rem .556rem 0;
+      margin-bottom: .528rem;
+      box-sizing: border-box;
+      -webkit-border-radius: .333rem;
+      -moz-border-radius: .333rem;
+      border-radius: .333rem;
+      color: #4d4d4d; }
+      div#comment-page div.comment-impression > div.comment-text > textarea:read-only, div#comment-page div.comment-impression > div.comment-text > textarea:disabled {
+        background: #fff;
+        color: #333 !important; }
+    div#comment-page div.comment-impression > div.comment-text > span {
+      position: absolute;
+      top: .528rem;
+      left: .556rem;
+      font-size: .833rem;
+      color: #999;
+      line-height: 1;
+      pointer-events: none;
+      -webkit-background-size: 0.639rem 0.861rem;
+      -moz-background-size: 0.639rem 0.861rem;
+      -o-background-size: 0.639rem 0.861rem;
+      background-size: 0.639rem 0.861rem;
+      background-image: url("../../images/comment/touch.png");
+      background-repeat: no-repeat;
+      background-position: 0 50%;
+      padding-left: 1.056rem; }
+      div#comment-page div.comment-impression > div.comment-text > span.none {
+        display: none; }
+  div#comment-page div.comment-impression > div.submit-btn {
+    height: 2.389rem;
+    line-height: 2.389rem;
+    margin: 0.556rem 1.278rem 0;
+    color: #fff;
+    border-radius: 0.333rem;
+    text-align: center;
+    background-color: #fb5549;
+    display: -webkit-box;
+    display: -moz-box;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    -webkit-box-align: center;
+    -moz-box-align: center; }
+    div#comment-page div.comment-impression > div.submit-btn.processing {
+      background: #ccc url("../../images/common/loading.gif") no-repeat 33% 45%; }
+
+div#comment-page.already-comment div.thanks {
+  display: block; }
+
+div#comment-page.already-comment div.top-info {
+  border-top: 1px solid #d9d9d9; }
+
+div#comment-page.already-comment div.attention-wrap {
+  display: none; }
+
+div#comment-page.already-comment div.comment-impression {
+  padding-bottom: 0;
+  border-bottom: none; }
+  div#comment-page.already-comment div.comment-impression div.comment-text > span, div#comment-page.already-comment div.comment-impression div.comment-text > div {
+    display: none; }
+  div#comment-page.already-comment div.comment-impression div.submit-btn {
+    display: none; }

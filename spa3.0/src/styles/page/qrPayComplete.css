@@ -1,0 +1,87 @@
+div#qrpay-complete-page div.success-info {
+  padding: 1.722rem 0 1.444rem;
+  text-align: center; }
+  div#qrpay-complete-page div.success-info > div {
+    display: inline-block; }
+    div#qrpay-complete-page div.success-info > div > span {
+      line-height: 1;
+      font-size: 1.111rem; }
+      div#qrpay-complete-page div.success-info > div > span:nth-of-type(1) {
+        color: #21b100;
+        position: relative; }
+        div#qrpay-complete-page div.success-info > div > span:nth-of-type(1) > i {
+          position: relative;
+          top: .35rem;
+          display: inline-block;
+          width: 1.556rem;
+          height: 1.556rem;
+          -webkit-background-size: cover;
+          -moz-background-size: cover;
+          -o-background-size: cover;
+          background-size: cover;
+          background-image: url("../../images/qrPay/icon_success.png");
+          background-repeat: no-repeat; }
+      div#qrpay-complete-page div.success-info > div > span:nth-of-type(2) {
+        color: #424242; }
+        div#qrpay-complete-page div.success-info > div > span:nth-of-type(2) > span:first-child {
+          font-size: 1.889rem; }
+
+div#qrpay-complete-page div.comment-star {
+  padding: 1rem .667rem;
+  background-color: #fff; }
+  div#qrpay-complete-page div.comment-star > div {
+    display: table;
+    width: 100%; }
+    div#qrpay-complete-page div.comment-star > div:last-child {
+      margin-top: 1.222rem; }
+    div#qrpay-complete-page div.comment-star > div > div {
+      display: table-cell;
+      line-height: 1.111rem;
+      height: 1.111rem;
+      font-size: .889rem;
+      vertical-align: middle; }
+      div#qrpay-complete-page div.comment-star > div > div:first-child {
+        color: #424242; }
+      div#qrpay-complete-page div.comment-star > div > div:nth-of-type(2) {
+        text-align: center; }
+        div#qrpay-complete-page div.comment-star > div > div:nth-of-type(2) div {
+          height: 1.111rem;
+          -webkit-background-size: 8.611rem 1.111rem;
+          -moz-background-size: 8.611rem 1.111rem;
+          -o-background-size: 8.611rem 1.111rem;
+          background-size: 8.611rem 1.111rem;
+          background-repeat: no-repeat; }
+        div#qrpay-complete-page div.comment-star > div > div:nth-of-type(2) > div {
+          display: inline-block;
+          width: 8.611rem;
+          background-image: url("../../images/qrPay/star-null-2.png"); }
+          div#qrpay-complete-page div.comment-star > div > div:nth-of-type(2) > div > div {
+            background-image: url("../../images/qrPay/star-selected-2.png"); }
+      div#qrpay-complete-page div.comment-star > div > div:last-child {
+        width: 4rem;
+        color: #ff9d09;
+        text-align: right; }
+
+div#qrpay-complete-page div.comment-title {
+  padding: .722rem .667rem;
+  font-size: .778rem;
+  color: #616161;
+  line-height: 1; }
+
+div#qrpay-complete-page .comment-text {
+  width: 100%;
+  height: 6.611rem;
+  padding: 1.056rem .667rem;
+  font-size: .778rem; }
+
+div#qrpay-complete-page div.submit-btn {
+  margin: 1.056rem .667rem;
+  text-align: center;
+  height: 2.444rem;
+  line-height: 2.444rem;
+  color: #fff;
+  background-color: #fb5549;
+  border-radius: .3rem; }
+  div#qrpay-complete-page div.submit-btn.processing {
+    color: #bdbdbd;
+    background: #e0e0e0 url("../../images/common/loading.gif") no-repeat 30% 45%; }

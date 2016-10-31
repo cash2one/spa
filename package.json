@@ -2,7 +2,6 @@
   "name": "spa",
   "version": "3.0.0",
   "description": "A webapp project for spa club",
-  "main": "index.js",
   "scripts": {
     "init": "webpack --progress --config webpack.dev.config.js",
     "dev": "webpack-dev-server --inline --hot --compress --history-api-fallback --config webpack.dev.config.js",

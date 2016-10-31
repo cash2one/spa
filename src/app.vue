@@ -21,13 +21,11 @@
 </template>
 <script>
     import { Global } from './libs/global';
-    import { IM } from './libs/im';
 
     module.exports = {
         data: function() {
             return {
-                global : Global.data,
-                im : IM
+                global : Global.data
             }
         },
         mounted: function() {
@@ -38,9 +36,6 @@
                 _this.initWindowWidth();
             });
             _this.initWindowWidth();
-        },
-        beforeDestroy: function() {
-
         },
         methods: {
             initWindowWidth : function(){

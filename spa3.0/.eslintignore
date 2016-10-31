@@ -1,0 +1,6 @@
+build/*.js
+config/*.js
+src/libs/websdk-1.1.2.js
+src/libs/jweixin.js
+src/views/*.vue
+src/components/*.vue
