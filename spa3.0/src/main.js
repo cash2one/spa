@@ -55,101 +55,491 @@ Vue.http.interceptors.push(function (request, next) {
     })
 })
 
-// 页面列表，true表示需要checkLogin
-var pageRouterList = {
-    'home': '',                         // 会所首页
-    'message': true,                // 消息列表
-    'technicianList': '',             // 技师列表
-    'technicianDetail': '',          // 技师详情
-    'order': true,                     // 订单列表
-    'orderDetail': true,            // 订单详情
-    'personal': '',                      // 个人中心
-    'clubProfile': '',                   // 会所简介
-    'promotions': '',                  // 优惠活动
-    'serviceList': '',                    // 服务项目列表
-    'serviceItem': '',                  // 服务项目详情
-    'map': '',                            // 会所地址
-    'comment': '',                     // 技师评论
-    'review': '',                          // 技师评论列表
-    'technicianImg': '',              // 技师相册
-    'chat': true,                         // 聊天页面
-    'login': '',                             // 登录
-    'confirmLogin': '',                // 确认登录
-    'recoverPassword': '',           // 找回密码
-    'register': '',                         // 注册
-    'promotionsActivity': '',        // 会所活动详情
-    'accountDetail': true,           // 个人账户
-    'account': true,                    // 个人账户
-    'coupon': true,                     // 我的优惠券
-    'couponDetail': true,            // 优惠券详情
-    'confirmOrder': '',                 // 预约页面
-    'paidCouponDetail': '',           // 点钟券详情
-    'paidCoupon': '',                   // 点钟券
-    'collect': true,                        // 技师收藏
-    'contacts': true,                     // 最近联系人
-    'techReward': true,                // 打赏技师
-    'info': true,                            // 用户信息
-    'picture': true,                        // 用户修改头像
-    'integralDetail': true,              // 积分中心详情
-    'integral': true,                       // 积分中心--所有账户
-    'integralExplain': '',                  // 积分规则说明
-    'suggestions': true,                 // 投诉建议
-    'qrPayCode': true,                   // 我的账户-付款二维码
-    'tradeRecords': true,                // 我的账户--交易记录
-    'treat': true,                             // 我的账户--交易记录
-    'recharge': true,                       // 我的账户--充值
-    'treatExplain': '',                        // 我的账户--请客说明
-    'treatRecords': true,                  // 我的账户--请客记录
-    'treatDetail': true,                      // 我的账户--请客详情
-    'bindPhone': '',                           // 绑定手机
-    'inviteCode': '',                           // 输入邀请码
-    'hourTicketList': '',                      // 点钟券列表页
-    'serviceGroup': '',                        // 服务列表
-    'member': '',                               // 会员活动
-    'qrPay': '',                                    // 支付
-    'qrPayComplete': '',                     // 支付完成
-    'follow9358': '',
-    'plumflowers': '',                         // 一元夺
-    'robProjectDetail': '',                    // 抢购项目详情
-    'robProjectSuccess': true,                 // 抢购项目成功
-    'clubList': {                                  // 会所列表，配置子页面
-        children: ['clubList-nearby', 'clubList-all', 'clubList-search']
-    }
-}
-
 var isClubMode = _global.pageMode === 'club'
-var pageRouterOption = [] // 构造router
 var prefixPath = isClubMode ? '' : '/'
 var clubPageRouterOption = []
-var itemContent
-var optionItem
 var switchComponent = {
     template: '<div></div>',
     created: function () {
         location.reload(true)
     }
 }
-
-function RouterOption (path, name, isCheckLogin) {
-    this.path = path
-    this.name = name
-    this.meta = { checkLogin: isCheckLogin }
-    this.component = function (resolve) {
-        require(['./views/' + name + '.vue'], resolve)
+var pageRouterOption = [
+    {
+        path: prefixPath + 'home',
+        name: 'home',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/home.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'message',
+        name: 'message',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/message.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'technicianList',
+        name: 'technicianList',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/technicianList.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'technicianDetail',
+        name: 'technicianDetail',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/technicianDetail.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'order',
+        name: 'order',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/order.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'orderDetail',
+        name: 'orderDetail',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/orderDetail.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'personal',
+        name: 'personal',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/personal.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'clubProfile',
+        name: 'clubProfile',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/clubProfile.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'promotions',
+        name: 'promotions',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/promotions.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'serviceList',
+        name: 'serviceList',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/serviceList.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'serviceItem',
+        name: 'serviceItem',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/serviceItem.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'map',
+        name: 'map',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/map.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'comment',
+        name: 'comment',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/comment.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'review',
+        name: 'review',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/review.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'technicianImg',
+        name: 'technicianImg',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/technicianImg.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'chat',
+        name: 'chat',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/chat.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'login',
+        name: 'login',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/login.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'confirmLogin',
+        name: 'confirmLogin',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/confirmLogin.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'recoverPassword',
+        name: 'recoverPassword',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/recoverPassword.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'register',
+        name: 'register',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/register.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'promotionsActivity',
+        name: 'promotionsActivity',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/promotionsActivity.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'accountDetail',
+        name: 'accountDetail',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/accountDetail.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'account',
+        name: 'account',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/account.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'coupon',
+        name: 'coupon',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/coupon.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'couponDetail',
+        name: 'couponDetail',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/couponDetail.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'confirmOrder',
+        name: 'confirmOrder',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/confirmOrder.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'paidCouponDetail',
+        name: 'paidCouponDetail',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/paidCouponDetail.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'paidCoupon',
+        name: 'paidCoupon',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/paidCoupon.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'collect',
+        name: 'collect',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/collect.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'contacts',
+        name: 'contacts',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/contacts.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'techReward',
+        name: 'techReward',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/techReward.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'info',
+        name: 'info',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/info.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'picture',
+        name: 'picture',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/picture.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'integralDetail',
+        name: 'integralDetail',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/integralDetail.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'integral',
+        name: 'integral',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/integral.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'integralExplain',
+        name: 'integralExplain',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/integralExplain.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'suggestions',
+        name: 'suggestions',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/suggestions.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'qrPayCode',
+        name: 'qrPayCode',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/qrPayCode.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'tradeRecords',
+        name: 'tradeRecords',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/tradeRecords.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'treat',
+        name: 'treat',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/treat.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'recharge',
+        name: 'recharge',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/recharge.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'treatExplain',
+        name: 'treatExplain',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/treatExplain.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'treatRecords',
+        name: 'treatRecords',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/treatRecords.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'treatDetail',
+        name: 'treatDetail',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/treatDetail.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'bindPhone',
+        name: 'bindPhone',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/bindPhone.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'inviteCode',
+        name: 'inviteCode',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/inviteCode.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'hourTicketList',
+        name: 'hourTicketList',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/hourTicketList.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'serviceGroup',
+        name: 'serviceGroup',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/serviceGroup.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'member',
+        name: 'member',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/member.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'qrPay',
+        name: 'qrPay',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/qrPay.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'qrPayComplete',
+        name: 'qrPayComplete',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/qrPayComplete.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'follow9358',
+        name: 'follow9358',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/follow9358.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'plumflowers',
+        name: 'plumflowers',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/plumflowers.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'robProjectDetail',
+        name: 'robProjectDetail',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/robProjectDetail.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'robProjectSuccess',
+        name: 'robProjectSuccess',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/robProjectSuccess.vue'], resolve)
+        }
+    },
+    {
+        path: prefixPath + 'clubList',
+        name: 'clubList',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/clubList.vue'], resolve)
+        },
+        children: [
+            {
+                path: 'nearby',
+                name: 'clubList-nearby',
+                meta: { checkLogin: false },
+                component: function (resolve) {
+                    require(['./views/clubList-nearby.vue'], resolve)
+                }
+            },
+            {
+                path: 'all',
+                name: 'clubList-all',
+                meta: { checkLogin: false },
+                component: function (resolve) {
+                    require(['./views/clubList-all.vue'], resolve)
+                }
+            },
+            {
+                path: 'search',
+                name: 'clubList-search',
+                meta: { checkLogin: false },
+                component: function (resolve) {
+                    require(['./views/clubList-search.vue'], resolve)
+                }
+            }
+        ]
     }
-}
-
-for (var pageName in pageRouterList) {
-    itemContent = pageRouterList[pageName]
-    optionItem = new RouterOption(prefixPath + pageName, pageName, !!itemContent)
-    if (itemContent && itemContent.children) {
-        optionItem.children = [] // 增加子页面配置
-        itemContent.children.forEach(function (subPage) {
-            optionItem.children.push(new RouterOption(subPage.split('-')[1], subPage, false))
-        })
-    }
-    pageRouterOption.push(optionItem)
-}
+]
 
 // 用于跳转
 pageRouterOption.push({
