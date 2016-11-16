@@ -17,34 +17,35 @@
 </template>
 
 <script>
-    import { eventHub } from '../libs/hub';
-    import Util from '../libs/util';
+    import {eventHub} from '../libs/hub'
+    import Util from '../libs/util'
 
     module.exports = {
-        data : function(){
+        data: function () {
             return {
-                show : false
+                show: false
             }
         },
-        props : {
-            shareUrl : {
-                type : String
+        props: {
+            shareUrl: {
+                type: String
             }
         },
-        created : function(){
-            eventHub.$on("change-plumflowers-pop",this.doChange);
+        created: function () {
+            eventHub.$on('change-plumflowers-pop', this.doChange)
         },
         methods: {
-            doChange : function(type){
-                this.show = type;
+            doChange: function (type) {
+                this.show = type
             },
-            doClickGet : function(){
-                var _this = this, urlObj = Util.urlFormat(_this.shareUrl);
-                _this.$router.push({ name : urlObj.page, query : urlObj.querys });
+            doClickGet: function () {
+                var _this = this
+                var urlObj = Util.urlFormat(_this.shareUrl)
+                _this.$router.push({name: urlObj.page, query: urlObj.querys})
             }
         },
-        beforeDestroy : function(){
-            eventHub.$off("change-plumflowers-pop",this.doChange);
+        beforeDestroy: function () {
+            eventHub.$off('change-plumflowers-pop', this.doChange)
         }
     }
 </script>

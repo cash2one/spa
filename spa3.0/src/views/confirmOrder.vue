@@ -2,36 +2,26 @@
     @import '../styles/page/confirmOrder.css';
 </style>
 <template>
-    <div class="page" id="service-item-page" v-if="!global.loading">
-    </div>
+    <div class="page" id="service-item-page" v-if="!global.loading"></div>
 </template>
 <script>
-    import { Global } from '../libs/global';
-    import TelDetail from '../components/tel-detail.vue';
-    import Util from "../libs/util";
+    import {Global} from '../libs/global'
 
     module.exports = {
-        data: function(){
+        data: function () {
             return {
-                global : Global.data,
-                queryDataUrl : "../api/v2/club/"+Global.data.clubId+"/service/item"
+                global: Global.data
             }
         },
-        components: {
-
+        components: {},
+        route: function () {
         },
-        route: function(){
-            var _this = this, global = _this.global,pageParam = global.currPage.query;
-        },
-        filters: {
-        },
-        mounted : function(){
-            var _this = this;
-
+        filters: {},
+        mounted: function () {
         },
         methods: {
-            doClickPageBack : function(){//点击返回按钮
-                history.back();
+            doClickPageBack: function () { // 点击返回按钮
+                history.back()
             }
         }
     }

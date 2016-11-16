@@ -6,7 +6,9 @@ module.exports = {
   },
   globals: {
     'AMap': true,
-    'WebIM': true
+    'WebIM': true,
+    'WeixinJSBridge': true,
+    'jrQrcode': true
   },
   env: {
     'browser': true,
@@ -27,6 +29,8 @@ module.exports = {
     // allow async-await
     'generator-star-spacing': 0,
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+    // off eqeqeq
+    'eqeqeq': 'off'
   }
 }

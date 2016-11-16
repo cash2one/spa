@@ -8,33 +8,33 @@
 </template>
 
 <script>
-    import { eventHub } from '../libs/hub';
+    import {eventHub} from '../libs/hub'
 
     module.exports = {
-        data : function(){
+        data: function () {
             return {
-                show : false
+                show: false
             }
         },
-        props : {
-            telephone : {
-                type : Array,
-                default : []
+        props: {
+            telephone: {
+                type: Array,
+                default: []
             }
         },
-        created : function(){
-            eventHub.$on("change-tel-detail",this.doChange);
+        created: function () {
+            eventHub.$on('change-tel-detail', this.doChange)
         },
         methods: {
-            doChange : function(type){
-                this.show = type;
+            doChange: function (type) {
+                this.show = type
             },
-            doClickWrap : function(e){
-                e.stopPropagation();
+            doClickWrap: function (e) {
+                e.stopPropagation()
             }
         },
-        beforeDestroy : function(){
-            eventHub.$off("change-tel-detail",this.doChange);
+        beforeDestroy: function () {
+            eventHub.$off('change-tel-detail', this.doChange)
         }
     }
 </script>

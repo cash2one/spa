@@ -13,11 +13,5 @@ module.exports = {
             }
             el.value = val
         })
-    },
-    update: function () {
-
-    },
-    unbind: function () {
-
     }
 }

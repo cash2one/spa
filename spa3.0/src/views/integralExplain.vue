@@ -27,17 +27,17 @@
     </div>
 </template>
 <script>
-    import { Global } from '../libs/global';
+    import {Global} from '../libs/global'
 
     module.exports = {
-        data: function(){
+        data: function () {
             return {
-                global : Global.data
+                global: Global.data
             }
         },
         methods: {
-            doClickPageBack : function(){
-                history.back();
+            doClickPageBack: function () {
+                history.back()
             }
         }
     }

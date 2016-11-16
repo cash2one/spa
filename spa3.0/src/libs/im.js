@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Util from './util'
 import { eventHub } from './hub'
-import './websdk-1.1.2'
+import './websdk-1.1.3'
 
 /**
  * 即时通讯IM
@@ -94,7 +94,7 @@ exports.IM = {
             var sessionObj
             for (item in _this.sessionList) {
                 sessionObj = _this.sessionList[item]
-                if (!(pageMode === 'club' && sessionObj.clubId !== global.clubId)) {
+                if (!(pageMode == 'club' && sessionObj.clubId !== global.clubId)) {
                     newMsgCount += sessionObj.new
                 }
             }
@@ -107,7 +107,7 @@ exports.IM = {
     // 更新会话列表
     updateSessionList: function (msg, type, isNew) {
         var _this = this
-        var talkerId = ((msg.from === _this.id || msg.from === _this.secondId) ? msg.to : msg.from)
+        var talkerId = ((msg.from == _this.id || msg.from == _this.secondId) ? msg.to : msg.from)
         var sessionList = _this.getSessionList()
         var ext = msg.ext
         var sessionObj
@@ -128,13 +128,13 @@ exports.IM = {
             sessionObj.avatar = ext.avatar
             sessionObj.no = ext.no
         }
-        var dataObj = {id: msg.id || '', type: type, data: (type === 'pic' ? '[图片]' : msg.data), time: (+new Date())}
+        var dataObj = {id: msg.id || '', type: type, data: (type == 'pic' ? '[图片]' : msg.data), time: (+new Date())}
         if (ext && ext.msgType) {
             var msgType = dataObj.msgType = ext.msgType
-            if (msgType === 'order') dataObj.orderId = ext.orderId
-            else if (msgType === 'diceGame') dataObj.data = '[骰子游戏]'
+            if (msgType == 'order') dataObj.orderId = ext.orderId
+            else if (msgType == 'diceGame') dataObj.data = '[骰子游戏]'
         }
-        if (type === 'pic') {
+        if (type == 'pic') {
             dataObj.url = msg.url
             dataObj.width = msg.width
             dataObj.height = msg.height
@@ -179,7 +179,7 @@ exports.IM = {
     // 存储接收到的消息
     storeMessage: function (msg, type) {
         var _this = this
-        var talkerId = ((msg.from === _this.id || msg.from === _this.secondId) ? msg.to : msg.from)
+        var talkerId = ((msg.from == _this.id || msg.from == _this.secondId) ? msg.to : msg.from)
         var messageListObj = _this.getMessageList(talkerId)
         var ext = msg.ext
         if (!messageListObj.name) {
@@ -200,31 +200,31 @@ exports.IM = {
             to: msg.to,
             id: msg.id || '',
             type: type,
-            data: (type === 'pic' ? '[图片]' : msg.data),
+            data: (type == 'pic' ? '[图片]' : msg.data),
             time: msg.time || (+new Date()),
             status: msg.status || 1
         }
         if (ext && ext.msgType) {
             var msgType = dataObj.msgType = ext.msgType
-            if (msgType === 'order') {
+            if (msgType == 'order') {
                 dataObj.orderId = ext.orderId
-            } else if (msgType === 'paidCoupon') {
+            } else if (msgType == 'paidCoupon') {
                 dataObj.actId = ext.actId
                 dataObj.techCode = ext.techCode
-            } else if (msgType === 'ordinaryCoupon') {
+            } else if (msgType == 'ordinaryCoupon') {
                 dataObj.userActId = msg.userActId
-            } else if (msgType === 'diceGame') {
+            } else if (msgType == 'diceGame') {
                 dataObj.gameStatus = ext.gameStatus
                 dataObj.gameId = ext.gameId
                 dataObj.gameInvite = ext.gameInvite
                 dataObj.gameResult = ext.gameResult
-            } else if (msgType === 'gift') {
+            } else if (msgType == 'gift') {
                 dataObj.giftId = ext.giftId
                 dataObj.giftValue = ext.giftValue
                 dataObj.giftName = ext.giftName
             }
         }
-        if (type === 'pic') {
+        if (type == 'pic') {
             dataObj.url = msg.url
             dataObj.width = msg.width
             dataObj.height = msg.height
@@ -258,7 +258,7 @@ exports.IM = {
             if (avatarArr.length > 0) {
                 Vue.http.get('../api/v1/emchat/tech/avatars', {params: {avatarIds: avatarArr.join(',')}}).then(function (res) {
                     res = res.body
-                    if (res.statusCode === 200) {
+                    if (res.statusCode == 200) {
                         for (var i = 0; i < res.length; i++) {
                             sessionList[avatarIndex[i]].header = res[i]
                         }
@@ -359,7 +359,7 @@ exports.IM = {
         conn.listen({
             onOpened: function () {
                 console.log('conn opened...')
-                if (connIndex === 0 && _this.reConnTimer) {
+                if (connIndex == 0 && _this.reConnTimer) {
                     clearTimeout(_this.reConnTimer)
                 }
                 _this.getSessionList() // 加载会话列表
@@ -385,7 +385,7 @@ exports.IM = {
         })
 
         // 尝试登陆
-        var loginId = (connIndex === 0 ? _this.id : _this.secondId)
+        var loginId = (connIndex == 0 ? _this.id : _this.secondId)
         if (loginId) {
             console.log('尝试open conn ' + loginId)
             conn.open({
@@ -401,7 +401,7 @@ exports.IM = {
                 }
             })
         }
-        connIndex === 0 ? _this.conn = conn : _this.secondConn = conn
+        connIndex == 0 ? _this.conn = conn : _this.secondConn = conn
     },
 
     // 处理接受到的文本消息
@@ -409,7 +409,7 @@ exports.IM = {
         console.log('im 收到一条消息：')
         console.log(JSON.stringify(msg))
 
-        if (msg.data.toLowerCase() === 'debug') {
+        if (msg.data.toLowerCase() == 'debug') {
             return console.dir(msg)
         }
         var _this = this
@@ -417,7 +417,7 @@ exports.IM = {
         msg.time = ext.time - 0
 
         // 收到一张技师发来的优惠券
-        if (ext.msgType === 'ordinaryCoupon' && ext.actId && ext.techCode) {
+        if (ext.msgType == 'ordinaryCoupon' && ext.actId && ext.techCode) {
             console.log('收到一张技师发来的优惠券')
             if (!_this.global.userTel) { // 未绑定手机号
                 return _this.sendTextMessage({
@@ -441,7 +441,7 @@ exports.IM = {
                 }).then(function (res) {
                     res = res.body
                     var respData = res.respData
-                    if (res.statusCode === 200 && respData && respData.userActId) {
+                    if (res.statusCode == 200 && respData && respData.userActId) {
                         msg.userActId = respData.userActId
                     }
                     _this.doHandlerMessage(msg, 'text')
@@ -468,7 +468,7 @@ exports.IM = {
                             clubId: ext.clubId,
                             userType: 'tech'
                         }, null, true)
-                    } else if (res.statusCode === 206) {
+                    } else if (res.statusCode == 206) {
                         _this.sendTextMessage({ // 已结领取过了
                             to: msg.from,
                             msg: '已经领取过这张券了！',
@@ -478,7 +478,7 @@ exports.IM = {
                 })
             }
         } else {
-            if (ext.msgType === 'diceGame' && ext.gameStatus !== 'request') {
+            if (ext.msgType == 'diceGame' && ext.gameStatus !== 'request') {
                 // 查找gameMessageObj,更改其状态
                 var gameMessageObj
                 var messageList = _this.getMessageList(msg.from).list
@@ -486,7 +486,7 @@ exports.IM = {
                 if (messageList) {
                     for (var k = messageList.length - 1; k >= 0; k--) {
                         item = messageList[k]
-                        if (item.msgType === 'diceGame' && item.gameId === ext.gameId && item.gameStatus === 'request') {
+                        if (item.msgType == 'diceGame' && item.gameId == ext.gameId && item.gameStatus == 'request') {
                             gameMessageObj = item
                             break
                         }
@@ -497,9 +497,9 @@ exports.IM = {
                     if (gameMessageObj) gameMessageObj.gameStatus = 'handled'
                 } else {
                     if (gameMessageObj) gameMessageObj.gameStatus = ext.gameStatus
-                    if (ext.gameStatus === 'accept') {
+                    if (ext.gameStatus == 'accept') {
                         ext.gameStatus = 'handled'
-                    } else if (ext.gameStatus === 'over') {
+                    } else if (ext.gameStatus == 'over') {
                         eventHub.$emit('update-credit-account')
                         _this.needShowEffectDiceGames[ext.gameId] = true // 显示结果动画
                     }
@@ -510,7 +510,7 @@ exports.IM = {
         }
 
         // 如果是旧账号收到技师发来的消息，则发送changAccount消息通知技师用户的账号已切换
-        if (conn === _this.secondConn) {
+        if (conn == _this.secondConn) {
             conn.send({
                 to: msg.from,
                 msg: '',
@@ -525,7 +525,7 @@ exports.IM = {
         console.log('收到图片消息：')
         console.log(JSON.stringify(msg))
         var _this = this
-        if (msg.width === 0 && msg.height === 0) {
+        if (msg.width == 0 && msg.height == 0) {
             var img = new Image()
             img.onload = function () {
                 msg.width = this.width
@@ -543,8 +543,8 @@ exports.IM = {
         var _this = this
         var global = _this.global
         var storeMsg = _this.storeMessage(msg, type)
-        if (global.currPage.name === 'chat') { // 当前是聊天页面
-            if (_this.talker.id === msg.from) {
+        if (global.currPage.name == 'chat') { // 当前是聊天页面
+            if (_this.talker.id == msg.from) {
                 _this.updateSessionList(msg, type, false)
                 _this.talker.messageList.push(storeMsg)
                 setTimeout(function () {
@@ -581,7 +581,7 @@ exports.IM = {
                     header: talker.header,
                     avatar: talker.avatar,
                     no: talker.userNo,
-                    techId: talker.userType === 'tech' ? talker.userId : '',
+                    techId: talker.userType == 'tech' ? talker.userId : '',
                     clubId: talker.clubId
                 }
             }
@@ -625,7 +625,7 @@ exports.IM = {
         _this.conn.send(msg.body)
 
         // 如果此消息正是发给当前的聊天者，则需要在聊天页面上显示出来
-        if (_this.talker.id === option.to && needStore) {
+        if (_this.talker.id == option.to && needStore) {
             _this.talker.messageList.push(storeMsg)
             setTimeout(function () {
                 eventHub.$emit('message-wrap-to-bottom')
@@ -654,7 +654,7 @@ exports.IM = {
                     header: talker.header,
                     avatar: talker.avatar,
                     no: talker.userNo,
-                    techId: talker.userType === 'tech' ? talker.userId : '',
+                    techId: talker.userType == 'tech' ? talker.userId : '',
                     clubId: talker.clubId
                 }
             }
@@ -686,7 +686,7 @@ exports.IM = {
             })
 
             // 如果此消息正是发给当前的聊天者，则需要在聊天页面上显示出来
-            if (_this.talker.id === talker.id) {
+            if (_this.talker.id == talker.id) {
                 _this.talker.messageList.push(storeMsg)
                 setTimeout(function () {
                     eventHub.$emit('message-wrap-to-bottom')

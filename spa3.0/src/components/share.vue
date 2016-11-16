@@ -13,35 +13,35 @@
 </template>
 
 <script>
-    import { Global } from '../libs/global';
-    import { eventHub } from '../libs/hub';
+    import {Global} from '../libs/global'
+    import {eventHub} from '../libs/hub'
 
     module.exports = {
-        data: function(){
+        data: function () {
             return {
-                global : Global.data,
-                show : false
-            };
-        },
-        props : {
-            shareUrl : {
-                type : String,
-                required : true
+                global: Global.data,
+                show: false
             }
         },
-        created : function(){
-            eventHub.$on("change-share-pop",this.doChange);
+        props: {
+            shareUrl: {
+                type: String,
+                required: true
+            }
+        },
+        created: function () {
+            eventHub.$on('change-share-pop', this.doChange)
         },
         methods: {
-            doChange : function(type){
-                this.show = type;
+            doChange: function (type) {
+                this.show = type
             },
-            doClickWrap : function(event){
-                event.stopPropagation();
+            doClickWrap: function (event) {
+                event.stopPropagation()
             }
         },
-        beforeDestroy : function(){
-            eventHub.$off("change-share-pop",this.doChange);
+        beforeDestroy: function () {
+            eventHub.$off('change-share-pop', this.doChange)
         }
     }
 </script>

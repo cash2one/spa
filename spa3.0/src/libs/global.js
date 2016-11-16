@@ -132,11 +132,11 @@ exports.Global = {
                 configurable: true,
                 writable: true,
                 value: function (target, firstSource) {
-                    if (target === undefined || target === null) return
+                    if (target == undefined || target == null) return
                     var to = Object(target)
                     for (var i = 1; i < arguments.length; i++) {
                         var nextSource = arguments[i]
-                        if (nextSource === undefined || nextSource === null) continue
+                        if (nextSource == undefined || nextSource == null) continue
                         var keysArray = Object.keys(Object(nextSource))
                         for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
                             var nextKey = keysArray[nextIndex]
@@ -163,7 +163,7 @@ exports.Global = {
                         IM.userId = data.userId
                         IM.header = data.userHeader
                         IM.avatar = data.userAvatar
-                        IM.name = (data.userName === data.defaultName && data.userTel) ? data.defaultName + '(' + data.userTel.substr(0, 3) + '****' + data.userTel.slice(-4) + ')' : data.userName
+                        IM.name = (data.userName == data.defaultName && data.userTel) ? data.defaultName + '(' + data.userTel.substr(0, 3) + '****' + data.userTel.slice(-4) + ')' : data.userName
                         IM.createConn() // 创建环信连接
 
                         data.isLogin = true
@@ -209,19 +209,19 @@ exports.Global = {
         return new Promise(function (resolve, reject) {
             Vue.http.get('../api/v2/user/switches', {params: {clubId: clubId}}).then(function (res) {
                 res = res.body
-                if (res.statusCode === 200) {
+                if (res.statusCode == 200) {
                     res = res.respData
-                    var cfg = (clubId === _this.data.clubId ? _this.data.clubCfg : {})
+                    var cfg = (clubId == _this.data.clubId ? _this.data.clubCfg : {})
 
-                    cfg.accountSwitch = (res.account.switch === 'on')
-                    cfg.creditSwitch = (res.credit.systemSwitch === 'on' && res.credit.clubSwitch === 'on')
-                    cfg.diceGameSwitch = (cfg.creditSwitch && res.credit.diceGameSwitch === 'on')
+                    cfg.accountSwitch = (res.account.switch == 'on')
+                    cfg.creditSwitch = (res.credit.systemSwitch == 'on' && res.credit.clubSwitch == 'on')
+                    cfg.diceGameSwitch = (cfg.creditSwitch && res.credit.diceGameSwitch == 'on')
                     if (cfg.diceGameSwitch) cfg.diceGameTimeout = res.credit.gameTimeoutSeconds * 1000
 
-                    cfg.paidCouponSwitch = (res.paidCoupon.couponSwitch === 'on')
+                    cfg.paidCouponSwitch = (res.paidCoupon.couponSwitch == 'on')
                     if (cfg.paidCouponSwitch) cfg.paidCouponFee = res.paidCoupon.couponPlatformFee
 
-                    cfg.paidOrderSwitch = (res.paidOrder.switch === 'on')
+                    cfg.paidOrderSwitch = (res.paidOrder.switch == 'on')
                     if (cfg.paidOrderSwitch) cfg.paidOrderFee = res.paidOrder.platformFee
 
                     resolve(cfg)
@@ -245,7 +245,7 @@ exports.Global = {
                 }
             }).then(function (res) {
                 res = res.body
-                if (res.statusCode === 200) {
+                if (res.statusCode == 200) {
                     resolve(res.respData)
                 } else {
                     reject()
@@ -262,7 +262,7 @@ exports.Global = {
         if (data.token) {
             Vue.http.get('../api/v2/profile/user/info/view').then(function (res) {
                 res = res.body
-                if (res.statusCode === 200) {
+                if (res.statusCode == 200) {
                     res = res.respData
                     data.userAvatar = res.avatar || ''
                     data.userName = res.name || data.defaultName
@@ -366,7 +366,7 @@ exports.Global = {
     getOauthCode: function (pageUrl, sessionType, state, scope, msg, errorCallBack, isReplaceUrl) {
         var loc = location
         var _this = this
-        scope = (scope === 'base' ? 'snsapi_base' : 'snsapi_userinfo')
+        scope = (scope == 'base' ? 'snsapi_base' : 'snsapi_userinfo')
         var _tmpSearch = loc.search
         if (isReplaceUrl) {
             pageUrl = new URL(pageUrl)
@@ -380,17 +380,17 @@ exports.Global = {
             _tmpSearch = (_tmpSearch || '') + '&_t=' + (+new Date())
         }
         if (isReplaceUrl !== true) {
-            pageUrl = loc.origin + loc.pathname + _tmpSearch + loc.hash + (loc.hash ? (pageUrl.indexOf('&') === 0 ? pageUrl : (pageUrl ? '/' + pageUrl : '')) : pageUrl)
+            pageUrl = loc.origin + loc.pathname + _tmpSearch + loc.hash + (loc.hash ? (pageUrl.indexOf('&') == 0 ? pageUrl : (pageUrl ? '/' + pageUrl : '')) : pageUrl)
         } else {
             pageUrl = pageUrl.origin + pageUrl.pathname + _tmpSearch + pageUrl.hash
         }
         if (!/_offline_notice/.test(pageUrl)) {
             pageUrl = pageUrl.replace(/(&|\?)code=[\da-zA-Z]+(&?)/g, function (v1, v2, v3) {
-                return v2 === '?' ? (v3 ? '?' : '') : (v3 ? '&' : '')
+                return v2 == '?' ? (v3 ? '?' : '') : (v3 ? '&' : '')
             })
         }
         pageUrl = pageUrl.replace(/(&|\?)state=[\da-zA-Z_-]+(&?)/g, function (v1, v2, v3) {
-            return v2 === '?' ? (v3 ? '?' : '') : (v3 ? '&' : '')
+            return v2 == '?' ? (v3 ? '?' : '') : (v3 ? '&' : '')
         })
 
         Vue.http.get('../api/v2/wx/oauth2/code', {
@@ -402,7 +402,7 @@ exports.Global = {
             }
         }).then(function (res) {
             res = res.body
-            if (res && res.statusCode === 200) {
+            if (res && res.statusCode == 200) {
                 loc.href = res.respData
             } else {
                 if (errorCallBack) {
@@ -427,9 +427,9 @@ exports.Global = {
                 }
             }).then(function (res) {
                 res = res.body
-                if (res.statusCode === 200) {
+                if (res.statusCode == 200) {
                     resolve(res.respData)
-                } else if (res.statusCode === 40029) {
+                } else if (res.statusCode == 40029) {
                     _this.getOauthCode('', '9358', '9358', 'base')
                     reject('重新获取授权！')
                 } else {

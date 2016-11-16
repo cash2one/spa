@@ -72,92 +72,93 @@
     </div>
 </template>
 <script>
-    import { Global } from '../libs/global';
-    import Util from "../libs/util";
+    import {Global} from '../libs/global'
+    import Util from '../libs/util'
 
     module.exports = {
-        data: function(){
+        data: function () {
             return {
-                global : Global.data,
-                queryDataUrl : "../api/v2/finacial/account/payforother/detail",
-                cancelAuthUrl : "../api/v2/finacial/account/payforother/cancel",
-                detailId : "",
-                authorizeCode : "-",
-                treatMoney : "-",
-                isOpen : false,
-                telephone : "",
-                telStr : "-",
-                createDate : "-",
-                resultStatus : "",
-                cancelDate : "-",
-                usedDate : "-",
-                usedAmount : "-",
-                isShowConfirm : false,
-                isProcessing : false
+                global: Global.data,
+                queryDataUrl: '../api/v2/finacial/account/payforother/detail',
+                cancelAuthUrl: '../api/v2/finacial/account/payforother/cancel',
+                detailId: '',
+                authorizeCode: '-',
+                treatMoney: '-',
+                isOpen: false,
+                telephone: '',
+                telStr: '-',
+                createDate: '-',
+                resultStatus: '',
+                cancelDate: '-',
+                usedDate: '-',
+                usedAmount: '-',
+                isShowConfirm: false,
+                isProcessing: false
             }
         },
-        created : function(){
-            var   _this = this, global = _this.global, pageParams = global.currPage.query;
-            _this.detailId = pageParams.detailId;
-            if(!_this.detailId){
-                Util.tipShow(global.visitError);
-                return _this.$router.back();
-            }
-            else{
-                _this.$http.get(_this.queryDataUrl, { params : { detailId : _this.detailId }}).then(function(res){
-                    res = res.body;
-                    if(res.statusCode == 200){
-                        res = res.respData;
-                        _this.authorizeCode = Util.spaceFormat(res.authorizeCode);
-                        _this.treatMoney = (res.amount / 100).toFixed(2);
-                        _this.isOpen = res.open == 'Y';
-                        _this.telephone = res.telephone;
-                        _this.telStr = Util.spaceFormat(res.telephone, true);
-                        _this.createDate = res.createDate;
-                        _this.resultStatus = res.status;
-                        _this.cancelDate = res.cancelDate;
-                        _this.usedDate = res.usedDate;
-                        _this.usedAmount = (res.usedAmount / 100).toFixed(2);
+        created: function () {
+            var _this = this
+            var global = _this.global
+            var pageParams = global.currPage.query
+
+            _this.detailId = pageParams.detailId
+            if (!_this.detailId) {
+                Util.tipShow(global.visitError)
+                return _this.$router.back()
+            } else {
+                _this.$http.get(_this.queryDataUrl, {params: {detailId: _this.detailId}}).then(function (res) {
+                    res = res.body
+                    if (res.statusCode == 200) {
+                        res = res.respData
+                        _this.authorizeCode = Util.spaceFormat(res.authorizeCode)
+                        _this.treatMoney = (res.amount / 100).toFixed(2)
+                        _this.isOpen = res.open == 'Y'
+                        _this.telephone = res.telephone
+                        _this.telStr = Util.spaceFormat(res.telephone, true)
+                        _this.createDate = res.createDate
+                        _this.resultStatus = res.status
+                        _this.cancelDate = res.cancelDate
+                        _this.usedDate = res.usedDate
+                        _this.usedAmount = (res.usedAmount / 100).toFixed(2)
+                    } else {
+                        Util.tipShow(res.msg || global.loadError)
+                        return _this.$router.back()
                     }
-                    else{
-                        Util.tipShow(res.msg || global.loadError);
-                        return _this.$router.back();
-                    }
-                });
+                })
             }
         },
         methods: {
-            doClickPageBack : function(){
-                history.back();
+            doClickPageBack: function () {
+                history.back()
             },
-            doClickCancelAuthBtn : function(){
-                this.isShowConfirm = true;
+            doClickCancelAuthBtn: function () {
+                this.isShowConfirm = true
             },
-            doClickAbortCancel : function(){
-                this.isShowConfirm = false;
+            doClickAbortCancel: function () {
+                this.isShowConfirm = false
             },
-            doClickConfirmCancel : function(){
-                var _this = this, global = _this.global;
-                _this.isProcessing = true;
-                _this.$http.post(_this.cancelAuthUrl,{ detailId : _this.detailId }).then(function(res){
-                    _this.isProcessing = false;
-                    res = res.body;
-                    if(res.statusCode == 200){
-                        _this.isShowConfirm = false;
-                        _this.resultStatus = "CANCLED";
-                        _this.cancelDate = Util.dateFormat(new Date());
-                        var pageData = global.pageData["treatRecords"];
-                        if(pageData){
-                            pageData.changeStatusRecord = { id : _this.detailId , status : 'CANCLED' };
+            doClickConfirmCancel: function () {
+                var _this = this
+                var global = _this.global
+                _this.isProcessing = true
+                _this.$http.post(_this.cancelAuthUrl, {detailId: _this.detailId}).then(function (res) {
+                    _this.isProcessing = false
+                    res = res.body
+                    if (res.statusCode == 200) {
+                        _this.isShowConfirm = false
+                        _this.resultStatus = 'CANCLED'
+                        _this.cancelDate = Util.dateFormat(new Date())
+                        var pageData = global.pageData['treatRecords']
+                        if (pageData) {
+                            pageData.changeStatusRecord = {id: _this.detailId, status: 'CANCLED'}
                         }
+                    } else {
+                        Util.tipShow(res.msg || '请求出错！')
                     }
-                    else{
-                        Util.tipShow(res.msg || "请求出错！");
-                    }
-                },function(){
-                    _this.isProcessing = false;
-                    Util.tipShow("操作出错了！");
-                });
+                }, function () {
+                    _this.isProcessing = false
+                    Util.tipShow('操作出错了！')
+                })
             }
         }
     }

@@ -55,7 +55,7 @@ module.exports = {
 
         for (var k in o) {
             if (new RegExp('(' + k + ')').test(format)) {
-                format = format.replace(RegExp.$1, RegExp.$1.length === 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length))
+                format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length))
             }
         }
         return format
@@ -66,7 +66,7 @@ module.exports = {
         var dateArr = tArr[0].split('-')
         var timeArr
         var date = new Date()
-        if (dateArr.length === 3) {
+        if (dateArr.length == 3) {
             date.setFullYear(dateArr[0] - 0, dateArr[1] - 1, dateArr[2] - 0)
         }
         if (tArr[1]) {
@@ -81,7 +81,7 @@ module.exports = {
         if (!str) return
         var tmpArr = []
         var spaceStr = ''
-        last = last === true
+        last = last == true
         num = Math.abs(num || 4)
         space = Math.abs(space || 1)
         str = str.split('')
@@ -93,7 +93,7 @@ module.exports = {
         }
         str.forEach(function (v, i) {
             tmpArr.push(v)
-            if ((i + 1) % num === 0) {
+            if ((i + 1) % num == 0) {
                 tmpArr.push(spaceStr)
             }
         })
@@ -121,7 +121,7 @@ module.exports = {
             var paramArr = paramStr.split('&')
             for (k = 0; k < paramArr.length; k++) {
                 tempArr = paramArr[k].split('=')
-                if (tempArr.length === 2) {
+                if (tempArr.length == 2) {
                     paramObj[tempArr[0]] = tempArr[1]
                 }
             }
@@ -131,9 +131,9 @@ module.exports = {
             var queryArr = queryStr.split('&')
             for (k = 0; k < queryArr.length; k++) {
                 tempArr = queryArr[k].split('=')
-                if (tempArr.length === 1 && tempStr.indexOf('#' + tempArr[0]) >= 0) {
+                if (tempArr.length == 1 && tempStr.indexOf('#' + tempArr[0]) >= 0) {
                     page = tempArr[0]
-                } else if (tempArr.length === 2) {
+                } else if (tempArr.length == 2) {
                     if (!queryObj) queryObj = {}
                     queryObj[tempArr[0]] = tempArr[1]
                 }

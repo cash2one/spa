@@ -20,41 +20,42 @@
 </template>
 
 <script>
-    import { Global } from '../libs/global';
+    import {Global} from '../libs/global'
 
     module.exports = {
-        data: function(){
+        data: function () {
             return {
-                global : Global.data,
-                getClubQrCodeImgUrl : "../api/v1/wx/club/param_qrcode",
-                showGzText : false,
-                clubQrCodeImg : "", ////关注公众号二维码图片
-                getCodeImgMaxCount : 2
-            };
+                global: Global.data,
+                getClubQrCodeImgUrl: '../api/v1/wx/club/param_qrcode',
+                showGzText: false,
+                clubQrCodeImg: '', // 关注公众号二维码图片
+                getCodeImgMaxCount: 2
+            }
         },
-        created : function(){
-            var _this = this, global = _this.global;
-            _this.getClubQrCodeImg();//获取二维码图片
-            if(global.pageMode =="club" && global.userAgent.isWX){
-                _this.showGzText = true;
+        created: function () {
+            var _this = this
+            var global = _this.global
+            _this.getClubQrCodeImg() // 获取二维码图片
+            if (global.pageMode == 'club' && global.userAgent.isWX) {
+                _this.showGzText = true
             }
         },
         methods: {
-            getClubQrCodeImg : function(){
-                var _this = this, global = _this.global;
-                if(global.pageMode == "club"){
-                    _this.getCodeImgMaxCount--;
-                    _this.$http.get(_this.getClubQrCodeImgUrl, { params : { clubId : global.clubId }}).then(function(res){
-                        res = res.body;
-                        if(res.statusCode == 200){
-                            if(res.respData == "N"){
-                                if(_this.getCodeImgMaxCount != 0) _this.getClubQrCodeImg();
-                            }
-                            else{
-                                _this.clubQrCodeImg = res.respData;
+            getClubQrCodeImg: function () {
+                var _this = this
+                var global = _this.global
+                if (global.pageMode == 'club') {
+                    _this.getCodeImgMaxCount--
+                    _this.$http.get(_this.getClubQrCodeImgUrl, {params: {clubId: global.clubId}}).then(function (res) {
+                        res = res.body
+                        if (res.statusCode == 200) {
+                            if (res.respData == 'N') {
+                                if (_this.getCodeImgMaxCount != 0) _this.getClubQrCodeImg()
+                            } else {
+                                _this.clubQrCodeImg = res.respData
                             }
                         }
-                    });
+                    })
                 }
             }
         }

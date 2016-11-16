@@ -8,10 +8,10 @@ module.exports = {
             if (/\D/.test(val)) {
                 val = val.replace(/\D/g, '')
             }
-            if (val.length === 1 && val !== 1) {
+            if (val.length == 1 && val != 1) {
                 val = ''
             }
-            if (val.length === 2 && !/^1[34578]$/.test(val)) {
+            if (val.length == 2 && !/^1[34578]$/.test(val)) {
                 val = 1
             }
             if (val.length > 11) {
@@ -19,9 +19,5 @@ module.exports = {
             }
             el.value = val
         })
-    },
-    update: function () {
-    },
-    unbind: function () {
     }
 }

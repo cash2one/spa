@@ -13,31 +13,31 @@
 </template>
 
 <script>
-    import { eventHub } from '../libs/hub';
+    import {eventHub} from '../libs/hub'
 
     module.exports = {
-        data: function(){
+        data: function () {
             return {
-                show : false,
-                amount : 0,
-                type : "gift"
+                show: false,
+                amount: 0,
+                type: 'gift'
             }
         },
-        created : function(){
-            eventHub.$on("set-credit-tip",this.doSetCreditTip);
+        created: function () {
+            eventHub.$on('set-credit-tip', this.doSetCreditTip)
         },
-        beforeDestroy : function(){
-            eventHub.$off("set-credit-tip",this.doSetCreditTip);
+        beforeDestroy: function () {
+            eventHub.$off('set-credit-tip', this.doSetCreditTip)
         },
         methods: {
-            doClickCancelBtn : function(){
-                this.show = false;
+            doClickCancelBtn: function () {
+                this.show = false
             },
-            doSetCreditTip : function(option){
-                var _this = this;
-                _this.amount = option.amount || _this.amount;
-                _this.type = option.type || _this.type;
-                _this.show = option.show || _this.show;
+            doSetCreditTip: function (option) {
+                var _this = this
+                _this.amount = option.amount || _this.amount
+                _this.type = option.type || _this.type
+                _this.show = option.show || _this.show
             }
         }
     }
