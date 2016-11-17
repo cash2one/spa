@@ -1,0 +1,108 @@
+div#coupon-page {
+  overflow-y: hidden; }
+  div#coupon-page div.list {
+    overflow-y: auto; }
+  div#coupon-page div.list-item {
+    padding-bottom: 0.722rem; }
+    div#coupon-page div.list-item div.header {
+      height: 1.805rem;
+      line-height: 1.805rem;
+      background-color: #e6e6e6;
+      font-size: 0.889rem;
+      color: #666;
+      text-indent: 0.611rem;
+      border-top: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap; }
+      div#coupon-page div.list-item div.header.first {
+        border-top: 0; }
+    div#coupon-page div.list-item a.item {
+      display: block;
+      margin: 0.667rem 0.667rem 0;
+      border: 1px solid #d9d9d9;
+      border-radius: 0.222rem;
+      background-color: #fff;
+      color: #4d4d4d;
+      position: relative; }
+      div#coupon-page div.list-item a.item > i {
+        display: block;
+        height: 0.5278rem;
+        -webkit-background-size: 0.333rem 0.5278rem;
+        -moz-background-size: 0.333rem 0.5278rem;
+        -o-background-size: 0.333rem 0.5278rem;
+        background-size: 0.333rem 0.5278rem;
+        background-image: url("../../images/coupon/red_round.png");
+        background-repeat: no-repeat;
+        background-repeat: repeat-x;
+        border-top-left-radius: 0.222rem;
+        border-top-right-radius: 0.222rem; }
+      div#coupon-page div.list-item a.item > div:nth-of-type(1) {
+        margin: 0.694rem 0  0 0.611rem;
+        font-size: 1.167rem;
+        line-height: 1.52rem; }
+      div#coupon-page div.list-item a.item > div:nth-of-type(2) {
+        margin-left: 0.611rem;
+        font-size: 0.778rem;
+        line-height: 1.222rem; }
+      div#coupon-page div.list-item a.item > div:nth-of-type(3) {
+        margin-left: 0.611rem;
+        font-size: 0.667rem;
+        color: #999;
+        line-height: 1.083rem;
+        margin-bottom: 0.2rem; }
+      div#coupon-page div.list-item a.item > div:nth-of-type(4) {
+        position: absolute;
+        color: #f24f52;
+        font-size: 0.889rem;
+        top: 1.056rem;
+        right: 0.667rem;
+        line-height: 1.2rem; }
+      div#coupon-page div.list-item a.item > div:nth-of-type(5) {
+        color: #fff;
+        font-size: 0.667rem;
+        background-color: #f24f52;
+        border-top: 1px solid #d9d9d9;
+        height: 1.027rem;
+        line-height: 1.027rem;
+        padding-left: 0.667rem;
+        border-bottom-left-radius: 0.222rem;
+        border-bottom-right-radius: 0.222rem; }
+      div#coupon-page div.list-item a.item > span {
+        display: none;
+        position: absolute;
+        right: 0.222rem;
+        top: 2.38rem;
+        font-size: 0.889rem;
+        color: #999;
+        background-color: #ededed;
+        padding: 0 0.556rem;
+        border-radius: 4px; }
+        div#coupon-page div.list-item a.item > span.unpay, div#coupon-page div.list-item a.item > span.payed {
+          display: inline;
+          background-color: #fff; }
+        div#coupon-page div.list-item a.item > span.unpay {
+          color: #fb5549;
+          border: 1px solid #fb5549; }
+        div#coupon-page div.list-item a.item > span.payed {
+          color: #51b636;
+          border: 1px solid #51b636; }
+        div#coupon-page div.list-item a.item > span.expire {
+          display: inline; }
+    div#coupon-page div.list-item div.expire > i {
+      -webkit-background-size: 0.333rem 0.5278rem;
+      -moz-background-size: 0.333rem 0.5278rem;
+      -o-background-size: 0.333rem 0.5278rem;
+      background-size: 0.333rem 0.5278rem;
+      background-image: url("../../images/coupon/gray_round.png");
+      background-repeat: no-repeat;
+      background-repeat: repeat-x; }
+    div#coupon-page div.list-item div.expire > div {
+      color: #999; }
+      div#coupon-page div.list-item div.expire > div:nth-of-type(4) {
+        color: #999; }
+      div#coupon-page div.list-item div.expire > div:nth-of-type(5) {
+        background-color: #999; }
+    div#coupon-page div.list-item div.expire > span {
+      display: block; }

@@ -1,0 +1,9 @@
+@import "../common/mixin.scss";
+
+div#service-group-page{
+  div.item{
+    width: 20rem;
+    height: 12.389rem;
+    @include imgBgFix(20rem 12.389rem);
+  }
+}

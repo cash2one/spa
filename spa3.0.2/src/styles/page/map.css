@@ -1,0 +1,59 @@
+div#map-page {
+  width: 20rem;
+  height: 100%; }
+  div#map-page div.gd_marker {
+    width: 30px;
+    height: 40px;
+    background-size: 30px 40px;
+    background-image: url("../../images/map/marker_icon.png");
+    background-repeat: no-repeat;
+    color: #fff;
+    text-align: center;
+    line-height: 30px;
+    font-size: 14px; }
+  div#map-page div.gd_infoWin {
+    background: rgba(0, 0, 0, 0.6);
+    min-height: 2.971rem;
+    color: #fff;
+    padding: 0.5rem;
+    border-radius: 0.222rem; }
+    div#map-page div.gd_infoWin > h3 {
+      padding: 0;
+      margin: 0;
+      font-size: 0.888rem;
+      font-weight: normal; }
+    div#map-page div.gd_infoWin > span {
+      font-size: 0.666rem; }
+    div#map-page div.gd_infoWin > a {
+      display: block;
+      width: 2.972rem;
+      position: absolute;
+      background-color: #fd9b33;
+      border-radius: 0.222rem;
+      font-size: 0.666rem;
+      text-align: center;
+      right: 0.5rem;
+      top: 0.5rem;
+      text-indent: 0.68rem; }
+      div#map-page div.gd_infoWin > a > i {
+        position: absolute;
+        display: block;
+        width: 0.88rem;
+        height: 0.77rem;
+        top: 50%;
+        margin-top: -0.385rem;
+        left: 0.28rem;
+        background-size: 0.88rem 0.77rem;
+        background-image: url("../../images/map/nav_icon.png");
+        background-repeat: no-repeat; }
+    div#map-page div.gd_infoWin > i {
+      display: block;
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-top: 0.666rem solid rgba(0, 0, 0, 0.6);
+      border-left: 0.416rem solid transparent;
+      border-right: 0.416rem solid transparent;
+      top: 100%;
+      left: 50%;
+      margin-left: -0.416rem; }

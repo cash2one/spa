@@ -1,0 +1,60 @@
+div#tech-reward-page div.top-tip {
+  height: 6.056rem;
+  background-color: #fff;
+  border-bottom: 1px solid #d9d9d9;
+  padding-top: 0.528rem; }
+  div#tech-reward-page div.top-tip > div {
+    margin-left: 3.194rem;
+    width: 13.472rem;
+    height: 5.056rem;
+    -webkit-background-size: 13.472rem 5.056rem;
+    -moz-background-size: 13.472rem 5.056rem;
+    -o-background-size: 13.472rem 5.056rem;
+    background-size: 13.472rem 5.056rem;
+    background-image: url("../../images/techReward/banner.png");
+    background-repeat: no-repeat; }
+
+div#tech-reward-page div.reward-list {
+  position: relative;
+  padding-left: 0.25rem; }
+  div#tech-reward-page div.reward-list::after {
+    content: "";
+    display: block;
+    clear: both; }
+  div#tech-reward-page div.reward-list > div {
+    float: left;
+    height: 4.167rem;
+    width: 4.361rem;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    text-align: center;
+    color: #4d4d4d;
+    margin-left: 0.417rem;
+    margin-top: 0.5rem;
+    background-color: #fff; }
+    div#tech-reward-page div.reward-list > div.money {
+      line-height: 4.167rem;
+      font-size: 1.056rem; }
+    div#tech-reward-page div.reward-list > div.gift > div:nth-of-type(1) {
+      height: 2.778rem;
+      width: 4.361rem;
+      padding-top: 0.35rem;
+      box-sizing: border-box; }
+      div#tech-reward-page div.reward-list > div.gift > div:nth-of-type(1) img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto; }
+    div#tech-reward-page div.reward-list > div.gift > div:nth-of-type(2) {
+      font-size: 0.778rem;
+      text-align: center;
+      line-height: 1.1rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap; }
+    div#tech-reward-page div.reward-list > div.active {
+      color: #fb5549;
+      border: 2px solid #fb5549; }
+
+div#tech-reward-page div.submit-button {
+  margin-top: 3rem;
+  letter-spacing: 2px; }

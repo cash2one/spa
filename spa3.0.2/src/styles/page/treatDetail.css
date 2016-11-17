@@ -1,0 +1,122 @@
+div#treat-detail-page div.info-area > div {
+  background-color: #fff;
+  padding: .889rem .667rem;
+  line-height: 1;
+  color: #616161;
+  font-size: .778rem;
+  margin-top: .667rem;
+  border-bottom: 1px solid #e0e0e0;
+  border-top: 1px solid #e0e0e0; }
+  div#treat-detail-page div.info-area > div > div {
+    display: table;
+    width: 100%; }
+    div#treat-detail-page div.info-area > div > div:not(:first-child) {
+      margin-top: .667rem; }
+    div#treat-detail-page div.info-area > div > div > div {
+      display: table-cell;
+      vertical-align: middle; }
+      div#treat-detail-page div.info-area > div > div > div:nth-of-type(1) {
+        width: 4.5rem; }
+  div#treat-detail-page div.info-area > div:first-child {
+    margin-top: 0;
+    border-top-width: 0; }
+    div#treat-detail-page div.info-area > div:first-child > div > div:nth-of-type(1) {
+      width: 5.722rem;
+      padding-left: 1.5rem;
+      background-size: 0.778rem 0.778rem;
+      background-repeat: no-repeat;
+      background-position: left center; }
+    div#treat-detail-page div.info-area > div:first-child > div > div.treat-code {
+      background-image: url("../../images/qrPay/icon_treat_code.png"); }
+    div#treat-detail-page div.info-area > div:first-child > div > div.treat-money {
+      background-image: url("../../images/qrPay/icon_treat_money.png"); }
+    div#treat-detail-page div.info-area > div:first-child > div > div.treat-tel {
+      background-image: url("../../images/qrPay/icon_treat_tel.png"); }
+
+div#treat-detail-page .vis-friend, div#treat-detail-page .call-phone {
+  display: inline-block;
+  font-size: .667rem;
+  padding: .2rem .3rem;
+  color: #fff;
+  position: relative;
+  top: -.1rem;
+  margin-left: .5rem; }
+
+div#treat-detail-page .vis-friend {
+  background-color: #ffb21a; }
+
+div#treat-detail-page .call-phone {
+  background-color: #ff6501;
+  width: 2rem;
+  text-align: center; }
+
+div#treat-detail-page .disabled {
+  background-color: #E0E0E0;
+  color: #bdbdbd; }
+
+div#treat-detail-page div.cancel-auth {
+  margin: .889rem .667rem;
+  background-color: #fb5549;
+  color: #fff;
+  text-align: center;
+  height: 2.444rem;
+  line-height: 2.444rem;
+  font-size: .889rem;
+  border-radius: .222rem; }
+
+div.cancel-treat-confirm > div {
+  width: 16.667rem;
+  margin-top: -3.378rem;
+  margin-left: -8.3335rem;
+  background-color: #fff;
+  color: #4d4d4d;
+  font-size: 0.889rem;
+  overflow: hidden;
+  border-radius: .5rem;
+  -webkit-box-shadow: 0 0 4px 4px #908f8f;
+  -moz-box-shadow: 0 0 4px 4px #908f8f;
+  -ms-shadow: 0 0 4px 4px #908f8f;
+  -o-shadow: 0 0 4px 4px #908f8f;
+  box-shadow: 0 0 4px 4px #908f8f; }
+  div.cancel-treat-confirm > div > div:nth-of-type(1) {
+    text-align: center;
+    border-bottom: 1px solid #d9d9d9;
+    padding: 1.472rem 0; }
+    div.cancel-treat-confirm > div > div:nth-of-type(1) > p:nth-of-type(1) {
+      line-height: 1;
+      margin-top: 0;
+      font-size: 1.056rem;
+      font-weight: bold;
+      color: #222;
+      margin-bottom: .667rem; }
+    div.cancel-treat-confirm > div > div:nth-of-type(1) > p:nth-of-type(2) {
+      color: #060606;
+      font-size: .778rem;
+      margin-top: .667rem;
+      margin-bottom: 0;
+      line-height: 1.5;
+      padding: 0 1.889rem; }
+  div.cancel-treat-confirm > div > div:nth-of-type(2) {
+    overflow: hidden; }
+    div.cancel-treat-confirm > div > div:nth-of-type(2) > a {
+      display: block;
+      width: 50%;
+      float: left;
+      text-align: center;
+      line-height: 2.806rem;
+      font-size: 1rem; }
+      div.cancel-treat-confirm > div > div:nth-of-type(2) > a:nth-of-type(1) {
+        color: #fff;
+        background-color: #ff5549; }
+      div.cancel-treat-confirm > div > div:nth-of-type(2) > a:nth-of-type(2) {
+        background-color: #ebebeb; }
+    div.cancel-treat-confirm > div > div:nth-of-type(2) > div {
+      display: none;
+      text-align: center;
+      background: #ccc url("../../images/common/loading.gif") no-repeat 30% center;
+      height: 2.806rem;
+      line-height: 2.806rem; }
+    div.cancel-treat-confirm > div > div:nth-of-type(2).processing > div {
+      display: block; }
+    div.cancel-treat-confirm > div > div:nth-of-type(2).processing > a {
+      display: none; }

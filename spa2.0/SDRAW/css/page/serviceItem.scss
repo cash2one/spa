@@ -1,0 +1,246 @@
+@import "../common/common.scss";
+#_content>#serviceItem {
+  #content {
+    overflow: hidden;
+    > div {
+      height: 100%;
+      > div {
+        width: 20rem;
+        height: 100%;
+        background: #eeeeee;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        >div{
+          box-sizing: border-box;
+          overflow-x: hidden;
+          padding-bottom: 4rem;
+          width:20rem;
+          > div {
+            &:nth-of-type(1) {
+              background-color: #ffffff;
+              height: 10.472rem;
+              @include sx();
+              padding:0.667rem 0.778rem 0.444rem;
+              >div{
+                &:nth-of-type(1) {
+                  width: 8.667rem;
+                  height: 8.667rem;
+                  @include imgBgFix(8.667rem 8.667rem);
+                  border: 4px solid #ffffff;
+                  @include ty(0,0,5px,0,rgba(205, 194, 194, 0.5));
+                }
+                &:nth-of-type(2) {
+                  margin-left: 1rem;
+                  >div {
+                    &:nth-of-type(1) {
+                      color: #666666;
+                      font-size: 1.167rem;
+                      margin-bottom: 1.222rem;
+                      text-overflow: ellipsis;
+                      word-break: break-all;
+                      width: 9rem;
+                      letter-spacing: 1px;
+                    }
+                    &:nth-of-type(2) {
+                      @include sx();
+                      margin-bottom: 0.222rem;
+                      >div {
+                        &:nth-of-type(1) {
+                          width: 0.9167rem;
+                          height: 0.8889rem;
+                          @include img('../../../img/serviceItem/clock.png',0.9167rem 0.8889rem);
+                          margin-right: 0.306rem;
+                        }
+                        &:nth-of-type(2) {
+                          color: #ffffff;
+                          //background: #fd9b33;
+                          height: 1.167rem;
+                          font-size: 0.778rem;
+                          line-height: 1.167rem;
+                          padding: 0 0.7rem 0 0.4rem;
+                          @include img("../../../img/serviceItem/price_bg.png",100% 1.167rem);
+                        }
+                      }
+                    }
+                    &:nth-of-type(3) {
+                      margin-left:1.084rem;
+                      color: #df5050;
+                      font-size: 0.778rem;
+                      &.none{
+                        display: none;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+            &:nth-of-type(2) {
+              color: #666666;
+              font-size: 0.889rem;
+              line-height: 1.167rem;
+              border-top: 1px dashed #d9d9d9;
+              border-bottom:1px solid #dddddd;
+              padding: 0.667rem 0.778rem 0.667rem;
+              background: #ffffff;
+              word-break: break-all;
+              &>div:nth-of-type(1){
+                height:1.4rem;
+                line-height:1.4rem;
+                font-size:0.778rem;
+                position: relative;
+                padding-left:1.194rem;
+                margin-bottom:0.222rem;
+                color:#4d4d4d;
+                &>div{
+                  position: absolute;
+                  width:0.971rem;
+                  height:0.971rem;
+                  top:50%;
+                  margin-top:-0.4855rem;
+                  left:0;
+                  @include img("../../../img/serviceItem/item_icon.png",0.971rem 0.971rem);
+                }
+              }
+            }
+
+            &:nth-of-type(3){
+              margin-top:0.444rem;
+              border-top:1px solid #e0e0e0;
+              border-bottom:1px solid #e0e0e0;
+              background-color: #ffffff;
+              &>div.title{
+                height:1.667rem;
+                line-height: 1.667rem;
+                border-bottom:1px solid #e0e0e0;
+                color:#4d4d4d;
+                font-size:0.778rem;
+                padding-left:1.944rem;
+                position: relative;
+                &>div{
+                  position: absolute;
+                  width:0.971rem;
+                  height:0.971rem;
+                  top:50%;
+                  margin-top:-0.4855rem;
+                  left:0.639rem;
+                  @include img("../../../img/serviceItem/techs_icon.png",0.971rem 0.971rem);
+                }
+              }
+              &>div.list{
+                margin-left:0.667rem;
+                height:3.611rem;
+                box-sizing: border-box;
+                border-bottom: 1px solid #e0e0e0;
+                margin-bottom: 0;
+                position: relative;
+                &>div{
+                  position: absolute;
+                  &:nth-of-type(1){
+                    width:1.028rem;
+                    height:1.028rem;
+                    @include img("../../../img/serviceItem/unselected.png",1.028rem 1.028rem);
+                    top:50%;
+                    margin-top:-0.514rem;
+                  }
+                  &:nth-of-type(2){
+                    width:2.778rem;
+                    height:2.778rem;
+                    @include imgBgFix(2.778rem 2.778rem);
+                    border-radius: 50%;
+                    margin-top:0.4165rem;
+                    //border:1px solid #e0e0e0;
+                    left:1.611rem;
+                  }
+                  &:nth-of-type(3){
+                    width:14rem;
+                    height: 100%;
+                    left:4.833rem;
+                    margin-top:0.55rem;
+                    &>div:nth-of-type(1){
+                      color:#4d4d4d;
+                      font-size:1rem;
+                      line-height: 1.3rem;
+                      width:7rem;
+                      @include sx();
+                      &>div:nth-of-type(1){
+                        max-width: 4.2rem;
+                        @include sl();
+                      }
+                      &>div:nth-of-type(2){
+                        margin-left:0.2rem;
+                        font-size:0.778rem;
+                        &>span{
+                          color:#ff9d09;
+                        }
+                      }
+                    }
+                    &>div:nth-of-type(2){
+                      color:#666666;
+                      font-size:0.778rem;
+                      line-height: 1.3rem;
+                      @include sl();
+                    }
+                    &>div:nth-of-type(3){
+                      position: absolute;
+                      height:0.778rem;
+                      line-height: 1.2rem;
+                      right:0;
+                      top:0;
+                      &>div{
+                        display: inline-block;
+                        width:4.445rem;
+                        height:0.778rem;
+                        @include img("../../../img/serviceItem/star1.png",0.889rem 0.778rem);
+                        background-repeat: repeat-x;
+                        &>div{
+                          width:0;
+                          height:0.778rem;
+                          @include img("../../../img/serviceItem/star2.png",0.889rem 0.778rem);
+                          background-repeat: repeat-x;
+                        }
+                      }
+                      &>span{
+                        position: relative;
+                        top:-0.1rem;
+                        margin-left:0.222rem;
+                        font-size:0.667rem;
+                        color:#ff9d09;
+                      }
+                    }
+                  }
+                }
+                &.selected{
+                  &>div:nth-of-type(1){
+                    @include img("../../../img/serviceItem/selected.png",1.028rem 1.028rem);
+                  }
+                }
+              }
+              &>div:last-child{
+                border-bottom: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  #confirmBtn{
+    position: absolute;
+    bottom:0;
+    height:3.333rem;
+    left:0;
+    right:0;
+    background-color: #e1e1e1;
+    &>div{
+      margin:0.444rem 0.667rem 0;
+      background-color: #fb5549;
+      color:#ffffff;
+      font-size:1.056rem;
+      text-align: center;
+      height:2.444rem;
+      line-height: 2.444rem;
+      border-radius: 5px;
+    }
+  }
+}

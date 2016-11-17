@@ -1,0 +1,209 @@
+@import "../common/mixin.scss";
+
+div#follow9358-page{
+  background-color: #ebebeb;
+  overflow-y: auto;
+  padding-top:.722rem;
+  text-align: center;
+  >div{
+    width: 18.667rem;
+    display: inline-block;
+    text-align: left;
+    padding-bottom: .722rem;
+  }
+
+  div.top{
+    background-color: #fff;
+    padding-bottom: 1.667rem;
+    position: relative;
+    &:before,&:after{
+      content: ' ';
+      display: block;
+      position: absolute;
+      width: .833rem;
+      height: .833rem;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      background-color: #ebebeb;
+      top: 8.5rem;
+    }
+    &:before{
+      left: -.417rem;
+    }
+    &:after{
+      right: -.417rem;
+    }
+  }
+
+  div.bottom{
+    height: 1.667rem;
+    @include img('../../images/follow9358/card_bottom.png',18.667rem 1.667rem);
+  }
+
+  div.club-info{
+    height: 3.5rem;
+    @include img('../../images/follow9358/card_top.jpg',18.667rem 3.5rem);
+    @include sx();
+    padding: 0 .667rem;
+    >div{
+      &.logo{
+        width: 2.5rem;
+        height: 2.5rem;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+        border:2px solid rgba(255,255,255,.5);
+        @include imgBgFix(2.5rem 2.5rem);
+        margin-right: .889rem;
+        box-sizing: content-box;
+      }
+      &.info{
+        @include boxFlex(1);
+        font-size: .889rem;
+        color: #fff;
+        @include sx();
+        >div{
+          &:nth-of-type(1){
+            max-width: 10rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          &:nth-of-type(2){
+            padding: 0 .3rem;
+            margin-left:.5rem;
+            min-width: 2.389rem;
+            max-width: 5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            height: .833rem;
+            text-align: center;
+            line-height: .833rem;
+            font-size: .556rem;
+            @include img('../../images/follow9358/tech_code_bg.png',100% .833rem);
+          }
+        }
+      }
+    }
+  }
+
+  div.tech-list{
+    height: 5.417rem;
+    margin:0 .472rem;
+    border-bottom: 1px dashed;
+    @include wq();
+    >div{
+      width: 3.833rem;
+      height: 3.833rem;
+      margin-right: .667rem;
+      &:last-child{
+        margin-right:0;
+      }
+      @include imgBgFix(3.833rem  3.833rem);
+      -webkit-border-radius: .25rem;
+      -moz-border-radius: .25rem;
+      border-radius: .25rem;
+    }
+    &.club{
+      >div{
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+      }
+    }
+  }
+
+  div.coupon-info{
+    height: 4.056rem;
+    margin:1.417rem .972rem 0;
+    @include img('../../images/follow9358/voucher.png',16.722rem 4.056rem);
+    background-position: center;
+    padding-top: .194rem;
+    display: none;
+    &.club{
+      display: block;
+    }
+    >div{
+      height: 3.056rem;
+      @include sx();
+      >div{
+        &:nth-of-type(1){
+          width: 4.5rem;
+          color: #f3e2a1;
+          font-size: 1rem;
+          text-align: center;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          padding: 0 0.3rem;
+        }
+        &:nth-of-type(2){
+          @include boxFlex(1);
+          @include sx();
+          padding:0 1rem 0 1.2rem;
+          color: #f05a54;
+          >div{
+            &:nth-of-type(1){
+              @include boxFlex(1);
+              @include x();
+              >div{
+                &:nth-of-type(1){
+                  font-size: .778rem;
+                  line-height: 1;
+                }
+                &:nth-of-type(2){
+                  font-size: 1.667rem;
+                  &.small{
+                    font-size:1.1rem;
+                  }
+                  &.big{
+                    font-size:1.4rem;
+                  }
+                }
+              }
+            }
+            &:nth-of-type(2){
+              width: 5.2rem;
+              font-size: .722rem;
+              padding-left: .2rem;
+              line-height:1.2;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  div.qr-code{
+    height: 12.278rem;
+    @include img('../../images/follow9358/bg_erweima.jpg',15.25rem 12.278rem);
+    background-position: center;
+    @include wq();
+    >img{
+      width: 7.333rem;
+      height: 7.333rem;
+    }
+  }
+
+  div.attention{
+    height: 2.556rem;
+    @include img('../../images/follow9358/box.jpg',11.083rem 2.556rem);
+    background-position: center;
+    padding: 0 3.694rem 0 5.972rem;
+    >div{
+      height: 2.556rem;
+      color: #616161;
+      font-size: .778rem;
+      padding-left: .944rem;
+      >div{
+        height: 1.278rem;
+        line-height: 1.278rem;
+      }
+      &.club{
+        padding-left: 1.5rem;
+      }
+    }
+  }
+}

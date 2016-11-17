@@ -1,0 +1,109 @@
+@import "../common/common.scss";
+
+#_content>#techReward {
+  #content {
+    background-color: #ededed;
+
+    &>div:nth-of-type(2){
+      height:6.056rem;
+      background-color: #fff;
+      border-bottom: 1px solid #d9d9d9;
+      padding-top:0.528rem;
+      box-sizing: border-box;
+      &>div{
+        margin-left:3.194rem;
+        width:13.472rem;
+        height:5.056rem;
+        @include img("../../../img/techReward/banner.png",13.472rem 5.056rem);
+      }
+    }
+
+    &>div:nth-of-type(3){
+      position: relative;
+      padding-left:0.25rem;
+      &::after{
+        content : "";
+        display: block;
+        clear: both;
+      }
+      &>div{
+        float: left;
+        height:4.167rem;
+        width:4.361rem;
+        border:1px solid #d9d9d9;
+        border-radius: 4px;
+        text-align: center;
+        color:#4d4d4d;
+        margin-left:0.417rem;
+        margin-top:0.5rem;
+        background-color: #fff;
+        box-sizing: border-box;
+        &.money{
+          font-size:1.056rem;
+          line-height: 4.167rem;
+          /*>div{
+            &:nth-of-type(1){
+              height: 2.0835rem;
+              line-height: 2.7rem;
+            }
+            &:nth-of-type(2){
+              line-height: 1.4rem;
+              font-size: 1rem;
+            }
+          }*/
+        }
+        &.gift{
+          &>div:nth-of-type(1){
+            height:2.778rem;
+            width:4.361rem;
+            padding-top:0.35rem;
+            box-sizing: border-box;
+            img{
+              display: block;
+              margin-left:auto;
+              margin-right:auto;
+            }
+          }
+          &>div:nth-of-type(2){
+            font-size:0.778rem;
+            text-align: center;
+            line-height: 1.1rem;
+            @include sl();
+          }
+        }
+        &.active{
+          color:#fb5549;
+          border:2px solid #fb5549;
+        }
+      }
+    }
+
+    &>div:nth-of-type(4){
+      height:2.444rem;
+      text-align: center;
+      color:#fff;
+      font-size:1.056rem;
+      line-height: 2.444rem;
+      margin:3rem 0.667rem 2rem;
+      border-radius: 4px;
+      background-color: #fb5549;
+      letter-spacing: 2px;
+      &.disabled{
+        background-color: #CCC;
+        background-image: url(../../../img/loading.gif);
+        background-repeat:no-repeat;
+        background-position: 30% 45%;
+      }
+    }
+
+    >#cancelReward{
+      position: absolute;
+      left: .667rem;
+      bottom: .667rem;
+      font-size: .778rem;
+      color: #616161;
+      text-decoration: underline;
+      line-height: 1;
+    }
+  }
+}

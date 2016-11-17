@@ -1,0 +1,29 @@
+div.golden-effect {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  top: 100%; }
+  div.golden-effect.show {
+    top: 0; }
+  div.golden-effect > div {
+    position: absolute;
+    top: 0;
+    animation-timing-function: linear;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-timing-function: linear;
+    -ms-animation-timing-function: linear;
+    -o-animation-timing-function: linear;
+    margin-top: -10rem; }
+    div.golden-effect > div.m1 {
+      width: 1.944rem;
+      height: 1.806rem;
+      background-size: 1.944rem 1.806rem;
+      background-image: url("../../images/chat/effect/1.png");
+      background-repeat: no-repeat; }
+    div.golden-effect > div.m2 {
+      width: 2.028rem;
+      height: 1.222rem;
+      background-size: 2.028rem 1.222rem;
+      background-image: url("../../images/chat/effect/2.png");
+      background-repeat: no-repeat; }

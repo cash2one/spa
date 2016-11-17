@@ -1,0 +1,73 @@
+@import "../common/common.scss";
+
+#_content>#qrPayCode {
+  #content {
+    width: 20rem;
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    background-color: #c2c2be;
+    background-image: url("../../../img/qrPay/bg_icon.png");
+    background-size: 15rem;
+    #title{
+      background-color: #ededed;
+    }
+
+    >div>div:nth-of-type(2){
+      text-align: center;
+      >div{
+        display: inline-block;
+        width: 16.722rem;
+        height: 19.333rem;
+        margin-top:3.667rem;
+        background-color: #f2f2f2;
+        -webkit-border-radius: .556rem;
+        -moz-border-radius: .556rem;
+        border-radius: .556rem;
+        box-shadow: 0 0 1rem 0 #aaaaaa;
+        >div{
+          &:nth-of-type(1){
+            background-color: #FFFFFF;
+            -webkit-border-radius: .556rem;
+            -moz-border-radius: .556rem;
+            border-radius: .556rem;
+            height: 16.722rem;
+            padding: 1rem;
+            box-sizing: border-box;
+            >canvas,img{
+              border: 0;
+              width: 100%;
+              height: 100%;
+            }
+          }
+          &:nth-of-type(2){
+            height: 2.611rem;
+            line-height: 2.611rem;
+            text-align: center;
+            >span{
+              padding-left: 1.111rem;
+              font-size: .778rem;
+              color: #616161;
+              @include img('../../../img/qrPay/icon_refresh.png',.667rem .667rem);
+              background-position: left center;
+            }
+          }
+          &.processing{
+            background-color: #CCCCCC;
+            background-image: url(../../../img/loading.gif);
+            background-repeat:no-repeat;
+            background-position: 24% 50%;
+          }
+        }
+      }
+    }
+
+
+    .border-t{
+      border-top:1px solid #E0E0E0;
+    }
+    .border-b{
+      border-bottom:1px solid #E0E0E0;
+    }
+  }
+}

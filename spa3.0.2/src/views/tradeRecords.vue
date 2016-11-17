@@ -1,0 +1,120 @@
+<style>
+    @import '../styles/page/tradeRecords.css';
+</style>
+<template>
+    <div class="page" id="trade-records-page" v-show="!global.loading">
+        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>交易记录</div>
+        <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
+            <div class="list-item" v-for="item in dataList">
+                <div>{{ tradeType[item.bizType] }}<span :class="{ recharge : item.income }">{{ item.income ? '+' : '-' }}{{item.amount}}元</span></div>
+                <div>{{ item.createDatetime }}</div>
+            </div>
+            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i>
+                <div>加载数据</div>
+            </div>
+            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip || dataList.length==0 }">
+                <div>已经加载全部数据</div>
+            </div>
+            <div class="nullData" v-show="dataList.length==0 && !isAddData">
+                <div></div>
+                <div>暂无内容...</div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    import { Global } from '../libs/global'
+    import Util from '../libs/util'
+
+    module.exports = {
+        data: function () {
+            return {
+                global: Global.data,
+                getRecordsUrl: '../api/v2/finacial/account/trades/',
+                dataList: [],
+                currPage: 0,
+                pageSize: 10,
+                accountId: '',
+                tradeType: {
+                    consume: '账号消费',
+                    line_recharge: '线下充值',
+                    pay_for_other: '请客',
+                    user_recharge: '用户充值'
+                },
+                showDataLoadTip: false, // 显示数据正在加载
+                showFinishLoadTip: false, // 显示已经加载完成
+                isDataAddEnd: false, // 数据是否已加载完
+                isAddData: false // 数据是否正在加载
+            }
+        },
+        created: function () {
+            var that = this
+            var global = that.global
+            var pageParams = global.currPage.query
+
+            that.accountId = pageParams.accountId
+            if (!that.accountId) {
+                that.$router.back()
+            } else {
+                that.getRecordsUrl += that.accountId
+            }
+        },
+        mounted: function () {
+            this.queryRecord()
+        },
+        methods: {
+            doClickPageBack: function () {
+                history.back()
+            },
+            queryRecord: function (page) {
+                var that = this
+                if (that.isAddData) {
+                    return
+                }
+                that.isAddData = true
+                page = page || that.currPage + 1
+
+                // 更新数据加载提示
+                that.showDataLoadTip = true
+                that.showFinishLoadTip = false
+                that.isDataAddEnd = false
+
+                that.$http.get(that.getRecordsUrl, {
+                    params: {
+                        page: page,
+                        pageSize: that.pageSize
+                    }
+                }).then(function (res) {
+                    res = res.body
+                    if (res) {
+                        res = (res.statusCode != '200') ? [] : res['respData']
+
+                        for (var i = 0; i < res.length; i++) {
+                            res[i].income = res[i].tradeType == 'income'
+                            res[i].amount = (res[i].amount / 100).toFixed(2)
+                            that.dataList.push(res[i])
+                        }
+                        if (res.length < that.pageSize) {
+                            that.isDataAddEnd = true
+                            that.showFinishLoadTip = true
+                        }
+                        that.currPage = page
+                        that.isAddData = false
+                        that.showDataLoadTip = false
+                    } else {
+                        Util.tipShow(that.global.loadError)
+                    }
+                }, function () {
+                    Util.tipShow(that.global.loadError)
+                })
+            },
+            doHandlerListScroll: function () {
+                var that = this
+                var listEle = that.$refs.listEle
+                if (!that.isDataAddEnd && listEle.scrollTop + listEle.clientHeight * 1.4 > listEle.scrollHeight) {
+                    that.queryRecord()
+                }
+            }
+        }
+    }
+</script>

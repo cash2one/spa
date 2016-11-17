@@ -1,0 +1,111 @@
+@import "../common/common.scss";
+#_content>#suggestions{
+  #content{
+    >div{
+      width: 20rem;
+      background: #ffffff;
+
+      &:nth-of-type(1){
+        background: #ededed;
+      }
+      &:nth-of-type(2){
+        //height: 3.972rem;
+        border-top: 1px solid #d9d9d9;
+        border-bottom: 1px solid #d9d9d9;
+        width: 20rem;
+        >div{
+          margin:0 0.667rem;
+          width: 18.666rem;
+          height: 4.444rem;
+          @include sx();
+          >div{
+            height: 1.4rem;
+            color:#4d4d4d;
+            font-size: 0.889rem;
+            @include sx();
+            &:nth-of-type(1){
+              width: 2.444rem;
+            }
+            &:nth-of-type(2){
+              //width: 13.556rem;
+              margin-right: 2.612rem;
+              width: 10.944rem;
+              height: 1.667rem;
+              @include img('../../../img/starNull_icon.png',10.944rem 1.667rem);
+              display: block;
+              position: relative;
+              >div{
+                width: 0;
+                height: 1.667rem;
+                position: absolute;
+                left:0;
+                top:0;
+                @include img('../../../img/starScore_icon.png',10.944rem 1.667rem);
+              }
+            }
+          }
+        }
+      }
+
+      &:nth-of-type(3){
+        margin-top: 0.667rem;
+        margin-bottom: 0.6rem;
+        border-bottom: 1px solid #d9d9d9;
+        color: #666666;
+        display: inline-block;
+        >div{
+          width: 100%;
+          &:nth-of-type(1){
+            height: 2.222rem;
+            @include sx();
+            border-bottom: 1px solid #d9d9d9;
+            border-top: 1px solid #d9d9d9;
+            border-left: 0.333rem solid #ff9d09;
+            >div{
+              height: 100%;
+              @include sx();
+              color: #4d4d4d;
+              font-size: 0.889rem;
+              padding-left: 0.334rem;
+            }
+          }
+          &:nth-of-type(2){
+            margin-top: 0.389rem;
+            margin-left: 0.667rem;
+            @include sx();
+            >textarea{
+              width: 18.666rem;
+              height: 4.8rem;
+              font-size: 1rem;
+            }
+          }
+        }
+      }
+      &:nth-of-type(4){
+        height: 3rem;
+        background: none;
+      }
+    }
+  }
+
+  #footer {
+    position: absolute;
+    border-top: 1px solid #e0e0e0;
+    margin-top: -3.4rem;
+    width: 100%;
+    height: 3.305rem;
+    background: rgba(255, 255, 255, 0.8);
+    @include wq();
+    > div {
+      width: 19.111rem;
+      height: 2.444rem;
+      background: #d9d9d9;
+      color: #ffffff;
+      border-radius: 3px;
+      @include wq();
+      &.active {
+        background: #fb5549;
+      }
+    }
+  }
+}

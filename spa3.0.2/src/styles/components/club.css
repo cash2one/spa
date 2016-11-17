@@ -1,0 +1,66 @@
+div.club-item-wrap {
+  background-color: #fff;
+  margin-bottom: .222rem;
+  padding: 0 0 .333rem; }
+  div.club-item-wrap:last-child {
+    margin-bottom: 0; }
+  div.club-item-wrap.no-techs {
+    padding-bottom: 0; }
+  div.club-item-wrap > div.club-info {
+    padding: .5rem 0 .333rem 3.611rem;
+    line-height: 1;
+    position: relative;
+    margin: 0 .667rem; }
+    div.club-item-wrap > div.club-info > i {
+      display: inline-block;
+      position: absolute;
+      width: 2.944rem;
+      height: 2.944rem;
+      background-size: 2.944rem 2.944rem;
+      background-repeat: no-repeat;
+      top: 50%;
+      margin-top: -1.472rem;
+      left: 0;
+      border-radius: 50%; }
+    div.club-item-wrap > div.club-info > div > div > span:nth-of-type(1) {
+      width: 11rem;
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      line-height: 1.3; }
+    div.club-item-wrap > div.club-info > div > div:first-child {
+      font-size: .944rem;
+      color: #212121;
+      margin-bottom: .667rem; }
+      div.club-item-wrap > div.club-info > div > div:first-child > span:nth-of-type(2) {
+        float: right;
+        padding: .278rem .556rem;
+        text-align: center;
+        color: #fff;
+        background-color: #ff9d09;
+        font-size: .611rem;
+        border-radius: .556rem; }
+    div.club-item-wrap > div.club-info > div > div:last-child {
+      font-size: .778rem;
+      color: #666; }
+      div.club-item-wrap > div.club-info > div > div:last-child > span:nth-of-type(2) {
+        float: right;
+        font-size: .722rem;
+        color: #999; }
+  div.club-item-wrap > div.club-techs {
+    padding: .14rem 0.14rem 0.556rem;
+    margin-left: .667rem;
+    height: 5.807rem; }
+    div.club-item-wrap > div.club-techs div.swiper-slide {
+      border-radius: .222rem;
+      box-shadow: 0 0 .139rem 0 #c7c7c7;
+      display: inline-block;
+      margin-right: .611rem;
+      width: 5.111rem;
+      height: 5.111rem;
+      background-size: 5.111rem 5.111rem;
+      background-repeat: no-repeat; }
+      div.club-item-wrap > div.club-techs div.swiper-slide > div {
+        width: 100%;
+        height: 100%; }
