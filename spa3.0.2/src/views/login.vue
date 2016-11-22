@@ -4,7 +4,7 @@
 <template>
     <div class="page login-page" id="login-page" v-show="!global.loading">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>登录/注册</div>
-        <div class="input tel"><i></i><span>+86</span><input type="tel" placeholder="请输入您的11位手机号" v-model="tel" maxlength="11" v-tel-input @keypress="dokeyPressOfInput($event)"/></div>
+        <div class="input tel"><i></i><span>+86</span><input type="tel" placeholder="请输入您的11位手机号" v-model="tel" maxlength="11" v-tel-input @keypress.enter="doClickNextBtn()"/></div>
         <div class="next-btn" :class="{ active : isTelValid }" @click="doClickNextBtn()">下一步</div>
         <div class="tip-title">注：</div>
         <div class="tip">进行身份验证后系统会自动判断你是否为注册用户，并自动衔接后续的操作</div>
@@ -102,11 +102,6 @@
             },
             doClickPageBack: function () {
                 history.back()
-            },
-            dokeyPressOfInput: function (event) {
-                if (event.keyCode == 13) {
-                    this.doClickNextBtn()
-                }
             }
         }
     }

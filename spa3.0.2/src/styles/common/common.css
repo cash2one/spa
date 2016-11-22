@@ -1,3 +1,4 @@
+@charset "UTF-8";
 html, body, div, span, h1, h2, h3, h4, h5, h6, p, a, img, dl, dt, dd, ol, ul, li, fieldset, form, label, table, caption, tbody, tfoot, thead, tr, th, td, article, canvas, figure, figcaption, footer, header, menu, nav, section {
   border: 0;
   font: inherit;
@@ -157,7 +158,7 @@ div.pop-modal {
   bottom: 0;
   margin-left: -10rem;
   background: rgba(100, 100, 100, 0.7);
-  z-index: 3;
+  z-index: 11;
   -webkit-transition: all 0.5s;
   transition: all 0.5s;
   -webkit-transform-origin: 50% 100%;
@@ -171,14 +172,14 @@ div.pop-modal {
     transform: scale(1, 1); }
   div.pop-modal > div.center-wrap {
     position: absolute;
-    top: 50%;
-    left: 50%; }
+    top: 45%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); }
 
 div.credit-tip-pop > div {
   width: 16.389rem;
   height: 9.889rem;
-  margin-top: -4.944rem;
-  margin-left: -8.194rem;
   border-radius: 0.22rem;
   background-color: #fff;
   overflow: hidden; }
@@ -213,3 +214,53 @@ div.credit-tip-pop > div {
       div.credit-tip-pop > div > div.btn > a.get {
         color: #ff6666;
         border-right-width: 0; }
+
+.recommend-label {
+  overflow: hidden; }
+  .recommend-label:after {
+    content: '店长推荐';
+    position: absolute;
+    top: 0.7rem;
+    left: -1.2rem;
+    width: 5rem;
+    height: 1.167rem;
+    line-height: 1.167rem;
+    font-size: .667rem;
+    color: #fff;
+    text-align: center;
+    background: -webkit-gradient(linear, left 50%, right 50%, from(#ff725d), to(#fea03a));
+    background: -webkit-linear-gradient(to right, #ff725d, #fea03a);
+    background: -webkit-linear-gradient(left, #ff725d, #fea03a);
+    background: linear-gradient(to right, #ff725d, #fea03a);
+    -webkit-transform-origin: center;
+            transform-origin: center;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg); }
+
+@-webkit-keyframes couponAni {
+  from {
+    -webkit-transform: rotate(0);
+    transform: rotate(0); }
+  25% {
+    -webkit-transform: rotate(-8deg);
+    transform: rotate(-8deg); }
+  75% {
+    -webkit-transform: rotate(8deg);
+    transform: rotate(8deg); }
+  to {
+    -webkit-transform: rotate(0);
+    transform: rotate(0); } }
+
+@keyframes couponAni {
+  from {
+    -webkit-transform: rotate(0);
+    transform: rotate(0); }
+  25% {
+    -webkit-transform: rotate(-8deg);
+    transform: rotate(-8deg); }
+  75% {
+    -webkit-transform: rotate(8deg);
+    transform: rotate(8deg); }
+  to {
+    -webkit-transform: rotate(0);
+    transform: rotate(0); } }

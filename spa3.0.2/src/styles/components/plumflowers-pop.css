@@ -1,10 +1,7 @@
 div.plumflowers-pop {
   z-index: 11; }
   div.plumflowers-pop > div {
-    top: 45% !important;
     width: 17.722rem;
-    margin-left: -8.861rem;
-    margin-top: -11.276rem;
     text-align: center; }
     div.plumflowers-pop > div > div {
       background-color: #fff; }

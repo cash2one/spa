@@ -14,34 +14,6 @@
     -webkit-transform: translate(0, -2.556rem);
     transform: translate(0, -2.556rem); } }
 
-@-webkit-keyframes couponAni {
-  from {
-    -webkit-transform: rotate(0);
-    transform: rotate(0); }
-  25% {
-    -webkit-transform: rotate(-8deg);
-    transform: rotate(-8deg); }
-  75% {
-    -webkit-transform: rotate(8deg);
-    transform: rotate(8deg); }
-  to {
-    -webkit-transform: rotate(0);
-    transform: rotate(0); } }
-
-@keyframes couponAni {
-  from {
-    -webkit-transform: rotate(0);
-    transform: rotate(0); }
-  25% {
-    -webkit-transform: rotate(-8deg);
-    transform: rotate(-8deg); }
-  75% {
-    -webkit-transform: rotate(8deg);
-    transform: rotate(8deg); }
-  to {
-    -webkit-transform: rotate(0);
-    transform: rotate(0); } }
-
 div#technician-detail-page {
   overflow-y: auto; }
   div#technician-detail-page div.top {

@@ -59,13 +59,14 @@ div.menu-container{
         height:0.889rem;
         line-height: 0.889rem;
         min-width: 0.55rem;
-        padding:0 0.111rem;
+        padding:0 .15rem;
         color:#fff;
-        font-size:0.5rem;
+        font-size:0.6rem;
         font-style: normal;
         background-color: #fb5549;
-        border-radius: 0.4rem;
+        border-radius: 50% / 50%;
         text-align: center;
+        @include scale(.85,.85);
       }
     }
   }
@@ -75,10 +76,10 @@ div.menu-container{
     >a{
       width:4rem;
       >div:nth-of-type(1){
-        width:1.861rem;
+        width:1.361rem;
         height:1.333rem;
         margin:0.111rem auto;
-        @include imgBgFix(1.861rem 1.333rem);
+        @include imgBgFix(1.361rem 1.333rem);
       }
       >div:nth-of-type(2){
         line-height: 1.1rem;
@@ -86,51 +87,48 @@ div.menu-container{
     }
     >a.home{
       >div:nth-of-type(1){
-        background-image: url("../../images/common/nav_001.png");
+        background-image: url("../../images/home/nav_001.png");
       }
       &.active{
         >div:nth-of-type(1){
-          background-image: url("../../images/common/nav_000.png");
+          background-image: url("../../images/home/nav_000.png");
         }
       }
     }
     >a.message{
       >div:nth-of-type(1){
-        background-image: url("../../images/common/nav_011.png");
+        background-image: url("../../images/home/nav_011.png");
       }
       &.active{
         >div:nth-of-type(1){
-          background-image: url("../../images/common/nav_010.png");
+          background-image: url("../../images/home/nav_010.png");
         }
       }
     }
     >a.technicianList{
       >div:nth-of-type(1){
-        background-image: url("../../images/common/nav_021.png");
-      }
-      &.active{
-        >div:nth-of-type(1){
-          background-image: url("../../images/common/nav_020.png");
-        }
+        height:2.389rem;
+        width:3.361rem;
+        @include img("../../images/home/nav_021.png",3.361rem 2.389rem);
       }
     }
     >a.order{
       >div:nth-of-type(1){
-        background-image: url("../../images/common/nav_031.png");
+        background-image: url("../../images/home/nav_031.png");
       }
       &.active{
         >div:nth-of-type(1){
-          background-image: url("../../images/common/nav_030.png");
+          background-image: url("../../images/home/nav_030.png");
         }
       }
     }
     >a.personal{
       >div:nth-of-type(1){
-        background-image: url("../../images/common/nav_041.png");
+        background-image: url("../../images/home/nav_041.png");
       }
       &.active{
         >div:nth-of-type(1){
-          background-image: url("../../images/common/nav_040.png");
+          background-image: url("../../images/home/nav_040.png");
         }
       }
     }
@@ -360,7 +358,6 @@ div.page-back-btn{
     margin-left: -.3rem;
     border-left: .2rem solid #fff;
     border-bottom: .2rem solid #fff;
-    @include boxsizing(border-box);
     @include rotate(45deg);
   }
 }

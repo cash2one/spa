@@ -159,7 +159,7 @@
                         return
                     }
                     if (!global.isLogin || !global.userTel) {
-                        Global.loginParams('paidCoupon')
+                        Global.login(null, 'paidCoupon')
                         if (!global.isLogin) {
                             Util.tipShow('请您先登录！')
                             that.$router.push({name: 'login'})

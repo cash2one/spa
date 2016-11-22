@@ -78,9 +78,6 @@ var webpackConfig = merge(baseWebpackConfig, {
   ]
 })
 
-console.log("webpackConfig：");
-console.dir(webpackConfig);
-
 if (config.build.productionGzip) {
   var CompressionWebpackPlugin = require('compression-webpack-plugin')
 

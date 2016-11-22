@@ -25,7 +25,7 @@ module.exports = {
     // allow paren-less arrow functions
     'arrow-parens': 0,
     // setting default 4 indent
-    'indent': [ 'error', 4 ],
+    'indent': [ 'error', 4 , { 'SwitchCase' : 1 }],
     // allow async-await
     'generator-star-spacing': 0,
     // allow debugger during development

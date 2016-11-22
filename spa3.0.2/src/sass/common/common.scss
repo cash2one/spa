@@ -83,7 +83,7 @@ div.finish-load-tip{
 
 div.pop-modal{
   @include mask();
-  z-index:3;
+  z-index:11;
   @include transition(all 0.5s);
   @include tOrigin(50% 100%);
   @include scale(1,0);
@@ -92,10 +92,11 @@ div.pop-modal{
     opacity: 1;
     @include scale(1,1);
   }
-  &>div.center-wrap{
+  >div.center-wrap{
     position: absolute;
-    top:50%;
+    top:45%;
     left:50%;
+    @include translate(-50%, -50%);
   }
 }
 
@@ -103,8 +104,6 @@ div.credit-tip-pop{
   >div{
     width:16.389rem;
     height:9.889rem;
-    margin-top:-4.944rem;
-    margin-left:-8.194rem;
     border-radius: 0.22rem;
     background-color: #fff;
     overflow: hidden;
@@ -145,5 +144,42 @@ div.credit-tip-pop{
         }
       }
     }
+  }
+}
+
+.recommend-label{
+  overflow: hidden;
+  &:after{
+    content: '店长推荐';
+    position: absolute;
+    top: 0.7rem;
+    left: -1.2rem;
+    width: 5rem;
+    height: 1.167rem;
+    line-height: 1.167rem;
+    font-size: .667rem;
+    color: #fff;
+    text-align: center;
+    background: -moz-linear-gradient(to right,#ff725d,#fea03a);
+    background: -webkit-gradient(linear,left 50%,right 50%,from(#ff725d),to(#fea03a));
+    background: -webkit-linear-gradient(to right,#ff725d,#fea03a);
+    background: linear-gradient(to right,#ff725d,#fea03a);
+    transform-origin: center;
+    @include rotate(-45deg);
+  }
+}
+
+@include keyframes(couponAni){
+  from{
+    @include rotate(0);
+  }
+  25%{
+    @include rotate(-8deg)
+  }
+  75%{
+    @include rotate(8deg);
+  }
+  to{
+    @include rotate(0)
   }
 }

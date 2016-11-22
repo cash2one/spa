@@ -14,21 +14,6 @@
   }
 }
 
-@include keyframes(couponAni){
-  from{
-    @include rotate(0);
-  }
-  25%{
-    @include rotate(-8deg)
-  }
-  75%{
-    @include rotate(8deg);
-  }
-  to{
-    @include rotate(0)
-  }
-}
-
 div#technician-detail-page{
   overflow-y: auto;
   div.top{

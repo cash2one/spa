@@ -93,8 +93,7 @@
                 Util.tipShow(global.visitError)
                 that.$router.back()
             } else if (!global.isLogin) {
-                Global.loginParams('paidCouponDetail')
-                that.$router.push({name: 'login'})
+                Global.login(that.$router, 'paidCouponDetail')
             } else {
                 that.payAuthCode = query.code || global.authCode
                 that.queryDataUrl += that.userActId
@@ -195,7 +194,7 @@
                             }
                             return
                         } else if (!global.userTel) {
-                            Global.loginParams('paidCouponDetail')
+                            Global.login(null, 'paidCouponDetail')
                             that.$router.push({name: 'bindPhone'})
                         } else {
                             Util.removeLocalStorage('paid-cou-detail-param')

@@ -99,8 +99,7 @@
             var that = this
             if (!that.im.id) {
                 Util.tipShow('请您先登录！')
-                Global.loginParams('chat')
-                that.$router.push({name: 'login'})
+                Global.login(that.$router, 'chat')
             }
 
             // event on

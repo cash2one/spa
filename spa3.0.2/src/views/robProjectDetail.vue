@@ -179,8 +179,7 @@
                 var global = that.global
                 if (!global.isLogin) {
                     Util.tipShow('请您先登录！')
-                    Global.loginParams()
-                    that.$router.push({name: 'login'})
+                    Global.login(that.$router)
                     return false
                 } else if (!global.userTel) {
                     /* $.$.loginUrl = location.hash;

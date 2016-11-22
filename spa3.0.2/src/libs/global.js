@@ -183,7 +183,9 @@ exports.Global = {
             }
         })
     },
-
+    /*
+     * 依据窗口宽度调整页面font-size
+     */
     resizeWidth: function () {
         var data = this.data
         var win = window
@@ -375,14 +377,19 @@ exports.Global = {
     bindTelPhone: function () {
 
     },
-
-    loginParams: function (page) {
+    /*
+     * 从当前页面page跳转到login页面
+     */
+    login: function (router, page) {
         var that = this.data
         var currPage = that.currPage
         that.loginPage = page || currPage.name
         that.loginPageQuery = {}
         for (var item in currPage.query) {
             that.loginPageQuery[item] = currPage.query[item]
+        }
+        if (router) {
+            router.push({name: 'login'})
         }
     },
 

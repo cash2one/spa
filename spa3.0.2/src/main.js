@@ -33,12 +33,14 @@ var ChatInput = require('./components/chat-input')
 var DiceSetting = require('./components/dice-setting')
 var LoadMore = require('./components/load-more')
 var GoldenEffect = require('./components/golden-effect')
+var HomeTech = require('./components/home-tech')
 
 Vue.component('tech', Tech)
 Vue.component('chat-input', ChatInput)
 Vue.component('dice-setting', DiceSetting)
 Vue.component('load-more', LoadMore)
 Vue.component('golden-effect', GoldenEffect)
+Vue.component('home-tech', HomeTech)
 
 Vue.http.options.emulateJSON = true
 Global.beforeInit()
@@ -575,6 +577,9 @@ pageRouterOption.push({
 })
 
 // 其他链接
+pageRouterOption.push({
+    path: '/', redirect: { name: isClubMode ? 'home' : 'clubList' }
+})
 pageRouterOption.push({
     path: '*', redirect: { name: isClubMode ? 'home' : 'clubList' }
 })

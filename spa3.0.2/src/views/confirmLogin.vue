@@ -4,8 +4,8 @@
 <template>
     <div class="page login-page" id="confirm-login-page" v-show="!global.loading">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>登录</div>
-        <div class="input tel spec"><i></i><span>+86</span><input type="tel" placeholder="请输入您的11位手机号" v-model="tel" maxlength="11" v-tel-input/></div>
-        <div class="input pw"><i></i><input type="password" autofocus placeholder="请输入6-20位密码，仅限字母和数字" v-password-input v-model="password" maxlength="20"/></div>
+        <div class="input tel spec"><i></i><span>+86</span><input type="tel" placeholder="请输入您的11位手机号" v-model="tel" maxlength="11" v-tel-input @keypress.enter="doClickLoginBtn()"/></div>
+        <div class="input pw"><i></i><input type="password" autofocus placeholder="请输入6-20位密码，仅限字母和数字" v-password-input v-model="password" maxlength="20" @keypress.enter="doClickLoginBtn()"/></div>
         <div class="error" v-show="!isTelValid">*&nbsp;请输入正确的11位手机号</div>
         <div class="error" v-show="isTelValid && !isPasswordValid">*&nbsp;请输入6~20位密码</div>
         <div class="next-btn" :class="{ active : isTelValid && isPasswordValid }" @click="doClickLoginBtn()">登录</div>

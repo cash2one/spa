@@ -173,17 +173,15 @@ div#personal-page{
 }
 
 div.confirm-logout{
-  &>div{
+  >div{
     height:6.756rem;
     width:16.667rem;
-    margin-top:-3.378rem;
-    margin-left:-8.3335rem;
     background-color: #fff;
     color:#4d4d4d;
     font-size:0.889rem;
     overflow: hidden;
     @include ty(0,0,4px,4px,#908f8f);
-    &>div:nth-of-type(1){
+    >div:nth-of-type(1){
       height:4.35rem;
       line-height: 4.35rem;
       text-align: center;
