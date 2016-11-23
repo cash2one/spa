@@ -3,12 +3,12 @@
 </style>
 <template>
     <div>
-        <div class="page-back-btn" @click="doClickPageBack()" v-show="!global.loading"></div>
+        <div class="page-back-btn" @click="doClickPageBack()"></div>
         <div class="page" id="service-group-page" v-show="!global.loading">
             <div class="item" v-for="item in dataList" :style="{ backgroundImage : 'url('+item.imageUrl+')' }" @click="doClickItem(item.id)"></div>
             <div class="nullData" v-show="dataList.length==0">
                 <div></div>
-                <div>暂无内容...</div>
+                <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>
     </div>

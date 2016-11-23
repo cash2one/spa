@@ -2,7 +2,7 @@
     @import '../styles/page/login.css';
 </style>
 <template>
-    <div class="page login-page" id="login-page" v-show="!global.loading">
+    <div class="page login-page" id="login-page">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>登录/注册</div>
         <div class="input tel"><i></i><span>+86</span><input type="tel" placeholder="请输入您的11位手机号" v-model="tel" maxlength="11" v-tel-input @keypress.enter="doClickNextBtn()"/></div>
         <div class="next-btn" :class="{ active : isTelValid }" @click="doClickNextBtn()">下一步</div>
@@ -51,6 +51,7 @@
                     that.tel = pageParam['loginTel']
                     that.isTelValid = /^1[34578]\d{9}$/.test(that.tel)
                 }
+                global.loading = false
             }
         },
         mounted: function () {

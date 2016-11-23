@@ -2,7 +2,7 @@
     @import '../styles/page/qrPayCode.css';
 </style>
 <template>
-    <div class="page" id="qrpay-code-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="qrpay-code-page" :style="{ height : global.winHeight+'px' }">
         <div class="page-title"><a v-if="!isDirect" class="back" @click="doClickPageBack()"></a>付款二维码</div>
         <div class="qrcode-wrap">
             <div>

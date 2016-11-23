@@ -3,7 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="page-back-btn" @click="doClickPageBack()" v-show="!global.loading"></div>
+        <div class="page-back-btn" @click="doClickPageBack()"></div>
         <div class="page" id="map-page" :style="{ height : global.winHeight+'px'}" v-show="!global.loading"></div>
     </div>
 </template>
@@ -14,8 +14,6 @@
     module.exports = {
         data: function () {
             return {
-                // getClubPlaceDataUrl : '../json/map.json',
-                getClubPlaceDataUrl: '../api/v2/club/club_map',
                 global: Global.data,
                 mapData: null
             }
@@ -23,21 +21,19 @@
         created: function () {
             var that = this
             var global = that.global
-            global.loading = true
-            that.$http.get(that.getClubPlaceDataUrl, {params: {clubId: global.clubId}}).then(function (res) {
+            that.$http.get('../api/v2/club/club_map', {params: {clubId: global.clubId}}).then(function (res) {
                 res = res.body
-                global.loading = false
                 if (res && res.statusCode == '200' && AMap && res.respData.lngx) {
                     res = res.respData
                     that.mapData = res
                     that.initPage(res)
+                    global.loading = false
                 } else {
                     Util.tipShow('未能获取会所位置！')
                     that.$router.back()
                 }
             }, function () {
                 Util.tipShow('未能获取会所位置！')
-                global.loading = false
                 that.$router.back()
             })
         },
@@ -53,7 +49,7 @@
                     })
                 }) // 创建地图实例
                 AMap.event.addListener(mapObj, 'complete', function () {
-                    // alert('complete')
+                    // console.log('complete')
                 })
                 // 添加终点标记
                 var markerElement = document.createElement('div')

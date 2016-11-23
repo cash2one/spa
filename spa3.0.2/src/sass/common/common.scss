@@ -84,7 +84,7 @@ div.finish-load-tip{
 div.pop-modal{
   @include mask();
   z-index:11;
-  @include transition(all 0.5s);
+  @include transition(transform 0.5s);
   @include tOrigin(50% 100%);
   @include scale(1,0);
   opacity: 0;

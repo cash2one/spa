@@ -3,7 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="page" id="order-detail-page" v-if="!global.loading">
+        <div class="page" id="order-detail-page">
             <div class="page-title"><a class="back" @click="doClickBackPage()"></a>订单详情</div>
             <div :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }">
                 <div>

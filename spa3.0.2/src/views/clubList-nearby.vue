@@ -1,5 +1,5 @@
 <template>
-    <div class="page club-list-page" id="club-list-nearby-page" v-show="!global.loading">
+    <div class="page club-list-page" id="club-list-nearby-page">
         <div class="search">
             <router-link :to="{ name : 'inviteCode' , query : { tmp_clubSource : '9358' } }">添加会所</router-link>
             <router-link tag="div" :to="{ name : 'clubList-search' }"><span>搜索</span></router-link>
@@ -14,7 +14,7 @@
             </div>
             <div class="nullData" v-show="dataList.length==0 && !dataLoading">
                 <div></div>
-                <div>暂无内容...</div>
+                <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
             <router-link :to="{ name : 'clubList-all' }" tag="div" class="view-all" v-show="!dataLoading && dataList.length!=0">查看全部会所</router-link>
         </div>

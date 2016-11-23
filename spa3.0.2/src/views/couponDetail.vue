@@ -3,7 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="page" id="coupon-detail-page" v-show="!global.loading">
+        <div class="page" id="coupon-detail-page">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>优惠券详情</div>
             <div class="club-name">{{userAct.clubName}}</div>
             <div class="coupon-info">

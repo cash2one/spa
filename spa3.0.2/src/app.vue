@@ -3,7 +3,9 @@
 </style>
 <template>
     <div id="page-container">
-        <router-view></router-view>
+        <transition name="fade" mode="out-in">
+            <router-view></router-view>
+        </transition>
         <div v-show="global.showAppMenu && !global.loading" class="menu-container club">
             <router-link class="home" :to="{ name : 'home' }"><div></div><div>首页</div></router-link>
             <router-link class="message" :to="{ name : 'message' }"><div><i v-show="im.newMsgTotal>0">{{ im.newMsgTotal }}</i></div><div>聊天</div></router-link>
@@ -16,7 +18,7 @@
             <router-link class="message" :to="{ name : 'message' }"><div><i v-show="im.newMsgTotal>0">{{ im.newMsgTotal }}</i></div><div>聊天</div></router-link>
             <router-link class="personal" :to="{ name : 'personal' }"><div></div><div>个人中心</div></router-link>
         </div>
-        <spinner v-show="global.loading && !global.loading"></spinner>
+        <spinner v-show="global.loading"></spinner>
     </div>
 </template>
 <script>

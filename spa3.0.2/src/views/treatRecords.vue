@@ -2,7 +2,7 @@
     @import '../styles/page/treatRecords.css';
 </style>
 <template>
-    <div class="page" id="treat-records-page" v-show="!global.loading">
+    <div class="page" id="treat-records-page">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>请客记录</div>
         <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <router-link class="list-item" v-for="item in dataList" :to="{ name : 'treatDetail' , query : { detailId : item.id }}">
@@ -15,15 +15,11 @@
                     <div>授权手机<span>{{ item.telStr }}</span></div>
                 </div>
             </router-link>
-            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i>
-                <div>加载数据</div>
-            </div>
-            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip || dataList.length==0 }">
-                <div>已经加载全部数据</div>
-            </div>
+            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
+            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip || dataList.length==0 }"><div>已经加载全部数据</div></div>
             <div class="nullData" v-show="dataList.length==0 && !isAddData">
                 <div></div>
-                <div>暂无内容...</div>
+                <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>
     </div>

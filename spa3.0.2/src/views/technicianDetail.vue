@@ -3,7 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="page-back-btn tech-detail-page" @click="doClickPageBack()" v-show="!global.loading"></div>
+        <div class="page-back-btn tech-detail-page" @click="doClickPageBack()"></div>
         <div class="page-back-home" @click="doClickBackHomeBtn()">会所</div>
         <div class="page" id="technician-detail-page" v-show="!global.loading" :style="{ height : (global.winHeight-2.667*global.winScale*16)+'px' }">
             <div class="top">

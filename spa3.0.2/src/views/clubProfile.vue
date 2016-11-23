@@ -5,7 +5,7 @@
     <div>
         <div class="page-back-btn" @click="doClickPageBack()"></div>
         <div class="club-profile-page-num" v-show="totalPage>0"><span>1</span>/{{totalPage}}</div>
-        <div class="page" id="club-profile-page" :style="{ height : global.winHeight+'px'}" v-show="!global.loading">
+        <div class="page" id="club-profile-page" :style="{ height : global.winHeight+'px'}">
             <swiper class="profile-swipe" :options="swiperOption">
                 <swiper-slide v-for="item in profileData">
                     <div class="profile-top">

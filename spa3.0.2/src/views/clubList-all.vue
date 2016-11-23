@@ -1,5 +1,5 @@
 <template>
-    <div class="page club-list-page" id="club-list-all-page" v-show="!global.loading" @click="doClickPage()">
+    <div class="page club-list-page" id="club-list-all-page" @click="doClickPage()">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>会所列表</div>
         <div class="filter-title">
             <div :class="{ active : activeFilterType=='distance' }" @click="doActiveFilterType('distance',$event)">
@@ -34,7 +34,7 @@
             </div>
             <div class="nullData" v-show="dataList.length==0 && !dataLoading">
                 <div></div>
-                <div>暂无内容...</div>
+                <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>
     </div>

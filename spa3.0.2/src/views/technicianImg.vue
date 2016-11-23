@@ -2,7 +2,7 @@
     @import '../styles/page/technicianImg.css';
 </style>
 <template>
-    <div class="page" id="technician-img-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="technician-img-page" :style="{ height : global.winHeight+'px' }">
         <swiper class="pic-swipe" :auto="24*60*60*1000" :index="startIndex">
             <swiper-slide v-for="pic in pics" :options="swiperOption">
                 <img :src="pic.bigImageUrl"/>

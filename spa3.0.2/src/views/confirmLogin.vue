@@ -2,7 +2,7 @@
     @import '../styles/page/login.css';
 </style>
 <template>
-    <div class="page login-page" id="confirm-login-page" v-show="!global.loading">
+    <div class="page login-page" id="confirm-login-page">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>登录</div>
         <div class="input tel spec"><i></i><span>+86</span><input type="tel" placeholder="请输入您的11位手机号" v-model="tel" maxlength="11" v-tel-input @keypress.enter="doClickLoginBtn()"/></div>
         <div class="input pw"><i></i><input type="password" autofocus placeholder="请输入6-20位密码，仅限字母和数字" v-password-input v-model="password" maxlength="20" @keypress.enter="doClickLoginBtn()"/></div>
@@ -58,6 +58,8 @@
             if (global.userAgent.isWX && (!global.authCode || pageParam.state != '9358_login')) {
                 Global.getOauthCode('', '9358', '9358_login', 'base')
                 return that.$router.back()
+            } else {
+                global.loading = false
             }
         },
         mounted: function () {

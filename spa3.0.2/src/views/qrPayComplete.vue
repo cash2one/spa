@@ -2,7 +2,7 @@
     @import '../styles/page/qrPayComplete.css';
 </style>
 <template>
-    <div class="page" id="qrpay-complete-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="qrpay-complete-page" :style="{ height : global.winHeight+'px' }">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>支付完成</div>
         <div class="success-info">
             <div>

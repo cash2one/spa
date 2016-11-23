@@ -33,16 +33,16 @@ contacts
 coupon
 couponDetail
 follow9358
-home
+home-----------------------------
 hourTicketList
 info
 integral
 integralDetail
-integralExplain
+integralExplain-----------------------
 inviteCode
 login
-map
-member
+map---------------------
+member-------------------
 message
 order
 orderDetail
@@ -72,5 +72,5 @@ techReward
 tradeRecords
 treat
 treatDetail
-treatExplain
+treatExplain--------------------
 treatRecords

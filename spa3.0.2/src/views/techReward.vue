@@ -3,7 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="page" id="tech-reward-page" v-show="!global.loading">
+        <div class="page" id="tech-reward-page">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>技师打赏</div>
             <div class="top-tip"><div></div></div>
             <div class="reward-list">

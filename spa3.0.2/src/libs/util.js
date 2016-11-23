@@ -81,6 +81,7 @@ module.exports = {
         if (!str) return
         var tmpArr = []
         var spaceStr = ''
+        var v
         last = last == true
         num = Math.abs(num || 4)
         space = Math.abs(space || 1)
@@ -91,12 +92,13 @@ module.exports = {
         for (var j = space; j > 0; j--) {
             spaceStr += ' '
         }
-        str.forEach(function (v, i) {
+        for (var i = 0; i < str.length; i++) {
+            v = str[i]
             tmpArr.push(v)
             if ((i + 1) % num == 0) {
                 tmpArr.push(spaceStr)
             }
-        })
+        }
         if (last) {
             tmpArr.reverse()
         }

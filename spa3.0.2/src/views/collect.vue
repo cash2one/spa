@@ -2,7 +2,7 @@
     @import '../styles/page/collect.css';
 </style>
 <template>
-    <div class="page" id="collect-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="collect-page" :style="{ height : global.winHeight+'px' }">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>我的收藏</div>
         <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <div class="list-item" v-for="singleClubData in dataList">
@@ -42,7 +42,7 @@
             </div>
             <div class="nullData" v-show="dataList.length==0 && !isAddData">
                 <div></div>
-                <div>暂无内容...</div>
+                <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>
     </div>

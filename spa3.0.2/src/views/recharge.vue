@@ -2,7 +2,7 @@
     @import '../styles/page/recharge.css';
 </style>
 <template>
-    <div class="page" id="recharge-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="recharge-page" :style="{ height : global.winHeight+'px' }">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>充值</div>
         <div class="recharge-area">
             <div>充值金额</div>

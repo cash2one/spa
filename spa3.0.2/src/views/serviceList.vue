@@ -3,7 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="page-back-btn" @click="doClickPageBack()" v-show="!global.loading"></div>
+        <div class="page-back-btn" @click="doClickPageBack()"></div>
         <div class="page" id="service-list-page" v-show="!global.loading">
             <div class="category" v-for="service in serviceList">
                 <div :class="service['code']">

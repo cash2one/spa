@@ -3,7 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="page" id="personal-page" v-show="!global.loading" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }">
+        <div class="page" id="personal-page" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }">
             <div class="page-title">个人中心</div>
             <div class="top">
                 <div class="header" v-show="global.isLogin" :style="{ backgroundImage : 'url('+global.userHeader+')' }"></div>
@@ -127,6 +127,7 @@
                             Util.localStorage('isTelephoneUser', false)
                             Util.tipShow(res.msg || '检查绑定状态失败')
                         }
+                        global.loading = false
                     })
                 } else if (global.userTel) {
                     that.$http.get(that.checkWxBandUrl, {params: {phoneNum: global.userTel}}).then(function (res) {
@@ -138,10 +139,14 @@
                         } else {
                             Util.tipShow(res.msg || '检查绑定状态失败')
                         }
+                        global.loading = false
                     })
                 } else {
                     that.showExitBtn = false
+                    global.loading = false
                 }
+            } else {
+                global.loading = false
             }
         },
         mounted: function () {

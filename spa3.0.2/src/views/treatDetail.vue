@@ -3,7 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="page" id="treat-detail-page" v-show="!global.loading">
+        <div class="page" id="treat-detail-page">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>我要请客</div>
             <div class="info-area">
                 <div class="info-top">

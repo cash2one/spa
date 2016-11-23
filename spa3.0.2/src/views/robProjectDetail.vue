@@ -3,7 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="page-back-btn" @click="doClickPageBack()" v-show="!global.loading"></div>
+        <div class="page-back-btn" @click="doClickPageBack()"></div>
         <div class="page" id="rob-project-detail-page" :style="{ height : (global.winHeight-2.943*16*global.winScale)+'px' }">
             <div class="top-banner"></div>
             <div class="info">

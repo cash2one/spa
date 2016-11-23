@@ -2,7 +2,7 @@
     @import '../styles/page/login.css';
 </style>
 <template>
-    <div class="page login-page" id="recover-password-page" v-show="!global.loading">
+    <div class="page login-page" id="recover-password-page">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>修改密码</div>
         <div class="input tel spec"><i></i><span>+86</span><input type="tel" placeholder="请输入您的11位手机号" v-model="tel" maxlength="11" v-tel-input/></div>
         <div class="input auth spec"><i></i><input type="tel" placeholder="请输入手机短信验证码" v-model="testCode" v-test-code-input maxlength="4"/><a @click="getTestCode()" :class="testCodeBtnStatus">{{testCodeBtnText}}</a></div>

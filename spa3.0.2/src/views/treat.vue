@@ -2,7 +2,7 @@
     @import '../styles/page/treat.css';
 </style>
 <template>
-    <div class="page" id="treat-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="treat-page" :style="{ height : global.winHeight+'px' }">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>我要请客</div>
         <div class="treat-area">
             <div>

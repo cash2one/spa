@@ -612,11 +612,12 @@ router.beforeEach(function (to, from, next) {
         else router.go(-2)
         return
     }
+    _global.loading = true
 
     // 检测登录
     if (to.meta.checkLogin) {
         if (!(_global.isLogin && _global.token)) {
-            Global.loginParams(to.name)
+            Global.login(null, to.name)
             return next({ name: 'login' })
         }
     }

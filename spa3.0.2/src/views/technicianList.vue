@@ -2,86 +2,75 @@
     @import '../styles/page/technicianList.css';
 </style>
 <template>
-    <div>
-        <div class="page" id="technician-list-page" v-show="!global.loading">
-            <div class="page-title">技师列表<a class="search" @click="doClickSwitchSearchInputBtn()"></a></div>
-            <div class="search" :class="{ active: showSearchInput }">
-                <input type="text" placeholder="技师昵称或者编号" maxlength="30" v-model="searchTechName"/>
-                <div @click="doClickSearchBtn()">搜索</div>
-            </div>
-            <div class="menu" :class="{ 'search-active': showSearchInput }">
-                <div class="status" @click="doClickChangeStatus()">
-                    <div :class="{ active : stateActiveId=='free' }"></div>
-                    <div>只显示闲</div>
-                </div>
-                <div class="comment" @click="doClickShowSelectScore()">
-                    <div :class="{ active : showSelectScore }">
-                        <div>{{ scoreActiveId =='1' ? '评论最多' : '评分最高' }}</div>
-                        <span></span>
-                    </div>
-                    <div :class="{ active : showSelectScore }">
-                        <div @click="doClickChangeScoreStatus('1')" :class="{ active : scoreActiveId =='1' }">评论最多</div>
-                        <div @click="doClickChangeScoreStatus('-1')" :class="{ active : scoreActiveId !='1' }">评分最高
-                        </div>
-                    </div>
-                </div>
-                <div class="filter" @click="doClickShowServiceItemSelectArea()">
-                    <div></div>
-                    <div :class="{ active : currSelectItemName != '全部项目' }">{{currSelectItemName=="全部项目" ? "项目筛选" : currSelectItemName }}</div>
-                </div>
-            </div>
+    <div class="page" id="technician-list-page">
+        <div class="page-title">技师列表</div>
+        <div class="search" :class="{ active: showSearchInput }">
+            <input type="text" placeholder="技师昵称或者编号" maxlength="30" v-model="searchTechName"/>
+            <div @click="queryTechList(1)">搜索</div>
+        </div>
 
-            <div class="tech-list" ref="listEle" :style="{ height : (global.winHeight-7.633*global.winScale*16)+'px' }" @scroll="doHandlerTechListScroll()">
-                <router-link class="item" :to="{ name : 'technicianDetail', query : { id : tech.id } }" v-for="tech in techList" :key="tech.id">
-                    <div>
-                        <div :style="{ backgroundImage : 'url('+(tech.avatarUrl || global.defaultHeader)+')' }"></div>
-                        <div :class="tech['status']">{{ tech['status']=='free' ? '闲' : '忙' }}</div>
-                    </div>
+        <div class="menu" :class="{ 'search-active': showSearchInput }">
+            <div class="status" @click="doClickChangeStatus()">
+                <div :class="{ active : stateActiveId=='free' }">只显示闲</div>
+            </div>
+            <div class="comment" @click="doClickShowSelectScore()">
+                <div :class="{ active : showSelectScore }">{{ scoreActiveId =='1' ? '评论最多' : '评分最高' }}</div>
+            </div>
+            <div class="filter" @click="doClickShowServiceItemSelectArea()">
+                <div :class="{ active : showServiceItemSelectArea }">{{ currSelectItemName=="全部项目" ? "项目筛选" : currSelectItemName }}</div>
+            </div>
+            <div class="search-icon" @click="doSwitchSearchInput()"></div>
+        </div>
+
+        <div class="tech-list" ref="listEle" :style="{ height : (global.winHeight-7.633*global.winScale*16)+'px' }" @scroll="doHandlerTechListScroll()">
+            <router-link class="item" :to="{ name : 'technicianDetail', query : { id : tech.id } }" v-for="tech in techList" :key="tech.id">
+                <div :class="tech.status" :style="{ backgroundImage : 'url('+(tech.avatarUrl || global.defaultHeader)+')' }"></div>
+                <div>
                     <div>
                         <div>
-                            <div>
-                                <div>{{ tech['name'] || global.defaultTechName }}</div>
-                                <div v-show="tech['serialNo']">[<span>{{ tech['serialNo'] }}</span>]</div>
-                            </div>
-                            <div>
-                                <div class="stars"><div :style="{ width : tech['star']+'%'}"></div></div>
-                                <div>{{tech['commentCount']}}评论</div>
-                            </div>
+                            <div>{{ tech.name || global.defaultTechName }}</div>
+                            <div v-show="tech.serialNo">{{ tech.serialNo }}</div>
                         </div>
-                        <div><span v-for="tag in tech.tagStrArr">{{tag}}</span></div>
                         <div>
-                            <div>{{tech['description'] || ''}}</div>
-                            <div>预约</div>
+                            <div>{{ tech.starStr }}</div>
+                            <div>{{ tech.commentCount }}</div>
+                            <div>{{ tech.impressionsStr }}</div>
                         </div>
+                        <div><div>{{ tech.description || "" }}</div></div>
                     </div>
-                </router-link>
-                <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i>
-                    <div>加载数据</div>
-                </div>
-                <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }">
-                    <div>已经加载全部数据</div>
-                </div>
-                <div class="nullData" v-show="techList.length==0 && !isAddData">
                     <div></div>
-                    <div>暂无内容...</div>
                 </div>
+            </router-link>
+            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i>
+                <div>加载数据</div>
+            </div>
+            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }">
+                <div>已经加载全部数据</div>
+            </div>
+            <div class="nullData" v-show="techList.length==0 && !isAddData">
+                <div></div>
+                <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>
-        <div id="tech-list-select-area" class="pop-modal" :class="{ active : showServiceItemSelectArea }">
-            <div>
+
+        <div class="pop-modal selector-area" :class="{ 'show-search' : showSearchInput, active : showSelectScore || showServiceItemSelectArea }">
+            <div class="comment" :class="{ active : showSelectScore }">
+                <div @click="doClickChangeScoreStatus('1')" :class="{ active : scoreActiveId =='1' }">评论最多</div>
+                <div @click="doClickChangeScoreStatus('-1')" :class="{ active : scoreActiveId !='1' }">评分最高</div>
+            </div>
+            <div class="service-item" :class="{ active : showServiceItemSelectArea }">
                 <div>
                     <div class="all">
-                        <div :class="{ active : itemActiveId=='-1' }" @click="doClickServiceItem('-1','全部项目','')">全部项目</div>
+                        <div class="item" :class="{ active : itemActiveId=='-1' }" @click="doClickServiceItem('-1','全部项目','')">全部项目</div>
                     </div>
                     <div class="category" v-for="item in serviceItems">
-                        <div>{{item.name}}</div>
+                        <div>{{ item.name }}</div>
                         <div>
-                            <div v-for="subItem in item.serviceItems" :class="{ active : itemActiveId==subItem.id }" @click="doClickServiceItem(subItem.id,subItem.name,item.name)">{{subItem.name}}</div>
+                            <div class="item" v-for="subItem in item.serviceItems" :class="{ active : itemActiveId==subItem.id }" @click="doClickServiceItem(subItem.id,subItem.name,item.name)">{{ subItem.name }}</div>
                         </div>
                     </div>
-                    <div class="null"></div>
                 </div>
-                <div class="btns">
+                <div>
                     <div @click="doClickServiceItemBtn('cancel')">取消</div>
                     <div @click="doClickServiceItemBtn('ok')">确定</div>
                 </div>
@@ -96,8 +85,7 @@
     module.exports = {
         data: function () {
             return {
-                getTechListUrl: '../api/v2/club/{clubId}/technician',
-                getServiceItemUrl: '../api/v2/club/{clubId}/service/select',
+                getDataUrl: '../api/v2/club/{clubId}/technician',
                 global: Global.data,
                 techList: [],
                 showSearchInput: false,
@@ -117,6 +105,7 @@
                 currSelectItemName: '全部项目',
                 currItemActiveId: '-1',
 
+                currScrollTop: 0, // 当前滚动条
                 showDataLoadTip: false, // 显示数据正在加载
                 showFinishLoadTip: false, // 显示已经加载完成
                 isDataAddEnd: false, // 数据是否已加载完
@@ -132,32 +121,30 @@
             var pageData = global.pageData['technicianList']
             if (pageData) {
                 setTimeout(function () {
+                    console.log('scroll top：' + pageData['scrollTop'])
                     that.$refs.listEle.scrollTop = pageData['scrollTop']
-                    // console.log('set scroll top：'+ pageData['scrollTop']+'---'+that.techListEle.scrollTop);
                 }, 100)
             }
             // 获取服务项目数据
-            that.$http.get(that.getServiceItemUrl, {params: {clubId: global.clubId}}).then(function (res) {
+            that.$http.get('../api/v2/club/{clubId}/service/select', {params: {clubId: global.clubId}}).then(function (res) {
                 res = res.body
                 if (res && res.length) {
                     that.serviceItems = res
                 }
-            }, function () {
-                //
             })
         },
         created: function () {
             var that = this
             var global = that.global
-            var pageData = global.pageData['technicianList']
+            var pageData = global.pageData['technicianList'] // 获取缓存中的数据
 
             if (pageData) {
                 for (var key in pageData) {
                     that[key] = pageData[key]
                 }
+                global.loading = false
             } else {
-                global.loading = true
-                that.$http.get(that.getTechListUrl, {
+                that.$http.get(that.getDataUrl, {
                     params: {
                         clubId: global.clubId,
                         page: that.currPage,
@@ -168,24 +155,23 @@
                         techName: that.showSearchInput ? encodeURIComponent(that.searchTechName) : ''
                     }
                 }).then(function (res) {
-                    global.loading = false
                     res = res.body
                     if (res && res.list) {
                         that.doHandlerTechListData(res.list)
                         that.techList = res.list
+                        global.loading = false
                     } else {
                         Util.tipShow(global.loadError)
                         that.$router.back()
                     }
                 }, function () {
                     Util.tipShow(global.loadError)
-                    global.loading = false
                     that.$router.back()
                 })
             }
         },
         methods: {
-            doClickSwitchSearchInputBtn: function () {
+            doSwitchSearchInput: function () {
                 this.showSearchInput = !this.showSearchInput
             },
             queryTechList: function (page) { // 查询列表数据
@@ -201,7 +187,7 @@
                 that.showDataLoadTip = true
                 that.showFinishLoadTip = false
                 that.isDataAddEnd = false
-                that.$http.get(that.getTechListUrl, {
+                that.$http.get(that.getDataUrl, {
                     params: {
                         clubId: global.clubId,
                         page: page,
@@ -244,6 +230,7 @@
             doHandlerTechListScroll: function () { // 数据列表往下滑动加载的处理
                 var that = this
                 var listEle = that.$refs.listEle
+                that.currScrollTop = listEle.scrollTop
                 if (!that.isDataAddEnd && listEle.scrollTop + listEle.clientHeight * 1.4 > listEle.scrollHeight) {
                     that.queryTechList()
                 }
@@ -252,46 +239,43 @@
                 var that = this
                 var gTechList = that.global.techList
                 var gTechID = that.global.techListID
+                var impsArr
+                var imps
+                var techItem
+                var k
 
                 for (var i = 0; i < list.length; i++) {
-                    if (!list[i]['techTags'] || list[i]['techTags'].length == 0) {
-                        list[i]['techTags'] = [{tagName: '(无)'}]
+                    techItem = list[i]
+                    techItem.starStr = ((techItem.star - 0) / 20).toFixed(1)
+                    imps = techItem.impressions
+                    impsArr = []
+                    if (imps && imps.length > 0) {
+                        for (k = 0; k < imps.length; k++) {
+                            impsArr.push('#' + imps[k])
+                        }
                     }
-                    if (that.currSelectedCategory && list[i]['techTags'].length > 1) {
-                        list[i]['techTags'].sort(function (a, b) {
-                            if (a.tagName == that.currSelectedCategory) return -1
-                            else if (b.tagName == that.currSelectedCategory) return 1
-                            return 0
-                        })
-                    }
-                    list[i]['tagStrArr'] = []
-                    for (var k = 0; k < 3 && k < list[i]['techTags'].length; k++) {
-                        list[i]['tagStrArr'].push(k == 2 ? '...' : list[i]['techTags'][k]['tagName'])
-                    }
-                    if (gTechID[list[i]['id']] == undefined) {
-                        gTechID[list[i]['id']] = gTechList.length
-                        gTechList.push(list[i])
+                    techItem.impressionsStr = impsArr.join(' ')
+                    if (gTechID[techItem.id] == undefined) {
+                        gTechID[techItem.id] = gTechList.length
+                        gTechList.push(techItem)
                     }
                 }
             },
             doClickChangeStatus: function () {
-                this.showSelectScore = false
                 this.stateActiveId = (this.stateActiveId == 'all' ? 'free' : 'all')
                 this.queryTechList(1)
             },
             doClickShowSelectScore: function () {
                 this.showSelectScore = !this.showSelectScore
+                this.showServiceItemSelectArea = false
             },
             doClickChangeScoreStatus: function (type) {
                 this.scoreActiveId = type
                 this.queryTechList(1)
             },
-            doClickSearchBtn: function () {
-                this.queryTechList(1)
-            },
             doClickShowServiceItemSelectArea: function () {
                 this.showSelectScore = false
-                this.showServiceItemSelectArea = true
+                this.showServiceItemSelectArea = !this.showServiceItemSelectArea
             },
             doClickServiceItemBtn: function (type) {
                 var that = this
@@ -320,7 +304,7 @@
                 status = that.storeDataList[k]
                 pageData[status] = that[status]
             }
-            pageData['scrollTop'] = that.$refs.listEle.scrollTop
+            pageData['scrollTop'] = that.currScrollTop
         }
     }
 </script>

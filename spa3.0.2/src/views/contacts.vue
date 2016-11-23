@@ -2,7 +2,7 @@
     @import '../styles/page/message.css';
 </style>
 <template>
-    <div class="page message-list-page" id="contacts-page" v-show="!global.loading">
+    <div class="page message-list-page" id="contacts-page">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>最近联系人<div class="edit-title" @click="doClickEditBtn()">{{ inEdit ? "完成" : "编辑"}}</div></div>
         <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }"
              @scroll="doHandlerListScroll()">
@@ -23,7 +23,7 @@
             </div>
             <div class="nullData" v-show="dataList.length==0 && !isAddData">
                 <div></div>
-                <div>暂无内容...</div>
+                <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>
     </div>

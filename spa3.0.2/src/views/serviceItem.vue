@@ -3,7 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="page-back-btn" @click="doClickPageBack()" v-show="!global.loading"></div>
+        <div class="page-back-btn" @click="doClickPageBack()"></div>
         <div class="confirm-btn" v-if="dataList.length>0"><a @click="doClickConfirmOrder()">确认预约</a></div>
         <div class="page" id="service-item-page" :style="{ height : (global.winHeight-3.333*global.winScale*16)+'px' }" v-if="!global.loading">
             <swiper v-if="dataList.length>0" class="profile-swipe" :options="swiperOption">
@@ -27,7 +27,7 @@
             </swiper>
             <div class="nullData" v-show="dataList.length==0">
                 <div></div>
-                <div>暂无内容...</div>
+                <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>
         <tel-detail v-if="telephone.length>0" :telephone="telephone"></tel-detail>

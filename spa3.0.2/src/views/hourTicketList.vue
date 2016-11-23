@@ -2,7 +2,7 @@
     @import '../styles/page/hourTicketList.css';
 </style>
 <template>
-    <div class="page" id="hour-ticket-list-page" v-show="!global.loading">
+    <div class="page" id="hour-ticket-list-page">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>点钟券</div>
         <div class="list" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }">
             <div class="item" v-for="item in dataList" @click="doClickPaidCoupon(item.actId)">
@@ -19,7 +19,7 @@
             </div>
             <div class="nullData" v-show="dataList.length==0">
                 <div></div>
-                <div>暂无内容...</div>
+                <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>
     </div>

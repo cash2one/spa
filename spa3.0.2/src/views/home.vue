@@ -3,7 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="page" id="home-page" v-show="!global.loading">
+        <div class="page" id="home-page">
             <div class="banner">
                 <swiper class="banner-swipe" :options="swiperOption">
                     <swiper-slide v-for="pic in bannerPics">
@@ -56,7 +56,7 @@
             </div>
         </div>
         <tel-detail v-if="global.clubTelephone.length>0" :telephone="global.clubTelephone"></tel-detail>
-        <router-link class="home-coupon" :to="{ name: 'promotions' }">
+        <router-link class="home-coupon" :to="{ name: 'promotions' }" v-show="!global.loading">
             <div></div>
             <span>抢优惠</span>
         </router-link>
@@ -66,32 +66,27 @@
             <div @click="doClickPopCoupon()">领取红包</div>
             <div @click="doClosePopCoupon()"></div>
         </div>
-       <!-- <plumflowers-pop :share-url="plumShareUrl"></plumflowers-pop>-->
         <activity-pop v-if="popActType != 'coupon'" :act-data="popActData"></activity-pop>
     </div>
 </template>
 <script>
     import { Global } from '../libs/global'
     import { eventHub } from '../libs/hub'
-    // import PlumflowersPop from '../components/plumflowers-pop'
     import ActivityPop from '../components/activity-pop'
     import Util from '../libs/util'
     import Counter from '../components/counter'
 
     module.exports = {
         components: {
-            // 'plumflowers-pop': PlumflowersPop,
             'counter': Counter,
             'activity-pop': ActivityPop
         },
         data: function () {
             return {
-                getHomeDataUrl: '../api/v2/club/{clubId}/homeData',
                 global: Global.data,
                 bannerPics: [],
                 serviceItems: [],
                 techs: [],
-                // plumShareUrl: '',
                 paidServiceItems: [],
                 isCollected: false, // 是否已收藏
                 clubDist: '', // 与会所的距离
@@ -118,10 +113,8 @@
         mounted: function () {
             var that = this
             var global = that.global
-            global.loading = true
-            that.$http.get(that.getHomeDataUrl, {params: {clubId: global.clubId}}).then(function (res) {
+            that.$http.get('../api/v2/club/{clubId}/homeData', {params: {clubId: global.clubId}}).then(function (res) {
                 res = res.body
-                global.loading = false
                 if (res.statusCode == 200) {
                     res = res.respData
                     global.clubLogoUrl = res.club.imageUrl || global.defaultClubLogo
@@ -143,16 +136,17 @@
                     } else {
                         that.setLocation(res.club)
                     }
-
                     // 用户是否已收藏会所
                     that.isCollected = res.isUserFavoriteClub
+
+                    global.loading = false
                 } else {
                     Util.tipShow(global.loadError)
                 }
             }, function () {
                 Util.tipShow(global.loadError)
             })
-            // 请求优惠券或者一元夺美女数据
+            // 请求弹窗数据
             that.$http.get('../api/v2/club/popup/get', {params: {clubId: global.clubId}}).then(function (popRes) {
                 popRes = popRes.body
                 if (popRes.statusCode == 200) {
@@ -162,7 +156,7 @@
                     if (lastPopInfo) {
                         lastPopInfo = JSON.parse(lastPopInfo)
                     }
-                    // 再次弹窗
+                    // 是否弹窗
                     if (!lastPopInfo || lastPopInfo.id != popRes.activityId || (lastPopInfo.id && lastPopInfo.time && (+new Date()) - new Date(lastPopInfo.time) > 24 * 3600 * 1000)) {
                         Util.localStorage('pastPopInfo_' + global.clubId, JSON.stringify({id: popRes.activityId, time: (+new Date())}))
                         that.popActType = popRes.activityType

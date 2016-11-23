@@ -2,7 +2,7 @@
     @import '../styles/page/promotions.css';
 </style>
 <template>
-    <div class="page" id="promotions-page" v-show="!global.loading">
+    <div class="page" id="promotions-page">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>优惠活动</div>
         <div class="title" v-if="coupons.length>0">优惠券</div>
         <div v-for="coupon in coupons" :class="[coupon['getFlag'], 'money', coupon['useType']=='money' ? '' : 'coupon' ]">
@@ -26,7 +26,7 @@
         </router-link>
         <div class="nullData" v-if="activities.length==0 && coupons.length==0">
             <div></div>
-            <div>暂无内容...</div>
+            <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
         </div>
     </div>
 </template>

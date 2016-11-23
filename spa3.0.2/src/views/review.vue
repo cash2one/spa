@@ -2,7 +2,7 @@
     @import '../styles/page/review.css';
 </style>
 <template>
-    <div class="page" id="review-list-page" v-show="!global.loading">
+    <div class="page" id="review-list-page">
         <div class="page-title">
             <a class="back" @click="doClickPageBack()"></a>评论列表
             <div class="comment-select" :class="{ active : showCommentTypeSelect }" @click="doShowCommentTypeSelect()">
@@ -37,7 +37,7 @@
             </div>
             <div class="nullData" v-show="comments.length==0 && !isAddData">
                 <div></div>
-                <div>暂无内容...</div>
+                <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>
     </div>

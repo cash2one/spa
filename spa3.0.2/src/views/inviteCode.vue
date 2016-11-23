@@ -2,7 +2,7 @@
     @import '../styles/page/inviteCode.css';
 </style>
 <template>
-    <div class="page login-page" id="invite-code-page" v-show="!global.loading">
+    <div class="page login-page" id="invite-code-page">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>输入邀请码</div>
         <div class="code-input">
             <input placeholder="会所邀请码 (必填)" maxlength="6" v-model="inviteCode" @input="doInputInviteCode()"/>

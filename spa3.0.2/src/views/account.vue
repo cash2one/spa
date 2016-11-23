@@ -2,7 +2,7 @@
     @import '../styles/page/account.css';
 </style>
 <template>
-    <div class="page" id="account-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="account-page" :style="{ height : global.winHeight+'px' }">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>所有账户</div>
         <router-link class="jump-qrcode" v-show="dataList.length>0" :to="{ name : 'qrPayCode' }">
             <div></div>
@@ -27,7 +27,7 @@
             </div>
             <div class="nullData" v-show="dataList.length==0 && !showDataLoadTip">
                 <div></div>
-                <div>暂无内容...</div>
+                <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>
     </div>

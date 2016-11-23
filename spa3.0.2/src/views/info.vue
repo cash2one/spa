@@ -2,7 +2,7 @@
     @import '../styles/page/info.css';
 </style>
 <template>
-    <div class="page info-page" id="info-page" v-show="!global.loading">
+    <div class="page info-page" id="info-page">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>资料编辑<div @click="doClickSaveBtn()">保存</div></div>
         <div class="info-content">
             <div>

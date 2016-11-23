@@ -2,7 +2,7 @@
     @import '../styles/page/follow9358.css';
 </style>
 <template>
-    <div class="page" id="follow9358-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="follow9358-page" :style="{ height : global.winHeight+'px' }">
         <div>
             <div class="top">
                 <div class="club-info">

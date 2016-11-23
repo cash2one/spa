@@ -2,7 +2,7 @@
     @import '../styles/page/qrPay.css';
 </style>
 <template>
-    <div class="page" id="qrpay-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="qrpay-page" :style="{ height : global.winHeight+'px' }">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>支付</div>
         <div class="club-info">
             <div>

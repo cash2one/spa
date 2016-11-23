@@ -2,7 +2,7 @@
     @import '../styles/page/comment.css';
 </style>
 <template>
-    <div class="page" id="comment-page" v-show="!global.loading" :class="{ 'already-comment' : orderType != 0 }">
+    <div class="page" id="comment-page" :class="{ 'already-comment' : orderType != 0 }">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>评价</div>
         <div class="wrap thanks">
             <div>

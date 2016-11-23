@@ -3,7 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="page-back-btn" @click="doClickPageBack()" v-show="!global.loading"></div>
+        <div class="page-back-btn" @click="doClickPageBack()"></div>
         <div class="page" id="promotions-activity-page" v-show="!global.loading">
             <div class="act-detail">
                 <div class="act-bg" :style="{ backgroundImage : 'url('+(actDetail.actLogoUrl || global.defaultBannerImgUrl)+')' }">

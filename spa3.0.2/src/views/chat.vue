@@ -2,7 +2,7 @@
     @import '../styles/page/chat.css';
 </style>
 <template>
-    <div class="page" id="chat-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="chat-page" :style="{ height : global.winHeight+'px' }">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>{{ talker.name }}<span v-show="talker.userNo">[{{ talker.userNo }}]</span><a class="icon home" :class="{ once : talker.userType=='manager' }" @click="doClickHomeIcon()"></a>
             <router-link class="icon tech" v-show="talker.userType=='tech'" :to="{ name : 'technicianDetail', query : { id : talker.userId } }"></router-link>
         </div>

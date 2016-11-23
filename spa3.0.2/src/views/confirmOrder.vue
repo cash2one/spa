@@ -2,7 +2,7 @@
     @import '../styles/page/confirmOrder.css';
 </style>
 <template>
-    <div class="page" id="service-item-page" v-if="!global.loading"></div>
+    <div class="page" id="service-item-page"></div>
 </template>
 <script>
     import { Global } from '../libs/global'

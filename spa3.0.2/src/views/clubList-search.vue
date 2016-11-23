@@ -1,5 +1,5 @@
 <template>
-    <div class="page club-list-page" id="club-list-search-page" v-show="!global.loading" :style="{ height : (global.winHeight-2.667*global.winScale*16)+'px' }">
+    <div class="page club-list-page" id="club-list-search-page" :style="{ height : (global.winHeight-2.667*global.winScale*16)+'px' }">
         <div class="page-title search-title">
             <a class="back" @click="doClickPageBack()"></a>
             <input type="text" v-model="searchText" placeholder="输入会所名称、地址、技师标签" maxlength="50" @keypress.enter="doClickSearchBtn()"/>

@@ -2,7 +2,7 @@
     @import '../styles/page/accountDetail.css';
 </style>
 <template>
-    <div class="page" id="account-detail-page" v-show="!global.loading">
+    <div class="page" id="account-detail-page">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>我的账户</div>
         <div class="info-item item">
             <div>

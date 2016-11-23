@@ -113,7 +113,7 @@ gulp.task('clean-pub', function () {
 });
 
 gulp.task('pub-dist',function(){
-    exists('dist/static', 'E:/workspace/spa-manager/WebRoot/spa/static', copy );
+    exists('dist', 'E:/workspace/spa-manager/WebRoot/spa', copy );
 });
 
 gulp.task('pub-img',function(){
@@ -126,5 +126,5 @@ gulp.task('pub-index', function () {
 
 ////上线执行 gulp build
 gulp.task('pub', function (callback) {
-    runSequence('clean-pub','pub-dist','pub-img','pub-index',callback);
+    runSequence('clean-pub','pub-dist','pub-img',callback);
 });

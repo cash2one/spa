@@ -3,7 +3,7 @@
 </style>
 <template>
     <div>
-        <div class="page paid-coupon-page" id="paid-coupon-page" v-show="!global.loading" :style="{ height : (global.winHeight-6.966*global.winScale*16)+'px' }">
+        <div class="page paid-coupon-page" id="paid-coupon-page" :style="{ height : (global.winHeight-6.966*global.winScale*16)+'px' }">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>点钟券</div>
             <div class="club-info" @click="doClickClubInfo()">
                 <div :style="{ backgroundImage : 'url('+(couponData.imageUrl || global.defaultClubLogo )+')' }"></div>

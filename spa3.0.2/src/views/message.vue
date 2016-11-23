@@ -2,7 +2,7 @@
     @import '../styles/page/message.css';
 </style>
 <template>
-    <div class="page message-list-page" id="message-page" v-show="!global.loading">
+    <div class="page message-list-page" id="message-page">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>消息列表
             <div v-show="dataList.length!=0" class="edit-title" @click="doClickEditBtn()">{{ inEdit ? "完成" : "编辑" }}</div>
         </div>
@@ -19,7 +19,7 @@
             </div>
             <div class="nullData" v-show="dataList.length==0">
                 <div></div>
-                <div>暂无内容...</div>
+                <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>
     </div>

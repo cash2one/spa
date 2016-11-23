@@ -2,7 +2,7 @@
     @import '../styles/page/integralDetail.css';
 </style>
 <template>
-    <div class="page" id="integral-detail-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="integral-detail-page" :style="{ height : global.winHeight+'px' }">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>积分中心</div>
         <div class="total">
             <div>现有积分<router-link :to="{ name : 'integralExplain' }">积分规则</router-link><i></i></div>

@@ -35,6 +35,9 @@
                 global: Global.data
             }
         },
+        created: function () {
+            this.global.loading = false
+        },
         methods: {
             doClickPageBack: function () {
                 history.back()

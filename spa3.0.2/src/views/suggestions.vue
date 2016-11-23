@@ -3,21 +3,17 @@
 </style>
 <template>
     <div>
-        <div class="page" id="suggestions-page" v-show="!global.loading" :style="{ height : global.winHeight+'px' }">
+        <div class="page" id="suggestions-page" :style="{ height : global.winHeight+'px' }">
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>投诉建议</div>
             <div class="star-comment">
                 <div>
                     <div>环境</div>
-                    <div class="stars" @click="doClickCommentStar($event,0)">
-                        <div :style="{ width: environmentScore+'%' }"></div>
-                    </div>
+                    <div class="stars" @click="doClickCommentStar($event,0)"><div :style="{ width: environmentScore+'%' }"></div></div>
                     <div>{{ scoreArr[environmentScore/20-1] }}</div>
                 </div>
                 <div>
                     <div>服务</div>
-                    <div class="stars" @click="doClickCommentStar($event,1)">
-                        <div :style="{ width: serviceScore+'%' }"></div>
-                    </div>
+                    <div class="stars" @click="doClickCommentStar($event,1)"><div :style="{ width: serviceScore+'%' }"></div></div>
                     <div>{{ scoreArr[serviceScore/20-1] }}</div>
                 </div>
             </div>

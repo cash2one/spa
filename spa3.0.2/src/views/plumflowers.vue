@@ -588,7 +588,6 @@
                     that.reduceTimer = setTimeout(that.doReduceCount, 100)
                 }
             },
-
             doPlusCount: function () {
                 var that = this
                 clearTimeout(that.plusTimer)
@@ -600,13 +599,11 @@
                     that.plusTimer = setTimeout(that.doPlusCount, 100)
                 }
             },
-
             doTouchStartReduce: function (e) {
                 e.preventDefault()
                 this.checkedAll = false
                 this.doReduceCount()
             },
-
             doTouchMoveReduce: function () {
                 var that = this
                 clearTimeout(that.reduceTimer)
@@ -614,17 +611,14 @@
                 that.reduceTimer = 0
                 that.plusTimer = 0
             },
-
             doTouchEndReduce: function (e) {
                 e.preventDefault()
                 this.doTouchMoveReduce()
             },
-
             doTouchStartPlus: function (e) {
                 e.preventDefault()
                 this.doPlusCount()
             },
-
             doTouchMovePlus: function () {
                 var that = this
                 clearTimeout(that.reduceTimer)
@@ -632,7 +626,6 @@
                 that.reduceTimer = 0
                 that.plusTimer = 0
             },
-
             doTouchEndPlus: function (e) {
                 e.preventDefault()
                 this.doTouchMovePlus()

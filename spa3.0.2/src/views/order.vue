@@ -3,7 +3,7 @@
 </style>
 <template>
     <div v-show="!global.loading">
-        <div class="page" id="order-list-page" v-if="!global.loading">
+        <div class="page" id="order-list-page">
             <div class="page-title"><a class="back" @click="doClickBackPage()"></a>我的订单</div>
             <div class="order-list" ref="listEle" :style="{ height : (global.winHeight-5.411*global.winScale*16)+'px'}" @scroll="doHandlerOrderListScroll()">
                 <div v-for="(order,$index) in orderList" :key="order.id">
@@ -35,7 +35,7 @@
                 </div>
                 <div class="nullData" v-show="orderList.length==0 && !isAddData">
                     <div></div>
-                    <div>暂无内容...</div>
+                    <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
                 </div>
             </div>
             <div id="refundDialog" :class="{ hide:!showRefundDlg }">
@@ -394,7 +394,7 @@
                 status = that.storeDataList[k]
                 pageData[status] = that[status]
             }
-            pageData['scrollTop'] = that.$refs.listEle.scrollTop
+            pageData.scrollTop = that.$refs.listEle.scrollTop
         }
     }
 </script>
