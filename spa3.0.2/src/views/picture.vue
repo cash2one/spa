@@ -31,7 +31,7 @@
             var global = that.global
             var win = window
             if (!win._fileReader) {
-                that.$router.redirect({name: 'info', query: {}})
+                that.$router.replace({name: 'info'})
             } else {
                 that.type = global.currPage.query.type
                 global.loading = false

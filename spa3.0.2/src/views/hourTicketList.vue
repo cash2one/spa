@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="nullData" v-show="dataList.length==0">
-                <div></div>
+                <div v-show="!global.loading"></div>
                 <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>
@@ -32,7 +32,6 @@
         data: function () {
             return {
                 global: Global.data,
-                queryDataUrl: '../api/v1/profile/redpack/list',
                 dataList: [],
                 clubId: '',
                 techCode: ''
@@ -43,10 +42,8 @@
             var global = that.global
             that.clubId = global.currPage.query.clubId || global.clubId
             that.techCode = global.currPage.query.techCode
-            global.loading = true
-            that.$http.get(that.queryDataUrl, {params: {clubId: that.clubId}}).then(function (res) {
+            that.$http.get('../api/v1/profile/redpack/list', {params: {clubId: that.clubId}}).then(function (res) {
                 res = res.body
-                global.loading = false
                 if (res.statusCode == 200) {
                     res = res.respData.coupons
                     var list = []
@@ -57,13 +54,13 @@
                         }
                     }
                     that.dataList = list
+                    global.loading = false
                 } else {
                     Util.tipShow(res.msg || global.loadError)
                     that.$router.back()
                 }
             }, function () {
                 Util.tipShow(global.loadError)
-                global.loading = false
                 that.$router.back()
             })
         },

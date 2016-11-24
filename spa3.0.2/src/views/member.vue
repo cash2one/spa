@@ -11,7 +11,7 @@
                 <div v-html="item.memberContent"></div>
             </div>
             <div class="nullData" v-show="dataList.length==0">
-                <div></div>
+                <div v-show="!global.loading"></div>
                 <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>

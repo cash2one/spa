@@ -18,7 +18,7 @@
                 <div :class="{ active : inEdit }" @click="doClickDelRecord(item)">删除记录</div>
             </div>
             <div class="nullData" v-show="dataList.length==0">
-                <div></div>
+                <div v-show="!global.loading"></div>
                 <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>

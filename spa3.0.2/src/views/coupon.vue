@@ -25,7 +25,7 @@
                 <div>已经加载全部数据</div>
             </div>
             <div class="nullData" v-show="dataList.length==0 && !isAddData">
-                <div></div>
+                <div v-show="!global.loading"></div>
                 <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>
@@ -39,7 +39,6 @@
         data: function () {
             return {
                 global: Global.data,
-                getRecordsUrl: '../api/v2/club/user_get_coupons',
                 dataList: [],
                 dataIndex: {},
                 currPage: 0,
@@ -53,8 +52,10 @@
         },
         mounted: function () {
             var that = this
-            that.isQueryAll = that.global.pageMode != 'club' || that.global.currPage.query.all == 'true'
+            var global = that.global
+            that.isQueryAll = global.pageMode != 'club' || global.currPage.query.all == 'true'
             that.queryRecord()
+            global.loading = false
         },
         methods: {
             doClickPageBack: function () {
@@ -74,7 +75,7 @@
                 that.showFinishLoadTip = false
                 that.isDataAddEnd = false
 
-                that.$http.get(that.getRecordsUrl, {
+                that.$http.get('../api/v2/club/user_get_coupons', {
                     params: {
                         page: page,
                         pageSize: that.pageSize,

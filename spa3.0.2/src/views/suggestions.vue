@@ -35,7 +35,6 @@
         data: function () {
             return {
                 global: Global.data,
-                submitCommentUrl: '../api/v2/profile/user/feedback/create',
                 environmentScore: 100,
                 serviceScore: 100,
                 commentText: '',
@@ -43,8 +42,11 @@
             }
         },
         created: function () {
-            if (!this.global.clubId) {
-                this.$router.back()
+            var that = this
+            if (!that.global.clubId) {
+                that.$router.back()
+            } else {
+                that.global.loading = false
             }
         },
         methods: {
@@ -62,7 +64,7 @@
             },
             doSubmitComment: function () {
                 var that = this
-                that.$http.post(that.submitCommentUrl, {
+                that.$http.post('../api/v2/profile/user/feedback/create', {
                     clubId: that.global.clubId,
                     environmentalScore: that.environmentScore,
                     serviceScore: that.serviceScore,

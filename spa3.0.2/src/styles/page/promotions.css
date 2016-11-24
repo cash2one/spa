@@ -64,13 +64,6 @@ div#promotions-page div.money-coupon {
         color: #fff;
         border-radius: .3rem;
         margin-top: .3rem; }
-        div#promotions-page div.money-coupon > div:nth-of-type(2) > div:nth-of-type(2).processing {
-          background-color: #e0e0e0 !important;
-          color: #bdbdbd !important;
-          background-image: url("../../images/common/loading.gif");
-          background-repeat: no-repeat;
-          background-position: .2rem 45%;
-          padding-left: .8rem; }
         div#promotions-page div.money-coupon > div:nth-of-type(2) > div:nth-of-type(2).disabled {
           background-color: #e0e0e0 !important;
           color: #bdbdbd !important; }
