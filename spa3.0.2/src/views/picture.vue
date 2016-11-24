@@ -19,7 +19,6 @@
         data: function () {
             return {
                 global: Global.data,
-                saveUserPicUrl: '../api/v2/profile/user/avatar/eidt',
                 type: '',
                 inPostData: false
             }
@@ -29,13 +28,14 @@
         },
         created: function () {
             var that = this
+            var global = that.global
             var win = window
             if (!win._fileReader) {
                 that.$router.redirect({name: 'info', query: {}})
             } else {
-                that.type = that.global.currPage.query.type
+                that.type = global.currPage.query.type
+                global.loading = false
             }
-            // event on
             eventHub.$on('put-base64', that.doPutBase64)
         },
         methods: {
@@ -49,9 +49,7 @@
             },
             doPutBase64: function (imgData) {
                 var that = this
-                that.$http.post(that.saveUserPicUrl, {
-                    avatar: encodeURIComponent(imgData)
-                }).then(function () {
+                that.$http.post('../api/v2/profile/user/avatar/eidt', {avatar: encodeURIComponent(imgData)}).then(function () {
                     Global.updateUserNameAndHeader()
                     Util.tipShow('保存成功！')
                     that.inPostData = false

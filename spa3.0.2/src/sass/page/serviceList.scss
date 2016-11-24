@@ -15,72 +15,73 @@ div#service-list-page{
           width: 1.639rem;
           height: 1.556rem;
           margin: 0 0.667rem;
+          @include imgBgFix(1.639rem 1.556rem)
         }
         &:nth-of-type(2){
           font-size: 0.889rem;
           line-height: 1.3335rem;
         }
       }
-      &.fp{
+      &.FP{
         border-bottom-color:#f17186;
         >div{
           &:nth-of-type(1){
-            @include img('../../images/serviceItem/01.png', 1.639rem 1.556rem);
+            background-image: url('../../images/serviceItem/01.png');
           }
           &:nth-of-type(2){
             color: #f17186;
           }
         }
       }
-      &.mp{
+      &.MP{
         border-bottom-color:#ff6902;
         >div{
           &:nth-of-type(1){
-            @include img('../../images/serviceItem/02.png', 1.639rem 1.556rem);
+            background-image: url('../../images/serviceItem/02.png');
           }
           &:nth-of-type(2){
             color: #ff6902;
           }
         }
       }
-      &.sp{
+      &.SP{
         border-bottom-color:#8ebe5f;
         >div{
           &:nth-of-type(1){
-            @include img('../../images/serviceItem/03.png', 1.639rem 1.556rem);
+            background-image: url('../../images/serviceItem/03.png');
           }
           &:nth-of-type(2){
             color: #8ebe5f;
           }
         }
       }
-      &.tm{
+      &.TM{
         border-bottom-color:#bc6b08;
         >div{
           &:nth-of-type(1){
-            @include img('../../images/serviceItem/04.png', 1.639rem 1.556rem);
+            background-image: url('../../images/serviceItem/04.png');
           }
           &:nth-of-type(2){
             color: #bc6b08;
           }
         }
       }
-      &.op{
+      &.OP{
         border-bottom-color:#fe5858;
         >div{
           &:nth-of-type(1){
-            @include img('../../images/serviceItem/05.png', 1.639rem 1.556rem);
+            background-image: url('../../images/serviceItem/05.png');
           }
           &:nth-of-type(2){
             color: #fe5858;
           }
         }
       }
-      &.lp{
+      &.LP{
         border-bottom-color:#c0ac4f;
         >div{
           &:nth-of-type(1){
-            @include img('../../images/serviceItem/06.png', 1.639rem 1.556rem);
+            background-image: url('../../images/serviceItem/06.png');
           }
           &:nth-of-type(2){
             color: #c0ac4f;

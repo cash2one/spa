@@ -612,8 +612,11 @@ router.beforeEach(function (to, from, next) {
         else router.go(-2)
         return
     }
-    _global.loading = true
-
+    if (_global.canShowLoading) {
+        _global.loading = true
+    } else {
+        _global.canShowLoading = true
+    }
     // 检测登录
     if (to.meta.checkLogin) {
         if (!(_global.isLogin && _global.token)) {

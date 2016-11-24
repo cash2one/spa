@@ -4,7 +4,7 @@
 <template>
     <div>
         <div class="page-back-btn" @click="doClickPageBack()"></div>
-        <div class="page" id="promotions-activity-page" v-show="!global.loading">
+        <div class="page" id="promotions-activity-page">
             <div class="act-detail">
                 <div class="act-bg" :style="{ backgroundImage : 'url('+(actDetail.actLogoUrl || global.defaultBannerImgUrl)+')' }">
                     <div></div>
@@ -33,7 +33,7 @@
                 </div>
                 <router-link v-if='act.actId !=actDetail.actId ' v-for="act in otherActs" :to="{name :'promotionsActivity' , query : { id : act.actId }}">
                     <div :style="{ backgroundImage : 'url('+act.actLogoUrl+')' }"></div>
-                    <div><i></i>{{act.actTitle}}</div>
+                    <div><i></i>{{ act.actTitle }}</div>
                     <div>活动时间：{{act.startDate | dateToString(act.endDate,'—')}}</div>
                 </router-link>
             </div>
@@ -48,7 +48,6 @@
     module.exports = {
         data: function () {
             return {
-                getDataUrl: '../api/v2/club/',
                 global: Global.data,
                 actDetail: {
                     actId: '',
@@ -70,13 +69,13 @@
                 Util.tipShow(global.visitError)
                 return that.$router.back()
             }
-            that.getDataUrl += global.clubId + '/' + query.id + '/actdetail'
-            that.$http.get(that.getDataUrl).then(function (res) {
+            that.$http.get('../api/v2/club/{clubId}/{actId}/actdetail', {params: {clubId: global.clubId, actId: query.id}}).then(function (res) {
                 res = res.body
                 if (res.statusCode == 200) {
                     res = res.respData
                     that.actDetail = res.act
                     that.otherActs = res.acts
+                    global.loading = false
                 } else {
                     Util.tipShow(global.loadError)
                     that.$router.back()

@@ -61,36 +61,131 @@ div#service-item-page div.service-item-top {
       color: #df5050;
       font-size: 0.778rem; }
 
+div#service-item-page div.service-item-desc, div#service-item-page div.service-item-tech {
+  background-color: #fff;
+  border-bottom: 1px solid #e0e0e0; }
+  div#service-item-page div.service-item-desc > div:nth-of-type(1), div#service-item-page div.service-item-tech > div:nth-of-type(1) {
+    font-size: 0.778rem;
+    padding-left: 1.194rem;
+    margin-bottom: 0.222rem;
+    color: #4d4d4d;
+    background-size: 0.971rem 0.971rem;
+    background-repeat: no-repeat;
+    background-position-y: center; }
+
 div#service-item-page div.service-item-desc {
   color: #666;
   font-size: 0.889rem;
   line-height: 1.167rem;
   border-top: 1px dashed #d9d9d9;
-  border-bottom: 1px solid #ddd;
   padding: 0.667rem 0.778rem 0.667rem;
-  background: #fff;
   word-break: break-all; }
   div#service-item-page div.service-item-desc > div:nth-of-type(1) {
     height: 1.4rem;
     line-height: 1.4rem;
-    font-size: 0.778rem;
-    position: relative;
-    padding-left: 1.194rem;
-    margin-bottom: 0.222rem;
-    color: #4d4d4d; }
-    div#service-item-page div.service-item-desc > div:nth-of-type(1) > i {
-      position: absolute;
-      width: 0.971rem;
-      height: 0.971rem;
-      top: 50%;
-      margin-top: -0.4855rem;
-      left: 0;
-      background-size: 0.971rem 0.971rem;
-      background-image: url("../../images/serviceItem/item_icon.png");
-      background-repeat: no-repeat; }
+    background-image: url("../../images/serviceItem/item_icon.png"); }
   div#service-item-page div.service-item-desc p {
     line-height: 1.5;
     margin: 0.2rem 0; }
+
+div#service-item-page div.service-item-tech {
+  margin-top: .444rem;
+  border-top: 1px solid #e0e0e0; }
+  div#service-item-page div.service-item-tech > div:nth-of-type(1) {
+    height: 1.667rem;
+    line-height: 1.667rem;
+    padding-left: 1.944rem;
+    background-image: url("../../images/serviceItem/techs_icon.png");
+    border-bottom: 1px solid #e0e0e0;
+    background-position-x: .7rem; }
+  div#service-item-page div.service-item-tech div.tech {
+    margin-left: 0.667rem;
+    height: 3.611rem;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 0;
+    position: relative; }
+    div#service-item-page div.service-item-tech div.tech > div {
+      position: absolute; }
+      div#service-item-page div.service-item-tech div.tech > div:nth-of-type(1) {
+        width: 1.028rem;
+        height: 1.028rem;
+        background-size: 1.028rem 1.028rem;
+        background-image: url("../../images/serviceItem/unselected.png");
+        background-repeat: no-repeat;
+        top: 50%;
+        margin-top: -0.514rem; }
+      div#service-item-page div.service-item-tech div.tech > div:nth-of-type(2) {
+        width: 2.778rem;
+        height: 2.778rem;
+        background-size: 2.778rem 2.778rem;
+        background-repeat: no-repeat;
+        border-radius: 50%;
+        margin-top: 0.4165rem;
+        left: 1.611rem; }
+      div#service-item-page div.service-item-tech div.tech > div:nth-of-type(3) {
+        width: 14rem;
+        height: 100%;
+        left: 4.833rem;
+        margin-top: 0.55rem; }
+        div#service-item-page div.service-item-tech div.tech > div:nth-of-type(3) > div:nth-of-type(1) {
+          color: #4d4d4d;
+          font-size: 1rem;
+          line-height: 1.3rem;
+          width: 7rem;
+          display: -webkit-box;
+          display: -moz-box;
+          -webkit-box-align: center;
+          -moz-box-align: center; }
+          div#service-item-page div.service-item-tech div.tech > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(1) {
+            max-width: 4.2rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap; }
+          div#service-item-page div.service-item-tech div.tech > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(2) {
+            margin-left: 0.2rem;
+            font-size: 0.778rem; }
+            div#service-item-page div.service-item-tech div.tech > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(2) > span {
+              color: #ff9d09; }
+        div#service-item-page div.service-item-tech div.tech > div:nth-of-type(3) > div:nth-of-type(2) {
+          color: #666;
+          font-size: 0.778rem;
+          line-height: 1.3rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap; }
+        div#service-item-page div.service-item-tech div.tech > div:nth-of-type(3) > div:nth-of-type(3) {
+          position: absolute;
+          height: 0.778rem;
+          line-height: 1.2rem;
+          right: 0;
+          top: 0; }
+          div#service-item-page div.service-item-tech div.tech > div:nth-of-type(3) > div:nth-of-type(3) > div {
+            display: inline-block;
+            width: 4.445rem;
+            height: 0.778rem;
+            background-size: 0.889rem 0.778rem;
+            background-image: url("../../images/serviceItem/star1.png");
+            background-repeat: no-repeat;
+            background-repeat: repeat-x; }
+            div#service-item-page div.service-item-tech div.tech > div:nth-of-type(3) > div:nth-of-type(3) > div > div {
+              width: 0;
+              height: 0.778rem;
+              background-size: 0.889rem 0.778rem;
+              background-image: url("../../images/serviceItem/star2.png");
+              background-repeat: no-repeat;
+              background-repeat: repeat-x; }
+          div#service-item-page div.service-item-tech div.tech > div:nth-of-type(3) > div:nth-of-type(3) > span {
+            position: relative;
+            top: -0.1rem;
+            margin-left: 0.222rem;
+            font-size: 0.667rem;
+            color: #ff9d09; }
+    div#service-item-page div.service-item-tech div.tech.selected > div:nth-of-type(1) {
+      background-size: 1.028rem 1.028rem;
+      background-image: url("../../images/serviceItem/selected.png");
+      background-repeat: no-repeat; }
+  div#service-item-page div.service-item-tech > div:last-child {
+    border-bottom: 0; }
 
 div.confirm-btn {
   position: fixed;
@@ -102,12 +197,12 @@ div.confirm-btn {
   z-index: 10; }
   div.confirm-btn > a {
     display: block;
+    height: 2.444rem;
+    line-height: 2.444rem;
     margin: .444rem .667rem 0;
     background-color: #fb5549;
     color: #fff;
     font-size: 1.056rem;
     text-align: center;
-    height: 2.444rem;
     letter-spacing: 2px;
-    line-height: 2.444rem;
     border-radius: 5px; }

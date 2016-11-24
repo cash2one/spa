@@ -20,6 +20,7 @@ exports.Global = {
         showAppMenu: false,                   // 是否显示底部菜单--club模式下
         show9358Menu: false,                  // 9358公众号模式下
         loading: false,                               // loading效果
+        canShowLoading: true,                 // 是否可显示loading
         pageMode: 'club',                         // 当前模式，club--会所网站 9358--公众号
         sessionType: 'web',                        // sessionType
         token: '',                                        // 用户token

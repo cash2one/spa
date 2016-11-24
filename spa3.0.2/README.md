@@ -24,7 +24,7 @@ clubList
 clubList-all
 clubList-nearby
 clubList-search
-clubProfile
+clubProfile-------------------------
 collect
 comment
 confirmLogin
@@ -35,7 +35,7 @@ couponDetail
 follow9358
 home-----------------------------
 hourTicketList
-info
+info-----------------------------
 integral
 integralDetail
 integralExplain-----------------------
@@ -49,10 +49,10 @@ orderDetail
 paidCoupon
 paidCouponDetail
 personal
-picture
+picture---------------------
 plumflowers
-promotions
-promotionsActivity
+promotions-------------------
+promotionsActivity-------------------
 qrPay
 qrPayCode
 qrPayComplete
@@ -63,11 +63,11 @@ review
 robProjectDetail
 robProjectSuccess
 serviceGroup
-serviceItem
-serviceList
+serviceItem--------------------
+serviceList---------------------
 suggestions
 technicianDetail
-technicianList
+technicianList-----------------
 techReward
 tradeRecords
 treat

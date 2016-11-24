@@ -26,17 +26,18 @@
         data: function () {
             return {
                 global: Global.data,
-                saveUserInfoUrl: '../api/v2/profile/user/info/eidt',
                 nickName: ''
             }
         },
         created: function () {
             var that = this
-            if (!that.global.isLogin) {
+            var global = that.global
+            if (!global.isLogin) {
                 Util.tipShow('请您先登录！')
                 return that.$router.push({name: 'login'})
             } else {
-                that.nickName = that.global.userName
+                that.nickName = global.userName
+                global.loading = false
             }
         },
         methods: {
@@ -48,9 +49,7 @@
                 if (that.nickName.length == 0) {
                     return Util.tipShow('昵称不能为空！')
                 }
-                that.$http.post(that.saveUserInfoUrl, {
-                    name: that.nickName
-                }).then(function (res) {
+                that.$http.post('../api/v2/profile/user/info/eidt', {name: that.nickName}).then(function (res) {
                     res = res.body
                     if (res.statusCode == 200) {
                         that.global.userName = that.nickName

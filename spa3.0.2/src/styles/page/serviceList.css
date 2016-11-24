@@ -17,57 +17,47 @@ div#service-list-page div.category {
     div#service-list-page div.category > div > div:nth-of-type(1) {
       width: 1.639rem;
       height: 1.556rem;
-      margin: 0 0.667rem; }
+      margin: 0 0.667rem;
+      background-size: 1.639rem 1.556rem;
+      background-repeat: no-repeat; }
     div#service-list-page div.category > div > div:nth-of-type(2) {
       font-size: 0.889rem;
       line-height: 1.3335rem; }
-    div#service-list-page div.category > div.fp {
+    div#service-list-page div.category > div.FP {
       border-bottom-color: #f17186; }
-      div#service-list-page div.category > div.fp > div:nth-of-type(1) {
-        background-size: 1.639rem 1.556rem;
-        background-image: url("../../images/serviceItem/01.png");
-        background-repeat: no-repeat; }
-      div#service-list-page div.category > div.fp > div:nth-of-type(2) {
+      div#service-list-page div.category > div.FP > div:nth-of-type(1) {
+        background-image: url("../../images/serviceItem/01.png"); }
+      div#service-list-page div.category > div.FP > div:nth-of-type(2) {
         color: #f17186; }
-    div#service-list-page div.category > div.mp {
+    div#service-list-page div.category > div.MP {
       border-bottom-color: #ff6902; }
-      div#service-list-page div.category > div.mp > div:nth-of-type(1) {
-        background-size: 1.639rem 1.556rem;
-        background-image: url("../../images/serviceItem/02.png");
-        background-repeat: no-repeat; }
-      div#service-list-page div.category > div.mp > div:nth-of-type(2) {
+      div#service-list-page div.category > div.MP > div:nth-of-type(1) {
+        background-image: url("../../images/serviceItem/02.png"); }
+      div#service-list-page div.category > div.MP > div:nth-of-type(2) {
         color: #ff6902; }
-    div#service-list-page div.category > div.sp {
+    div#service-list-page div.category > div.SP {
       border-bottom-color: #8ebe5f; }
-      div#service-list-page div.category > div.sp > div:nth-of-type(1) {
-        background-size: 1.639rem 1.556rem;
-        background-image: url("../../images/serviceItem/03.png");
-        background-repeat: no-repeat; }
-      div#service-list-page div.category > div.sp > div:nth-of-type(2) {
+      div#service-list-page div.category > div.SP > div:nth-of-type(1) {
+        background-image: url("../../images/serviceItem/03.png"); }
+      div#service-list-page div.category > div.SP > div:nth-of-type(2) {
         color: #8ebe5f; }
-    div#service-list-page div.category > div.tm {
+    div#service-list-page div.category > div.TM {
       border-bottom-color: #bc6b08; }
-      div#service-list-page div.category > div.tm > div:nth-of-type(1) {
-        background-size: 1.639rem 1.556rem;
-        background-image: url("../../images/serviceItem/04.png");
-        background-repeat: no-repeat; }
-      div#service-list-page div.category > div.tm > div:nth-of-type(2) {
+      div#service-list-page div.category > div.TM > div:nth-of-type(1) {
+        background-image: url("../../images/serviceItem/04.png"); }
+      div#service-list-page div.category > div.TM > div:nth-of-type(2) {
         color: #bc6b08; }
-    div#service-list-page div.category > div.op {
+    div#service-list-page div.category > div.OP {
       border-bottom-color: #fe5858; }
-      div#service-list-page div.category > div.op > div:nth-of-type(1) {
-        background-size: 1.639rem 1.556rem;
-        background-image: url("../../images/serviceItem/05.png");
-        background-repeat: no-repeat; }
-      div#service-list-page div.category > div.op > div:nth-of-type(2) {
+      div#service-list-page div.category > div.OP > div:nth-of-type(1) {
+        background-image: url("../../images/serviceItem/05.png"); }
+      div#service-list-page div.category > div.OP > div:nth-of-type(2) {
         color: #fe5858; }
-    div#service-list-page div.category > div.lp {
+    div#service-list-page div.category > div.LP {
       border-bottom-color: #c0ac4f; }
-      div#service-list-page div.category > div.lp > div:nth-of-type(1) {
-        background-size: 1.639rem 1.556rem;
-        background-image: url("../../images/serviceItem/06.png");
-        background-repeat: no-repeat; }
-      div#service-list-page div.category > div.lp > div:nth-of-type(2) {
+      div#service-list-page div.category > div.LP > div:nth-of-type(1) {
+        background-image: url("../../images/serviceItem/06.png"); }
+      div#service-list-page div.category > div.LP > div:nth-of-type(2) {
         color: #c0ac4f; }
   div#service-list-page div.category:last-child {
     margin-bottom: 0; }

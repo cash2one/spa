@@ -48,7 +48,7 @@
                 <div>已经加载全部数据</div>
             </div>
             <div class="nullData" v-show="techList.length==0 && !isAddData">
-                <div></div>
+                <div v-show="!global.loading"></div>
                 <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>
@@ -251,7 +251,9 @@
                     impsArr = []
                     if (imps && imps.length > 0) {
                         for (k = 0; k < imps.length; k++) {
-                            impsArr.push('#' + imps[k])
+                            if (imps[k]) {
+                                impsArr.push('#' + imps[k])
+                            }
                         }
                     }
                     techItem.impressionsStr = impsArr.join(' ')
