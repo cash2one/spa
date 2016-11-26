@@ -14,15 +14,9 @@
                     </div>
                     <div>
                         <div>
+                            <div><div>{{ item.techName || global.defaultTechName }}</div><template v-if="item.serialNo"><span>[</span><div>{{ item.serialNo}}</div><span>]</span></template></div>
                             <div>
-                                <div>{{ item.techName || global.defaultTechName }}</div>
-                                <span v-if="item.serialNo">[</span>
-                                <div v-if="item.serialNo">{{ item.serialNo}}</div>
-                                <span v-if="item.serialNo">]</span></div>
-                            <div>
-                                <div class="stars">
-                                    <div :style="{ width: item.star+'%' }"></div>
-                                </div>
+                                <div class="stars"><div :style="{ width: item.star+'%' }"></div></div>
                                 <div>{{ item.commentCount || 0 }}评论</div>
                             </div>
                         </div>
@@ -34,12 +28,8 @@
                     </div>
                 </router-link>
             </div>
-            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i>
-                <div>加载数据</div>
-            </div>
-            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }">
-                <div>已经加载全部数据</div>
-            </div>
+            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
+            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
             <div class="nullData" v-show="dataList.length==0 && !isAddData">
                 <div v-show="!global.loading"></div>
                 <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
@@ -55,7 +45,6 @@
         data: function () {
             return {
                 global: Global.data,
-                getRecordsUrl: '../api/v2/profile/user/favorite',
                 dataList: [],
                 dataIndex: {},
                 currPage: 0,
@@ -70,6 +59,7 @@
         mounted: function () {
             var that = this
             that.isQueryAll = that.global.pageMode != 'club' || that.global.currPage.query.all == 'true'
+            that.global.loading = false
             that.queryRecord()
         },
         methods: {
@@ -90,11 +80,9 @@
                 that.showFinishLoadTip = false
                 that.isDataAddEnd = false
 
-                that.$http.get(that.getRecordsUrl, {
+                that.$http.get('../api/v2/profile/user/favorite', {
                     params: {
-                        page: page,
-                        pageSize: that.pageSize,
-                        clubId: (that.isQueryAll ? '' : global.clubId)
+                        page: page, pageSize: that.pageSize, clubId: (that.isQueryAll ? '' : global.clubId)
                     }
                 }).then(function (res) {
                     res = res.body

@@ -25,7 +25,7 @@ clubList-all
 clubList-nearby
 clubList-search
 clubProfile-------------------------
-collect
+collect-----------------------------
 comment
 confirmLogin
 confirmOrder
@@ -38,7 +38,7 @@ hourTicketList
 info-----------------------------
 integral
 integralDetail
-integralExplain-----------------------
+integralExplain--------------------
 inviteCode
 login
 map---------------------
@@ -67,6 +67,7 @@ serviceItem--------------------
 serviceList---------------------
 suggestions-------------------
 technicianDetail
+technicianImg-----------------
 technicianList-----------------
 techReward
 tradeRecords

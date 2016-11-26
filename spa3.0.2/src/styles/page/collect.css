@@ -2,6 +2,8 @@ div#collect-page {
   overflow-y: hidden; }
   div#collect-page div.list {
     overflow-y: auto; }
+    div#collect-page div.list > div:nth-of-type(1) > div.header {
+      border-top-width: 0; }
   div#collect-page div.list-item div.header {
     height: 1.805rem;
     line-height: 1.805rem;

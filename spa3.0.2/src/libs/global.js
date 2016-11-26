@@ -16,6 +16,10 @@ exports.Global = {
             name: '',
             query: null
         },
+        lastPage: {                                    // 上一次的页面信息
+            name: '',
+            query: null
+        },
 
         showAppMenu: false,                   // 是否显示底部菜单--club模式下
         show9358Menu: false,                  // 9358公众号模式下

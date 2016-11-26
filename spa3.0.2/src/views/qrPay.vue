@@ -74,15 +74,13 @@
                         if (((+new Date()) - (global.currPage.query['_t'] || 0) > 2400) || !that.payAuthCode) {
                             Global.getOauthCode('', '9358', 'confirm-qrpay', 'base')
                         } else {
-                            that.$http.get(that.getOpenIdUrl, {
-                                params: {
-                                    code: that.payAuthCode,
-                                    scope: 'snsapi_base',
-                                    wxmp: '9358',
-                                    openId: '',
-                                    webSessionId: ''
-                                }
-                            }).then(function (res) {
+                            that.$http.get(that.getOpenIdUrl, {params: {
+                                code: that.payAuthCode,
+                                scope: 'snsapi_base',
+                                wxmp: '9358',
+                                openId: '',
+                                webSessionId: ''
+                            }}).then(function (res) {
                                 res = res.body
                                 if (res.statusCode == 200) {
                                     that.openId = res.respData.openid
@@ -145,7 +143,7 @@
                     }
                 } else {
                     var tmp = that.payMoney.match(/\./g)
-                    if (tmp && that.payMoney.match(/\./g).length > 1) {
+                    if (tmp && tmp.length > 1) {
                         that.payMoney = that.payMoney.slice(0, -1)
                     }
                     if (!/^([1-9][0-9]*)$/g.test(that.payMoney)) {

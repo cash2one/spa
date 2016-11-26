@@ -3,10 +3,11 @@
 </style>
 <template>
     <div class="page" id="technician-img-page" :style="{ height : global.winHeight+'px' }">
-        <swiper class="pic-swipe" :auto="24*60*60*1000" :index="startIndex">
-            <swiper-slide v-for="pic in pics" :options="swiperOption">
+        <swiper class="pic-swipe" :options="swiperOption">
+            <swiper-slide v-for="pic in pics">
                 <img :src="pic.bigImageUrl"/>
             </swiper-slide>
+            <div class="swiper-pagination" slot="pagination"></div>
         </swiper>
     </div>
 </template>
@@ -14,21 +15,27 @@
     import { Global } from '../libs/global'
     import Util from '../libs/util'
 
+    var techImgSwiper = null // 图片slide
+    var thisPage = null // 组件实例的引用
+
     module.exports = {
         data: function () {
             return {
                 global: Global.data,
-                queryTechDetailUrl: '../api/v2/club/technician/{techId}',
                 techId: '',
                 startIndex: 0,
                 swiperOption: {
                     observeParents: true,
-                    loop: true,
+                    zoom: true,
+                    zoomMax: 2,
+                    pagination: '.swiper-pagination',
                     onInit: function (swiper) {
-                        setTimeout(function () {
-                            swiper.reLoop()
-                            swiper.slideNext(null, 0)
-                        }, 500)
+                        techImgSwiper = swiper
+                    },
+                    onSlideChangeEnd: function (swiper) {
+                        if (thisPage) {
+                            thisPage.doSlideChange(swiper.activeIndex)
+                        }
                     }
                 },
                 pics: [] // 相册
@@ -38,35 +45,89 @@
             var that = this
             var global = that.global
             var pageParam = global.currPage.query
+            thisPage = that
             if (pageParam.id == undefined) { // 链接上无技师id
+                Util.tipShow(global.visitError)
                 return that.$router.back()
             }
-            that.startIndex = parseInt((pageParam.index || 0))
+            if (pageParam.index) {
+                that.startIndex = parseInt(pageParam.index) - 1
+            }
             var pageData = global.pageData
-            that.techId = global.currPage.query.id
+            that.techId = pageParam.id
             if (!pageData['technicianImg']) {
                 pageData['technicianImg'] = {}
             }
             pageData = pageData['technicianImg']
             if (pageData[that.techId]) {
                 that.pics = pageData[that.techId]
-            } else {
-                global.loading = true
-                that.$http.get(that.queryTechDetailUrl, {params: {techId: global.currPage.query.id}}).then(function (res) {
-                    res = res.body
+                if (that.startIndex != 0) {
+                    that.waitSlideTo()
+                } else {
                     global.loading = false
-                    if (res && res.albums && res.albums.length > 0) {
-                        pageData[that.techId] = res.albums
-                        that.pics = pageData[that.techId]
+                    that.addEvent()
+                }
+            } else {
+                that.$http.get('../api/v2/club/tech/albums/{techId}', {params: {techId: pageParam.id}}).then(function (res) {
+                    res = res.body
+                    if (res.statusCode == 200) {
+                        res = res.respData
+                        if (res) {
+                            res.sort(function (pic1, pic2) { return pic1.orders > pic2.orders })
+                            that.pics = pageData[that.techId] = res
+                        }
+                        if (that.startIndex != 0) {
+                            that.waitSlideTo()
+                        } else {
+                            global.loading = false
+                            that.addEvent()
+                        }
                     } else {
                         Util.tipShow(global.loadError)
                         that.$router.back()
                     }
                 }, function () {
                     Util.tipShow(global.loadError)
-                    global.loading = false
                     that.$router.back()
                 })
+            }
+        },
+        methods: {
+            waitSlideTo: function () {
+                var that = this
+                var waitTimer = setInterval(function () {
+                    if (techImgSwiper) {
+                        clearInterval(waitTimer)
+                        techImgSwiper.slideTo(that.startIndex, 0)
+                        that.global.loading = false
+                        that.addEvent()
+                    }
+                }, 30)
+            },
+            doSlideChange: function (index) {
+                var that = this
+                that.global.canShowLoading = false
+                that.$router.replace({name: 'technicianImg', query: {id: that.techId, index: index + 1}})
+            },
+            addEvent: function () {
+                var that = this
+                var global = that.global
+                var swiperContainer = that.$el.querySelector('div.swiper-container')
+                var swiperWrapper = that.$el.querySelector('div.swiper-wrapper')
+                if (swiperContainer) {
+                    swiperContainer.addEventListener('click', function () {
+                        if (global.lastPage.name == 'technicianDetail') {
+                            that.$router.back()
+                        } else {
+                            that.$router.push({name: 'technicianDetail', query: {id: that.techId}})
+                        }
+                    })
+                }
+                if (swiperWrapper) {
+                    swiperWrapper.addEventListener('click', function (event) {
+                        event.stopPropagation()
+                    })
+                }
             }
         }
     }

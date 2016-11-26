@@ -628,6 +628,11 @@ router.beforeEach(function (to, from, next) {
     var currPage = _global.currPage
     currPage.query = to.query
     currPage.name = to.name
+
+    var lastPage = _global.lastPage
+    lastPage.name = from.name
+    lastPage.query = from.query
+
     _global.showAppMenu = isClubMode && /^(home|message|order|personal|technicianList)$/.test(to.name)
     _global.show9358Menu = !isClubMode && /(clubList|message|personal)/.test(to.name)
     next()

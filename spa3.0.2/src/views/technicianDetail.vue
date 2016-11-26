@@ -5,20 +5,22 @@
     <div>
         <div class="page-back-btn tech-detail-page" @click="doClickPageBack()"></div>
         <div class="page-back-home" @click="doClickBackHomeBtn()">会所</div>
-        <div class="page" id="technician-detail-page" v-show="!global.loading" :style="{ height : (global.winHeight-2.667*global.winScale*16)+'px' }">
+        <div class="page" id="technician-detail-page" :style="{ height : (global.winHeight-2.667*global.winScale*16)+'px' }">
             <div class="top">
                 <div class="header">
                     <div v-if="techAvatarUrl" :style="{ backgroundImage : 'url('+techAvatarUrl+')' }"></div>
                 </div>
                 <div class="name">
-                    <div>{{techName}}</div>
-                    <div v-show="techNo">{{techNo}}</div>
+                    <div>{{ techName }}</div>
+                    <div v-show="techNo">{{ techNo }}</div>
                     <div :class="techStatus">{{ techStatus=='free' ? '闲' : '忙' }}</div>
                 </div>
+                <div class="desc">{{ techDesc }}</div>
                 <div class="favorite" @click="doClickCollectBtn()" :class="{ collected : isFavorite }">
                     <div></div>
-                    <div>{{favoriteCount}}</div>
-                    <span :class="{ active : showCollectedAni }">{{collectedText}}</span></div>
+                    <div>{{ favoriteCount }}</div>
+                    <span :class="{ active : showCollectedAni }">{{ collectedText }}</span>
+                </div>
             </div>
             <div class="pics" v-show="techPics.length>0">
                 <div>
@@ -31,7 +33,7 @@
                 <div>所有评论</div>
                 <div>
                     <div class="stars"><div :style="{ width : techStar+'%'}"></div></div>
-                    <div>{{techCommentCount}}评论</div>
+                    <div>{{ techCommentCount }}评论</div>
                 </div>
             </router-link>
             <router-link class="view" :to="{ name : 'technicianList' }">
@@ -73,8 +75,8 @@
                     <div class="coupon-title" v-if="paidCoupons.length>0">点钟券</div>
                     <div class="coupon-item paid" v-for="coupon in paidCoupons" @click="doClickPaidCoupon(coupon)">
                         <div>
-                            <div>{{coupon.actTitle}}</div>
-                            <div>{{coupon.consumeMoneyDescription}}</div>
+                            <div>{{ coupon.actTitle }}</div>
+                            <div>{{ coupon.consumeMoneyDescription }}</div>
                         </div>
                         <div>
                             <div>点钟券</div>
@@ -84,7 +86,7 @@
                     <div class="coupon-title" v-if="ordinaryCoupons.length>0">优惠券</div>
                     <div class="coupon-item ordinary" v-for="coupon in ordinaryCoupons">
                         <div>
-                            <div>{{coupon.actTitle}}</div>
+                            <div>{{ coupon.actTitle }}</div>
                             <div>{{(coupon.useType == 'money' ? (coupon.actValue+'元现金券，') : '') +coupon.consumeMoneyDescription}}</div>
                         </div>
                         <div>
@@ -107,15 +109,12 @@
         data: function () {
             return {
                 global: Global.data,
-                queryTechDetailUrl: '../api/v2/club/technician/{techId}',
-                queryClubCouponUrl: '../api/v2/club/{clubId}/coupons',
-                updateFavoriteTechUrl: '../api/v2/profile/user/favorite/',
-
                 techId: '', // 技师ID
                 techAvatarUrl: '',   // 技师头像
                 techName: '', // 技师名称
                 techNo: '', // 技师编号
                 techStatus: '', // 技师状态
+                techDesc: '', // 技师自评
                 techInviteCode: '', // 技师邀请码
                 favoriteCount: 0, // 技师收藏数
 
@@ -144,7 +143,7 @@
             var that = this
             var global = that.global
             // 获取优惠券数据
-            that.$http.get(that.queryClubCouponUrl, {params: {clubId: global.clubId}}).then(function (res) {
+            that.$http.get('../api/v2/club/{clubId}/coupons', {params: {clubId: global.clubId}}).then(function (res) {
                 res = res.body
                 if (res && res.statusCode == 200) {
                     res = res.respData.coupons || []
@@ -164,32 +163,26 @@
         created: function () {
             var that = this
             var global = that.global
-            if (global.currPage.query.id == undefined) { // 链接上无技师id
+            var query = global.currPage.query
+            if (query.id == undefined) { // 链接上无技师id
+                Util.tipShow(global.visitError)
                 return that.$router.back()
             }
-            global.loading = true
-            that.$http.get(that.queryTechDetailUrl, {params: {techId: global.currPage.query.id}}).then(function (res) {
+            // 查询技师数据
+            that.$http.get('../api/v2/club/technician/{techId}', {params: {techId: query.id}}).then(function (res) {
                 res = res.body
-                global.loading = false
                 if (res && res.info) {
-                    // 技师相册缓存到global
-                    if (res.albums) {
-                        var pageData = global.pageData
-                        if (!pageData['technicianImg']) {
-                            pageData['technicianImg'] = {}
-                        }
-                        pageData['technicianImg'][res.id] = res.albums
-                    }
+                    var info = res.info
                     that.techId = res.id
-                    that.techAvatarUrl = res.info.avatarUrl || that.global.defaultHeader
-                    that.techName = res.info.name || that.global.defaultTechName
-                    that.techNo = res.info.serialNo || ''
-                    that.techStatus = res.info.status || 'free'
+                    that.techAvatarUrl = info.avatarUrl || global.defaultHeader
+                    that.techName = info.name || global.defaultTechName
+                    that.techNo = info.serialNo || ''
+                    that.techStatus = info.status || 'free'
                     that.favoriteCount = parseInt(res.favoriteCount || 0)
-                    that.techInviteCode = res.info.inviteCode || ''
-                    that.techPics = res.albums || []
-                    that.techCommentCount = res.info.commentCount || 0
-                    that.techStar = res.info.star || 0
+                    that.techInviteCode = info.inviteCode || ''
+                    that.techCommentCount = info.commentCount || 0
+                    that.techStar = info.star || 0
+                    that.techDesc = info.description
                     that.serviceItems = res.service || []
                     that.canComment = res.toDayCommentCount != 1
                     that.isFavorite = (res['isFavorite'] || 'n').toLowerCase() == 'y'
@@ -198,14 +191,32 @@
                     that.appointment = (res.appointment || 'y').toLowerCase()
                     that.telephone = res.telephone ? res.telephone.split(',') : []
                     that.payAppointment = res.payAppointment || 'N'
+                    global.loading = false
                 } else {
                     Util.tipShow(global.loadError)
                     that.$router.back()
                 }
             }, function () {
                 Util.tipShow(global.loadError)
-                global.loading = false
                 that.$router.back()
+            })
+
+            // 查询技师相册
+            that.$http.get('../api/v2/club/tech/albums/{techId}', {params: {techId: query.id}}).then(function (picRes) {
+                picRes = picRes.body
+                if (picRes.statusCode == 200) {
+                    picRes = picRes.respData
+                    // 技师相册缓存到global
+                    if (picRes) {
+                        var pageData = global.pageData
+                        if (!pageData['technicianImg']) {
+                            pageData['technicianImg'] = {}
+                        }
+                        picRes.sort(function (pic1, pic2) { return pic1.orders > pic2.orders })
+                        pageData['technicianImg'][query.id] = picRes
+                        that.techPics = picRes
+                    }
+                }
             })
         },
         methods: {
@@ -213,6 +224,7 @@
                 history.back()
             },
             doClickBackHomeBtn: function () { // 点击回到主页的按钮
+
             },
             doSelectServiceItem: function (itemId) {
                 this.currSelectItem = itemId
@@ -273,16 +285,14 @@
                 var that = this
                 var global = that.global
                 if (!global.isLogin) {
-                    global.loginPage = 'technicianDetail'
-                    global.loginPageQuery = {id: that.techId}
-                    that.$router.push({name: 'comment'})
+                    Global.login(that.$router)
                     return
                 }
                 if (that.collectedAniTimer) {
                     clearTimeout(that.collectedAniTimer)
                     that.showCollectedAni = false
                 }
-                that.$http.get(that.updateFavoriteTechUrl + (that.isFavorite ? 'delete' : 'create'), {params: {id: that.techId}}).then(function (res) {
+                that.$http.get('../api/v2/profile/user/favorite/' + (that.isFavorite ? 'delete' : 'create'), {params: {id: that.techId}}).then(function () {
                     that.isFavorite = !that.isFavorite
                     if (that.isFavorite) {
                         that.collectedText = '已收藏'

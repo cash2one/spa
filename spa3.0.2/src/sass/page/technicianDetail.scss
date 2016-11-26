@@ -32,7 +32,6 @@ div#technician-detail-page{
         position: relative;
         width: 3.389rem;
         height: 3.389rem;
-        box-sizing: border-box;
         border-radius: 50%;
         border: .12rem solid #fff;
         @include imgBgFix(100%);
@@ -41,12 +40,12 @@ div#technician-detail-page{
           display: inline-block;
           width: 3.978rem;
           height: 3.978rem;
-          box-sizing: border-box;
           position: absolute;
           top: -.4rem;
           left: -.4rem;
           border: .167rem solid rgba(255,255,255,.15);
           border-radius: 50%;
+          box-sizing: border-box;
         }
       }
     }
@@ -90,7 +89,6 @@ div#technician-detail-page{
           border-radius: .556rem;
           background: rgba(102,204,102,1);
           border: 1px solid rgba(255,255,255,.6);;
-          box-sizing: border-box;
           &.busy{
             background: rgba(255,102,102,1);
           }
@@ -149,6 +147,15 @@ div#technician-detail-page{
           @include img('../../images/technicianDetail/collected.png', .916rem .916rem);
         }
       }
+    }
+
+    div.desc{
+      position: absolute;
+      top: 5.6rem;
+      left: 4.967rem;
+      font-size: .722rem;
+      max-width: 14.5rem;
+      line-height: 1.2;
     }
   }
 
@@ -515,7 +522,6 @@ div.coupon-list{
     display: table;
     height: 4.278rem;
     width: 100%;
-    box-sizing: border-box;
     position: relative;
     box-shadow: 0 0 5px 0 #e0e0e0;
     margin-bottom: .556rem;
@@ -572,7 +578,7 @@ div.coupon-list{
             display: inline-block;
             width: 80%;
             min-width: 4.139rem;
-            background-color: #ff6666;
+            background-color: #f66;
             font-size: .778rem;
             color: #fff;
             -webkit-border-radius: .3rem;
@@ -580,7 +586,7 @@ div.coupon-list{
             border-radius: .3rem;
             margin-top: .3rem;
             &.processing{
-              background-color: #E0E0E0 !important;
+              background-color: #e0e0e0 !important;
               color: #bdbdbd !important;
               background-image: url("../../images/common/loading.gif");
               background-repeat:no-repeat;
@@ -588,7 +594,7 @@ div.coupon-list{
               padding-left: .8rem;
             }
             &.disabled{
-              background-color: #E0E0E0 !important;
+              background-color: #e0e0e0 !important;
               color: #bdbdbd !important;
             }
           }
