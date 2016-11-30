@@ -80,7 +80,7 @@ exports.Global = {
             paidOrderSwitch: false, // 付费预约开关
             paidOrderFee: 0 // 付费预约手续费
         },
-
+        shareConfigOption: {},      // 全局的分享option
         techList: [],                                                                                 // 暂存的技师列表页面数据
         techListID: {},                                                                              // 暂存的技师列表ID值
         pageData: {}                                                                               // 缓存(在内存)的页面数据，切换回来的时候可以恢复状态
@@ -130,9 +130,16 @@ exports.Global = {
         if (data.clubId) {
             Vue.http.get('../api/v2/club/' + data.clubId + '/clubName').then((res) => {
                 res = res.body
-                data.clubLogoUrl = res.logo || ''
+                data.clubLogoUrl = res.logo || data.defaultClubLogo
                 data.clubName = res.name
                 data.clubTelephone = res.telephone ? res.telephone.split(',') : []
+
+                data.shareConfigOption = {
+                    title: data.clubName + '欢迎您',
+                    desc: '选个技师，选个项目，给身体放个假，这里太合适不过了。',
+                    link: location.origin + '/spa-manager/spa/#/' + data.clubId + '/home?visitChannel=9358&isNeedFollow=true',
+                    imgUrl: data.clubLogoUrl
+                }
             })
         }
 
@@ -306,16 +313,17 @@ exports.Global = {
             })
         }
     },
-    /*
-     * 设置分享配置
-     */
-    shareConfig: function (option) {
+    // 设置分享配置
+    shareConfig: function (option, configPage) {
         var win = window
         var wx = win['wx']
         var that = this
         if (!wx) return
         option = option || {}
         if (wx['signReady']) {
+            if (configPage == wx['configPage']) { // 已经配置过此页面的分享
+                return
+            }
             if (option.title) {
                 wx.hideMenuItems({menuList: ['menuItem:copyUrl']})
                 wx.showAllNonBaseMenuItem()
@@ -327,13 +335,14 @@ exports.Global = {
             } else {
                 wx.hideAllNonBaseMenuItem() // 屏蔽分享菜单
             }
+            wx['configPage'] = configPage
         } else {
             win['requestSignCount'] = 2
-            that.weiXinCfgSignature(option)
+            that.weiXinCfgSignature(option, configPage)
         }
     },
 
-    weiXinCfgSignature: function (option) {
+    weiXinCfgSignature: function (option, configPage) {
         var signUrl = ''
         var win = window
         var wx = win['wx']
@@ -361,7 +370,7 @@ exports.Global = {
                     wx['signReady'] = false
                     win['requestSignCount']--
                     if (win['requestSignCount'] !== 0) {
-                        that.weiXinCfgSignature()
+                        that.weiXinCfgSignature(option, configPage)
                     }
                 })
             }
@@ -370,7 +379,7 @@ exports.Global = {
                 win['wxReady'] = true
                 wx.ready(function () {
                     wx['signReady'] = true
-                    that.shareConfig(option)
+                    that.shareConfig(option, configPage)
                 })
             }
         })
@@ -386,13 +395,14 @@ exports.Global = {
     /*
      * 从当前页面page跳转到login页面
      */
-    login: function (router, page) {
+    login: function (router, page, query) {
         var that = this.data
         var currPage = that.currPage
         that.loginPage = page || currPage.name
         that.loginPageQuery = {}
-        for (var item in currPage.query) {
-            that.loginPageQuery[item] = currPage.query[item]
+        query = query || currPage.query
+        for (var item in query) {
+            that.loginPageQuery[item] = query[item]
         }
         if (router) {
             router.push({name: 'login'})

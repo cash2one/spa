@@ -37,11 +37,11 @@
                     <div>{{ techCommentCount }}评论</div>
                 </div>
             </router-link>
-            <router-link class="view" :to="{ name : 'technicianList' }">
+            <a class="view" @click="doClickViewOtherTech()">
                 <div class="icon"></div>
                 <div class="arrow"></div>
                 <div>查看店内其他技师</div>
-            </router-link>
+            </a>
             <div class="service-item" v-show="serviceItems.length>0">
                 <div class="title">选择项目<div></div></div>
                 <div class="wrap">
@@ -60,7 +60,7 @@
         <div class="tech-detail-footer-wrap">
             <a @click="doClickCommentBtn()">点评</a>
             <a @click="doClickRewardBtn()">打赏</a>
-            <router-link :to="{ name : 'chat', query : { techId : techId } }">聊天</router-link>
+            <router-link :to="{ name : 'chat', query : { techId: techId, clubId: clubId } }">聊天</router-link>
             <a @click="doClickOrderBtn()" :class="{ active : canOrder }">预约</a>
         </div>
         <tel-detail v-if="telephone.length>0" :telephone="telephone"></tel-detail>
@@ -74,14 +74,14 @@
                 </div>
                 <div class="list">
                     <div class="coupon-title" v-if="paidCoupons.length>0">点钟券</div>
-                    <div class="coupon-item paid" v-for="coupon in paidCoupons" @click="doClickPaidCoupon(coupon)">
+                    <div class="coupon-item paid" v-for="coupon in paidCoupons" @click="doViewPaidCoupon(coupon)">
                         <div>
                             <div>{{ coupon.actTitle }}</div>
                             <div>{{ coupon.consumeMoneyDescription }}</div>
                         </div>
                         <div>
                             <div>点钟券</div>
-                            <div>立即购买</div>
+                            <div @click="doGetPaidCoupon(coupon,$event)">立即购买</div>
                         </div>
                     </div>
                     <div class="coupon-title" v-if="ordinaryCoupons.length>0">优惠券</div>
@@ -92,7 +92,7 @@
                         </div>
                         <div>
                             <div>{{coupon.useTypeName}}</div>
-                            <div>{{ (coupon.getFlag == 'already_get' ? '已领取' : (coupon.getFlag == 'finish_get' ? '已领完' :'立即领取')) }}</div>
+                            <div :class="{ disabled: coupon.getFlag=='already_get' || coupon.getFlag == 'finish_get' }" @click="doGetOrdinaryCoupon(coupon,$event)">{{ (coupon.getFlag == 'already_get' ? '已领取' : (coupon.getFlag == 'finish_get' ? '已领完' :'立即领取')) }}</div>
                         </div>
                     </div>
                 </div>
@@ -105,6 +105,7 @@
     import Util from '../libs/util'
     import { eventHub } from '../libs/hub'
     import ItemPriceFormatter from '../filters/item-price-formatter'
+    import { IM } from '../libs/im'
 
     module.exports = {
         data: function () {
@@ -116,8 +117,10 @@
                 authCode: '',
 
                 techId: '', // 技师ID
+                techChatId: '', // 技师聊天ID
                 clubId: '', // 会所ID
                 techAvatarUrl: '',   // 技师头像
+                techAvatar: '', // 技师头像ID
                 techName: '', // 技师名称
                 techNo: '', // 技师编号
                 techStatus: '', // 技师状态
@@ -143,7 +146,11 @@
                 currSelectItem: '', // 当前选中的项目
                 paidCoupons: [], // 点钟券数据
                 ordinaryCoupons: [], // 普通优惠券数据
-                showCouponList: false // 是否显示优惠券列表
+                showCouponList: false, // 是否显示优惠券列表
+
+                payRequestObj: null,
+                payTarget: null,
+                payCoupon: null
             }
         },
         created: function () {
@@ -189,8 +196,10 @@
                     if (res && res.info) {
                         var info = res.info
                         that.techId = res.id
+                        that.techChatId = res.emchatId
                         that.clubId = info.clubId
                         that.techAvatarUrl = info.avatarUrl || global.defaultHeader
+                        that.techAvatar = info.avatar || ''
                         that.techName = info.name || global.defaultTechName
                         that.techNo = info.serialNo || ''
                         that.techStatus = {free: '闲', busy: '忙', rest: '休'}[info.status || 'free']
@@ -217,6 +226,19 @@
                                 that.showCounter = true
                             }
                         }
+
+                        // 设置分享
+                        if (global.userAgent.isWX) {
+                            Global.shareConfig({
+                                title: that.techName + '欢迎您',
+                                desc: '点我聊聊，更多优惠，更好服务！',
+                                link: location.origin + '/spa-manager/spa/#/' + that.clubId + '/technicianDetail?visitChannel=9358&isNeedFollow=true&id=' + that.techId,
+                                imgUrl: that.techAvatarUrl
+                            }, 'technicianDetail-' + that.techId)
+                        }
+
+                        // 获取优惠券数据
+                        that.getCouponData()
                     } else {
                         Util.tipShow(global.loadError)
                         that.$router.back()
@@ -243,27 +265,18 @@
                         }
                     }
                 })
-
-                // 获取优惠券数据
-                that.$http.get('../api/v2/club/{clubId}/coupons', {params: {clubId: global.clubId}}).then(function (res) {
-                    res = res.body
-                    if (res && res.statusCode == 200) {
-                        res = res.respData.coupons || []
-                        res.sort(function (a, b) {
-                            return a.useType >= b.useType ? ((b.consumeMoney - b.actValue) - (a.consumeMoney - a.actValue)) : -1
-                        })
-                        for (var i = 0, len = res.length; i < len; i++) {
-                            if (res[i]['couponType'] == 'paid') { // 点钟券
-                                that.paidCoupons.push(res[i])
-                            } else {
-                                that.ordinaryCoupons.push(res[i])
-                            }
-                        }
-                    }
-                })
             },
             doClickPageBack: function () { // 点击返回按钮
                 history.back()
+            },
+            doClickViewOtherTech: function () { // 查看店内其他技师
+                var that = this
+                var global = that.global
+                if (global.pageMode == 'club') {
+                    that.$router.push({name: 'technicianList'})
+                } else {
+                    that.$router.push({path: '/' + that.clubId + '/technicianList', query: {clubsource: '9358'}})
+                }
             },
             doClickBackHomeBtn: function () { // 点击回到主页的按钮
                 var that = this
@@ -274,7 +287,7 @@
                     that.$router.push({path: '/' + that.clubId + '/home'})
                 }
             },
-            doSelectServiceItem: function (itemId) {
+            doSelectServiceItem: function (itemId) { // 选择服务项目
                 var that = this
                 if (that.currSelectItem == itemId) {
                     that.currSelectItem = ''
@@ -304,12 +317,16 @@
                     } else if (that.appointment != 'n') {
                         if (that.payAppointment == 'Y' && !that.global.userAgent.isWX) {
                             Util.tipShow('此会所需支付预约，请在微信客户端中打开！')
+                        } else if (that.isCrossInner && !that.currSelectItem) {
+                            Util.tipShow('必须选择一个服务项目！', 4000)
                         } else {
                             that.$router.push({
                                 name: 'confirmOrder',
-                                query: {techId: that.techId, itemId: that.currSelectItem, clubId: ''}
+                                query: {techId: that.techId, itemId: that.currSelectItem, clubId: that.clubId}
                             })
                         }
+                    } else {
+                        Util.tipShow('会所不支持线上预约！')
                     }
                 }
             },
@@ -324,7 +341,7 @@
                     Util.tipShow('您今天已经评论过该技师了！')
                 }
             },
-            switchCouponListStatus: function (type) {
+            switchCouponListStatus: function (type) { // 切换优惠券的显示
                 this.showCouponList = type
             },
             doClickCollectBtn: function () { // 点击收藏按钮
@@ -355,7 +372,7 @@
                     console.log('error' + JSON.stringify(error))
                 })
             },
-            doClickPaidCoupon: function (coupon) {
+            doViewPaidCoupon: function (coupon) {
                 var that = this
                 var global = that.global
                 that.$router.push({
@@ -366,6 +383,186 @@
                         chanel: global.currPage.query.chanel || 'link'
                     }
                 })
+            },
+            getCouponData: function () { // 获取优惠券数据
+                var that = this
+                that.$http.get('../api/v2/club/{clubId}/coupons', {params: {clubId: that.clubId}}).then(function (res) {
+                    res = res.body
+                    if (res && res.statusCode == 200) {
+                        res = res.respData.coupons || []
+                        res.sort(function (a, b) {
+                            return a.useType >= b.useType ? ((b.consumeMoney - b.actValue) - (a.consumeMoney - a.actValue)) : -1
+                        })
+                        for (var i = 0, len = res.length; i < len; i++) {
+                            if (res[i]['couponType'] == 'paid') { // 点钟券
+                                that.paidCoupons.push(res[i])
+                            } else {
+                                that.ordinaryCoupons.push(res[i])
+                            }
+                        }
+                    }
+                })
+            },
+            doGetPaidCoupon: function (coupon, event) { // 点击购买点钟券
+                event.stopPropagation()
+                var that = this
+                var global = that.global
+                var target = event.target
+                var targetCls = target.classList
+                var chanel = global.currPage.query.chanel || 'link'
+
+                if (!global.userAgent.isWX) {
+                    return Util.tipShow('需在微信中打开才可购买！')
+                }
+                if (!global.isLogin) {
+                    Util.tipShow('请您先登录！')
+
+                    // 登录之后跳转到paidCoupon页面
+                    Global.login(that.$router, 'paidCoupon', {
+                        actId: coupon.actId,
+                        techCode: that.techInviteCode,
+                        chanel: chanel
+                    })
+                    return
+                } else if (!global.userTel) {
+                    Global.login(null)
+                    Global.bindTelPhone(false)
+                    return
+                } else if (targetCls.contains('processing')) {
+                    Util.tipShow('购买中,请稍候...')
+                } else {
+                    targetCls.add('processing')
+                    target.innerHTML = '购买中...'
+
+                    that.$http.post('../api/v2/wx/pay/paid_coupon', {
+                        actId: coupon.actId,
+                        businessType: 'paid_coupon',
+                        businessChannel: chanel,
+                        clubId: that.clubId,
+                        money: coupon.actValue,
+                        openId: global.openId,
+                        techId: that.techId,
+                        tradeChannel: 'wx'
+                    }).then(function (res) {
+                        res = res.body
+                        if (res.statusCode == 200) {
+                            that.payRequestObj = JSON.parse(res.respData)
+                            that.payTarget = target
+                            that.payCoupon = coupon
+                            if (typeof WeixinJSBridge == 'undefined') {
+                                document.addEventListener('WeixinJSBridgeReady', function () {
+                                    that.onBridgeReady()
+                                }, false)
+                            } else {
+                                that.onBridgeReady()
+                            }
+                        } else if (res.statusCode == 935801) {
+                            Util.localStorage('paid-coupon-param', true)
+                            Global.getOauthCode('', '9358', 'paid-coupon', 'base')
+                        } else {
+                            targetCls.remove('processing')
+                            target.innerHTML = '立即购买'
+                            Util.tipShow(res.msg || '购买点钟券请求失败！')
+                        }
+                    }, function () {
+                        targetCls.remove('processing')
+                        target.innerHTML = '立即购买'
+                    })
+                }
+            },
+            onBridgeReady: function () {
+                var that = this
+                var payRequestObj = that.payRequestObj
+                var target = that.payTarget
+                var payCoupon = that.payCoupon
+                WeixinJSBridge.invoke('getBrandWCPayRequest', {
+                    appId: payRequestObj.appId,
+                    timeStamp: payRequestObj.timeStamp + '',
+                    nonceStr: payRequestObj.nonceStr,
+                    package: payRequestObj.package,
+                    signType: payRequestObj.signType,
+                    paySign: payRequestObj.paySign
+                }, function (res) {
+                    target.classList.remove('processing')
+                    target.innerHTML = '立即购买'
+                    if (res.err_msg.indexOf('ok') >= 0) {
+                        Util.tipShow('支付成功！')
+                        target.innerHTML = '购买成功'
+
+                        // 发送购买了点钟券的消息
+                        IM.sendTextMessage({
+                            to: that.techChatId,
+                            data: '您购买了' + that.techName + '的"' + payCoupon.actTitle + '"',
+                            msg: payCoupon.actTitle + '&' + payCoupon.actId,
+                            ext: {
+                                msgType: 'paidCouponTip'
+                            }
+                        }, {
+                            id: that.techChatId,
+                            name: that.techName,
+                            header: that.techAvatarUrl,
+                            avatar: that.techAvatar,
+                            userNo: that.techNo,
+                            userId: that.techId,
+                            clubId: that.clubId,
+                            userType: 'tech'
+                        }, function () {
+                            // 跳转到点钟券详情页
+                            that.$router.push({name: 'paidCouponDetail', query: {userActId: payRequestObj.bizId}})
+                        })
+                    }
+                })
+            },
+            doGetOrdinaryCoupon: function (coupon, event) { // 点击领取优惠券
+                var that = this
+                var global = that.global
+                var target = event.target
+                var targetCls = target.classList
+
+                if (targetCls.contains('disabled')) {
+                    return
+                }
+                if (!global.isLogin) {
+                    Global.login(that.$router)
+                    return
+                } else if (!global.userTel) {
+                    Global.login(null)
+                    Global.bindTelPhone(false)
+                    return
+                } else if (targetCls.contains('processing')) {
+                    Util.tipShow('领取中,请稍候...')
+                } else {
+                    targetCls.add('processing')
+                    target.innerHTML = '领取中...'
+                    that.$http.get('../api/v2/club/get/redpacket', {params: {
+                        actId: coupon.actId,
+                        phoneNum: global.userTel,
+                        openId: global.openId,
+                        techCode: that.techInviteCode
+                    }}).then(function (res) {
+                        res = res.body
+                        targetCls.remove('processing')
+                        target.innerHTML = '立即领取'
+                        if (res.statusCode == 200) {
+                            if (coupon.userGetCount > coupon.userGetCounts + 1) {
+                                coupon.userGetCounts = coupon.userGetCounts + 1
+                            } else {
+                                targetCls.add('disabled')
+                                target.innerHTML = '已领取'
+                            }
+                        } else if (res.statusCode == 206) {
+                            targetCls.add('disabled')
+                            target.innerHTML = '已领取'
+                            Util.tipShow(res.msg || '你已经领取过了！')
+                        } else {
+                            Util.tipShow(res.msg || '领取失败！')
+                        }
+                    }, function () {
+                        Util.tipShow('领取失败！')
+                        targetCls.remove('processing')
+                        target.innerHTML = '立即领取'
+                    })
+                }
             }
         },
         filters: {

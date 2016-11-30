@@ -641,6 +641,9 @@ router.beforeEach(function (to, from, next) {
 
 // 加载页面之后
 router.afterEach(function (to) {
+    if (_global.userAgent.isWX && !/(technicianDetail|couponDetail)/.test(to.name)) { // 自定义分享的页面除外
+        Global.shareConfig(_global.shareConfigOption, 'global')
+    }
 })
 
 Global.init().then(function () {
