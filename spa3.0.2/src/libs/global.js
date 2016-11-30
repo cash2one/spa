@@ -24,7 +24,6 @@ exports.Global = {
         showAppMenu: false,                   // 是否显示底部菜单--club模式下
         show9358Menu: false,                  // 9358公众号模式下
         loading: false,                               // loading效果
-        canShowLoading: true,                 // 是否可显示loading
         pageMode: 'club',                         // 当前模式，club--会所网站 9358--公众号
         sessionType: 'web',                        // sessionType
         token: '',                                        // 用户token
@@ -164,12 +163,13 @@ exports.Global = {
         IM.global = that.data
         return new Promise(function (resolve, reject) {
             // check login
-            if (data.token) {
+            if (data.token && data.userId) {
                 Vue.http.get('../api/v1/check_login/' + data.sessionType + '/' + data.token).then(function (res) {
                     res = res.body
                     if (res.msg !== 'Y') {
                         that.clearLoginInfo()
                     } else {
+                        console.log('util.md5' + data.userId)
                         IM.id = Util.md5(data.userId)
                         IM.password = IM.id
                         IM.userId = data.userId
@@ -184,6 +184,7 @@ exports.Global = {
                     resolve()
                 })
             } else {
+                that.clearLoginInfo()
                 resolve()
             }
         })
@@ -397,27 +398,26 @@ exports.Global = {
             router.push({name: 'login'})
         }
     },
-
+    // 获取授权
     getOauthCode: function (pageUrl, sessionType, state, scope, msg, errorCallBack, isReplaceUrl) {
         var loc = location
-        var that = this
         scope = (scope == 'base' ? 'snsapi_base' : 'snsapi_userinfo')
-        var _tmpSearch = loc.search
+        var tmpSearch = loc.search
         if (isReplaceUrl) {
             pageUrl = new URL(pageUrl)
-            _tmpSearch = pageUrl.search
+            tmpSearch = pageUrl.search
         }
-        if (/_t=(\d*)/g.test(_tmpSearch)) {
-            _tmpSearch = _tmpSearch.replace(/_t=(\d*)/g, function () {
+        if (/_t=(\d*)/g.test(tmpSearch)) {
+            tmpSearch = tmpSearch.replace(/_t=(\d*)/g, function () {
                 return '_t=' + (+new Date())
             })
         } else {
-            _tmpSearch = (_tmpSearch || '') + '&_t=' + (+new Date())
+            tmpSearch = (tmpSearch || '') + '&_t=' + (+new Date())
         }
         if (isReplaceUrl !== true) {
-            pageUrl = loc.origin + loc.pathname + _tmpSearch + loc.hash + (loc.hash ? (pageUrl.indexOf('&') == 0 ? pageUrl : (pageUrl ? '/' + pageUrl : '')) : pageUrl)
+            pageUrl = loc.origin + loc.pathname + tmpSearch + loc.hash + (loc.hash ? (pageUrl.indexOf('&') == 0 ? pageUrl : (pageUrl ? '/' + pageUrl : '')) : pageUrl)
         } else {
-            pageUrl = pageUrl.origin + pageUrl.pathname + _tmpSearch + pageUrl.hash
+            pageUrl = pageUrl.origin + pageUrl.pathname + tmpSearch + pageUrl.hash
         }
         if (!/_offline_notice/.test(pageUrl)) {
             pageUrl = pageUrl.replace(/(&|\?)code=[\da-zA-Z]+(&?)/g, function (v1, v2, v3) {
@@ -443,12 +443,12 @@ exports.Global = {
                 if (errorCallBack) {
                     errorCallBack(res)
                 } else {
-                    that.tipShow(msg || res.msg || '请求微信授权失败！')
+                    Util.tipShow(msg || res.msg || '请求微信授权失败！')
                 }
             }
         })
     },
-
+    // 获取OpenId option参数：authCode openId sessionId state
     getOpenId: function (option) {
         var that = this
         return new Promise(function (resolve, reject) {
@@ -463,9 +463,9 @@ exports.Global = {
             }).then(function (res) {
                 res = res.body
                 if (res.statusCode == 200) {
-                    resolve(res.respData)
+                    resolve(res.respData.openid)
                 } else if (res.statusCode == 40029) {
-                    that.getOauthCode('', '9358', '9358', 'base')
+                    that.getOauthCode('', '9358', option.state || '9358', 'base')
                     reject('重新获取授权！')
                 } else {
                     reject(res.msg || '获取openId失败！')
@@ -475,8 +475,8 @@ exports.Global = {
             })
         })
     },
-
-    waitAMapInit: function () { // 等待高德地图初始化完成
+    // 等待高德地图初始化完成
+    waitAMapInit: function () {
         return new Promise(function (resolve, reject) {
             if (AMap && AMap.LngLat) {
                 resolve()

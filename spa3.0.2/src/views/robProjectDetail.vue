@@ -69,15 +69,11 @@
 <script>
     import { Global } from '../libs/global'
     import Util from '../libs/util'
-    import Counter from '../components/counter'
     import WeekDayFormatter from '../filters/week-day-formatter'
 
     module.exports = {
         filters: {
             WeekDayFormatter: WeekDayFormatter
-        },
-        components: {
-            'counter': Counter
         },
         data: function () {
             return {

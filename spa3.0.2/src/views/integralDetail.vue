@@ -8,7 +8,7 @@
             <div>现有积分<router-link :to="{ name : 'integralExplain' }">积分规则</router-link><i></i></div>
             <b>{{amount}}<span>(冻结:{{freezeAmount}})</span></b>
         </div>
-        <div class="tip" v-show="isNoIntegral">您没有积分了，<router-link :to="{ name : 'integralExplain' }">如何获取积分</router-link></div>
+        <div class="tip" v-show="isNoIntegral && !showDataLoadTip">您没有积分了，<router-link :to="{ name : 'integralExplain' }">如何获取积分</router-link></div>
         <div class="title" v-show="!isNoIntegral">积分记录</div>
         <div class="list" ref="listEle" v-show="!isNoIntegral" :style="{ height : (global.winHeight-10.36*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <div class="list-item" v-for="item in dataList">
@@ -21,12 +21,8 @@
                     <span>{{ item.createDatetime }}</span>
                 </div>
             </div>
-            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i>
-                <div>加载数据</div>
-            </div>
-            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }">
-                <div>已经加载全部数据</div>
-            </div>
+            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
+            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
         </div>
     </div>
 </template>
@@ -38,8 +34,6 @@
         data: function () {
             return {
                 global: Global.data,
-                getRecordsUrl: '../api/v2/credit/user/records',
-                getUserAccountUrl: '../api/v2/credit/user/account',
                 amount: '-',
                 freezeAmount: 0,
                 dataList: [],
@@ -66,10 +60,12 @@
                         return that.$router.back()
                     } else {
                         that.getUserAccount()
+                        global.loading = false
                     }
                 })
             } else {
                 that.getUserAccount()
+                global.loading = false
             }
         },
         mounted: function () {
@@ -81,7 +77,7 @@
             },
             getUserAccount: function () {
                 var that = this
-                that.$http.get(that.getUserAccountUrl, {
+                that.$http.get('../api/v2/credit/user/account', {
                     params: {
                         clubId: that.clubId,
                         userType: 'user'
@@ -113,7 +109,7 @@
                 that.showFinishLoadTip = false
                 that.isDataAddEnd = false
 
-                that.$http.get(that.getRecordsUrl, {
+                that.$http.get('../api/v2/credit/user/records', {
                     params: {
                         page: page,
                         pageSize: that.pageSize,

@@ -137,13 +137,11 @@ div#technician-detail-page{
         opacity: 0;
         &.active{
           display: block;
-          -webkit-animation:colledAni 3s;
-          -o-animation:colledAni 3s;
           animation:colledAni 3s;
         }
       }
       &.collected{
-        &>div:nth-of-type(1){
+        >div:nth-of-type(1){
           @include img('../../images/technicianDetail/collected.png', .916rem .916rem);
         }
       }
@@ -156,6 +154,22 @@ div#technician-detail-page{
       font-size: .722rem;
       max-width: 14.5rem;
       line-height: 1.2;
+      @include sl();
+    }
+
+    div.counter-wrap{
+      position: absolute;
+      top:4.9rem;
+      left:4.976rem;
+    }
+
+    &.showCounter{
+      div.name{
+        top:3.5rem;
+      }
+      div.desc{
+        top:6.2rem;
+      }
     }
   }
 
@@ -366,7 +380,7 @@ div.tech-detail-footer-wrap{
   right:0;
   background-color: rgba(255,255,255,0.96);
   border-top: 1px solid #e0e0e0;
-  &>a{
+  >a{
     display: block;
     letter-spacing: 1px;
     float: left;
@@ -382,26 +396,22 @@ div.tech-detail-footer-wrap{
     &:nth-of-type(1),&:nth-of-type(2),&:nth-of-type(3){
       width: 4.444rem;
       padding-top: .8rem;
-      >i{
+      &:before{
+        content:"";
         position: absolute;
         top: .3rem;
         left: 50%;
-        -webkit-transform: translate(-50%, 0);
-        -moz-transform: translate(-50%, 0);
-        -ms-transform: translate(-50%, 0);
-        -o-transform: translate(-50%, 0);
         transform: translate(-50%, 0);
-        display: inline-block;
       }
     }
-    &:nth-of-type(1)>i{
+    &:nth-of-type(1):before{
       width: 1rem;
       height: 1rem;
       @include img('../../images/technicianDetail/comment.png', 100%)
     }
     &:nth-of-type(2){
       border-left:1px solid #eaeaea;
-      >i{
+      &:before{
         width: 1rem;
         height: 1.083rem;
         @include img('../../images/technicianDetail/money-package.png', 100%)
@@ -409,7 +419,7 @@ div.tech-detail-footer-wrap{
     }
     &:nth-of-type(3){
       border-left:1px solid #eaeaea;
-      >i{
+      &:before{
         top:.45rem;
         width: 1.138rem;
         height: 1rem;
@@ -500,8 +510,6 @@ div.coupon-list{
         text-align: center;
         font-size: 1.5rem;
         border:1px solid #fff;
-        -webkit-border-radius: 50%;
-        -moz-border-radius: 50%;
         border-radius: 50%;
         box-sizing: content-box;
         @include wy(0,-50%,0);
@@ -534,8 +542,6 @@ div.coupon-list{
       width: .639rem;
       height: .639em;
       background-color: #f2f2f2;
-      -webkit-border-radius: 50%;
-      -moz-border-radius: 50%;
       border-radius: 50%;
       position: absolute;
       right: 33.2%;
@@ -581,8 +587,6 @@ div.coupon-list{
             background-color: #f66;
             font-size: .778rem;
             color: #fff;
-            -webkit-border-radius: .3rem;
-            -moz-border-radius: .3rem;
             border-radius: .3rem;
             margin-top: .3rem;
             &.processing{

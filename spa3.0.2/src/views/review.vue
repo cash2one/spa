@@ -15,7 +15,7 @@
                 </ul>
             </div>
         </div>
-        <div class="comment-list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerCommentListScroll()">
+        <div class="comment-list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <div class="comment-item" v-for="item in comments">
                 <div>
                     <div :style="{ backgroundImage : 'url('+(item.avatarUrl || global.defaultHeader)+')' }"></div>
@@ -25,18 +25,14 @@
                 </div>
                 <div>
                     <div><div :style="{ width : item.rate+'%' }"></div></div>
-                    <div v-show="item.rewardAmount != 0"><i></i>打赏：<span>{{item.rewardAmount}}</span>元</div>
+                    <div v-show="item.rewardAmount != 0"><i></i>打赏：<span>{{ (item.rewardAmount/100).toFixed(2) }}</span>元</div>
                 </div>
                 <div v-show="item.comment">{{item.comment}}</div>
             </div>
-            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i>
-                <div>加载数据</div>
-            </div>
-            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }">
-                <div>已加载完全部数据</div>
-            </div>
+            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
+            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已加载完全部数据</div></div>
             <div class="nullData" v-show="comments.length==0 && !isAddData">
-                <div></div>
+                <div v-show="!global.loading"></div>
                 <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>
@@ -54,7 +50,7 @@
                 pageSize: 20,
                 currPage: 1,
                 currType: '',
-                techId: Global.data.currPage.query.id,
+                techId: '',
                 comments: [],
                 showDataLoadTip: false, // 显示数据正在加载
                 showFinishLoadTip: false, // 显示已经加载完成
@@ -66,10 +62,11 @@
         created: function () {
             var that = this
             var global = that.global
-            if (global.currPage.query.id == undefined) { // 链接上无技师id
+            that.techId = global.currPage.query.id
+            if (that.techId == undefined) { // 链接上无技师id
+                Util.tipShow(global.visitError)
                 return that.$router.back()
             }
-            global.loading = true
             that.$http.get(that.queryTechCommentsUrl, {
                 params: {
                     page: that.currPage,
@@ -95,7 +92,6 @@
                 }
             }, function () {
                 Util.tipShow(global.loadError)
-                global.loading = false
                 that.$router.back()
             })
         },
@@ -164,7 +160,7 @@
                     Util.tipShow(that.global.loadError)
                 })
             },
-            doHandlerCommentListScroll: function () { // 列表的滚动加载
+            doHandlerListScroll: function () { // 列表的滚动加载
                 var that = this
                 var listEle = that.$refs.listEle
                 if (!that.isDataAddEnd && listEle.scrollTop + listEle.clientHeight * 1.4 > listEle.scrollHeight) {

@@ -32,7 +32,7 @@
                     <div>
                         <div>
                             <div>{{ item.name }}</div>
-                            <div>剩余<span>{{ item.canPaidCount }}</span>份</div>
+                            <div v-show="item.canPaidCount>0">剩余<span>{{ item.canPaidCount }}</span>份</div>
                         </div>
                         <div>￥{{ item.amount }}<span>原价{{ item.price }}元</span>
                             <router-link :to="{ name : 'robProjectDetail' , query : { robProjectId : item.id }}">去抢购</router-link>
@@ -74,11 +74,9 @@
     import { eventHub } from '../libs/hub'
     import ActivityPop from '../components/activity-pop'
     import Util from '../libs/util'
-    import Counter from '../components/counter'
 
     module.exports = {
         components: {
-            'counter': Counter,
             'activity-pop': ActivityPop
         },
         data: function () {

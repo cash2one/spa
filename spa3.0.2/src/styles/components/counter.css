@@ -36,3 +36,19 @@ div.counter-wrap {
       -moz-transition-duration: 300ms;
       -ms-transition-duration: 300ms;
       -o-transition-duration: 300ms; }
+  div.counter-wrap.clock > label:nth-of-type(2), div.counter-wrap.clock > label:nth-of-type(5) {
+    display: none; }
+  div.counter-wrap.clock > div:nth-of-type(1), div.counter-wrap.clock > div:nth-of-type(2) {
+    display: none; }
+  div.counter-wrap.clock > div {
+    background: #fff;
+    margin-right: .15rem; }
+    div.counter-wrap.clock > div > div > b {
+      font-weight: normal; }
+    div.counter-wrap.clock > div:nth-of-type(odd) {
+      margin-left: .2rem; }
+  div.counter-wrap.clock > label {
+    color: #fff;
+    font-size: .722rem; }
+    div.counter-wrap.clock > label:first-child {
+      margin-right: .1rem; }

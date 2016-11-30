@@ -2,8 +2,8 @@
     @import '../styles/components/counter.css';
 </style>
 <template>
-    <div class="counter-wrap" @transitionend="doTransitionEnd($event)">
-        <label>{{ tipText[status] }}</label>
+    <div class="counter-wrap" :class="type" @transitionend="doTransitionEnd($event)">
+        <label>{{ type=='clock' ? '距离下钟' : tipText[status] }}</label>
         <template v-if="status !='over' ">
             <div ref="w0">
                 <div data-index="0"><b>{{ times[0][0] }}</b><b>{{ times[0][1] }}</b></div>
@@ -18,14 +18,14 @@
             <div ref="w3">
                 <div data-index="3"><b>{{ times[3][0] }}</b><b>{{ times[3][1] }}</b></div>
             </div>
-            <label>时</label>
+            <label>{{ type=='clock' ? ':' : '时' }}</label>
             <div ref="w4">
                 <div data-index="4"><b>{{ times[4][0] }}</b><b>{{ times[4][1] }}</b></div>
             </div>
             <div ref="w5">
                 <div data-index="5"><b>{{ times[5][0] }}</b><b>{{ times[5][1] }}</b></div>
             </div>
-            <label>分</label>
+            <label>{{ type=='clock' ? ':' : '分' }}</label>
             <div ref="w6">
                 <div data-index="6"><b>{{ times[6][0] }}</b><b>{{ times[6][1] }}</b></div>
             </div>
@@ -63,6 +63,10 @@
                 default: function () {
                     return {'notStarted': '距开始：', 'started': '距结束：', 'over': '已结束'}
                 }
+            },
+            type: {
+                type: String,
+                default: 'act'
             }
         },
         computed: {

@@ -10,35 +10,27 @@
                 <div>感谢您的评价!</div>
             </div>
         </div>
-        <router-link class="wrap top-info" :to="{ name : 'technicianDetail' , query : { id : techId }}">
-            <div class="tech-header" :style="{ backgroundImage : 'url('+techHeader+')' }"></div>
-            <div class="tech-info">
+        <div class="tech-info-wrap">
+            <router-link :to="{ name : 'technicianDetail' , query : { id : techId }}">
+                <div :style="{ backgroundImage : 'url('+techHeader+')' }"></div>
                 <div>
                     <div>{{ techName }}</div>
-                    <div>
-                        <div class="stars"><div :style="{ width : techStars+'%'}"></div></div>
-                        <div>{{ commentCount }}评论</div>
-                    </div>
+                    <div v-show="techNo">{{ techNo }}</div>
                 </div>
-                <div>编号【<span>{{ techNo }}</span>】</div>
-            </div>
-            <div class="right-arrow"></div>
-        </router-link>
+            </router-link>
+        </div>
         <div class="comment-info wrap">
             <div class="title">服务评级</div>
-            <div></div>
-            <div class="item" v-for="item in commentItems">
+            <div class="item" v-for="item in commentItems" v-show="item.show">
                 <div>{{ item.label }}</div>
                 <div class="comment-stars">
-                    <div @click="doClickCommentStar($event,item)">
-                        <div :style="{ width : item.value+'%' }"></div>
-                    </div>
+                    <div @click="doClickCommentStar($event,item)"><div :style="{ width : item.value+'%' }"></div></div>
                 </div>
                 <div>{{ item.value | commentFormatter(item.type) }}</div>
             </div>
         </div>
         <div class="comment-impression wrap">
-            <div class="title">印象点评<span>(最多3项)</span></div>
+            <div class="title">印象点评<span>（最多3项）</span></div>
             <div class="comment-labels">
                 <div v-for="item in impressionList" :key="item.id" @click="doClickImpressionItem(item)" :class="{ active : item.selected }">{{ item.tag }}</div>
             </div>
@@ -47,9 +39,11 @@
                 <div>200字以内哦~</div>
                 <span :class="{ none : !showTextareaPlaceholder }">亲，点击这里，留句好评哦，么么哒~</span>
             </div>
-            <div class="submit-btn" @click="doClickSubmitBtn()" :class="{ processing : inProcessing }">提交{{ inProcessing? "中..." : "" }}</div>
         </div>
         <attention></attention>
+        <div class="submit-btn">
+            <div @click="doClickSubmitBtn()" :class="{ processing : inProcessing }">提交{{ inProcessing? "中..." : "" }}</div>
+        </div>
     </div>
 </template>
 <script>
@@ -65,9 +59,6 @@
         data: function () {
             return {
                 global: Global.data,
-                queryImpressionListUrl: '../api/v2/club//impression/list',
-                queryTechData: '../api/v2/club//shared/technician',
-                submitUrl: '../api/v2/club//user/comment/create',
                 orderId: '',
                 techId: '',
                 type: '',
@@ -83,11 +74,8 @@
                 inProcessing: false,
                 impressionList: [],
                 selectedImpression: [],
-                commentItems: [{label: '态度', value: 100, type: 0}, {label: '仪容', value: 100, type: 0}, {
-                    label: '技能',
-                    value: 100,
-                    type: 0
-                }, {label: '偷钟', value: 100, type: 1}]
+                isScan: false,
+                commentItems: []
             }
         },
         created: function () {
@@ -102,8 +90,17 @@
             that.orderId = query.orderId || query.id
             that.type = query.type || ''
             that.commentId = query.commentId || ''
+            that.isScan = query.isScan == 1
 
-            that.$http.get(that.queryImpressionListUrl).then(function (res) {
+            that.commentItems = [
+                {label: '技师态度：', value: 100, type: 0, show: true},
+                {label: '技师仪容：', value: 100, type: 0, show: true},
+                {label: '技师技能：', value: 100, type: 0, show: true},
+                {label: '技师偷钟：', value: 100, type: 1, show: true},
+                {label: '会所环境：', value: 100, type: 0, show: that.isScan},
+                {label: '接待服务：', value: 100, type: 0, show: that.isScan}]
+
+            that.$http.get('../api/v2/club/impression/list').then(function (res) {
                 res = res.body
                 if (res.statusCode == 200) {
                     var list = res.respData
@@ -121,8 +118,7 @@
                     Util.tipShow(res.msg || '查询印象标签数据出错！')
                 }
             })
-            global.loading = true
-            that.$http.get(that.queryTechData, {
+            that.$http.get('../api/v2/club/shared/technician', {
                 params: {
                     id: that.orderId || that.techId,
                     type: that.type,
@@ -168,7 +164,7 @@
                     that.techHeader = techInfo.avatarUrl || global.defaultHeader
                     that.techName = techInfo.name || global.defaultTechName
                     that.commentCount = techInfo.commentCount || 0
-                    that.techNo = techInfo.serialNo || '无'
+                    that.techNo = techInfo.serialNo
                     that.techStars = techInfo.star || 0
                 } else {
                     Util.tipShow(res.msg || global.loadError)
@@ -176,7 +172,6 @@
                 }
             }, function () {
                 Util.tipShow(global.loadError)
-                global.loading = false
                 that.$router.back()
             })
         },
@@ -190,7 +185,7 @@
                 var v = Math.ceil((event.offsetX || event.layerX) / (8.611 * 16 * that.global.winScale * 0.2))
                 var commentItems = that.commentItems
                 var itemIndex = commentItems.indexOf(item)
-                Vue.set(commentItems, itemIndex, {value: v * 20, type: item.type, label: item.label})
+                Vue.set(commentItems, itemIndex, {value: v * 20, type: item.type, label: item.label, show: item.show})
             },
             onTextareaFocus: function () {
                 var that = this
@@ -220,13 +215,15 @@
                                 impressionArr.push(list[i].tag)
                             }
                         }
-                        that.$http.post(that.submitUrl, {
+                        that.$http.post('../api/v2/club/user/comment/create', {
                             id: that.orderId || that.techId,
-                            type: that.type,
+                            type: that.isScan ? 'tech_qrcode' : that.type,
                             attitudeRate: commentItems[0].value,
                             appearanceRate: commentItems[1].value,
                             skillRate: commentItems[2].value,
                             clockRate: commentItems[3].value,
+                            environmentalScore: that.isScan ? commentItems[4] : '',
+                            serviceScore: that.isScan ? commentItems[5] : '',
                             impression: impressionArr.join('、'),
                             comment: encodeURIComponent(that.commentInputText)
                         }).then(function (res) {

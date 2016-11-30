@@ -61,12 +61,14 @@
             pageData = pageData['technicianImg']
             if (pageData[that.techId]) {
                 that.pics = pageData[that.techId]
-                if (that.startIndex != 0) {
-                    that.waitSlideTo()
-                } else {
-                    global.loading = false
-                    that.addEvent()
-                }
+                that.$nextTick(function () {
+                    if (that.startIndex != 0) {
+                        that.waitSlideTo()
+                    } else {
+                        global.loading = false
+                        that.addEvent()
+                    }
+                })
             } else {
                 that.$http.get('../api/v2/club/tech/albums/{techId}', {params: {techId: pageParam.id}}).then(function (res) {
                     res = res.body
@@ -76,12 +78,14 @@
                             res.sort(function (pic1, pic2) { return pic1.orders > pic2.orders })
                             that.pics = pageData[that.techId] = res
                         }
-                        if (that.startIndex != 0) {
-                            that.waitSlideTo()
-                        } else {
-                            global.loading = false
-                            that.addEvent()
-                        }
+                        that.$nextTick(function () {
+                            if (that.startIndex != 0) {
+                                that.waitSlideTo()
+                            } else {
+                                global.loading = false
+                                that.addEvent()
+                            }
+                        })
                     } else {
                         Util.tipShow(global.loadError)
                         that.$router.back()
@@ -106,7 +110,6 @@
             },
             doSlideChange: function (index) {
                 var that = this
-                that.global.canShowLoading = false
                 that.$router.replace({name: 'technicianImg', query: {id: that.techId, index: index + 1}})
             },
             addEvent: function () {

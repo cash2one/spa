@@ -236,7 +236,6 @@
                 } else {
                     queryParam.top = 1
                 }
-                that.global.canShowLoading = false
                 that.$router.replace({name: 'serviceItem', query: queryParam})
             },
             doSelectTech: function (techId, itemId) { // 选择技师

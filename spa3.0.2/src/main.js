@@ -34,6 +34,7 @@ var DiceSetting = require('./components/dice-setting')
 var LoadMore = require('./components/load-more')
 var GoldenEffect = require('./components/golden-effect')
 var HomeTech = require('./components/home-tech')
+var Counter = require('./components/counter')
 
 Vue.component('tech', Tech)
 Vue.component('chat-input', ChatInput)
@@ -41,6 +42,7 @@ Vue.component('dice-setting', DiceSetting)
 Vue.component('load-more', LoadMore)
 Vue.component('golden-effect', GoldenEffect)
 Vue.component('home-tech', HomeTech)
+Vue.component('counter', Counter)
 
 Vue.http.options.emulateJSON = true
 Global.beforeInit()
@@ -608,15 +610,14 @@ router.beforeEach(function (to, from, next) {
     // 在已登录状态下，按返回键返回到的页面为 login 或 confirmLogin 页面时，拒绝此次切换，再次调用 history.back()
     if (_global.isLogin && /^(login|confirmLogin)$/.test(to.name)) {
         next(false)
-        if (to.name === 'login') router.go(-1)
+        if (to.name == 'login') router.go(-1)
         else router.go(-2)
         return
     }
-    if (_global.canShowLoading) {
-        _global.loading = true
-    } else {
-        _global.canShowLoading = true
-    }
+
+    // 如果只是改变当前页面锚点之后的参数，不显示loading
+    _global.loading = to.name != from.name
+
     // 检测登录
     if (to.meta.checkLogin) {
         if (!(_global.isLogin && _global.token)) {

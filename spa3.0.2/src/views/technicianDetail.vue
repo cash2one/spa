@@ -6,16 +6,17 @@
         <div class="page-back-btn tech-detail-page" @click="doClickPageBack()"></div>
         <div class="page-back-home" @click="doClickBackHomeBtn()">会所</div>
         <div class="page" id="technician-detail-page" :style="{ height : (global.winHeight-2.667*global.winScale*16)+'px' }">
-            <div class="top">
+            <div class="top" :class="{ showCounter : showCounter }">
                 <div class="header">
                     <div v-if="techAvatarUrl" :style="{ backgroundImage : 'url('+techAvatarUrl+')' }"></div>
                 </div>
                 <div class="name">
                     <div>{{ techName }}</div>
                     <div v-show="techNo">{{ techNo }}</div>
-                    <div :class="techStatus">{{ techStatus=='free' ? '闲' : '忙' }}</div>
+                    <div :class="techStatus">{{ techStatus }}</div>
                 </div>
-                <div class="desc">{{ techDesc }}</div>
+                <counter v-if="showCounter" :start="counterTime" :end="counterTime" type="clock"></counter>
+                <div class="desc" v-show="techDesc">{{ techDesc }}</div>
                 <div class="favorite" @click="doClickCollectBtn()" :class="{ collected : isFavorite }">
                     <div></div>
                     <div>{{ favoriteCount }}</div>
@@ -47,7 +48,7 @@
                     <div class="item" v-for="service in serviceItems" :class="{ selected : service.id == currSelectItem }" @click="doSelectServiceItem(service.id)">
                         <div></div>
                         <div :style="{ backgroundImage : 'url('+service.imageUrl+')' }"></div>
-                        <div>{{service.name}}</div>
+                        <div>{{ service.name }}</div>
                         <div>
                             <div>{{service.price1 | itemPriceFormatter(service.duration1,service.durationUnit)}}</div>
                             <div v-show="service.price2">{{service.price2 | itemPriceFormatter(service.duration2,service.durationUnitPlus)}}</div>
@@ -57,9 +58,9 @@
             </div>
         </div>
         <div class="tech-detail-footer-wrap">
-            <a @click="doClickCommentBtn()"><i></i>点评</a>
-            <a @click="doClickRewardBtn()"><i></i>打赏</a>
-            <router-link :to="{ name : 'chat', query : { techId : techId } }"><i></i>聊天</router-link>
+            <a @click="doClickCommentBtn()">点评</a>
+            <a @click="doClickRewardBtn()">打赏</a>
+            <router-link :to="{ name : 'chat', query : { techId : techId } }">聊天</router-link>
             <a @click="doClickOrderBtn()" :class="{ active : canOrder }">预约</a>
         </div>
         <tel-detail v-if="telephone.length>0" :telephone="telephone"></tel-detail>
@@ -109,7 +110,13 @@
         data: function () {
             return {
                 global: Global.data,
+                isCrossInner: false, // 是否已经与内网对接
+                showCounter: false,
+                counterTime: '',
+                authCode: '',
+
                 techId: '', // 技师ID
+                clubId: '', // 会所ID
                 techAvatarUrl: '',   // 技师头像
                 techName: '', // 技师名称
                 techNo: '', // 技师编号
@@ -139,27 +146,6 @@
                 showCouponList: false // 是否显示优惠券列表
             }
         },
-        mounted: function () {
-            var that = this
-            var global = that.global
-            // 获取优惠券数据
-            that.$http.get('../api/v2/club/{clubId}/coupons', {params: {clubId: global.clubId}}).then(function (res) {
-                res = res.body
-                if (res && res.statusCode == 200) {
-                    res = res.respData.coupons || []
-                    res.sort(function (a, b) {
-                        return a.useType >= b.useType ? ((b.consumeMoney - b.actValue) - (a.consumeMoney - a.actValue)) : -1
-                    })
-                    for (var i = 0, len = res.length; i < len; i++) {
-                        if (res[i]['couponType'] == 'paid') { // 点钟券
-                            that.paidCoupons.push(res[i])
-                        } else {
-                            that.ordinaryCoupons.push(res[i])
-                        }
-                    }
-                }
-            })
-        },
         created: function () {
             var that = this
             var global = that.global
@@ -168,74 +154,138 @@
                 Util.tipShow(global.visitError)
                 return that.$router.back()
             }
-            // 查询技师数据
-            that.$http.get('../api/v2/club/technician/{techId}', {params: {techId: query.id}}).then(function (res) {
-                res = res.body
-                if (res && res.info) {
-                    var info = res.info
-                    that.techId = res.id
-                    that.techAvatarUrl = info.avatarUrl || global.defaultHeader
-                    that.techName = info.name || global.defaultTechName
-                    that.techNo = info.serialNo || ''
-                    that.techStatus = info.status || 'free'
-                    that.favoriteCount = parseInt(res.favoriteCount || 0)
-                    that.techInviteCode = info.inviteCode || ''
-                    that.techCommentCount = info.commentCount || 0
-                    that.techStar = info.star || 0
-                    that.techDesc = info.description
-                    that.serviceItems = res.service || []
-                    that.canComment = res.toDayCommentCount != 1
-                    that.isFavorite = (res['isFavorite'] || 'n').toLowerCase() == 'y'
-                    that.canOrder = (res['appointment'] || 'y').toLowerCase() != 'n' || (res['phoneAppointment'] || 'y').toLowerCase() != 'n'
-                    that.phoneAppointment = (res.phoneAppointment || 'y').toLowerCase()
-                    that.appointment = (res.appointment || 'y').toLowerCase()
-                    that.telephone = res.telephone ? res.telephone.split(',') : []
-                    that.payAppointment = res.payAppointment || 'N'
-                    global.loading = false
-                } else {
-                    Util.tipShow(global.loadError)
-                    that.$router.back()
-                }
-            }, function () {
-                Util.tipShow(global.loadError)
-                that.$router.back()
-            })
 
-            // 查询技师相册
-            that.$http.get('../api/v2/club/tech/albums/{techId}', {params: {techId: query.id}}).then(function (picRes) {
-                picRes = picRes.body
-                if (picRes.statusCode == 200) {
-                    picRes = picRes.respData
-                    // 技师相册缓存到global
-                    if (picRes) {
-                        var pageData = global.pageData
-                        if (!pageData['technicianImg']) {
-                            pageData['technicianImg'] = {}
-                        }
-                        picRes.sort(function (pic1, pic2) { return pic1.orders > pic2.orders })
-                        pageData['technicianImg'][query.id] = picRes
-                        that.techPics = picRes
+            that.authCode = query.code || global.code
+            if (global.userAgent.isWX) {
+                if (!global.openId || global.openId.length < 10) {
+                    if ((+new Date()) - (query['_t'] || 0) > 24000 || !that.payAuthCode) {
+                        Global.getOauthCode('', '9358', 'confirm-tech-pay', 'base')
+                        return
+                    } else {
+                        Global.getOpenId({authCode: that.authCode, state: 'confirm-tech-pay'}).then(function (openId) {
+                            global.openId = openId
+                            that.init()
+                        }, function (error) {
+                            Util.tipShow(error)
+                            return that.$router.back()
+                        })
                     }
+                } else {
+                    that.init()
                 }
-            })
+            } else {
+                that.init()
+            }
         },
         methods: {
+            init: function () {
+                var that = this
+                var global = that.global
+                var query = global.currPage.query
+
+                // 查询技师数据
+                that.$http.get('../api/v2/club/technician/{techId}', {params: {techId: query.id}}).then(function (res) {
+                    res = res.body
+                    if (res && res.info) {
+                        var info = res.info
+                        that.techId = res.id
+                        that.clubId = info.clubId
+                        that.techAvatarUrl = info.avatarUrl || global.defaultHeader
+                        that.techName = info.name || global.defaultTechName
+                        that.techNo = info.serialNo || ''
+                        that.techStatus = {free: '闲', busy: '忙', rest: '休'}[info.status || 'free']
+                        that.favoriteCount = parseInt(res.favoriteCount || 0)
+                        that.techInviteCode = info.inviteCode || ''
+                        that.techCommentCount = info.commentCount || 0
+                        that.techStar = info.star || 0
+                        that.techDesc = info.description
+                        that.serviceItems = res.service || []
+                        that.canComment = res.toDayCommentCount != 1
+                        that.isFavorite = (res['isFavorite'] || 'n').toLowerCase() == 'y'
+                        that.canOrder = (res['appointment'] || 'y').toLowerCase() != 'n' || (res['phoneAppointment'] || 'y').toLowerCase() != 'n'
+                        that.phoneAppointment = (res.phoneAppointment || 'y').toLowerCase()
+                        that.appointment = (res.appointment || 'y').toLowerCase()
+                        that.telephone = res.telephone ? res.telephone.split(',') : []
+                        that.payAppointment = res.payAppointment || 'N'
+                        global.loading = false
+
+                        that.isCrossInner = res.hasInnerProvider == 'true'
+                        if (that.isCrossInner && info.status == 'busy' && info.endTime) {
+                            var endTime = (+new Date(info.endTime.replace(/-/g, '-')))
+                            if (endTime - (+new Date()) > 0) {
+                                that.counterTime = info.endTime
+                                that.showCounter = true
+                            }
+                        }
+                    } else {
+                        Util.tipShow(global.loadError)
+                        that.$router.back()
+                    }
+                }, function () {
+                    Util.tipShow(global.loadError)
+                    that.$router.back()
+                })
+
+                // 查询技师相册
+                that.$http.get('../api/v2/club/tech/albums/{techId}', {params: {techId: query.id}}).then(function (picRes) {
+                    picRes = picRes.body
+                    if (picRes.statusCode == 200) {
+                        picRes = picRes.respData
+                        // 技师相册缓存到global
+                        if (picRes) {
+                            var pageData = global.pageData
+                            if (!pageData['technicianImg']) {
+                                pageData['technicianImg'] = {}
+                            }
+                            picRes.sort(function (pic1, pic2) { return pic1.orders > pic2.orders })
+                            pageData['technicianImg'][query.id] = picRes
+                            that.techPics = picRes
+                        }
+                    }
+                })
+
+                // 获取优惠券数据
+                that.$http.get('../api/v2/club/{clubId}/coupons', {params: {clubId: global.clubId}}).then(function (res) {
+                    res = res.body
+                    if (res && res.statusCode == 200) {
+                        res = res.respData.coupons || []
+                        res.sort(function (a, b) {
+                            return a.useType >= b.useType ? ((b.consumeMoney - b.actValue) - (a.consumeMoney - a.actValue)) : -1
+                        })
+                        for (var i = 0, len = res.length; i < len; i++) {
+                            if (res[i]['couponType'] == 'paid') { // 点钟券
+                                that.paidCoupons.push(res[i])
+                            } else {
+                                that.ordinaryCoupons.push(res[i])
+                            }
+                        }
+                    }
+                })
+            },
             doClickPageBack: function () { // 点击返回按钮
                 history.back()
             },
             doClickBackHomeBtn: function () { // 点击回到主页的按钮
-
+                var that = this
+                var global = that.global
+                if (global.pageMode == 'club') {
+                    that.$router.push({name: 'home'})
+                } else {
+                    that.$router.push({path: '/' + that.clubId + '/home'})
+                }
             },
             doSelectServiceItem: function (itemId) {
-                this.currSelectItem = itemId
+                var that = this
+                if (that.currSelectItem == itemId) {
+                    that.currSelectItem = ''
+                } else {
+                    that.currSelectItem = itemId
+                }
             },
             doClickRewardBtn: function () { // 点击打赏按钮
                 var that = this
                 if (that.global.userAgent.isWX) {
-                    that.$router.push({
-                        name: 'techReward',
-                        query: {techId: that.techId}
-                    })
+                    that.$router.push({name: 'techReward', query: {techId: that.techId}})
                 } else {
                     Util.tipShow('请在微信中打开！')
                 }
@@ -257,11 +307,7 @@
                         } else {
                             that.$router.push({
                                 name: 'confirmOrder',
-                                query: {
-                                    techId: that.techId,
-                                    itemId: that.currSelectItem,
-                                    clubId: ''
-                                }
+                                query: {techId: that.techId, itemId: that.currSelectItem, clubId: ''}
                             })
                         }
                     }

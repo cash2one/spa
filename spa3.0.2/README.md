@@ -26,7 +26,7 @@ clubList-nearby
 clubList-search
 clubProfile-------------------------
 collect-----------------------------
-comment
+comment-------------------------
 confirmLogin
 confirmOrder
 contacts
@@ -36,8 +36,8 @@ follow9358
 home-----------------------------
 hourTicketList
 info-----------------------------
-integral
-integralDetail
+integral-------------------------
+integralDetail----------------------
 integralExplain--------------------
 inviteCode
 login
@@ -59,7 +59,7 @@ qrPayComplete
 recharge
 recoverPassword
 register
-review
+review--------------------------
 robProjectDetail
 robProjectSuccess
 serviceGroup-------------------
