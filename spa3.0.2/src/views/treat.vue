@@ -36,8 +36,6 @@
         data: function () {
             return {
                 global: Global.data,
-                queryDataUrl: '../api/v2/finacial/account/',
-                payAuthUrl: '../api/v2/finacial/account/payforother/auth',
                 accountId: '',
                 accountMoney: '-',
                 canVisible: true,
@@ -60,9 +58,7 @@
             if (!that.accountId) {
                 return that.$router.back()
             } else {
-                that.queryDataUrl += that.accountId
-                global.loading = true
-                that.$http.get(that.queryDataUrl).then(function (res) {
+                that.$http.get('../api/v2/finacial/account/' + that.accountId).then(function (res) {
                     global.loading = false
                     res = res.body
                     if (res.statusCode == 200) {
@@ -88,7 +84,7 @@
                     } else {
                         that.isProcessing = true
                         that.confirmBtnText = '授权中...'
-                        that.$http.post(that.payAuthUrl, {
+                        that.$http.post('../api/v2/finacial/account/payforother/auth', {
                             accountId: that.accountId,
                             amount: that.money,
                             open: that.canVisible ? 'Y' : 'N',

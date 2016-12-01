@@ -19,14 +19,10 @@
                     <div><span>冻结金额</span><span>{{ item.freezeAmount | MoneyFormatter }}</span></div>
                 </div>
             </router-link>
-            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i>
-                <div>加载数据</div>
-            </div>
-            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }">
-                <div>已经加载全部数据</div>
-            </div>
+            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
+            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
             <div class="nullData" v-show="dataList.length==0 && !showDataLoadTip">
-                <div></div>
+                <div v-show="!global.loading"></div>
                 <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>
@@ -41,7 +37,6 @@
         data: function () {
             return {
                 global: Global.data,
-                getRecordsUrl: '../api/v2/finacial/accounts',
                 dataList: [],
                 showDataLoadTip: false, // 显示数据正在加载
                 showFinishLoadTip: false // 显示已经加载完成
@@ -51,8 +46,7 @@
             var that = this
             var global = that.global
             that.showDataLoadTip = true
-            global.loading = true
-            that.$http.get(that.getRecordsUrl).then(function (res) {
+            that.$http.get('../api/v2/finacial/accounts').then(function (res) {
                 that.showDataLoadTip = false
                 res = res.body
                 global.loading = false
@@ -66,7 +60,6 @@
                 }
             }, function () {
                 Util.tipShow(global.loadError)
-                global.loading = false
                 return that.$router.back()
             })
         },

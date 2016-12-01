@@ -79,8 +79,7 @@
         data: function () {
             return {
                 global: Global.data,
-                queryDataUrl: '../api/v2/finacial/account/payforother/detail',
-                cancelAuthUrl: '../api/v2/finacial/account/payforother/cancel',
+                queryDataUrl: '../api/v2/finacial/account/payforother/',
                 detailId: '',
                 authorizeCode: '-',
                 treatMoney: '-',
@@ -106,7 +105,7 @@
                 Util.tipShow(global.visitError)
                 return that.$router.back()
             } else {
-                that.$http.get(that.queryDataUrl, {params: {detailId: that.detailId}}).then(function (res) {
+                that.$http.get(that.queryDataUrl + 'detail', {params: {detailId: that.detailId}}).then(function (res) {
                     res = res.body
                     if (res.statusCode == 200) {
                         res = res.respData
@@ -141,7 +140,7 @@
                 var that = this
                 var global = that.global
                 that.isProcessing = true
-                that.$http.post(that.cancelAuthUrl, {detailId: that.detailId}).then(function (res) {
+                that.$http.post(that.queryDataUrl + 'cancel', {detailId: that.detailId}).then(function (res) {
                     that.isProcessing = false
                     res = res.body
                     if (res.statusCode == 200) {

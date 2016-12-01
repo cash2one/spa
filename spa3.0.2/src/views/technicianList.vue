@@ -8,7 +8,6 @@
             <input type="text" placeholder="技师昵称或者编号" maxlength="30" v-model="searchTechName"/>
             <div @click="queryTechList(1)">搜索</div>
         </div>
-
         <div class="menu" :class="{ 'search-active': showSearchInput }">
             <div class="status" @click="doClickChangeStatus()">
                 <div :class="{ active : stateActiveId=='free' }">只显示闲</div>

@@ -18,7 +18,7 @@
             <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
             <div class="finish-load-tip" :class="{ none : !showFinishLoadTip || dataList.length==0 }"><div>已经加载全部数据</div></div>
             <div class="nullData" v-show="dataList.length==0 && !isAddData">
-                <div></div>
+                <div v-show="!global.loading"></div>
                 <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>
@@ -33,7 +33,6 @@
         data: function () {
             return {
                 global: Global.data,
-                getRecordsUrl: '../api/v2/finacial/account/payforother/list',
                 dataList: [],
                 currPage: 0,
                 pageSize: 10,
@@ -110,7 +109,7 @@
                 that.showFinishLoadTip = false
                 that.isDataAddEnd = false
 
-                that.$http.get(that.getRecordsUrl, {
+                that.$http.get('../api/v2/finacial/account/payforother/list', {
                     params: {
                         page: page,
                         pageSize: that.pageSize,

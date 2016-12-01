@@ -537,6 +537,14 @@ var pageRouterOption = [
             require(['./views/robProjectSuccess.vue'], resolve)
         }
     },
+    {   // 电子期刊列表
+        path: prefixPath + 'journalList',
+        name: 'journalList',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/journalList.vue'], resolve)
+        }
+    },
     {
         path: prefixPath + 'clubList',
         name: 'clubList',

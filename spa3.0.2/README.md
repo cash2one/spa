@@ -66,7 +66,7 @@ serviceGroup-------------------
 serviceItem--------------------
 serviceList---------------------
 suggestions-------------------
-technicianDetail
+technicianDetail------------------
 technicianImg-----------------
 technicianList-----------------
 techReward
@@ -75,3 +75,4 @@ treat
 treatDetail
 treatExplain--------------------
 treatRecords
+journalList--------------------
