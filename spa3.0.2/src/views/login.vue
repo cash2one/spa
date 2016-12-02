@@ -22,7 +22,6 @@
         data: function () {
             return {
                 global: Global.data,
-                loginUrl: '../api/v1/user/login',
                 tel: '',
                 userLoginParam: null
             }
@@ -45,7 +44,7 @@
             }
             if (global.userAgent.isWX && (!global.authCode || pageParam.state != '9358_login')) {
                 Global.getOauthCode('', '9358', '9358_login', 'base')
-                that.$router.back()
+                return
             } else {
                 if (pageParam['loginTel']) {
                     that.tel = pageParam['loginTel']
@@ -83,7 +82,7 @@
                         paramData.wxNickName = global.nickName
                         paramData.wxHeadimgurl = global.headerImgUrl
                     }
-                    that.$http.get(that.loginUrl, {params: paramData}).then(function (res) {
+                    that.$http.post('../api/v1/user/login', paramData).then(function (res) {
                         window['spa-login-info'] = paramData
                         res = res.body
                         if (res.statusCode == 2) {

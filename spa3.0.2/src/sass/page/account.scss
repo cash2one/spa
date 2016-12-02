@@ -1,102 +1,163 @@
 @import "../common/mixin.scss";
 
 div#account-page{
-
-  a.jump-qrcode{
-    display: block;
-    @include sx();
-    background-color: #fff;
-    height: 2.444rem;
-    margin-top: .667rem;
-    border-top: 1px solid #e0e0e0;
-    border-bottom: 1px solid #e0e0e0;
-    >div{
-      &:first-child{
-        margin-left: .833rem;
-      }
-      &:nth-of-type(2){
-        width: 17.445rem;
-        font-size: .889rem;
-        color: #424242;
-      }
-      &:nth-of-type(3){
-        width: .889rem;
-        height: .889rem;
-        @include img('../../images/account/icon_erweima.png',.889rem .889rem);
+  div.search-area{
+    margin: .667rem .889rem 0;
+    position: relative;
+    >input{
+      width: 18.222rem;
+      padding: .3rem 2.361rem .3rem 1rem;
+      font-size: .889rem;
+      color: #212121;
+      border: 1px solid #ccc;
+      border-radius: .5rem;
+      box-sizing: border-box;
+    }
+    >span{
+      position: absolute;
+      top: 0;
+      height: 100%;
+      right: 0;
+      width: 2.278rem;
+      @include img('../../images/account/ic_search.png',1rem 1rem);
+      background-position: center;
+      &:before{
+        content: ' ';
+        position: absolute;
+        height: 60%;
+        top:20%;
+        left: 0;
+        border:1px solid #ccc;
       }
     }
-  }
-
-  div.list{
-    overflow-y: auto;
   }
 
   a.list-item{
     display: block;
     margin-top: .667rem;
     background-color: #fff;
-    border-top:1px solid #e0e0e0;
-    border-bottom:1px solid #e0e0e0;
+    border-radius: .5rem;
+    margin-left:.889rem;
+    margin-right:.889rem;
     >div{
-      &.header{
-        position: relative;
-        height: 1.167rem;
-        line-height: 1.167rem;
-        padding:.361rem .667rem .361rem 2rem;
-        box-sizing : content-box;
-        font-size: .778rem;
-        color: #333;
-        border-bottom:1px solid #e0e0e0;
-        >span{
-          &:nth-of-type(1){
-            display: inline-block;
-            width: 1.167rem;
-            height: 1.167rem;
-            margin-right:.167rem;
-            border-radius: 50%;
-            position: absolute;
-            left: .667rem;
-            @include imgBgFix(1.167rem 1.167rem)
-          }
-          &:nth-of-type(2){
-            display: inline-block;
-            width: 16rem;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-          }
-        }
-        >i{
-          width: 0.43rem;
-          height: 0.43rem;
-          border-left: 0.1rem solid #999;
-          border-bottom: 0.1rem solid #999;
-          -webkit-transform:translate(0,-50%)  rotate(-135deg);
-          -moz-transform:translate(0,-50%)  rotate(-135deg);
-          -ms-transform:translate(0,-50%)  rotate(-135deg);
-          transform: translate(0,-50%) rotate(-135deg);
-          display: inline-block;
-          position: absolute;
-          right: .667rem;
-          top: 50%;
-        }
-      }
-      &.item{
-        padding: .667rem;
-        font-size: .889rem;
-        color: #212121;
+      &:nth-of-type(1){
+        padding: .667rem .889rem 0;
+        height: 5.722rem;
+        border-top-left-radius: .5rem;
+        border-top-right-radius: .5rem;
+
+        @include imgBgFix(18.222rem 5.722rem);
         >div{
-          line-height: 1;
-          &:last-child{
-            margin-top: .5rem;
-          }
-          >span{
-            &:first-child{
-              font-size: .778rem;
-              color: #616161;
-              margin-right: .556rem;
+          &:nth-of-type(1){
+            @include sx();
+            >div{
+              &:nth-of-type(1){
+                width: 1.333rem;
+                height: 1.333rem;
+                border-radius: 50%;
+                @include imgBgFix(1.333rem 1.333rem);
+              }
+              &:nth-of-type(2){
+                @include boxFlex(1);
+                font-size: .889rem;
+                padding-left: .5rem;
+              }
             }
           }
+          &:nth-of-type(2){
+            margin-top: 1rem;
+            @include x();
+            >div{
+              text-align: right;
+              color: #fff;
+              &:nth-of-type(1){
+                @include boxFlex(1);
+                >span{
+                  font-size: 2.778rem;
+                  &.vip{
+                    font-size:2rem;
+                    font-style: italic;
+                  }
+                }
+              }
+              &:nth-of-type(2){
+                @include boxFlex(4);
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                font-size: .889rem;
+              }
+            }
+          }
+        }
+      }
+      &:nth-of-type(2){
+        border:1px solid #e0e0e0;
+        border-top:none;
+        border-bottom-left-radius: .5rem;
+        border-bottom-right-radius: .5rem;
+        padding: 0 .889rem;
+        @include sx();
+        >div{
+          &:nth-of-type(1){
+            @include boxFlex(1);
+            font-size: .778rem;
+            color: #212121;
+          }
+          &:nth-of-type(2){
+            width: .889rem;
+            height: .889rem;
+            @include img('../../images/account/ic_QR.png',.889rem .889rem);
+          }
+        }
+      }
+    }
+
+    &.tpl-01{
+      >div:nth-of-type(1){
+        background-image: url('../../images/account/style-01.jpg');
+        >div:nth-of-type(1){
+          color: #fff;
+        }
+      }
+    }
+    &.tpl-02{
+      >div:nth-of-type(1){
+        background-image: url('../../images/account/style-05.jpg');
+        >div:nth-of-type(1){
+          color: #6a4228;
+        }
+      }
+    }
+    &.tpl-03{
+      >div:nth-of-type(1){
+        background-image: url('../../images/account/style-03.jpg');
+        >div:nth-of-type(1){
+          color: #584f55;
+        }
+      }
+    }
+    &.tpl-04{
+      >div:nth-of-type(1){
+        background-image: url('../../images/account/style-04.jpg');
+        >div:nth-of-type(1){
+          color: #d06200;
+        }
+      }
+    }
+    &.tpl-05{
+      >div:nth-of-type(1){
+        background-image: url('../../images/account/style-05.jpg');
+        >div:nth-of-type(1){
+          color: #252d3b;
+        }
+      }
+    }
+    &.tpl-06{
+      >div:nth-of-type(1){
+        background-image: url('../../images/account/style-06.jpg');
+        >div:nth-of-type(1){
+          color: #fff;
         }
       }
     }

@@ -16,6 +16,7 @@
 </template>
 <script>
     import { Global } from '../libs/global'
+    import { IM } from '../libs/im'
     import Util from '../libs/util'
     import TelInput from '../directives/tel-input'
     import PasswordInput from '../directives/password-input'
@@ -57,7 +58,7 @@
             }
             if (global.userAgent.isWX && (!global.authCode || pageParam.state != '9358_login')) {
                 Global.getOauthCode('', '9358', '9358_login', 'base')
-                return that.$router.back()
+                return
             } else {
                 global.loading = false
             }
@@ -90,13 +91,13 @@
                         code: global.authCode,
                         isBindWeixin: that.isBindWeixin ? 'Y' : 'N'
                     }
-                    if (global.sessionType == '9358' || global.userAgent.isWX) {
+                    if (global.sessionType == '9358') {
                         paramData.loginChanel = global.loginChanel
                         paramData.openId = global.openId
                         paramData.wxNickName = global.nickName
                         paramData.wxHeadimgurl = global.headerImgUrl
                     }
-                    that.$http.get('../api/v1/user/login', {params: paramData}).then(function (res) {
+                    that.$http.post('../api/v1/user/login', paramData).then(function (res) {
                         res = res.body
                         if (res.statusCode == 2) {
                             window['spa-login-info'] = paramData
@@ -105,12 +106,12 @@
                             Util.localStorage('con-login-param', JSON.stringify(paramData))
                             Global.getOauthCode('', '9358', '9358_login', 'base')
                         } else if (res.status == 200) {
-                            global.token = res['token']
-                            global.userId = res['userId']
-                            global.userHeader = res['avatarUrl'] || global.defaultHeader
-                            global.userTel = res['phoneNum']
-                            global.userName = res['name']
-                            global.loginName = res['loginName']
+                            global.token = res.token
+                            global.userId = res.userId
+                            global.userHeader = res.avatarUrl || global.defaultHeader
+                            global.userTel = res.phoneNum
+                            global.userName = res.name
+                            global.loginName = res.loginName
                             global.isTelephoneUser = true
                             global.isLogin = true
 
@@ -122,15 +123,33 @@
                             Util.localStorage('userLoginName', global.loginName)
                             Util.localStorage('isTelephoneUser', true)
                             Util.tipShow(res.message || '登录成功！')
-                            // =================
-                            if (global.loginPage) {
-                                that.$router.push({name: global.loginPage, query: global.loginPageQuery})
-                            } else {
-                                that.$router.push({name: 'home'})
+
+                            var im = IM
+                            var userLoginParam = that.userLoginParam
+                            im.id = res.emchatId
+                            if (userLoginParam.oldUserId && userLoginParam.oldUserId != global.userId) {
+                                im.secondId = userLoginParam.oldChatId
+                                im.mergeAccount(userLoginParam.oldUserId, global.userId)
+                            }
+                            var delay = false
+                            if (im.conn && im.conn.isOpened()) {
+                                im.closeConn()
+                                delay = true
+                            }
+                            setTimeout(function () {
+                                im.createConn()
+                                if (im.secondId) {
+                                    im.createConn(1)
+                                }
+                                Global.redirectToLastPage(that.$router)
+                            }, delay ? 500 : 1)
+
+                            if (res.message) {
+                                Util.tipShow(res.message)
                             }
                         } else if (res.respData == 'HAS_BOUND') {
                             Util.tipShow(res.message || '当前用户已绑定！')
-                            that.$router.push({name: global.loginPage, query: global.loginPageQuery})
+                            Global.redirectToLastPage(that.$router)
                         } else {
                             Util.tipShow(res.message || '登录出错！')
                         }

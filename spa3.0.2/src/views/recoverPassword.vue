@@ -30,14 +30,10 @@
         },
         data: function () {
             return {
-                checkLoginNameUrl: '../api/v1/user/checkLoginName',
-                getTestCodeUrl: '../api/v1/icode',
-                resetPasswordUrl: '../api/v1/user/resetPassword',
                 global: Global.data,
                 tel: '',
                 password: '',
                 testCode: '', // 短信验证码
-                userLoginParam: null,
                 testCodeBtnStatus: '',
                 testCodeBtnText: '获取验证码',
                 getTestCodeRepeatCount: 6
@@ -56,30 +52,24 @@
         },
         created: function () {
             var that = this
-            var _userLoginParam = Util.localStorage('spa-login-info')
-            if (_userLoginParam) {
-                that.userLoginParam = JSON.parse(_userLoginParam)
-            }
-        },
-        mounted: function () {
-            var that = this
-            var param = that.userLoginParam
+            var param = window['spa-login-info']
             if (param && param['username']) {
                 that.tel = param['username']
                 that.isTelValid = /^1[34578]\d{9}$/.test(that.tel)
             }
+            that.global.loading = false
         },
         methods: {
             doClickConfirmBtn: function () {
                 var that = this
                 if (that.isTelValid && that.isTestCodeVaild && that.isPasswordValid) {
-                    that.$http.post(that.checkLoginNameUrl, {loginName: that.tel}).then(function (res) {
+                    that.$http.post('../api/v1/user/checkLoginName', {loginName: that.tel}).then(function (res) {
                         res = res.body
                         if (res + '' == '-1') {
                             Util.tipShow('用户尚未注册！')
                             return
                         }
-                        that.$http.post(that.resetPasswordUrl, {
+                        that.$http.post('../api/v1/user/resetPassword', {
                             username: that.tel,
                             code: that.testCode,
                             password: that.password
@@ -132,7 +122,7 @@
                             that.testCodeBtnText = '重新发送(' + count + 's)'
                         }
                     }, 1000)
-                    that.$http.get(that.getTestCodeUrl, {params: {mobile: that.tel}})
+                    that.$http.get('../api/v1/icode', {params: {mobile: that.tel}})
                 })
             }
         }

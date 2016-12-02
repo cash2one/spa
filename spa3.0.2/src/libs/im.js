@@ -404,6 +404,22 @@ exports.IM = {
         connIndex == 0 ? that.conn = conn : that.secondConn = conn
     },
 
+    // 关闭环信连接
+    closeConn: function (){
+        var that = this
+        if (that.conn && that.conn.isOpened()) {
+            that.conn.close()
+            that.sessionList = null
+            that.messageList = {}
+            that.needShowEffectDiceGames = {}
+            that.newMsgTotal = 0
+        }
+
+        if (that.secondConn && that.secondConn.isOpened()) {
+            that.secondConn.close()
+        }
+    },
+
     // 处理接受到的文本消息
     doReceiveTextMessage: function (msg, conn) {
         console.log('im 收到一条消息：')

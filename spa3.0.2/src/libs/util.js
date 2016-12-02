@@ -78,32 +78,21 @@ module.exports = {
         }
         return date
     },
-    spaceFormat: function (str, last, num, space) {
+    spaceFormat: function (str, last, num, space, spaceChar) {
         if (!str) return
-        var tmpArr = []
         var spaceStr = ''
-        var v
-        last = last == true
+        last = last === true
         num = Math.abs(num || 4)
         space = Math.abs(space || 1)
-        str = str.split('')
+        spaceChar = spaceChar || ' '
+        var reg = new RegExp('(\\S{' + num + '})', 'g')
         if (last) {
-            str = str.reverse()
+            reg = new RegExp('(\\S)(?=(\\S{' + num + '})+$)', 'g') // 反向,使用零宽断言
         }
         for (var j = space; j > 0; j--) {
-            spaceStr += ' '
+            spaceStr += spaceChar
         }
-        for (var i = 0; i < str.length; i++) {
-            v = str[i]
-            tmpArr.push(v)
-            if ((i + 1) % num == 0) {
-                tmpArr.push(spaceStr)
-            }
-        }
-        if (last) {
-            tmpArr.reverse()
-        }
-        return tmpArr.join('')
+        return str.replace(reg, '$1'+spaceStr)
     },
     urlFormat: function (url) {
         var baseStr = url.split('?')

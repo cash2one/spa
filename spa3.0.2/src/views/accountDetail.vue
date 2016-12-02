@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="account-detail-page">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>我的账户</div>
+        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>会员卡详情</div>
         <div class="info-item item">
             <div>
                 <div class="available-icon"></div>

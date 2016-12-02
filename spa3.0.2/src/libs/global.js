@@ -177,13 +177,14 @@ exports.Global = {
                         that.clearLoginInfo()
                     } else {
                         console.log('util.md5' + data.userId)
-                        IM.id = Util.md5(data.userId)
-                        IM.password = IM.id
-                        IM.userId = data.userId
-                        IM.header = data.userHeader
-                        IM.avatar = data.userAvatar
-                        IM.name = (data.userName == data.defaultName && data.userTel) ? data.defaultName + '(' + data.userTel.substr(0, 3) + '****' + data.userTel.slice(-4) + ')' : data.userName
-                        IM.createConn() // 创建环信连接
+                        var im = IM
+                        im.id = Util.md5(data.userId)
+                        im.password = im.id
+                        im.userId = data.userId
+                        im.header = data.userHeader
+                        im.avatar = data.userAvatar
+                        im.name = (data.userName == data.defaultName && data.userTel) ? data.defaultName + '(' + data.userTel.substr(0, 3) + '****' + data.userTel.slice(-4) + ')' : data.userName
+                        im.createConn() // 创建环信连接
 
                         data.isLogin = true
                         that.updateUserNameAndHeader()
@@ -237,6 +238,9 @@ exports.Global = {
         Util.removeLocalStorage('userTel')
         Util.removeLocalStorage('userName')
         Util.removeLocalStorage('userLoginName')
+
+        // 关闭环信连接
+        IM.closeConn()
     },
     /*
      * 获取会所的开关信息
@@ -408,6 +412,21 @@ exports.Global = {
             router.push({name: 'login'})
         }
     },
+
+    /*
+     * 登录之后跳转到上次访问的页面
+     */
+    redirectToLastPage: function (router) {
+        var data = this.data
+        if (data.loginPage) {
+            router.push({name: data.loginPage, query: data.loginPageQuery})
+        } else if (data.pageMode == 'club') {
+            router.push({name: 'home'})
+        } else {
+            router.push({path: '/'})
+        }
+    },
+
     // 获取授权
     getOauthCode: function (pageUrl, sessionType, state, scope, msg, errorCallBack, isReplaceUrl) {
         var loc = location

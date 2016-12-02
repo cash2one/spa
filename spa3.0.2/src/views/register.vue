@@ -17,6 +17,7 @@
 </template>
 <script>
     import { Global } from '../libs/global'
+    import { IM } from '../libs/im'
     import Util from '../libs/util'
     import TelInput from '../directives/tel-input'
     import PasswordInput from '../directives/password-input'
@@ -30,9 +31,6 @@
         },
         data: function () {
             return {
-                checkLoginNameUrl: '../api/v1/user/checkLoginName',
-                getTestCodeUrl: '../api/v1/icode',
-                registerUrl: '../api/v1/user/register',
                 global: Global.data,
                 tel: '',
                 password: '',
@@ -71,7 +69,7 @@
             }
             if (global.userAgent.isWX && (!global.authCode || pageParam.state != '9358_login')) {
                 Global.getOauthCode('', '9358', '9358_login', 'base')
-                that.$router.back()
+                return
             } else {
                 if (_loginInfo) {
                     that.tel = _loginInfo['username']
@@ -85,6 +83,7 @@
                     delete window['spa-login-info']
                 }
             }
+            global.loading = false
         },
         mounted: function () {
             var that = this
@@ -111,7 +110,7 @@
                 var global = that.global
                 if (that.isTelValid && that.isTestCodeVaild && that.isPasswordValid) {
                     that.inRequest = true
-                    that.$http.post(that.checkLoginNameUrl, {loginName: that.tel}).then(function (res) {
+                    that.$http.post('../api/v1/user/checkLoginName', {loginName: that.tel}).then(function (res) {
                         res = res.body
                         if (res + '' == '1') {
                             Util.tipShow('该用户已经注册了！')
@@ -131,15 +130,15 @@
                                 auth2code: global.authCode,
                                 isBindWeixin: that.isBindWeixin ? 'Y' : 'N'
                             }
-                            that.$http.post(that.registerUrl, param).then(function (res) {
+                            that.$http.post('../api/v1/user/register', param).then(function (res) {
                                 res = res.body
                                 if (res.status == 200) {
-                                    global.token = res['token']
-                                    global.userId = res['userId']
-                                    global.userHeader = res['avatarUrl'] || global.defaultHeader
-                                    global.userTel = res['phoneNum']
-                                    global.userName = res['name']
-                                    global.loginName = res['loginName']
+                                    global.token = res.token
+                                    global.userId = res.userId
+                                    global.userHeader = res.avatarUrl || global.defaultHeader
+                                    global.userTel = res.phoneNum
+                                    global.userName = res.name
+                                    global.loginName = res.loginName
                                     global.isLogin = true
 
                                     Util.localStorage('token', global.token)
@@ -149,14 +148,27 @@
                                     Util.localStorage('userName', global.userName)
                                     Util.localStorage('userLoginName', global.loginName)
 
-                                    // =====
                                     Util.tipShow('注册成功！')
 
-                                    if (global.loginPage) {
-                                        that.$router.push({name: global.loginPage, query: global.loginPageQuery})
-                                    } else {
-                                        that.$router.push({name: 'home'})
+                                    var im = IM
+                                    var userLoginParam = that.userLoginParam
+                                    im.id = res.emchatId
+                                    if (userLoginParam.oldUserId && userLoginParam.oldUserId != global.userId) {
+                                        im.secondId = userLoginParam.oldChatId
+                                        im.mergeAccount(userLoginParam.oldUserId, global.userId)
                                     }
+                                    var delay = false
+                                    if (im.conn && im.conn.isOpened()) {
+                                        im.closeConn()
+                                        delay = true
+                                    }
+                                    setTimeout(function () {
+                                        im.createConn()
+                                        if (im.secondId) {
+                                            im.createConn(1)
+                                        }
+                                        Global.redirectToLastPage(that.$router)
+                                    }, delay ? 500 : 1)
                                 } else if (res.statusCode == '935801') {
                                     Util.localStorage('user-register-param', JSON.stringify(param))
                                     Global.getOauthCode('', '9358', '9358_login', 'base')
@@ -206,7 +218,7 @@
                             that.testCodeBtnText = '重新发送(' + count + 's)'
                         }
                     }, 1000)
-                    that.$http.get(that.getTestCodeUrl, {params: {mobile: that.tel}})
+                    that.$http.get('../api/v1/icode', {params: {mobile: that.tel}})
                 })
             }
         }

@@ -16,7 +16,7 @@ npm run build
 
 ============ sub page list ============
 === 2016.11.17
-account
+account-------------------------
 accountDetail
 bindPhone
 chat
@@ -27,7 +27,7 @@ clubList-search
 clubProfile-------------------------
 collect-----------------------------
 comment-------------------------
-confirmLogin
+confirmLogin---------------------
 confirmOrder
 contacts
 coupon
@@ -40,7 +40,7 @@ integral-------------------------
 integralDetail----------------------
 integralExplain--------------------
 inviteCode
-login
+login-------------------
 map---------------------
 member-------------------
 message
@@ -57,8 +57,8 @@ qrPay
 qrPayCode
 qrPayComplete
 recharge
-recoverPassword
-register
+recoverPassword------------------
+register----------------------
 review--------------------------
 robProjectDetail
 robProjectSuccess

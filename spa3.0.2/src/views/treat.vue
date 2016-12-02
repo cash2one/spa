@@ -6,7 +6,7 @@
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>我要请客</div>
         <div class="treat-area">
             <div>
-                <div>授权金额<span>(可用金额：{{accountMoney}})</span></div>
+                <div>授权金额<span>(可用金额：{{ accountMoney }})</span></div>
                 <div><input type="number" v-model="money" pattern="[0-9]*" @input="doInputOfMoney()"/>元</div>
                 <div>注：朋友最多可用金额，授权完成后，将冻结授权金额。朋友使用后或者取消授权后将取消解冻。</div>
             </div>

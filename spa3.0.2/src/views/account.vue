@@ -3,61 +3,79 @@
 </style>
 <template>
     <div class="page" id="account-page" :style="{ height : global.winHeight+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>所有账户</div>
-        <router-link class="jump-qrcode" v-show="dataList.length>0" :to="{ name : 'qrPayCode' }">
-            <div></div>
-            <div>付款二维码</div>
-            <div></div>
-        </router-link>
-        <div class="list" :style="{ height : (global.winHeight-(dataList.length>0 ? 5.722 : 2.611)*global.winScale*16)+'px' }">
-            <router-link class="list-item" v-for="item in dataList" :to="{ name : 'accountDetail', query : { accountId : item.id } }">
-                <div class="header">
-                    <span :style="{ backgroundImage : 'url('+(item.clubImage || global.defaultClubLogo )+')' }"></span><span>{{ item.clubName }}</span><i></i>
+        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>所有会员卡</div>
+        <div class="search-area">
+            <input type="text" placeholder="输入会所名称" maxlength="50" v-model="searchText" @keypress.enter="doClickSearch()"/>
+            <span @click="doClickSearch()"></span>
+        </div>
+        <div class="list">
+            <router-link class="list-item" :class="'tpl-0'+item.styleId" v-for="(item,index) in dataList" v-show="showList[index]" :to="{ name : 'accountDetail', query : { accountId : item.id } }">
+                <div>
+                    <div>
+                        <div :style="{ backgroundImage : 'url('+(item.clubImage || global.defaultClubLogo)+')' }"></div>
+                        <div>{{ item.clubName }}</div>
+                    </div>
+                    <div>
+                        <div><span :class="{ vip : item.isVip }">{{ item.isVip ? 'vip' : item.discount }}</span>{{ item.isVip ? '' : '折'}}</div>
+                        <div>{{ item.memberTypeName }}会员</div>
+                    </div>
                 </div>
-                <div class="item expire">
-                    <div><span>可用金额</span><span>{{ item.amount | MoneyFormatter }}</span></div>
-                    <div><span>冻结金额</span><span>{{ item.freezeAmount | MoneyFormatter }}</span></div>
+                <div>
+                    <div>ID：{{ item.cardNo }}</div>
+                    <div></div>
                 </div>
             </router-link>
-            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
-            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
-            <div class="nullData" v-show="dataList.length==0 && !showDataLoadTip">
-                <div v-show="!global.loading"></div>
-                <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
-            </div>
+        </div>
+        <div class="nullData" v-show="noData">
+            <div v-show="!global.loading"></div>
+            <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
         </div>
     </div>
 </template>
 <script>
     import { Global } from '../libs/global'
     import Util from '../libs/util'
-    import MoneyFormatter from '../filters/money-formatter'
 
     module.exports = {
         data: function () {
             return {
                 global: Global.data,
                 dataList: [],
-                showDataLoadTip: false, // 显示数据正在加载
-                showFinishLoadTip: false // 显示已经加载完成
+                showList: [],
+                searchText: '',
+                noData: true
             }
         },
         created: function () {
             var that = this
             var global = that.global
-            that.showDataLoadTip = true
             that.$http.get('../api/v2/finacial/accounts').then(function (res) {
-                that.showDataLoadTip = false
                 res = res.body
-                global.loading = false
                 if (res.statusCode == 200) {
                     res = res.respData
+                    var showList = []
+                    var item
+                    for (var i = 0; i < res.length; i++) {
+                        item = res[i]
+                        if (item.discount / 100 >= 10) {
+                            item.isVip = true
+                        } else {
+                            item.isVip = false
+                            item.discount = (item.discount / 100).toFixed(2).replace(/0*$/g, '').replace(/\.$/g, '')
+                        }
+                        item.cardNo = Util.spaceFormat(item.cardNo)
+                        showList.push(true)
+                    }
                     that.dataList = res
-                    that.showFinishLoadTip = res.length > 0
+                    that.showList = showList
+                    if (res.length > 0) {
+                        that.noData = false
+                    }
                 } else {
                     Util.tipShow(res.msg || global.loadError)
                     return that.$router.back()
                 }
+                global.loading = false
             }, function () {
                 Util.tipShow(global.loadError)
                 return that.$router.back()
@@ -66,10 +84,35 @@
         methods: {
             doClickPageBack: function () {
                 history.back()
+            },
+            doClickSearch: function () {
+                var that = this
+                var searchText = that.searchText.trim()
+                var list = that.dataList
+                var showList = []
+                var k
+                if (list.length > 0) {
+                    if (searchText) {
+                        var item
+                        that.noData = true
+                        for (k = 0; k < list.length; k++) {
+                            item = list[k]
+                            if (item.clubName.indexOf(searchText) >= 0) {
+                                showList.push(true)
+                                that.noData = false
+                            } else {
+                                showList.push(false)
+                            }
+                        }
+                    } else {
+                        that.noData = false
+                        for (k = 0; k < list.length; k++) {
+                            showList.push(true)
+                        }
+                    }
+                    that.showList = showList
+                }
             }
-        },
-        filters: {
-            MoneyFormatter: MoneyFormatter
         }
     }
 </script>
