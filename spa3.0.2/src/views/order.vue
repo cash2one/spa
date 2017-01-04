@@ -27,12 +27,8 @@
                     <span class='expandBtn' v-if="order.orderType=='paid' && (order.status=='submit' || order.status=='accept' || order.status=='complete')" @click="doShowQrCode(order)" :class="{expand:order.qrShow}">{{order.qrShow?'收起':'展开'}}</span>
                 </div>
 
-                <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i>
-                    <div>加载数据</div>
-                </div>
-                <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }">
-                    <div>已经加载全部数据</div>
-                </div>
+                <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><div>加载数据</div></div>
+                <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
                 <div class="nullData" v-show="orderList.length==0 && !isAddData">
                     <div></div>
                     <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>

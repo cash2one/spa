@@ -40,12 +40,8 @@
                     <div></div>
                 </div>
             </router-link>
-            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i>
-                <div>加载数据</div>
-            </div>
-            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }">
-                <div>已经加载全部数据</div>
-            </div>
+            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><div>加载数据</div></div>
+            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
             <div class="nullData" v-show="techList.length==0 && !isAddData">
                 <div v-show="!global.loading"></div>
                 <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
@@ -114,24 +110,6 @@
                 storeDataList: ['techList', 'showSearchInput', 'currPage', 'stateActiveId', 'scoreActiveId', 'itemActiveId', 'searchTechName', 'selectedCategory', 'selectItemName', 'currSelectedCategory', 'currSelectItemName', 'currItemActiveId', 'showFinishLoadTip', 'isDataAddEnd', 'showSelectScore', 'showServiceItemSelectArea']
             }
         },
-        mounted: function () {
-            var that = this
-            var global = that.global
-            var pageData = global.pageData['technicianList']
-            if (pageData) {
-                setTimeout(function () {
-                    console.log('scroll top：' + pageData['scrollTop'])
-                    that.$refs.listEle.scrollTop = pageData['scrollTop']
-                }, 100)
-            }
-            // 获取服务项目数据
-            that.$http.get('../api/v2/club/{clubId}/service/select', {params: {clubId: global.clubId}}).then(function (res) {
-                res = res.body
-                if (res && res.length) {
-                    that.serviceItems = res
-                }
-            })
-        },
         created: function () {
             var that = this
             var global = that.global
@@ -168,6 +146,26 @@
                     that.$router.back()
                 })
             }
+        },
+        mounted: function () {
+            var that = this
+            var global = that.global
+            var pageData = global.pageData['technicianList']
+            if (pageData) {
+                that.$nextTick(function () {
+                    setTimeout(function () {
+                        console.log('scroll top：' + pageData['scrollTop'])
+                        that.$refs.listEle.scrollTop = pageData['scrollTop']
+                    }, 100)
+                })
+            }
+            // 获取服务项目数据
+            that.$http.get('../api/v2/club/{clubId}/service/select', {params: {clubId: global.clubId}}).then(function (res) {
+                res = res.body
+                if (res && res.length) {
+                    that.serviceItems = res
+                }
+            })
         },
         methods: {
             doSwitchSearchInput: function () {

@@ -2,33 +2,63 @@
     @import '../styles/page/accountDetail.css';
 </style>
 <template>
-    <div class="page" id="account-detail-page">
+    <div class="page" id="account-detail-page" :class="{ noMember : !hasMember }" :style="{ 'min-height' : global.winHeight+'px' }">
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>会员卡详情</div>
-        <div class="info-item item">
-            <div>
-                <div class="available-icon"></div>
-                <div>可用金额</div>
-                <div>{{availableMoney}}</div>
+        <template v-if="hasMember">
+            <router-link v-if="memberCard" class="member-card" :class="'tpl-0'+memberCard.styleId" :to="{ name : 'qrPayCode' , query : { accountId : accountId }}">
+                <div>
+                    <div>
+                        <div :style="{ backgroundImage : 'url('+(memberCard.clubImage || global.clubLogoUrl || global.defaultClubLogo)+')' }"></div>
+                        <div>{{ memberCard.clubName || global.clubName }}</div>
+                    </div>
+                    <div>
+                        <div><span :class="{ vip : memberCard.isVip }">{{ memberCard.isVip ? 'vip' : memberCard.discount }}</span>{{ memberCard.isVip ? '' : '折'}}</div>
+                        <div>{{ memberCard.memberTypeName || memberCard.name }}会员</div>
+                    </div>
+                </div>
+                <div>
+                    <div>ID：{{ memberCard.cardNo }}</div>
+                    <div></div>
+                </div>
+            </router-link>
+            <div class="money-info">
+                <div><span>可用金额：</span><span>{{ availableMoney }}</span></div>
+                <div><span>冻结金额：</span><span>{{ frozenMoney }}</span></div>
             </div>
-            <div>
-                <div class="frozen-icon"></div>
-                <div>冻结金额</div>
-                <div>{{frozenMoney}}</div>
+            <router-link class="record-item right-arrow-item item" :to="{ name : 'tradeRecords' , query : { accountId : accountId }}">交易记录</router-link>
+            <router-link class="invite-item right-arrow-item item" :to="{ name : 'treat' , query : { accountId : accountId }}">我要请客</router-link>
+            <div class="explain-info">
+                <div>会员说明：</div>
+                <ul><li v-for="desc in descList">{{ desc }}</li></ul>
             </div>
-            <a @click="doChargeClick()">充值</a>
-        </div>
-        <router-link class="qrcode-item item" :to="{ name : 'qrPayCode' , query : { accountId : accountId }}">
-            <span>付款二维码</span>
-            <div></div>
-        </router-link>
-        <router-link class="record-item item" :to="{ name : 'tradeRecords' , query : { accountId : accountId }}">
-            <span>交易记录</span>
-            <div class="right-arrow"></div>
-        </router-link>
-        <router-link class="invite-item item" :to="{ name : 'treat' , query : { accountId : accountId }}">
-            <span>我要请客</span>
-            <div class="right-arrow"></div>
-        </router-link>
+        </template>
+        <template v-else>
+            <div class="none-member">
+                <div>
+                    <div>您当前没有会员卡记录哦~</div>
+                    <div>开卡请到会所门店</div>
+                </div>
+            </div>
+            <div class="member-list-title" v-show="cardList.length>0">会所的会员卡</div>
+            <div class="member-list" v-show="cardList.length>0">
+                <div v-for="item in cardList" class="member-card" :class="'tpl-0'+item.styleId">
+                    <div>
+                        <div>
+                            <div :style="{ backgroundImage : 'url('+(item.clubImage || global.clubLogoUrl || global.defaultClubLogo)+')' }"></div>
+                            <div>{{ item.clubName || global.clubName }}</div>
+                        </div>
+                        <div>
+                            <div><span :class="{ vip : item.isVip }">{{ item.isVip ? 'vip' : item.discount }}</span>{{ item.isVip ? '' : '折'}}</div>
+                            <div>{{ item.memberTypeName || item.name }}会员</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div>ID：{{ item.cardNo }}</div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+        </template>
     </div>
 </template>
 <script>
@@ -39,35 +69,62 @@
         data: function () {
             return {
                 global: Global.data,
+                hasMember: true,
                 accountId: '',
                 clubId: '',
-                queryDataUrl: '../api/v2/finacial/',
                 availableMoney: '-',
-                frozenMoney: '-'
+                frozenMoney: '-',
+                descList: [],
+                memberCard: null,
+                cardList: []
             }
         },
         created: function () {
             var that = this
             var global = that.global
             var pageParams = global.currPage.query
+            var queryDataUrl = '../api/v2/finacial/'
+            var isFromClub = false
+
             that.accountId = pageParams.accountId || ''
             if (!that.accountId && !global.clubId) {
+                Util.tipShow(global.visitError)
                 return that.$router.back()
             } else if (that.accountId) {
-                that.queryDataUrl += 'account/' + that.accountId
+                isFromClub = false
+                queryDataUrl += 'account/' + that.accountId
             } else {
-                that.queryDataUrl += 'club/account'
+                isFromClub = true
+                queryDataUrl += 'club/account'
             }
-            global.loading = true
-            that.$http.get(that.queryDataUrl, {params: {clubId: global.clubId}}).then(function (res) {
+            that.$http.get(queryDataUrl, {params: {clubId: global.clubId}}).then(function (res) {
                 res = res.body
-                global.loading = false
                 if (res.statusCode == 200 && res.respData) {
                     res = res.respData
-                    that.accountId = res.id
-                    that.availableMoney = (res.amount / 100).toFixed(2)
-                    that.frozenMoney = (res.freezeAmount / 100).toFixed(2)
-                    that.clubId = res.clubId
+
+                    if (!res.info && isFromClub) {
+                        that.hasMember = false
+                        if (res.memberTypes) {
+                            var list = res.memberTypes
+                            var arr = []
+                            for (var k = 0; k < list.length; k++) {
+                                arr.push(that.doHandlerMemberCard(list[k]))
+                            }
+                            that.cardList = arr
+                        }
+                    } else {
+                        that.hasMember = true
+                        if (isFromClub) {
+                            res = res.info
+                        }
+                        that.accountId = res.id
+                        that.availableMoney = (res.amount / 100).toFixed(2)
+                        that.frozenMoney = (res.freezeAmount / 100).toFixed(2)
+                        that.clubId = res.clubId
+                        that.descList = res.description.split(/[\f\n]/g)
+                        that.memberCard = that.doHandlerMemberCard(res)
+                    }
+                    global.loading = false
                 } else {
                     Util.tipShow(global.loadError)
                     that.$router.back()
@@ -78,14 +135,15 @@
             doClickPageBack: function () {
                 history.back()
             },
-            doChargeClick: function () {
-                var that = this
-                var global = that.global
-                if (global.userAgent.isWX) {
-                    that.$router.push({name: 'recharge', query: {accountId: that.accountId, clubId: that.clubId}})
+            doHandlerMemberCard: function (cardData) {
+                if (cardData.discount / 100 >= 10) {
+                    cardData.isVip = true
                 } else {
-                    Util.tipShow('使用微信打开才能充值！')
+                    cardData.isVip = false
+                    cardData.discount = (cardData.discount / 100).toFixed(2).replace(/0*$/g, '').replace(/\.$/g, '')
                 }
+                cardData.cardNo = Util.spaceFormat(cardData.cardNo || '8888888888888888')
+                return cardData
             }
         }
     }

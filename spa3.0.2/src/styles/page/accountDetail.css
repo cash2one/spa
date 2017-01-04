@@ -1,71 +1,64 @@
-div#account-detail-page div.item, div#account-detail-page a.item {
-  display: block;
-  position: relative;
-  height: 2.444rem;
-  line-height: 2.444rem;
-  padding-left: 0.883rem;
-  background-color: #fff;
-  margin-top: 0.667rem;
-  border-top: 1px solid #e0e0e0;
-  border-bottom: 1px solid #e0e0e0;
-  font-size: 0.889rem;
-  color: #424242; }
-  div#account-detail-page div.item div.right-arrow, div#account-detail-page a.item div.right-arrow {
-    position: absolute;
-    right: 0.833rem;
-    top: 50%;
-    margin-top: -0.22rem; }
-
-div#account-detail-page a.qrcode-item > div {
-  position: absolute;
-  width: .889rem;
-  height: .889rem;
-  right: 0.833rem;
-  top: 50%;
-  margin-top: -0.4445rem;
-  background-size: 0.889rem 0.889rem;
-  background-image: url("../../images/account/icon_erweima.png");
-  background-repeat: no-repeat; }
-
-div#account-detail-page div.info-item {
-  height: auto;
-  margin-top: 0;
-  border-top: none;
-  padding: 0.556rem 0.883rem; }
-  div#account-detail-page div.info-item > div {
-    height: 1.944rem;
-    line-height: 1.944rem;
-    display: -webkit-box;
-    display: -moz-box;
-    -webkit-box-align: center;
-    -moz-box-align: center; }
-    div#account-detail-page div.info-item > div > div {
-      margin-right: .5rem; }
-      div#account-detail-page div.info-item > div > div:first-child {
-        width: 1.056rem;
-        height: 1.056rem;
-        border-radius: 50%;
-        background-size: 1.056rem 1.056rem;
-        background-repeat: no-repeat; }
-      div#account-detail-page div.info-item > div > div.available-icon {
-        background-image: url("../../images/account/icon_available.png"); }
-      div#account-detail-page div.info-item > div > div.frozen-icon {
-        background-image: url("../../images/account/icon_blocked.png"); }
-      div#account-detail-page div.info-item > div > div:nth-of-type(2) {
-        color: #616161;
-        font-size: .778rem; }
-      div#account-detail-page div.info-item > div > div:last-child {
-        font-size: .889rem;
+div#account-detail-page {
+  background: #f5f5f5; }
+  div#account-detail-page.noMember {
+    background: #fff; }
+  div#account-detail-page div.page-title {
+    background: #ededed; }
+  div#account-detail-page a.item {
+    display: block;
+    height: 2.667rem;
+    line-height: 2.667rem;
+    padding-left: 0.883rem;
+    background-color: #fff;
+    margin-top: 0.667rem;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 0.889rem;
+    color: #424242; }
+  div#account-detail-page div.money-info {
+    margin-top: .667rem;
+    padding: 0 .889rem;
+    background-color: #fff; }
+    div#account-detail-page div.money-info > div {
+      height: 2.667rem;
+      line-height: 2.667rem;
+      font-size: .889rem;
+      color: #616161; }
+      div#account-detail-page div.money-info > div > span:nth-of-type(2) {
         color: #212121; }
-  div#account-detail-page div.info-item > a {
-    position: absolute;
-    right: .833rem;
-    width: 2.5rem;
-    height: 1.333rem;
-    top: 1rem;
-    background-color: #fb5549;
-    color: #fff;
-    font-size: .667rem;
-    text-align: center;
-    line-height: 1.333rem;
-    border-radius: 4px; }
+      div#account-detail-page div.money-info > div:nth-of-type(1) {
+        border-bottom: 1px solid #e0e0e0; }
+  div#account-detail-page .member-card > div:nth-of-type(2) > div:nth-of-type(1) {
+    font-size: .889rem; }
+  div#account-detail-page div.explain-info {
+    padding: 1rem .889rem;
+    font-size: .778rem; }
+    div#account-detail-page div.explain-info > div {
+      color: #212121; }
+    div#account-detail-page div.explain-info > ul {
+      margin: 0.111rem 0 0;
+      list-style: none;
+      padding-left: 0;
+      color: #616161; }
+  div#account-detail-page .none-member {
+    width: 20rem;
+    height: 12.972rem;
+    background: #f5f5f5 center 40%;
+    background-size: 6.472rem 5.889rem;
+    background-image: url("../../images/account/none-member.png");
+    background-repeat: no-repeat; }
+    div#account-detail-page .none-member > div {
+      text-align: center;
+      padding-top: 8.889rem;
+      font-size: .778rem;
+      color: #4d4d4d;
+      line-height: 1.3; }
+  div#account-detail-page .member-list-title {
+    font-size: .778rem;
+    color: #4d4d4d;
+    line-height: 1;
+    padding: .556rem .667rem;
+    border-top: 1px solid #e0e0e0; }
+  div#account-detail-page .member-list {
+    margin-top: -.5rem;
+    padding-bottom: .778rem; }

@@ -29,7 +29,7 @@
                 </div>
                 <div v-show="item.comment">{{item.comment}}</div>
             </div>
-            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
+            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><div>加载数据</div></div>
             <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已加载完全部数据</div></div>
             <div class="nullData" v-show="comments.length==0 && !isAddData">
                 <div v-show="!global.loading"></div>

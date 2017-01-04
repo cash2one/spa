@@ -15,7 +15,7 @@
                     <div>授权手机<span>{{ item.telStr }}</span></div>
                 </div>
             </router-link>
-            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
+            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><div>加载数据</div></div>
             <div class="finish-load-tip" :class="{ none : !showFinishLoadTip || dataList.length==0 }"><div>已经加载全部数据</div></div>
             <div class="nullData" v-show="dataList.length==0 && !isAddData">
                 <div v-show="!global.loading"></div>
@@ -46,38 +46,25 @@
                 showFinishLoadTip: false, // 显示已经加载完成
                 isDataAddEnd: false, // 数据是否已加载完
                 isAddData: false, // 数据是否正在加载
-                storeDataList: ['dataList', 'currPage', 'showFinishLoadTip', 'isDataAddEnd', 'showFinishLoadTip', 'clubId']
+                storeDataList: ['dataList', 'currPage', 'showFinishLoadTip', 'isDataAddEnd', 'showFinishLoadTip', 'clubId'],
+                currScrollTop: 0
             }
         },
-        created: function () {
+        mounted: function () {
             var that = this
             var global = that.global
             var pageParams = global.currPage.query
-            var pageData = global.pageData['treatRecords']
+            var pageData = global.pageData.treatRecords
 
             that.clubId = pageParams.clubId || global.clubId
             if (pageData && that.clubId == pageData.clubId) {
                 for (var key in pageData) { // 从数据缓存中加载数据
                     that[key] = pageData[key]
                 }
-            } else {
-                that.$router.back()
-            }
-        },
-        mounted: function () {
-            var that = this
-            var global = that.global
-            var k
-            var pageData = global.pageData['treatRecords']
-
-            if (pageData) {
-                setTimeout(function () {
-                    that.$refs.listEle.scrollTop = pageData['scrollTop']
-                }, 100)
                 var changeObj = pageData.changeStatusRecord
                 if (changeObj) {
                     var dataList = that.dataList
-                    for (k = 0; k < dataList.length; k++) {
+                    for (var k = 0; k < dataList.length; k++) {
                         if (dataList[k]['id'] == changeObj.id) {
                             if (changeObj.status == 'CANCLED') {
                                 dataList[k]['status'] = 'CANCLED'
@@ -87,8 +74,17 @@
                         }
                     }
                 }
-            } else {
+                that.$nextTick(function () {
+                    setTimeout(function () {
+                        that.$refs.listEle.scrollTop = pageData.scrollTop
+                        global.loading = false
+                    }, 100)
+                })
+            } else if (that.clubId) {
                 that.queryRecord()
+            } else {
+                Util.tipShow(global.visitError)
+                that.$router.back()
             }
         },
         methods: {
@@ -132,6 +128,9 @@
                         that.currPage = page
                         that.isAddData = false
                         that.showDataLoadTip = false
+                        if (global.loading) {
+                            global.loading = false
+                        }
                     } else {
                         Util.tipShow(global.loadError)
                     }
@@ -142,6 +141,7 @@
             doHandlerListScroll: function () {
                 var that = this
                 var listEle = that.$refs.listEle
+                that.currScrollTop = listEle.scrollTop
                 if (!that.isDataAddEnd && listEle.scrollTop + listEle.clientHeight * 1.4 > listEle.scrollHeight) {
                     that.queryRecord()
                 }
@@ -152,12 +152,12 @@
             var pageData = that.global.pageData
             if (!pageData.treatRecords) pageData.treatRecords = {}
             pageData = pageData.treatRecords
-            var status
+            var storeData
             for (var k = 0; k < that.storeDataList.length; k++) {
-                status = that.storeDataList[k]
-                pageData[status] = that[status]
+                storeData = that.storeDataList[k]
+                pageData[storeData] = that[storeData]
             }
-            pageData['scrollTop'] = that.$refs.listEle.scrollTop
+            pageData.scrollTop = that.currScrollTop
         }
     }
 </script>

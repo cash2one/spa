@@ -9,9 +9,7 @@
         </div>
         <div class="list" :style="{ height : (global.winHeight-7.491*global.winScale*16)+'px' }">
             <club v-for="item in dataList" :club-obj="item" key="item.id"></club>
-            <div class="data-load-tip" :class="{ none : !dataLoading }"><i></i>
-                <div>加载数据</div>
-            </div>
+            <div class="data-load-tip" :class="{ none : !dataLoading }"><div>加载数据</div></div>
             <div class="nullData" v-show="dataList.length==0 && !dataLoading">
                 <div></div>
                 <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>

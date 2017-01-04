@@ -9,7 +9,7 @@
                 <div><div :style="{ backgroundImage : 'url('+(item.clubImage || global.defaultClubLogo)+')' }"></div>{{ item.clubName || '小摩豆会所' }}<i></i></div>
                 <div><span>剩余积分</span>{{ item.amount }}</div>
             </router-link>
-            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i><div>加载数据</div></div>
+            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><div>加载数据</div></div>
             <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
             <div class="nullData" v-show="dataList.length==0 && !isAddData">
                 <div v-show="!global.loading"></div>

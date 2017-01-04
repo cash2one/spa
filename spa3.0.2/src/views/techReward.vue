@@ -7,13 +7,17 @@
             <div class="page-title"><a class="back" @click="doClickPageBack()"></a>技师打赏</div>
             <div class="top-tip"><div></div></div>
             <div class="reward-list">
-                <div v-for="item in moneyList" class="money" @click="doSelectReward('money',item)" :class="{ active : selectType=='money' && selectVal==item }">{{ item }}元</div>
+                <div v-for="(item, index) in moneyList" class="money" @click="doSelectReward('money',index)" :class="{ active : selectType=='money' && selectVal==index }">
+                    <div>{{ item.value }}</div>
+                    <div>{{ item.label }}</div>
+                </div>
                 <div v-for="item in giftList" class="gift" :class="{ active : selectType=='gift' && selectVal==item }" @click="doSelectReward('gift',item)">
                     <div><img :src="item.iconUrl"/></div>
                     <div>{{ item.ratio }}积分</div>
                 </div>
             </div>
             <div class="submit-button" :class="submitStatusCls" @click="doClickSubmitBtn()">{{ submitBtnText }}</div>
+            <div class="submit-button view-button" @click="doClickViewClub()">查看会所</div>
         </div>
         <credit-tip></credit-tip>
     </div>
@@ -27,18 +31,12 @@
         data: function () {
             return {
                 global: Global.data,
-                getOpenIdUrl: '../api/v2/wx/oauth2/openid',
-                getTechInfoUrl: '../api/v2/club/technician/',
-                getGiftListUrl: '../api/v2/credit/gift/list',
-                sendGiftUrl: '../api/v2/credit/gift/send',
-                rewardUrl: '../api/v2/wx/pay/user_reward',
-                payResUrl: '../api/v2/wx/pay/pay_result',
                 submitStatusCls: '',
                 submitBtnText: '打赏',
                 selectType: 'money',
                 selectVal: 1,
                 currSelectGiftValue: 0,
-                moneyList: [1, 3, 6, 9],
+                moneyList: [{value: 1.68, label: '一路发'}, {value: 5.20, label: '我爱你'}, {value: 8.88, label: '土豪赏'}, {value: 18.8, label: '要抱抱'}],
                 giftList: [],
                 techInfo: null,
                 techId: '',
@@ -58,16 +56,18 @@
 
             that.techId = params.techId
             if (!that.techId) {
-                Util.tipShow(global.visitErrori)
+                Util.tipShow(global.visitError)
                 that.$router.back()
             } else {
-                that.getTechInfoUrl += that.techId
                 that.commentId = params.commentId
                 that.paramData = Util.localStorage('tech-reward-param')
                 that.payAuthCode = params.code
                 that.clubId = global.clubId
-                if (that.paramData && that.payAuthCode) {
-                    that.$http.post(that.getOpenIdUrl, {
+                global.isFollowed = !!(global.isFollowed || Util.localStorage('spa_user_isFollowed') - 0 || false)
+
+                if (global.userAgent.isWX && that.paramData && that.payAuthCode) {
+                    // 获取openID 与其他页面获取openid的接口不一样
+                    that.$http.post('../api/v2/wx/oauth2/user/openid', {
                         code: that.payAuthCode,
                         scope: 'snsapi_userinfo',
                         wxmp: '9358',
@@ -85,46 +85,55 @@
                             that.$router.back()
                         }
                     })
+                } else {
+                    that.init()
                 }
-            }
-        },
-        mounted: function () {
-            var that = this
-            // 获取技师信息
-            that.$http.get(that.getTechInfoUrl).then(function (res) {
-                res = res.body
-                that.techInfo = res.info
-                that.techInfo.emchatId = res.emchatId
-                that.techInfo.clubName = res.clubName
-                that.clubId = res.info.clubId
-            })
-
-            // 获取积分系统开关
-            Global.getClubSwitches(that.clubId).then(function (cfg) {
-                if (cfg.creditSwitch) {
-                    // 获取积分礼物数据
-                    that.$http.get(that.getGiftListUrl).then(function (giftRes) {
-                        giftRes = giftRes.body
-                        if (giftRes.statusCode == 200) {
-                            that.giftList = giftRes.respData
-                        }
-                    })
-                    // 获取当前账户积分
-                    Global.getCreditAccount(that.clubId).then(function (creditRes) {
-                        if (creditRes && creditRes[0]) {
-                            that.currIntegralAccount = creditRes[0].amount
-                        }
-                    })
-                }
-            })
-
-            if (that.paramData) {
-                that.selectType = 'money'
-                that.selectVal = that.paramData
-                that.doClickSubmitBtn()
             }
         },
         methods: {
+            init: function () {
+                var that = this
+                var global = that.global
+
+                // 获取技师信息
+                that.$http.get('../api/v2/club/technician/{techId}', {params: {techId: that.techId}}).then(function (res) {
+                    res = res.body
+                    that.techInfo = res.info
+                    that.techInfo.emchatId = res.emchatId
+                    that.techInfo.clubName = res.clubName
+                    that.clubId = res.info.clubId
+                    global.loading = false
+                })
+
+                // 获取积分系统开关
+                Global.getClubSwitches(that.clubId).then(function (cfg) {
+                    if (cfg.creditSwitch) {
+                        // 获取积分礼物数据
+                        that.$http.get('../api/v2/credit/gift/list').then(function (giftRes) {
+                            giftRes = giftRes.body
+                            if (giftRes.statusCode == 200) {
+                                giftRes = giftRes.respData
+                                if (giftRes.length > 4) { // 只显示前4个
+                                    giftRes = giftRes.slice(0, 4)
+                                }
+                                that.giftList = giftRes
+                            }
+                        })
+                        // 获取当前账户积分
+                        Global.getCreditAccount(that.clubId).then(function (creditRes) {
+                            if (creditRes && creditRes[0]) {
+                                that.currIntegralAccount = creditRes[0].amount
+                            }
+                        })
+                    }
+                })
+
+                if (that.paramData) {
+                    that.selectType = 'money'
+                    that.selectVal = that.paramData
+                    that.doClickSubmitBtn()
+                }
+            },
             doClickPageBack: function () {
                 history.back()
             },
@@ -148,7 +157,7 @@
                     } else {
                         that.submitStatusCls = 'processing'
                         that.submitBtnText = '打赏中...'
-                        that.$http.get(that.sendGiftUrl, {
+                        that.$http.get('../api/v2/credit/gift/send', {
                             params: {
                                 clubId: that.clubId,
                                 emchatId: that.techInfo.emchatId,
@@ -169,8 +178,8 @@
                 } else { // 打赏金钱
                     that.submitStatusCls = 'processing'
                     that.submitBtnText = '打赏中...'
-                    that.$http.post(that.rewardUrl, {
-                        consumeMoney: that.selectVal,
+                    that.$http.post('../api/v2/wx/pay/user_reward', {
+                        consumeMoney: that.moneyList[that.selectVal],
                         openId: global.openId,
                         clubId: that.clubId,
                         consumeType: 'user_reward',
@@ -205,24 +214,29 @@
             onBridgeReady: function () {
                 var that = this
                 var payRequestObj = that.payRequestObj
+
                 WeixinJSBridge.invoke('getBrandWCPayRequest', {
-                    'appId': payRequestObj.appId,     // 公众号名称
-                    'timeStamp': payRequestObj.timeStamp + '',  // 时间
-                    'nonceStr': payRequestObj.nonceStr, // 随机串
-                    'package': payRequestObj.package,
-                    'signType': payRequestObj.signType,   // 微信签名方式
-                    'paySign': payRequestObj.paySign
+                    appId: payRequestObj.appId,
+                    timeStamp: payRequestObj.timeStamp + '',
+                    nonceStr: payRequestObj.nonceStr,
+                    package: payRequestObj.package,
+                    signType: payRequestObj.signType,
+                    paySign: payRequestObj.paySign
                 }, function (res) {
                     that.submitStatusCls = ''
                     that.submitBtnText = '打赏'
                     if (res.err_msg.indexOf('ok') >= 0) { // 支付成功之后
-                        that.$http.post(that.payResUrl, {prePayId: that.prePayId}).then(function () {
+                        that.$http.post('../api/v2/wx/pay/pay_result', {prePayId: that.prePayId}).then(function () {
                             console.log('发送一条打赏消息给技师')
                         })
                     } else {
                         Util.tipShow('未能成功支付！')
                     }
                 })
+            },
+            doClickViewClub: function () { // 点击查看会所
+                var that = this
+                that.$router.push({path: '/' + that.clubId + '/home'})
             }
         }
     }

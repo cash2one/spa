@@ -63,8 +63,8 @@
                     <p>取消授权后，授权码将作废，同时会通知到您的朋友。</p>
                 </div>
                 <div :class="{ processing : isProcessing }">
-                    <a class="cancel-btn" @click="doClickAbortCancel()">放弃取消</a>
-                    <a class="sure-btn" @click="doClickConfirmCancel()">确认取消</a>
+                    <a class="cancel-btn" @click="doClickAbortCancel()">放弃</a>
+                    <a class="sure-btn" @click="doClickConfirmCancel()">确认</a>
                     <div>取消授权中...</div>
                 </div>
             </div>
@@ -119,6 +119,7 @@
                         that.cancelDate = res.cancelDate
                         that.usedDate = res.usedDate
                         that.usedAmount = (res.usedAmount / 100).toFixed(2)
+                        global.loading = false
                     } else {
                         Util.tipShow(res.msg || global.loadError)
                         return that.$router.back()

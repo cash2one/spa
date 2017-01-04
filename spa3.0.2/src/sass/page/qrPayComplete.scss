@@ -20,12 +20,16 @@ div#qrpay-complete-page{
             height: 1.556rem;
             @include img("../../images/qrPay/icon_success.png",cover)
           }
+          >span{
+            margin:0 0.5rem;
+          }
         }
         &:nth-of-type(2){
           color: #424242;
           >span{
             &:first-child{
               font-size: 1.889rem;
+              margin-right:0.3rem;
             }
           }
         }
@@ -87,6 +91,9 @@ div#qrpay-complete-page{
     height: 6.611rem;
     padding: 1.056rem .667rem;
     font-size: .778rem;
+    color:#4d4d4d;
+    box-sizing: border-box;
+    resize:none;
   }
 
   div.submit-btn{

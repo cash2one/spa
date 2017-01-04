@@ -7,7 +7,7 @@
         <div class="qrcode-wrap">
             <div>
                 <div><img :src="qrCodeImgSrc"/></div>
-                <div :class="{ processing : isProcessing }" @click="refreshCode()"><span>{{timeStr}}</span></div>
+                <div :class="{ processing : isProcessing }" @click="refreshCode()"><span>{{ timeStr }}</span></div>
             </div>
         </div>
     </div>
@@ -23,7 +23,6 @@
                 global: Global.data,
                 isDirect: false,
                 isProcessing: false,
-                getCodeUrl: '../api/v2/finacial/account/pay/qrcode',
                 timer: 0,
                 timeStr: '每分钟自动更换',
                 qrCodeImgSrc: null
@@ -35,9 +34,7 @@
             var pageParams = global.currPage.query
             if (pageParams.isDirect != undefined) that.isDirect = true
             that.refreshCode()
-        },
-        beforeDestroy: function () {
-            if (this.timer) clearTimeout(this.timer)
+            global.loading = false
         },
         methods: {
             doClickPageBack: function () {
@@ -49,7 +46,7 @@
                     return Util.tipShow('正在请求二维码！')
                 }
                 that.isProcessing = true
-                that.$http.get(that.getCodeUrl).then(function (res) {
+                that.$http.get('../api/v2/finacial/account/pay/qrcode').then(function (res) {
                     res = res.body
                     that.isProcessing = false
                     if (res.statusCode == 200) {
@@ -69,7 +66,9 @@
                         }
                     } else {
                         Util.tipShow(res.msg || '请求二维码失败')
-                        if (that.timer) clearTimeout(that.timer)
+                        if (that.timer) {
+                            clearTimeout(that.timer)
+                        }
                         that.qrCodeImgSrc = 'images/common/loading_page.png'
                     }
                 })
@@ -104,6 +103,11 @@
                     str = tmp2 + '分钟' + str
                 }
                 return str
+            }
+        },
+        beforeDestroy: function () {
+            if (this.timer) {
+                clearTimeout(this.timer)
             }
         }
     }

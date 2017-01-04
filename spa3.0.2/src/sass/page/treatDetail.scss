@@ -65,7 +65,7 @@ div#treat-detail-page{
 
   .call-phone{
     background-color: #ff6501;
-    width: 2rem;
+    width: 2.2rem;
     text-align: center;
   }
 
@@ -75,7 +75,7 @@ div#treat-detail-page{
   }
 
   div.cancel-auth{
-    margin: .889rem .667rem;
+    margin: .889rem .667rem 0;
     background-color: #fb5549;
     color: #fff;
     text-align: center;
@@ -95,7 +95,7 @@ div.cancel-treat-confirm{
     overflow: hidden;
     border-radius:.5rem;
     @include ty(0,0,4px,4px,#908f8f);
-    &>div:nth-of-type(1){
+    >div:nth-of-type(1){
       text-align: center;
       border-bottom: 1px solid #d9d9d9;
       padding: 1.472rem 0;
@@ -116,9 +116,9 @@ div.cancel-treat-confirm{
         padding: 0 1.889rem;
       }
     }
-    &>div:nth-of-type(2){
+    >div:nth-of-type(2){
       overflow: hidden;
-      &>a{
+      >a{
         display: block;
         width:50%;
         float: left;

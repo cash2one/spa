@@ -31,9 +31,6 @@
         data: function () {
             return {
                 global: Global.data,
-                getOpenIdUrl: '../api/v2/wx/oauth2/openid',
-                getClubNameUrl: '../api/v2/club/',
-                consumeUrl: '../api/v2/wx/pay/consume/save',
                 logoImgUrl: '',
                 clubName: '',
                 payBtnStatusCls: 'disabled',
@@ -62,7 +59,6 @@
                 Util.tipShow(global.visitError)
                 that.$router.back()
             } else {
-                that.getClubNameUrl += that.clubId + '/clubName'
                 that.payAuthCode = pageParams.payAuthCode || global.authCode
                 var param = Util.localStorage('con-qrpay-param')
                 if (param) {
@@ -71,49 +67,44 @@
 
                 if (global.userAgent.isWX) {
                     if (!that.openId || that.openId.length < 10) {
-                        if (((+new Date()) - (global.currPage.query['_t'] || 0) > 2400) || !that.payAuthCode) {
+                        if (((+new Date()) - (pageParams['_t'] || 0) > 2400) || !that.payAuthCode) {
                             Global.getOauthCode('', '9358', 'confirm-qrpay', 'base')
                         } else {
-                            that.$http.get(that.getOpenIdUrl, {params: {
-                                code: that.payAuthCode,
-                                scope: 'snsapi_base',
-                                wxmp: '9358',
-                                openId: '',
-                                webSessionId: ''
-                            }}).then(function (res) {
-                                res = res.body
-                                if (res.statusCode == 200) {
-                                    that.openId = res.respData.openid
-                                    Util.localStorage('_qrpay_user_open_id', that.openId)
-                                } else if (res.statusCode == 40029) {
-                                    Util.getOauthCode('', '9358', 'confirm-qrpay', 'base')
-                                } else {
-                                    Util.tipShow(res.msg || '未能获取openId！')
-                                    that.$router.back()
-                                }
+                            Global.getOpenId({
+                                authCode: that.payAuthCode, state: 'confirm-qrpay'
+                            }).then(function (res) {
+                                that.openId = res
+                                Util.localStorage('_qrpay_user_open_id', res)
+                                that.init()
+                            }, function (error) {
+                                Util.tipShow(error || '未能获取OpenId！')
                             })
                         }
                     }
+                } else {
+                    that.init()
                 }
             }
         },
-        mounted: function () {
-            var that = this
-            that.$http.get(that.getClubNameUrl).then(function (res) {
-                res = res.body
-                if (res.name) {
-                    that.logoImgUrl = res.logo
-                    that.clubName = res.name
-                }
-                if (that.paramData) {
-                    Util.removeLocalStorage('con-recharge-param')
-                    that.payMoney = that.paramData.amount
-                    that.payBtnStatusCls = ''
-                    that.doClickPayBtn()
-                }
-            })
-        },
         methods: {
+            init: function () {
+                var that = this
+                var global = that.global
+                global.loading = false
+                that.$http.get('../api/v2/club/{clubId}/clubName', {params: {clubId: that.clubId}}).then(function (res) {
+                    res = res.body
+                    if (res.name) {
+                        that.logoImgUrl = res.logo
+                        that.clubName = res.name
+                    }
+                    if (that.paramData) {
+                        Util.removeLocalStorage('con-recharge-param')
+                        that.payMoney = that.paramData.amount
+                        that.payBtnStatusCls = ''
+                        that.doClickPayBtn()
+                    }
+                })
+            },
             doClickPageBack: function () {
                 history.back()
             },
@@ -142,6 +133,7 @@
                         that.payBtnStatusCls = 'disabled'
                     }
                 } else {
+                    that.payMoney = that.payMoney + ''
                     var tmp = that.payMoney.match(/\./g)
                     if (tmp && tmp.length > 1) {
                         that.payMoney = that.payMoney.slice(0, -1)
@@ -156,6 +148,10 @@
             },
             doClickPayBtn: function () {
                 var that = this
+                var global = that.global
+                if (!global.userAgent.isWX) {
+                    return Util.tipShow('只能通过微信进行支付！')
+                }
                 if (that.payBtnStatusCls != 'disabled') {
                     if (that.payBtnStatusCls == 'processing') {
                         Util.tipShow('正在处理中，请稍候...')
@@ -169,7 +165,7 @@
                             tradeChannel: 'wx',
                             openId: that.openId
                         }
-                        that.$http.post(that.consumeUrl, paramData).then(function (res) {
+                        that.$http.post('../api/v2/wx/pay/consume/save', paramData).then(function (res) {
                             res = res.body
                             if (res.statusCode == 200) {
                                 paramData.payToken = res.respData.token
@@ -201,12 +197,12 @@
                 var that = this
                 var payRequestObj = that.payRequestObj
                 WeixinJSBridge.invoke('getBrandWCPayRequest', {
-                    'appId': payRequestObj.appId,     // 公众号名称，由商户传入
-                    'timeStamp': payRequestObj.timeStamp + '',  // 时间
-                    'nonceStr': payRequestObj.nonceStr, // 随机串
-                    'package': payRequestObj.package,
-                    'signType': payRequestObj.signType,   // 微信签名方式
-                    'paySign': payRequestObj.paySign
+                    appId: payRequestObj.appId,
+                    timeStamp: payRequestObj.timeStamp + '',
+                    nonceStr: payRequestObj.nonceStr,
+                    package: payRequestObj.package,
+                    signType: payRequestObj.signType,
+                    paySign: payRequestObj.paySign
                 }, function (res) {
                     that.payBtnStatusCls = ''
                     that.payBtnText = '确认支付'

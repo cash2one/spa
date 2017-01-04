@@ -9,14 +9,10 @@
                 <div>{{ tradeType[item.bizType] }}<span :class="{ recharge : item.income }">{{ item.income ? '+' : '-' }}{{item.amount}}元</span></div>
                 <div>{{ item.createDatetime }}</div>
             </div>
-            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i>
-                <div>加载数据</div>
-            </div>
-            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip || dataList.length==0 }">
-                <div>已经加载全部数据</div>
-            </div>
+            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><div>加载数据</div></div>
+            <div class="finish-load-tip" :class="{ none : !showFinishLoadTip || dataList.length==0 }"><div>已经加载全部数据</div></div>
             <div class="nullData" v-show="dataList.length==0 && !isAddData">
-                <div></div>
+                <div v-show="!global.loading"></div>
                 <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
             </div>
         </div>
@@ -30,7 +26,6 @@
         data: function () {
             return {
                 global: Global.data,
-                getRecordsUrl: '../api/v2/finacial/account/trades/',
                 dataList: [],
                 currPage: 0,
                 pageSize: 10,
@@ -54,13 +49,11 @@
 
             that.accountId = pageParams.accountId
             if (!that.accountId) {
+                Util.tipShow(global.visitError)
                 that.$router.back()
             } else {
-                that.getRecordsUrl += that.accountId
+                this.queryRecord()
             }
-        },
-        mounted: function () {
-            this.queryRecord()
         },
         methods: {
             doClickPageBack: function () {
@@ -68,6 +61,7 @@
             },
             queryRecord: function (page) {
                 var that = this
+                var global = that.global
                 if (that.isAddData) {
                     return
                 }
@@ -79,10 +73,11 @@
                 that.showFinishLoadTip = false
                 that.isDataAddEnd = false
 
-                that.$http.get(that.getRecordsUrl, {
+                that.$http.get('../api/v2/finacial/account/trades/{accountId}', {
                     params: {
                         page: page,
-                        pageSize: that.pageSize
+                        pageSize: that.pageSize,
+                        accountId: that.accountId
                     }
                 }).then(function (res) {
                     res = res.body
@@ -101,11 +96,14 @@
                         that.currPage = page
                         that.isAddData = false
                         that.showDataLoadTip = false
+                        if (global.loading) {
+                            global.loading = false
+                        }
                     } else {
-                        Util.tipShow(that.global.loadError)
+                        Util.tipShow(global.loadError)
                     }
                 }, function () {
-                    Util.tipShow(that.global.loadError)
+                    Util.tipShow(global.loadError)
                 })
             },
             doHandlerListScroll: function () {

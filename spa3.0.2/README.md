@@ -17,7 +17,7 @@ npm run build
 ============ sub page list ============
 === 2016.11.17
 account-------------------------
-accountDetail
+accountDetail----------------------
 bindPhone
 chat
 clubList
@@ -53,9 +53,9 @@ picture---------------------
 plumflowers
 promotions-------------------
 promotionsActivity-------------------
-qrPay
-qrPayCode
-qrPayComplete
+qrPay--------------------------------
+qrPayCode---------------------------
+qrPayComplete---------------------
 recharge
 recoverPassword------------------
 register----------------------
@@ -70,9 +70,12 @@ technicianDetail------------------
 technicianImg-----------------
 technicianList-----------------
 techReward
-tradeRecords
-treat
-treatDetail
+tradeRecords-------------------
+treat---------------------------
+treatDetail----------------------
 treatExplain--------------------
-treatRecords
+treatRecords-------------------
 journalList--------------------
+
+// 2016.12.26
+luckyWheel

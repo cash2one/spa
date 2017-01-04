@@ -157,7 +157,7 @@ div#technician-list-page div.tech-list {
               height: 0.778rem;
               line-height: 0.778rem;
               text-align: center;
-              box-sizing: border-box;
+              box-sizing: content-box;
               margin-left: .444rem;
               width: 2.389rem;
               font-size: .556rem;
@@ -182,12 +182,10 @@ div#technician-list-page div.tech-list {
               background-repeat: no-repeat;
               background-position: .222rem center; }
             div#technician-list-page div.tech-list a.item > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) {
-              background-color: #ffe4c6;
-              background-image: url("../../images/technicianList/comment_icon.png");
+              background: #ffe4c6 url("../../images/technicianList/comment_icon.png") no-repeat;
               color: #ff8909; }
             div#technician-list-page div.tech-list a.item > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) {
-              background-color: #ffe0e5;
-              background-image: url("../../images/technicianList/good_icon.png");
+              background: #ffe0e5 url("../../images/technicianList/good_icon.png") no-repeat;
               color: #f66; }
             div#technician-list-page div.tech-list a.item > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) {
               -webkit-box-flex: 1;

@@ -9,7 +9,7 @@
             <span @click="doClickSearch()"></span>
         </div>
         <div class="list">
-            <router-link class="list-item" :class="'tpl-0'+item.styleId" v-for="(item,index) in dataList" v-show="showList[index]" :to="{ name : 'accountDetail', query : { accountId : item.id } }">
+            <router-link class="member-card" :class="'tpl-0'+item.styleId" v-for="(item,index) in dataList" v-show="showList[index]" :to="{ name : 'accountDetail', query : { accountId : item.id } }">
                 <div>
                     <div>
                         <div :style="{ backgroundImage : 'url('+(item.clubImage || global.defaultClubLogo)+')' }"></div>

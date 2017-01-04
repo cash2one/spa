@@ -297,11 +297,7 @@
             },
             doClickRewardBtn: function () { // 点击打赏按钮
                 var that = this
-                if (that.global.userAgent.isWX) {
-                    that.$router.push({name: 'techReward', query: {techId: that.techId}})
-                } else {
-                    Util.tipShow('请在微信中打开！')
-                }
+                that.$router.push({name: 'techReward', query: {techId: that.techId}})
             },
             doClickOrderBtn: function () { // 点击预约按钮
                 var that = this

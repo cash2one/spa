@@ -18,12 +18,8 @@
                     <div v-show="item.couponType== 'redpack'">分享获得更多优惠机会</div>
                 </router-link>
             </div>
-            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><i></i>
-                <div>加载数据</div>
-            </div>
-            <div class="finish-load-tip border-top" :class="{ none : !showFinishLoadTip }">
-                <div>已经加载全部数据</div>
-            </div>
+            <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><div>加载数据</div></div>
+            <div class="finish-load-tip border-top" :class="{ none : !showFinishLoadTip }"><div>已经加载全部数据</div></div>
             <div class="nullData" v-show="dataList.length==0 && !isAddData">
                 <div v-show="!global.loading"></div>
                 <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>

@@ -70,9 +70,10 @@ div#treat-page {
     position: absolute;
     bottom: .722rem;
     left: 0;
-    width: 100%; }
+    width: 100%;
+    display: table; }
     div#treat-page div.footer-area > a {
-      display: inline-block;
+      display: table-cell;
       width: 50%;
       text-align: center;
       font-size: .889rem;

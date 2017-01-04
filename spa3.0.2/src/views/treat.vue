@@ -12,12 +12,12 @@
             </div>
             <div>
                 <div>朋友手机号码</div>
-                <div><input type="tel" v-model="tel" maxlength="11" v-tel-input="isTelValid"></div>
+                <div><input type="tel" v-model="tel" maxlength="11" v-tel-input /></div>
                 <div>注：我们将发送授权码给您的朋友。</div>
             </div>
         </div>
         <div class="check" :class="{ active : canVisible }" @click="canVisible = !canVisible">朋友可以看见授权金额。</div>
-        <div class="btn" :class="{ active : isTelValid && isMoneyValid, processing : isProcessing }" @click="doClickConfirmBtn()">{{confirmBtnText}}</div>
+        <div class="btn" :class="{ active : isTelValid && isMoneyValid, processing : isProcessing }" @click="doClickConfirmBtn()">{{ confirmBtnText }}</div>
         <div class="footer-area">
             <router-link :to="{ name : 'treatExplain' }">请客说明</router-link>
             <router-link :to="{ name : 'treatRecords' , query : { clubId : clubId } }">请客记录</router-link>
@@ -41,12 +41,16 @@
                 canVisible: true,
                 tel: '',
                 money: '',
-                isTelValid: false,
                 isMoneyValid: false,
                 isProcessing: false,
                 confirmBtnText: '确认授权',
                 clubId: '',
                 oldMoney: ''
+            }
+        },
+        computed: {
+            isTelValid: function () {
+                return /^1[34578]\d{9}$/.test(this.tel)
             }
         },
         created: function () {
@@ -56,15 +60,16 @@
 
             that.accountId = pageParams.accountId
             if (!that.accountId) {
+                Util.tipShow(global.visitError)
                 return that.$router.back()
             } else {
                 that.$http.get('../api/v2/finacial/account/' + that.accountId).then(function (res) {
-                    global.loading = false
                     res = res.body
                     if (res.statusCode == 200) {
                         res = res.respData
                         that.clubId = res.clubId
                         that.accountMoney = (res.amount / 100).toFixed(2)
+                        global.loading = false
                     } else {
                         Util.tipShow(global.loadError)
                         that.$router.back()
@@ -86,7 +91,7 @@
                         that.confirmBtnText = '授权中...'
                         that.$http.post('../api/v2/finacial/account/payforother/auth', {
                             accountId: that.accountId,
-                            amount: that.money,
+                            amount: parseFloat(that.money) * 100,
                             open: that.canVisible ? 'Y' : 'N',
                             telephone: that.tel
                         }).then(function (res) {
@@ -94,7 +99,7 @@
                             that.isProcessing = false
                             that.confirmBtnText = '确认授权'
                             if (res.statusCode != 200) {
-                                Util.tipShow(res.msg || '授权失败。')
+                                Util.tipShow(res.msg || '授权失败！')
                             } else {
                                 that.$router.push({
                                     name: 'treatDetail',
@@ -117,6 +122,7 @@
                     }
                 } else {
                     that.isMoneyValid = true
+                    that.money = that.money + ''
                     var tmp = that.money.match(/\./g)
                     if (tmp && tmp.length > 1) {
                         that.money = that.money.slice(0, -1)

@@ -5,6 +5,8 @@ import { IM } from '../libs/im'
 /**
  * 全局的数据
  * */
+var imgPathPrefix = 'images/home/'
+
 exports.Global = {
     data: {
         baseWidth: null,                           // 页面加载时窗口初始宽度，用于计算页面 scale
@@ -23,15 +25,15 @@ exports.Global = {
 
         showAppMenu: false,                   // 是否显示底部菜单--club模式下
         show9358Menu: false,                  // 9358公众号模式下
-        loading: false,                               // loading效果
+        loading: false,                               // 是否显示loading效果
         pageMode: 'club',                         // 当前模式，club--会所网站 9358--公众号
         sessionType: 'web',                        // sessionType
         token: '',                                        // 用户token
-        userId: '',
-        userAvatar: '',
-        userHeader: '',
-        userTel: '',
-        userName: '',
+        userId: '',                                       // 用户 ID
+        userAvatar: '',                                // 用户头像ID
+        userHeader: '',                               // 用户头像URL
+        userTel: '',                                      // 用户手机
+        userName: '',                                 // 用户名
         loginName: '',
         isTelephoneUser: false,
         isLogin: false,                                // 用户是否登录
@@ -46,28 +48,28 @@ exports.Global = {
         clubInviteCode: '',
         techSerialNo: '',
         techInviteCode: '',
+        isFollowed: false,
 
-        currLngx: '',
+        currLngx: '',                                    // 地理位置坐标
         currLaty: '',
-
         userAgent: {                                   // 浏览器UA
             isWX: false,
             isiPhone: false
         },
 
-        defaultClubLogo: 'images/home/logo_default.jpg',                       // 默认的club logo
-        defaultHeader: 'images/home/header_default.jpg',                       // 默认的头像
-        defaultTechName: '小摩豆技师',                                                   // 默认的技师名字
-        defaultName: '匿名用户',                                                               // 默认的名称
-        defaultBannerImgUrl: 'images/home/banner_default.jpg',             // 默认的banner图
-        defaultServiceItemImgUrl: 'images/home/serviceItem_default.jpg', // 默认的服务项目图
-        defaultGiftImg: 'images/chat/gift_default.png',                              // 默认的积分礼物图片
+        defaultClubLogo: imgPathPrefix + 'logo_default.jpg',                        // 默认的club logo
+        defaultHeader: imgPathPrefix + 'header_default.jpg',                        // 默认的头像
+        defaultTechName: '小摩豆技师',                                                      // 默认的技师名字
+        defaultName: '匿名用户',                                                                 // 默认的名称
+        defaultBannerImgUrl: imgPathPrefix + 'banner_default.jpg',               // 默认的banner图
+        defaultServiceItemImgUrl: imgPathPrefix + 'serviceItem_default.jpg',  // 默认的服务项目图
+        defaultGiftImg: 'images/chat/gift_default.png',                                // 默认的积分礼物图片
         loadError: '数据请求失败！',
         visitError: '页面缺少访问参数！',
 
         clubId: null,                                                                               // 当前会所ID
         clubLogoUrl: null,                                                                      // 当前会所logo
-        clubName: '',                                                                            // 当前会所名称
+        clubName: '',                                                                             // 当前会所名称
         clubTelephone: [],                                                                      // 当前会所联系电话
 
         clubCfg: {                                                                           // 当前会所的一些配置信息、开关
@@ -168,7 +170,7 @@ exports.Global = {
         }
 
         IM.global = that.data
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
             // check login
             if (data.token && data.userId) {
                 Vue.http.get('../api/v1/check_login/' + data.sessionType + '/' + data.token).then(function (res) {
@@ -176,14 +178,15 @@ exports.Global = {
                     if (res.msg !== 'Y') {
                         that.clearLoginInfo()
                     } else {
-                        console.log('util.md5' + data.userId)
+                        // console.log('util.md5' + data.userId)
                         var im = IM
+                        var userTel = data.userTel
                         im.id = Util.md5(data.userId)
                         im.password = im.id
                         im.userId = data.userId
                         im.header = data.userHeader
                         im.avatar = data.userAvatar
-                        im.name = (data.userName == data.defaultName && data.userTel) ? data.defaultName + '(' + data.userTel.substr(0, 3) + '****' + data.userTel.slice(-4) + ')' : data.userName
+                        im.name = (data.userName == data.defaultName && userTel) ? data.defaultName + '(' + userTel.substr(0, 3) + '****' + userTel.slice(-4) + ')' : data.userName
                         im.createConn() // 创建环信连接
 
                         data.isLogin = true
@@ -258,14 +261,19 @@ exports.Global = {
                     cfg.accountSwitch = (res.account.switch == 'on')
                     cfg.creditSwitch = (res.credit.systemSwitch == 'on' && res.credit.clubSwitch == 'on')
                     cfg.diceGameSwitch = (cfg.creditSwitch && res.credit.diceGameSwitch == 'on')
-                    if (cfg.diceGameSwitch) cfg.diceGameTimeout = res.credit.gameTimeoutSeconds * 1000
+                    if (cfg.diceGameSwitch) {
+                        cfg.diceGameTimeout = res.credit.gameTimeoutSeconds * 1000
+                    }
 
                     cfg.paidCouponSwitch = (res.paidCoupon.couponSwitch == 'on')
-                    if (cfg.paidCouponSwitch) cfg.paidCouponFee = res.paidCoupon.couponPlatformFee
+                    if (cfg.paidCouponSwitch) {
+                        cfg.paidCouponFee = res.paidCoupon.couponPlatformFee
+                    }
 
                     cfg.paidOrderSwitch = (res.paidOrder.switch == 'on')
-                    if (cfg.paidOrderSwitch) cfg.paidOrderFee = res.paidOrder.platformFee
-
+                    if (cfg.paidOrderSwitch) {
+                        cfg.paidOrderFee = res.paidOrder.platformFee
+                    }
                     resolve(cfg)
                 } else {
                     reject('请求异常！')
@@ -345,7 +353,7 @@ exports.Global = {
             that.weiXinCfgSignature(option, configPage)
         }
     },
-
+    // 微信签名
     weiXinCfgSignature: function (option, configPage) {
         var signUrl = ''
         var win = window
@@ -458,12 +466,10 @@ exports.Global = {
         })
 
         Vue.http.get('../api/v2/wx/oauth2/code', {
-            params: {
-                wxmp: sessionType,
-                state: state,
-                pageUrl: encodeURIComponent(pageUrl),
-                scope: scope
-            }
+            wxmp: sessionType,
+            state: state,
+            pageUrl: encodeURIComponent(pageUrl),
+            scope: scope
         }).then(function (res) {
             res = res.body
             if (res && res.statusCode == 200) {
@@ -477,18 +483,16 @@ exports.Global = {
             }
         })
     },
-    // 获取OpenId option参数：authCode openId sessionId state
+    // 获取OpenId option参数：authCode scope openId sessionId state
     getOpenId: function (option) {
         var that = this
         return new Promise(function (resolve, reject) {
-            Vue.http.get('../api/v2/wx/oauth2/openid', {
-                params: {
-                    code: option.authCode,
-                    scope: 'snsapi_base',
-                    sessionType: '9358',
-                    openId: option.openId || '',
-                    webSessionId: option.sessionId || ''
-                }
+            Vue.http.post('../api/v2/wx/oauth2/openid', {
+                code: option.authCode,
+                scope: option.scope || 'snsapi_base',
+                sessionType: '9358',
+                openId: option.openId || '',
+                webSessionId: option.sessionId || ''
             }).then(function (res) {
                 res = res.body
                 if (res.statusCode == 200) {

@@ -545,6 +545,14 @@ var pageRouterOption = [
             require(['./views/journalList.vue'], resolve)
         }
     },
+    {   // 大转盘抽奖页面
+        path: prefixPath + 'luckyWheel',
+        name: 'luckyWheel',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/luckyWheel.vue'], resolve)
+        }
+    },
     {
         path: prefixPath + 'clubList',
         name: 'clubList',
@@ -649,7 +657,7 @@ router.beforeEach(function (to, from, next) {
 
 // 加载页面之后
 router.afterEach(function (to) {
-    if (_global.userAgent.isWX && !/(technicianDetail|couponDetail)/.test(to.name)) { // 自定义分享的页面除外
+    if (_global.userAgent.isWX && !/(technicianDetail|couponDetail|luckyWheel)/.test(to.name)) { // 自定义分享的页面除外
         Global.shareConfig(_global.shareConfigOption, 'global')
     }
 })

@@ -47,7 +47,7 @@ div#treat-detail-page .vis-friend {
 
 div#treat-detail-page .call-phone {
   background-color: #ff6501;
-  width: 2rem;
+  width: 2.2rem;
   text-align: center; }
 
 div#treat-detail-page .disabled {
@@ -55,7 +55,7 @@ div#treat-detail-page .disabled {
   color: #bdbdbd; }
 
 div#treat-detail-page div.cancel-auth {
-  margin: .889rem .667rem;
+  margin: .889rem .667rem 0;
   background-color: #fb5549;
   color: #fff;
   text-align: center;

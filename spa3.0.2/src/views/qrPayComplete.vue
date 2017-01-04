@@ -6,25 +6,21 @@
         <div class="page-title"><a class="back" @click="doClickPageBack()"></a>支付完成</div>
         <div class="success-info">
             <div>
-                <span><i></i><spa>成功支付</spa></span><span><span>{{ money }}</span><span>元</span></span>
+                <span><i></i><span>成功支付</span></span><span><span>{{ money }}</span><span>元</span></span>
             </div>
         </div>
         <div class="comment-star">
             <div>
                 <div>环境</div>
                 <div>
-                    <div class="stars-area" @click="doClickCommentStar(0,$event)">
-                        <div :style="{ width : environmentScore+'%' }"></div>
-                    </div>
+                    <div class="stars-area" @click="doClickCommentStar(0,$event)"><div :style="{ width : environmentScore+'%' }"></div></div>
                 </div>
                 <div>非常好</div>
             </div>
             <div>
                 <div>服务</div>
                 <div>
-                    <div class="stars-area" @click="doClickCommentStar(1,$event)">
-                        <div :style="{ width : serviceScore+'%' }"></div>
-                    </div>
+                    <div class="stars-area" @click="doClickCommentStar(1,$event)"><div :style="{ width : serviceScore+'%' }"></div></div>
                 </div>
                 <div>非常好</div>
             </div>
@@ -42,7 +38,6 @@
         data: function () {
             return {
                 global: Global.data,
-                submitUrl: '../api/v2/profile/user/feedback/create',
                 scoreObj: ['非常差', '很差', '一般', '很好', '非常好'],
                 clubId: '',
                 money: '',
@@ -56,6 +51,7 @@
             var that = this
             var global = that.global
             var pageParams = global.currPage.query
+
             that.money = pageParams.money
             that.clubId = pageParams.clubId
             that.payToken = pageParams.payToken
@@ -65,6 +61,8 @@
             if (!that.money || !that.clubId) {
                 Util.tipShow(global.visitError)
                 that.$router.back()
+            } else {
+                global.loading = false
             }
         },
         methods: {
@@ -82,11 +80,11 @@
             },
             doClickSubmitBtn: function () {
                 var that = this
-                that.$http.post(that.submitUrl, {
-                    'clubId': that.clubId,
-                    'environmentalScore': that.environmentScore,
-                    'serviceScore': that.serviceScore,
-                    'comments': encodeURIComponent(that.commentStr.substr(0, 1000)),
+                that.$http.post('../api/v2/profile/user/feedback/create', {
+                    clubId: that.clubId,
+                    environmentalScore: that.environmentScore,
+                    serviceScore: that.serviceScore,
+                    comments: encodeURIComponent(that.commentStr.substr(0, 1000)),
                     token: that.payToken
                 }).then(function (res) {
                     res = res.body

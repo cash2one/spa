@@ -17,7 +17,7 @@
             <div class="account-wrap" v-show="global.clubCfg.accountSwitch || global.clubCfg.creditSwitch">
                 <router-link v-show="global.pageMode=='9358' || global.clubCfg.accountSwitch" :to="{ name : (global.pageMode=='club' ? 'accountDetail' : 'account') }">
                     <div class="account"></div>
-                    <div>我的账户</div>
+                    <div>我的会员卡</div>
                     <div class="right-arrow"></div>
                 </router-link>
                 <router-link v-show="global.pageMode=='9358' || global.clubCfg.creditSwitch" :to="{ name : (global.pageMode=='club' ? 'integralDetail' : 'integral') }">
