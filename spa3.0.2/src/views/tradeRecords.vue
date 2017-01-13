@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="trade-records-page">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>交易记录</div>
+        <page-title title-text="交易记录"></page-title>
         <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <div class="list-item" v-for="item in dataList">
                 <div>{{ tradeType[item.bizType] }}<span :class="{ recharge : item.income }">{{ item.income ? '+' : '-' }}{{item.amount}}元</span></div>
@@ -56,9 +56,6 @@
             }
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             queryRecord: function (page) {
                 var that = this
                 var global = that.global

@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="integral-detail-page" :style="{ height : global.winHeight+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>积分中心</div>
+        <page-title title-text="积分中心"></page-title>
         <div class="total">
             <div>现有积分<router-link :to="{ name : 'integralExplain' }">积分规则</router-link><i></i></div>
             <b>{{amount}}<span>(冻结:{{freezeAmount}})</span></b>
@@ -72,9 +72,6 @@
             this.queryRecord()
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             getUserAccount: function () {
                 var that = this
                 that.$http.get('../api/v2/credit/user/account', {

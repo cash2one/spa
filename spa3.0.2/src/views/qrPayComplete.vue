@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="qrpay-complete-page" :style="{ height : global.winHeight+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>支付完成</div>
+        <page-title title-text="支付完成"></page-title>
         <div class="success-info">
             <div>
                 <span><i></i><span>成功支付</span></span><span><span>{{ money }}</span><span>元</span></span>
@@ -66,9 +66,6 @@
             }
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             doClickCommentStar: function (type, event) {
                 var that = this
                 var v = Math.ceil((event.offsetX || event.layerX) / (8.611 * 16 * that.global.winScale * 0.2))

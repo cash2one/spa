@@ -4,7 +4,7 @@
 <template>
     <div>
         <div class="page login-page" id="account-page">
-            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>绑定手机</div>
+            <page-title title-text="绑定手机"></page-title>
             <div class="input tel">
                 <i></i><span>+86</span><input type="tel" placeholder="请输入您的11位手机号" v-model="tel" maxlength="11" v-tel-input="isTelValid" @keypress="dokeyPressOfInput($event)"/>
             </div>
@@ -47,9 +47,6 @@
             }
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             dokeyPressOfInput: function (event) {
                 if (event.keyCode == 13 && this.isTelValid) {
                     this.doClickBindBtn()

@@ -4,7 +4,7 @@
 <template>
     <div>
         <div class="page" id="treat-detail-page">
-            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>我要请客</div>
+            <page-title title-text="我要请客"></page-title>
             <div class="info-area">
                 <div class="info-top">
                     <div>
@@ -128,9 +128,6 @@
             }
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             doClickCancelAuthBtn: function () {
                 this.isShowConfirm = true
             },

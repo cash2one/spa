@@ -54,7 +54,7 @@ div#check-order-page .center-wrap {
     display: block;
     position: relative;
     font-size: 1.667rem;
-    margin-top: 0.3rem;
+    margin-top: 0.1rem;
     margin-left: 4rem;
     width: 12.5rem;
     color: #4d4d4d;
@@ -88,17 +88,17 @@ div#check-order-page .bottom-wrap {
       border-radius: 50%; }
   div#check-order-page .bottom-wrap > div:nth-of-type(2) {
     height: 2.222rem;
-    padding: 0.4167rem 0 0.472rem;
+    padding: 0.4167rem 0 0;
     border-top: 1px solid #ccc; }
     div#check-order-page .bottom-wrap > div:nth-of-type(2) > div {
       width: 9rem;
       font-size: 1rem;
       text-align: center;
       line-height: 2.222rem;
-      box-sizing: border-box;
       border-radius: 0.2rem;
       float: left;
-      margin-left: 0.667rem; }
+      margin-left: 0.667rem;
+      margin-bottom: 0.35rem; }
       div#check-order-page .bottom-wrap > div:nth-of-type(2) > div:nth-of-type(1) {
         background: #fff;
         border: 1px solid #f66;

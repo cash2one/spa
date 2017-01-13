@@ -4,7 +4,7 @@
 <template>
     <div>
         <div class="page" id="order-detail-page">
-            <div class="page-title"><a class="back" @click="doClickBackPage()"></a>订单详情</div>
+            <page-title title-text="订单详情"></page-title>
             <div :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }">
                 <div>
                     <div>{{clubInfo.clubName}}</div>
@@ -154,9 +154,6 @@
         methods: {
             computeOrderStatus (status) {
                 return OrderStatusFilter(status, 'tag')
-            },
-            doClickBackPage () {
-                this.$router.back()
             },
             doClickTelDetail () {
                 var that = this

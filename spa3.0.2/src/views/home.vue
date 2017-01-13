@@ -20,6 +20,10 @@
                 <div class="address"><router-link tag="div" :to="{ name: 'map' }">{{ clubDist }}</router-link><div @click="doClickContactClub"></div></div>
             </div>
 
+            <div class="journal" v-show="journal.id">
+                <div><span @click="doClickJournal()">{{ journal.title }}</span><router-link :to="{ name: 'journalList' }">全部</router-link></div>
+            </div>
+
             <div class="recommend tech" v-if="techs.length>0">
                 <div class="title"><div>点我聊聊</div><router-link :to="{ name: 'technicianList' }">全部</router-link></div>
                 <home-tech :techs="techs"></home-tech>
@@ -92,6 +96,9 @@
                 popActData: {}, // 弹窗数据
                 popCouponActCls: '',
                 showPopCoupon: false,
+                journal: {
+                    id: '', title: '', templateId: 1
+                },
                 swiperOption: {
                     autoplay: 5000,
                     pagination: '.swiper-pagination',
@@ -136,6 +143,10 @@
                     }
                     // 用户是否已收藏会所
                     that.isCollected = res.isUserFavoriteClub
+
+                    if (res.journal) {
+                        that.journal = res.journal
+                    }
 
                     global.loading = false
                 } else {
@@ -200,6 +211,10 @@
             },
             doClickServiceItem: function (id) {
                 this.$router.push({name: 'serviceItem', query: {top: '1', id: id}})
+            },
+            doClickJournal: function () {
+                var journal = this.journal
+                location.href = location.origin + '/spa-manager/journal/#/' + journal.templateId + '/?id=' + journal.id
             },
             doClickCollectBtn: function () { // 点击收藏按钮
                 var that = this

@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="wifi-page" :style="{ height : global.winHeight+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>会所WiFi</div>
+        <page-title title-text="会所WiFi"></page-title>
         <div class="list" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }">
             <div class="list-item" v-for="item in dataList">
                 <div>WiFi：{{ item.ssid }}</div>
@@ -44,11 +44,6 @@
                     that.$router.back()
                 }
             })
-        },
-        methods: {
-            doClickPageBack: function () {
-                history.back()
-            }
         }
     }
 </script>

@@ -3,8 +3,7 @@
 </style>
 <template>
     <div class="page" id="review-list-page">
-        <div class="page-title">
-            <a class="back" @click="doClickPageBack()"></a>评论列表
+        <page-title title-text="评论列表">
             <div class="comment-select" :class="{ active : showCommentTypeSelect }" @click="doShowCommentTypeSelect()">
                 <span>{{currType == 'order' ? '订单评论' : ( currType == 'tech' ? '粉丝评论' : '全部评论' )}}</span>
                 <div></div>
@@ -14,7 +13,7 @@
                     <li @click="doSelectCommentType('tech')" :class="{ selected : currType=='tech' }">粉丝评论</li>
                 </ul>
             </div>
-        </div>
+        </page-title>
         <div class="comment-list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <div class="comment-item" v-for="item in comments">
                 <div>
@@ -105,9 +104,6 @@
             },
             doShowCommentTypeSelect: function () {
                 this.showCommentTypeSelect = !this.showCommentTypeSelect
-            },
-            doClickPageBack: function () { // 点击返回按钮
-                history.back()
             },
             queryCommentData: function (page) { // 查询列表数据
                 var that = this

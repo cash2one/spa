@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="treat-page" :style="{ height : global.winHeight+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>我要请客</div>
+        <page-title title-text="我要请客"></page-title>
         <div class="treat-area">
             <div>
                 <div>授权金额<span>(可用金额：{{ accountMoney }})</span></div>
@@ -78,9 +78,6 @@
             }
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             doClickConfirmBtn: function () {
                 var that = this
                 if (that.isTelValid && that.isMoneyValid) {

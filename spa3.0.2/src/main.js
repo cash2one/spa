@@ -13,6 +13,7 @@ Vue.use(VueResource)
 Vue.use(AwesomeSwiper)
 
 // 注册公用组件
+var PageTitle = require('./components/page-title')
 var TelDetail = require('./components/tel-detail')
 var Share = require('./components/share')
 var Club = require('./components/club')
@@ -20,6 +21,7 @@ var Attention = require('./components/attention')
 var CreditTip = require('./components/credit-tip')
 var Spinner = require('./components/spinner')
 
+Vue.component('page-title', PageTitle)
 Vue.component('tel-detail', TelDetail)
 Vue.component('share', Share)
 Vue.component('club', Club)

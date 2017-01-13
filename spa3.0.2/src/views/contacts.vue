@@ -3,9 +3,8 @@
 </style>
 <template>
     <div class="page message-list-page" id="contacts-page">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>最近联系人<div class="edit-title" @click="doClickEditBtn()">{{ inEdit ? "完成" : "编辑"}}</div></div>
-        <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }"
-             @scroll="doHandlerListScroll()">
+        <page-title title-text="最近联系人"><div class="edit-title" @click="doClickEditBtn()">{{ inEdit ? "完成" : "编辑"}}</div></page-title>
+        <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <div class="list-item" v-for="item in dataList" :key="item.friendUserId" @click="doClickRecord(item)">
                 <div :style="{ backgroundImage : 'url('+(item.friendAvatarUrl || (item.toType == 'manager' ? global.defaultClubLogo : global.defaultHeader ))+')' }"></div>
                 <div>
@@ -61,9 +60,6 @@
             that.queryRecord()
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             queryRecord: function (page) {
                 var that = this
                 var global = that.global

@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="journal-list-page" :style="{ height : global.winHeight+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>电子期刊</div>
+        <page-title title-text="电子期刊"></page-title>
         <div class="list" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }">
             <div class="list-item" v-for="item in dataList" @click="doViewJournal(item)">
                 <div class='logo' :style="{ backgroundImage : 'url('+journalImg+')' }">NO.{{ item.sequenceNo }}</div>
@@ -50,9 +50,6 @@
             })
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             doViewJournal: function (journal) {
                 var loc = location
                 loc.href = loc.origin + '/spa-manager/journal?id=' + journal.journalId

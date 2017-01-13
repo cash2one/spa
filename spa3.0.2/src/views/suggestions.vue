@@ -4,7 +4,7 @@
 <template>
     <div>
         <div class="page" id="suggestions-page" :style="{ height : global.winHeight+'px' }">
-            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>投诉建议</div>
+            <page-title title-text="投诉建议"></page-title>
             <div class="star-comment">
                 <div>
                     <div>环境</div>
@@ -50,9 +50,6 @@
             }
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             doClickCommentStar: function (event, type) {
                 var that = this
                 var v = Math.ceil((event.offsetX || event.layerX) / (10.944 * 16 * that.global.winScale * 0.2))

@@ -3,9 +3,7 @@
 </style>
 <template>
     <div class="page message-list-page" id="message-page">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>消息列表
-            <div v-show="dataList.length!=0" class="edit-title" @click="doClickEditBtn()">{{ inEdit ? "完成" : "编辑" }}</div>
-        </div>
+        <page-title title-text="消息列表"><div v-show="dataList.length!=0" class="edit-title" @click="doClickEditBtn()">{{ inEdit ? "完成" : "编辑" }}</div></page-title>
         <div class="list" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }">
             <div class="list-item" v-for="item in dataList" @click="doClickRecord(item)" :key="item.chatId">
                 <div :style="{ backgroundImage : 'url('+(item.header || global.defaultHeader)+')' }"></div>
@@ -66,9 +64,6 @@
             that.dataList = dataArr
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             doClickEditBtn: function () {
                 this.inEdit = !this.inEdit
             },

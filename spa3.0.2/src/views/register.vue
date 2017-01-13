@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page login-page" id="register-page">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>注册</div>
+        <page-title title-text="注册"></page-title>
         <div class="input tel spec"><i></i><span>+86</span><input type="tel" placeholder="请输入您的11位手机号" v-model="tel" maxlength="11" v-tel-input/></div>
         <div class="input auth spec"><i></i><input type="tel" placeholder="请输入手机短信验证码" v-model="testCode" v-test-code-input maxlength="4"/><a @click="getTestCode()" :class="testCodeBtnStatus">{{testCodeBtnText}}</a></div>
         <div class="input pw"><i></i><input type="password" placeholder="请输入6-20位密码，仅限字母和数字" v-password-input v-model="password" maxlength="20"/></div>
@@ -181,9 +181,6 @@
                         }
                     })
                 }
-            },
-            doClickPageBack: function () {
-                history.back()
             },
             getTestCode: function () { // 获取短信验证码
                 var that = this

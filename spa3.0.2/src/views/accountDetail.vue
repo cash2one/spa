@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="account-detail-page" :class="{ noMember : !hasMember }" :style="{ 'min-height' : global.winHeight+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>会员卡详情</div>
+        <page-title title-text="会员卡详情"></page-title>
         <template v-if="hasMember">
             <router-link v-if="memberCard" class="member-card" :class="'tpl-0'+memberCard.styleId" :to="{ name : 'qrPayCode' , query : { accountId : accountId }}">
                 <div>
@@ -132,9 +132,6 @@
             })
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             doHandlerMemberCard: function (cardData) {
                 if (cardData.discount / 100 >= 10) {
                     cardData.isVip = true

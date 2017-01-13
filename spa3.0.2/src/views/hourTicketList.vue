@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="hour-ticket-list-page">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>点钟券</div>
+        <page-title title-text="点钟券"></page-title>
         <div class="list" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }">
             <div class="item" v-for="item in dataList" @click="doClickPaidCoupon(item.actId)">
                 <div>
@@ -65,9 +65,6 @@
             })
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             doClickPaidCoupon: function (actId) {
                 var that = this
                 var global = that.global

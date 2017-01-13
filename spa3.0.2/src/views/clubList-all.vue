@@ -1,6 +1,6 @@
 <template>
     <div class="page club-list-page" id="club-list-all-page" @click="doClickPage()">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>会所列表</div>
+        <page-title title-text="会所列表"></page-title>
         <div class="filter-title">
             <div :class="{ active : activeFilterType=='distance' }" @click="doActiveFilterType('distance',$event)">
                 <span>附近会所</span>
@@ -71,9 +71,6 @@
                     that.activeFilterType = type
                 }
                 event.stopPropagation()
-            },
-            doClickPageBack: function () {
-                this.$router.go(-1)
             },
             doSelectedItem: function (type, val) {
                 var that = this

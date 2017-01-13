@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page info-page" id="info-page">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>资料编辑<div @click="doClickSaveBtn()">保存</div></div>
+        <page-title title-text="资料编辑"><div @click="doClickSaveBtn()">保存</div></page-title>
         <div class="info-content">
             <div>
                 <input type="file" accept="image/*" capture="camcorder" @change="doImgChange($event)"/>
@@ -41,9 +41,6 @@
             }
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             doClickSaveBtn: function () {
                 var that = this
                 if (that.nickName.length == 0) {

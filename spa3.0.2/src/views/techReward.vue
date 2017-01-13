@@ -4,7 +4,7 @@
 <template>
     <div>
         <div class="page" id="tech-reward-page">
-            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>技师打赏</div>
+            <page-title title-text="技师打赏"></page-title>
             <div class="top-tip"><div></div></div>
             <div class="reward-list">
                 <div v-for="(item, index) in moneyList" class="money" @click="doSelectReward('money',index)" :class="{ active : selectType=='money' && selectVal==index }">
@@ -133,9 +133,6 @@
                     that.selectVal = that.paramData
                     that.doClickSubmitBtn()
                 }
-            },
-            doClickPageBack: function () {
-                history.back()
             },
             doSelectReward: function (type, val) {
                 var that = this

@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="account-page" :style="{ height : global.winHeight+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>所有会员卡</div>
+        <page-title title-text="所有会员卡"></page-title>
         <div class="search-area">
             <input type="text" placeholder="输入会所名称" maxlength="50" v-model="searchText" @keypress.enter="doClickSearch()"/>
             <span @click="doClickSearch()"></span>
@@ -82,9 +82,6 @@
             })
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             doClickSearch: function () {
                 var that = this
                 var searchText = that.searchText.trim()

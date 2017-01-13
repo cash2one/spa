@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="promotions-page">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>优惠活动</div>
+        <page-title title-text="优惠活动"></page-title>
         <div class="title coupon-title" v-if="coupons.length>0">优惠券</div>
         <div v-for="(coupon,index) in coupons" class="money-coupon" :class="{ money : coupon.useType == 'money' }">
             <div>
@@ -83,9 +83,6 @@
             dateToString: DateToString
         },
         methods: {
-            doClickPageBack: function () { // 点击返回按钮
-                history.back()
-            },
             doClickCancelPop: function () {
                 this.showPopTip = false
             },

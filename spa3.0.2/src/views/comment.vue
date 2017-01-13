@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="comment-page" :class="{ 'already-comment' : orderType != 0 }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>评价</div>
+        <page-title title-text="评价"></page-title>
         <div class="wrap thanks">
             <div>
                 <div></div>
@@ -176,9 +176,6 @@
             })
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             doClickCommentStar: function (event, item) { // 点击服务评级
                 var that = this
                 if (that.orderType != 0) return

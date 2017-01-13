@@ -4,7 +4,7 @@
 <template>
     <div>
         <div class="page paid-coupon-page" id="paid-coupon-detail-page" :style="{ height : (global.winHeight-(hidePayBtn ? 0 : 3.278)*global.winScale*16)+'px' }">
-            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>点钟券详情</div>
+            <page-title title-text="点钟券详情"></page-title>
             <div class="club-info" @click="doClickClubInfo()" v-show="global.pageMode != 'club'">
                 <div :style="{ backgroundImage : 'url('+(couponData.imageUrl || global.defaultClubLogo )+')' }"></div>
                 <span>{{ couponData.clubName }}</span></div>
@@ -157,9 +157,6 @@
             }
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             doClickClubInfo: function () { // 点击会所
                 var that = this
                 var global = that.global

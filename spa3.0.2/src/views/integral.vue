@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="integral-all-page" :style="{ height : global.winHeight+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>所有账户</div>
+        <page-title title-text="所有账户"></page-title>
         <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <router-link class="list-item" v-for="item in dataList" :to="{ name : 'integralDetail', query : { clubId : item.clubId } }">
                 <div><div :style="{ backgroundImage : 'url('+(item.clubImage || global.defaultClubLogo)+')' }"></div>{{ item.clubName || '小摩豆会所' }}<i></i></div>
@@ -39,9 +39,6 @@
             this.queryRecord()
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             queryRecord: function (page) {
                 var that = this
                 var global = that.global

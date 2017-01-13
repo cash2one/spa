@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page login-page" id="invite-code-page">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>输入邀请码</div>
+        <page-title title-text="输入邀请码"></page-title>
         <div class="code-input">
             <input placeholder="会所邀请码 (必填)" maxlength="6" v-model="inviteCode" @input="doInputInviteCode()"/>
             <input placeholder="技师编号 (选填)" maxlength="6" v-model="techNo" @input="doInputTechNo()"/>
@@ -44,9 +44,6 @@
             }
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             doClickSubmitBtn: function () {
                 var that = this
                 var global = that.global

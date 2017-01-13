@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="qrpay-code-page" :style="{ height : global.winHeight+'px' }">
-        <div class="page-title"><a v-if="!isDirect" class="back" @click="doClickPageBack()"></a>付款二维码</div>
+        <page-title title-text="付款二维码" :show-back="!isDirect"></page-title>
         <div class="qrcode-wrap">
             <div>
                 <div><img :src="qrCodeImgSrc"/></div>
@@ -37,9 +37,6 @@
             global.loading = false
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             refreshCode: function () {
                 var that = this
                 if (that.isProcessing) {

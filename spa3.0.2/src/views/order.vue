@@ -4,7 +4,7 @@
 <template>
     <div v-show="!global.loading">
         <div class="page" id="order-list-page">
-            <div class="page-title"><a class="back" @click="doClickBackPage()"></a>我的订单</div>
+            <page-title title-text="我的订单"></page-title>
             <div class="order-list" ref="listEle" :style="{ height : (global.winHeight-5.411*global.winScale*16)+'px'}" @scroll="doHandlerOrderListScroll()">
                 <div v-for="(order,$index) in orderList" :key="order.id">
                     <router-link :to="{name:'orderDetail',query:{orderId:order.id}}" tag="div">{{order.clubName}}<span>{{order.downPayment>0?('￥'+order.downPayment+'元'):''}}</span><span>{{order.status | orderStatusFilter('name')}}</span></router-link>
@@ -156,9 +156,6 @@
             }
         },
         methods: {
-            doClickBackPage () {
-                this.$router.back()
-            },
             queryOrderList (page) {
                 var that = this
                 if (that.isAddData) {

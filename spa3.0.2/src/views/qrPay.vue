@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="qrpay-page" :style="{ height : global.winHeight+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>支付</div>
+        <page-title title-text="支付"></page-title>
         <div class="club-info">
             <div>
                 <div :style="{ backgroundImage : 'url('+(logoImgUrl || global.defaultClubLogo )+')' }"></div>
@@ -104,9 +104,6 @@
                         that.doClickPayBtn()
                     }
                 })
-            },
-            doClickPageBack: function () {
-                history.back()
             },
             doClickClearBtn: function () {
                 var that = this

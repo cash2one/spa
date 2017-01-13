@@ -130,6 +130,41 @@ div#home-page{
     }
   }
 
+  div.journal{
+    height:2.378rem;
+    background: #f0f0f0;
+    >div{
+      width:16.806rem;
+      height:2.139rem;
+      @include img("../../images/journal/bg.png",16.806rem 2.139rem);
+      margin:0.31rem auto 0;
+      font-size:0.833rem;
+      color:#fff;
+      line-height: 2.52rem;
+      padding-left:6.1rem;
+      @include sl();
+      >a{
+        display: block;
+        position: relative;
+        font-size:.667rem;
+        float: right;
+        margin-right:3.2rem;
+        &:after{
+          content:"";
+          position: absolute;
+          width:.34rem;
+          height:.34rem;
+          top:50%;
+          right:-.4rem;
+          margin-top:-0.242rem;
+          border-bottom:2px solid #fff;
+          border-left:2px solid #fff;
+          @include rotate(-135deg);
+        }
+      }
+    }
+  }
+
   div.recommend{
     margin-top:.444rem;
     background-color: #fff;

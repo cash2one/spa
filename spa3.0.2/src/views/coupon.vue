@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="coupon-page" :style="{ height : global.winHeight+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>优惠券</div>
+        <page-title title-text="优惠券"></page-title>
         <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <div class="list-item" v-for="singleClubData in dataList">
                 <div class='header' v-if="isQueryAll">{{ singleClubData.clubName }}</div>
@@ -54,9 +54,6 @@
             global.loading = false
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             queryRecord: function (page) {
                 var that = this
                 var global = that.global

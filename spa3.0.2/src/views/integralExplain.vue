@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page rule-description" id="integral-explain-page">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>积分规则</div>
+        <page-title title-text="积分规则"></page-title>
         <div class="wrap" :style="{ height : (global.winHeight-3.278*global.winScale*16)+'px' }">
             <ul class="info">
                 <li>
@@ -37,11 +37,6 @@
         },
         created: function () {
             this.global.loading = false
-        },
-        methods: {
-            doClickPageBack: function () {
-                history.back()
-            }
         }
     }
 </script>

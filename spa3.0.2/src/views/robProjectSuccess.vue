@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="rob-project-success-page">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>抢购成功</div>
+        <page-title title-text="抢购成功"></page-title>
         <router-link :to="{ name : 'home' }" class="club-info" tag="div">
             <div :style="{ backgroundImage : 'url('+global.clubLogoUrl+')' }"></div>
             <div>{{ global.clubName }}</div>
@@ -92,9 +92,6 @@
                         that.clubObj.techs = techRes.respData
                     }
                 })
-            },
-            doClickPageBack: function () {
-                this.$router.push({name: 'home'})
             },
             // 点击'告诉朋友'
             doClickPopShare: function () {

@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="treat-records-page">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>请客记录</div>
+        <page-title title-text="请客记录"></page-title>
         <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <router-link class="list-item" v-for="item in dataList" :to="{ name : 'treatDetail' , query : { detailId : item.id }}">
                 <div>
@@ -88,9 +88,6 @@
             }
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             queryRecord: function (page) {
                 var that = this
                 var global = that.global

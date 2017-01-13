@@ -4,7 +4,7 @@
 <template>
     <div>
         <div class="page" id="coupon-detail-page">
-            <div class="page-title"><a class="back" @click="doClickPageBack()"></a>优惠券详情</div>
+            <page-title title-text="优惠券详情"></page-title>
             <div class="club-name">{{userAct.clubName}}</div>
             <div class="coupon-info">
                 <div>{{userAct.useTypeName}}</div>
@@ -135,9 +135,6 @@
             }
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             getQrCodeImageUrl: function () {
                 var that = this
                 if (that.getQrCodeCount > 0) {

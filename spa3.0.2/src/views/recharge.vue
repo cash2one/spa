@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page" id="recharge-page" :style="{ height : global.winHeight+'px' }">
-        <div class="page-title"><a class="back" @click="doClickPageBack()"></a>充值</div>
+        <page-title title-text="充值"></page-title>
         <div class="recharge-area">
             <div>充值金额</div>
             <div>
@@ -84,9 +84,6 @@
             }
         },
         methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
             doInputOfMoney: function () {
                 var that = this
                 if (that.money == '') {

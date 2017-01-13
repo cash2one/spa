@@ -113,6 +113,41 @@ div#home-page {
         background-image: url("../../images/home/tel_white_icon.png");
         background-repeat: no-repeat;
         background-position: center; }
+  div#home-page div.journal {
+    height: 2.378rem;
+    background: #f0f0f0; }
+    div#home-page div.journal > div {
+      width: 16.806rem;
+      height: 2.139rem;
+      background-size: 16.806rem 2.139rem;
+      background-image: url("../../images/journal/bg.png");
+      background-repeat: no-repeat;
+      margin: 0.31rem auto 0;
+      font-size: 0.833rem;
+      color: #fff;
+      line-height: 2.52rem;
+      padding-left: 6.1rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap; }
+      div#home-page div.journal > div > a {
+        display: block;
+        position: relative;
+        font-size: .667rem;
+        float: right;
+        margin-right: 3.2rem; }
+        div#home-page div.journal > div > a:after {
+          content: "";
+          position: absolute;
+          width: .34rem;
+          height: .34rem;
+          top: 50%;
+          right: -.4rem;
+          margin-top: -0.242rem;
+          border-bottom: 2px solid #fff;
+          border-left: 2px solid #fff;
+          -webkit-transform: rotate(-135deg);
+          transform: rotate(-135deg); }
   div#home-page div.recommend {
     margin-top: .444rem;
     background-color: #fff; }

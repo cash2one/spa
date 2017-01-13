@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Util from './util'
 import { eventHub } from './hub'
-import './websdk-1.1.3'
+import './webim.config'
+import './websdk-1.4.8.min'
 
 /**
  * 即时通讯IM
