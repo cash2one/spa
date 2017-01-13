@@ -76,6 +76,13 @@ treatDetail----------------------
 treatExplain--------------------
 treatRecords-------------------
 journalList--------------------
+wifi-----------------------------
 
 // 2016.12.26
 luckyWheel
+
+// 在线买单页面
+checkOrder
+
+// 买单记录页面
+checkOrderRecords

@@ -465,10 +465,10 @@ exports.Global = {
             return v2 == '?' ? (v3 ? '?' : '') : (v3 ? '&' : '')
         })
 
-        Vue.http.get('../api/v2/wx/oauth2/code', {
+        Vue.http.post('../api/v2/wx/oauth2/code', {
             wxmp: sessionType,
             state: state,
-            pageUrl: encodeURIComponent(pageUrl),
+            pageUrl: pageUrl, // post方式url不需要编码
             scope: scope
         }).then(function (res) {
             res = res.body

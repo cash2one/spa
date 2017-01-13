@@ -553,6 +553,30 @@ var pageRouterOption = [
             require(['./views/luckyWheel.vue'], resolve)
         }
     },
+    {   // wifi列表页面
+        path: prefixPath + 'wifi',
+        name: 'wifi',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/wifi.vue'], resolve)
+        }
+    },
+    {   // 在线买单页面
+        path: prefixPath + 'checkOrder',
+        name: 'checkOrder',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/checkOrder.vue'], resolve)
+        }
+    },
+    {   // 买单记录页面
+        path: prefixPath + 'checkOrderRecords',
+        name: 'checkOrderRecords',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/checkOrderRecords.vue'], resolve)
+        }
+    },
     {
         path: prefixPath + 'clubList',
         name: 'clubList',
