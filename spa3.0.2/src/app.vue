@@ -2,7 +2,7 @@
     @import './styles/page/index.css';
 </style>
 <template>
-    <div id="page-container">
+    <div id="page-container" :class="{ full : global.fullPage }">
         <transition name="fade" mode="out-in">
             <router-view></router-view>
         </transition>

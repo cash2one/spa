@@ -8,15 +8,15 @@
             <div class="top-tip"><div></div></div>
             <div class="reward-list">
                 <div v-for="(item, index) in moneyList" class="money" @click="doSelectReward('money',index)" :class="{ active : selectType=='money' && selectVal==index }">
-                    <div>{{ item.value }}</div>
-                    <div>{{ item.label }}</div>
+                    <div>{{ item.amount | MoneyFormatter }}</div>
+                    <div>{{ item.description }}</div>
                 </div>
                 <div v-for="item in giftList" class="gift" :class="{ active : selectType=='gift' && selectVal==item }" @click="doSelectReward('gift',item)">
-                    <div><img :src="item.iconUrl"/></div>
-                    <div>{{ item.ratio }}积分</div>
+                    <div><img :src="item.imgPath"/></div>
+                    <div>{{ item.credit }}积分</div>
                 </div>
             </div>
-            <div class="submit-button" :class="submitStatusCls" @click="doClickSubmitBtn()">{{ submitBtnText }}</div>
+            <div class="submit-button" :class="submitStatusCls" @click="doClickSubmitBtn()" v-show="moneyList.length>0 || giftList.length>0">{{ submitBtnText }}</div>
             <div class="submit-button view-button" @click="doClickViewClub()">查看会所</div>
         </div>
         <credit-tip></credit-tip>
@@ -26,6 +26,7 @@
     import { Global } from '../libs/global'
     import Util from '../libs/util'
     import { eventHub } from '../libs/hub'
+    import MoneyFormatter from '../filters/money-formatter'
 
     module.exports = {
         data: function () {
@@ -36,7 +37,7 @@
                 selectType: 'money',
                 selectVal: 1,
                 currSelectGiftValue: 0,
-                moneyList: [{value: 1.68, label: '一路发'}, {value: 5.20, label: '我爱你'}, {value: 8.88, label: '土豪赏'}, {value: 18.8, label: '要抱抱'}],
+                moneyList: [],
                 giftList: [],
                 techInfo: null,
                 techId: '',
@@ -103,29 +104,37 @@
                     that.techInfo.clubName = res.clubName
                     that.clubId = res.info.clubId
                     global.loading = false
-                })
 
-                // 获取积分系统开关
-                Global.getClubSwitches(that.clubId).then(function (cfg) {
-                    if (cfg.creditSwitch) {
-                        // 获取积分礼物数据
-                        that.$http.get('../api/v2/credit/gift/list').then(function (giftRes) {
-                            giftRes = giftRes.body
-                            if (giftRes.statusCode == 200) {
-                                giftRes = giftRes.respData
-                                if (giftRes.length > 4) { // 只显示前4个
-                                    giftRes = giftRes.slice(0, 4)
+                    // 获取会所金钱打赏设置
+                    that.$http.get('../api/v2/user/reward/tipList', {params: {clubId: that.clubId}}).then(function (res) {
+                        res = res.body
+                        if (res.statusCode == 200) {
+                            that.moneyList = res.respData
+                        }
+                    })
+
+                    // 获取积分系统开关
+                    Global.getClubSwitches(that.clubId).then(function (cfg) {
+                        if (cfg.creditSwitch) {
+                            // 获取积分礼物数据
+                            that.$http.get('../api/v2/user/reward/creditList', {params: {clubId: that.clubId}}).then(function (giftRes) {
+                                giftRes = giftRes.body
+                                if (giftRes.statusCode == 200) {
+                                    giftRes = giftRes.respData
+                                    if (giftRes.length > 4) { // 只显示前4个
+                                        giftRes = giftRes.slice(0, 4)
+                                    }
+                                    that.giftList = giftRes
                                 }
-                                that.giftList = giftRes
-                            }
-                        })
-                        // 获取当前账户积分
-                        Global.getCreditAccount(that.clubId).then(function (creditRes) {
-                            if (creditRes && creditRes[0]) {
-                                that.currIntegralAccount = creditRes[0].amount
-                            }
-                        })
-                    }
+                            })
+                            // 获取当前账户积分
+                            Global.getCreditAccount(that.clubId).then(function (creditRes) {
+                                if (creditRes && creditRes[0]) {
+                                    that.currIntegralAccount = creditRes[0].amount
+                                }
+                            })
+                        }
+                    })
                 })
 
                 if (that.paramData) {
@@ -148,7 +157,7 @@
                 }
                 if (that.selectType == 'gift') { // 送积分礼物
                     var selectGift = that.selectVal
-                    that.currSelectGiftValue = selectGift.ratio
+                    that.currSelectGiftValue = selectGift.credit
                     if (that.currSelectGiftValue > that.currIntegralAccount) {
                         eventHub.$emit('set-credit-tip', {amount: that.currSelectGiftValue, show: true})
                     } else {
@@ -158,7 +167,7 @@
                             params: {
                                 clubId: that.clubId,
                                 emchatId: that.techInfo.emchatId,
-                                giftId: selectGift['id'],
+                                giftId: selectGift['belongingsId'],
                                 num: 1
                             }
                         }).then(function (res) {
@@ -176,7 +185,7 @@
                     that.submitStatusCls = 'processing'
                     that.submitBtnText = '打赏中...'
                     that.$http.post('../api/v2/wx/pay/user_reward', {
-                        consumeMoney: that.moneyList[that.selectVal],
+                        consumeMoney: (that.moneyList[that.selectVal].amount / 100).toFixed(2),
                         openId: global.openId,
                         clubId: that.clubId,
                         consumeType: 'user_reward',
@@ -235,6 +244,9 @@
                 var that = this
                 that.$router.push({path: '/' + that.clubId + '/home'})
             }
+        },
+        filters: {
+            MoneyFormatter: MoneyFormatter
         }
     }
 </script>

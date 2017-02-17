@@ -323,13 +323,13 @@ div.nullData{
   width: 20rem;
   min-height: 13.861rem;
   padding-top:4rem;
-  &>div:nth-of-type(1){
+  >div:nth-of-type(1){
     margin:0 auto;
     width:7.028rem;
     height:6.861rem;
     @include img('../../images/common/null.png',7.028rem 6.861rem);
   }
-  &>div{
+  >div{
     text-align: center;
     line-height:4rem;
     color:#666;

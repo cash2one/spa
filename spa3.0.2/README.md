@@ -82,7 +82,21 @@ wifi-----------------------------
 luckyWheel
 
 // 在线买单页面
-checkOrder
+fastPay*******************************
+fastPayRecords************************
+fastPayError******************************
 
-// 买单记录页面
-checkOrderRecords
+// 次卡商城
+discountMall***************************
+onceCardDetail************************
+onceCardOrders***********************
+onceCardOrderDetail
+
+//
+oneYuanDetail
+oneYuanExplain
+oneYuanJoinRecords
+oneYuanPastWinRecords
+oneYuanRecords
+oneYuanRecordsDetail
+oneYuanSuccess

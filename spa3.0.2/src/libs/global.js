@@ -13,6 +13,7 @@ exports.Global = {
         winWidth: null,                             // 页面内容容器的当前宽度--固定20rem
         winHeight: null,                            // 页面的高度
         winScale: 1,                                   // 页面当前的font scale
+        fullPage: false,                              // 如果为true page-container的height将设置为100%
 
         currPage: {                                   // 当前页面信息
             name: '',
@@ -325,6 +326,7 @@ exports.Global = {
             })
         }
     },
+
     // 设置分享配置
     shareConfig: function (option, configPage) {
         var win = window
@@ -353,6 +355,7 @@ exports.Global = {
             that.weiXinCfgSignature(option, configPage)
         }
     },
+
     // 微信签名
     weiXinCfgSignature: function (option, configPage) {
         var signUrl = ''
@@ -397,7 +400,7 @@ exports.Global = {
         })
     },
 
-    checkAccess: function (fun) {
+    checkAccess: function () {
         return true
     },
 

@@ -76,6 +76,8 @@ div#page-container {
   position: relative;
   min-height: 100%;
   background-color: #eee; }
+  div#page-container.full {
+    height: 100%; }
   div#page-container > div.page {
     width: 100%;
     min-height: 100%; }
@@ -135,6 +137,17 @@ div.submit-button {
   div.submit-button.processing {
     color: #bdbdbd;
     background: #e0e0e0 url("../../images/common/loading.gif") no-repeat 30% 45%; }
+  div.submit-button.footer {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    width: 19.112rem;
+    margin: 0.444rem 0.444rem 0.444rem -9.556rem;
+    box-shadow: 0 0 0 0.111rem #ddd;
+    outline: 0.444rem solid #ddd; }
+    div.submit-button.footer.processing {
+      background-color: #ccc;
+      color: #999; }
 
 div.data-load-tip, div.finish-load-tip {
   display: -webkit-box;
@@ -232,7 +245,7 @@ div.credit-tip-pop > div {
       div.credit-tip-pop > div > div.btn > a.cancel {
         color: #616161; }
       div.credit-tip-pop > div > div.btn > a.get {
-        color: #ff6666;
+        color: #f66;
         border-right-width: 0; }
 
 .recommend-label {

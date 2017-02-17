@@ -564,19 +564,59 @@ var pageRouterOption = [
         }
     },
     {   // 在线买单页面
-        path: prefixPath + 'checkOrder',
-        name: 'checkOrder',
-        meta: { checkLogin: true },
+        path: prefixPath + 'fastPay',
+        name: 'fastPay',
+        meta: { checkLogin: true, fullPage: true },
         component: function (resolve) {
-            require(['./views/checkOrder.vue'], resolve)
+            require(['./views/fastPay.vue'], resolve)
         }
     },
     {   // 买单记录页面
-        path: prefixPath + 'checkOrderRecords',
-        name: 'checkOrderRecords',
+        path: prefixPath + 'fastPayRecords',
+        name: 'fastPayRecords',
         meta: { checkLogin: true },
         component: function (resolve) {
-            require(['./views/checkOrderRecords.vue'], resolve)
+            require(['./views/fastPayRecords.vue'], resolve)
+        }
+    },
+    {   // 买单出错页面
+        path: prefixPath + 'fastPayError',
+        name: 'fastPayError',
+        meta: { checkLogin: false, fullPage: true },
+        component: function (resolve) {
+            require(['./views/fastPayError.vue'], resolve)
+        }
+    },
+    {   // 特惠商城页面
+        path: prefixPath + 'discountMall',
+        name: 'discountMall',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/discountMall.vue'], resolve)
+        }
+    },
+    {   // 次卡详情页面
+        path: prefixPath + 'onceCardDetail',
+        name: 'onceCardDetail',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/onceCardDetail.vue'], resolve)
+        }
+    },
+    {   // 用户次卡订单列表页面
+        path: prefixPath + 'onceCardOrders',
+        name: 'onceCardOrders',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/onceCardOrders.vue'], resolve)
+        }
+    },
+    {   // 用户次卡订单详情页面
+        path: prefixPath + 'onceCardOrderDetail',
+        name: 'onceCardOrderDetail',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/onceCardOrderDetail.vue'], resolve)
         }
     },
     {
@@ -667,6 +707,8 @@ router.beforeEach(function (to, from, next) {
             return next({ name: 'login' })
         }
     }
+
+    _global.fullPage = !!to.meta.fullPage
 
     var currPage = _global.currPage
     currPage.query = to.query

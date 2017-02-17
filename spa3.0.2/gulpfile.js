@@ -25,7 +25,7 @@ gulp.task('sass', function() {
 //清理
 gulp.task('clean', function () {
     return gulp.src(['dist/*', 'src/styles/*'], {read: false})
-        .pipe(clean());
+        .pipe(clean({ force: true }));
 });
 
 //清理
@@ -109,7 +109,7 @@ var exists = function( src, dst, callback ){
 //清理
 gulp.task('clean-pub', function () {
     return gulp.src(['E:/workspace/spa-manager/WebRoot/spa/*'], {read: false})
-        .pipe(clean());
+        .pipe(clean({ force: true }));
 });
 
 gulp.task('pub-dist',function(){

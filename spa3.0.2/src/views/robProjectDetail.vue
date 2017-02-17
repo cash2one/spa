@@ -124,7 +124,6 @@
                 var query = global.currPage.query
 
                 that.itemId = query.robProjectId
-                console.log('init query data...')
                 that.$http.get('../api/v2/club/paid_service_item/view', {params: {id: that.itemId}}).then(function (res) {
                     res = res.body
                     if (res.statusCode == 200) {

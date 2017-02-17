@@ -5,6 +5,9 @@ div#page-container{
   position: relative;
   min-height: 100%;
   background-color: #eee;
+  &.full{
+    height: 100%;
+  }
   >div.page{
     width:100%;
     min-height: 100%;
@@ -63,6 +66,19 @@ div.submit-button{
   &.processing{
     color: #bdbdbd;
     background: #e0e0e0 url("../../images/common/loading.gif") no-repeat 30% 45%;
+  }
+  &.footer{
+    position: fixed;
+    left:50%;
+    bottom:0;
+    width: 19.112rem;
+    margin:0.444rem 0.444rem 0.444rem -9.556rem;
+    box-shadow: 0 0 0 0.111rem #ddd;
+    outline: 0.444rem solid #ddd;
+    &.processing{
+      background-color: #ccc;
+      color: #999;
+    }
   }
 }
 
@@ -156,7 +172,7 @@ div.credit-tip-pop{
           color:#616161;
         }
         &.get{
-          color:#ff6666;
+          color:#f66;
           border-right-width:0
         }
       }

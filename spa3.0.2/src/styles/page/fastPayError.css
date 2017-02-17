@@ -1,0 +1,23 @@
+div#fast-pay-error-page {
+  position: relative; }
+  div#fast-pay-error-page div {
+    position: absolute;
+    width: 15rem;
+    left: 50%;
+    top: 40%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    color: #fd7b08;
+    font-size: 1.222rem;
+    text-align: center;
+    letter-spacing: 2px;
+    line-height: 1.8; }
+    div#fast-pay-error-page div:before {
+      content: "";
+      display: block;
+      width: 11.667rem;
+      height: 10.444rem;
+      margin: 0 auto 1.389rem;
+      background-size: 11.667rem 10.444rem;
+      background-image: url("../../images/fastPay/3.png");
+      background-repeat: no-repeat; }
