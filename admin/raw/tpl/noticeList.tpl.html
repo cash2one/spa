@@ -1,0 +1,97 @@
+<!--系统通知-->
+<section id="noticeListPage" class="ms-controller" ms-controller="noticeListCtrl">
+    <script type="text/javascript" src="club-admin/raw/js/page/noticeList.js"></script>
+    <div class="dataTable" id="dataListTable">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="4" class="header">系统通知<div class="sizeOption">每页显示记录数：<select><option selected>20</option><option>50</option><option>100</option></select></div></th>
+            </tr>
+            <tr>
+                <th style="width:14%">时间</th>
+                <th style="width:50%">内容</th>
+                <th style="width:10%">编号</th>
+                <th style="width:16%">操作</th>
+            </tr>
+            </thead>
+            <tbody ms-if="dataList.length == 0" class="noData">
+            <tr><td colspan="4">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="dataList.length != 0">
+            <tr ms-repeat="dataList">
+                <td>{{el.createdAt}}</td>
+                <td>{{el.comments}}</td>
+                <td>{{el.serialNo}}</td>
+                <td>
+                    <span ms-if="el.status !='uncert'">{{statusObj[el.status]}}</span>
+                    <a ms-if="el.status =='uncert'" class="btn" ms-click="doEechDetail(el.id,el.techId,'修改')">修改</a>
+                    <a ms-if="el.status =='uncert' && el.serialNo" class="btn" ms-click="doHandlerNotice(el.id,'已同意')">同意</a>
+                    <a ms-if="el.status =='uncert'" class="btn" ms-click="doHandlerNotice(el.id,'已拒绝')">拒绝</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination" id="dataListPagination" ms-visible="dataList.length != 0"><div class="pages"></div></div>
+
+    <div class="modal" id="editTechModal">
+        <div>
+            <h3 class="header">基本信息修改<span>X</span></h3>
+            <div class="content form">
+                <div class="avatar">
+                    <img ms-if="editData.avatarUrl" ms-attr-src="{{editData.avatarUrl}}">
+                    <img ms-if="!editData.avatarUrl" src="club-admin/img/common/head.jpg"/>
+                    <span ms-click="doEditTechHeader()">重新上传</span>
+                </div>
+                <div><label>呢称：</label><input type="text"  maxlength="5" name="techName" placeholder="技师呢称"  ms-attr-value="editData.name" /><span><b>*</b></span></div>
+                <div class="sex clearfix"><label>性别：</label><span ms-class="active:currSex=='male'" ms-click="doChangeSex('male')"><i></i>男</span><span ms-class="active:currSex=='female'" ms-click="doChangeSex('female')"><i></i>女</span></div>
+                <div><label>编号：</label>{{techNo}}<label class="ml-15" ms-click="doEditTechNo">修改</label><span><b>*</b></span></div>
+            </div>
+            <div class="footer"><span class="tip"></span><a class="ok">同意</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+
+    <div class="modal" id="addTechNoModal">
+        <div>
+            <h3 class="header">修改技师编号<span>X</span></h3>
+            <div class="content form">
+                <div class="radio clearfix">
+                    <label>&nbsp</label>
+                    <span ms-class="active:techNoType=='spare'" ms-click="doChangeTechNo('spare')"><i></i>使用现有备用编号</span>
+                </div>
+                <div class="box">
+                    <label>&nbsp</label>
+                    <select ms-attr-disabled="techSpareDisabled" name="techSpareModal">
+                        <option value="-1">请选择编号</option>
+                        <option ms-repeat="techSpare" ms-attr-value="el.id">{{el.serialNo}}</option>
+                    </select>
+                </div>
+                <div class="radio clearfix">
+                    <label>&nbsp</label><span ms-class="active:techNoType=='add'" ms-click="doChangeTechNo('add')" ><i></i>新建技师编号</span>
+                </div>
+                <div  class="box"><label> </label><input type="text" name="techBakModal" maxlength="5" ms-attr-disabled="techAddDisabled"/></div>
+            </div>
+            <div class="footer"><span class="tip"></span><a class="ok">确定</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+
+    <div class="modal uploadImgModal" id="editHeaderModal">
+        <div>
+            <h3 class="header">修改技师头像<span>X</span></h3>
+            <div class="content">
+                <form id="techHeaderForm" action='tech/update/avatar' method="post" enctype='multipart/form-data'>
+                    <input type='hidden' name='id' ms-attr-value="{{techId}}"/>
+                    <input type='hidden' id='tech-x' name='x' value='0' />
+                    <input type='hidden' id='tech-y' name='y' value='0' />
+                    <input type='hidden' id='tech-factor' name='factor' value='1' />
+                    <input type='hidden' id='tech-w' name='width' value='1' />
+                    <input type='hidden' id='tech-h' name='height' value='1' />
+                    <input type="hidden" id="tech-image" name="image" id="techImageId"/>
+                    <input type='hidden' id='tech-imgFileName'/>
+                    <div><img /><a>上传图片</a><input type="file" id="tech-uploadImgBtn" name="imgFile"/><span class="selectionTxt"></span></div>
+                </form>
+            </div>
+            <div class="footer"><span class="tip"></span><a class="ok">确定</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+</section>

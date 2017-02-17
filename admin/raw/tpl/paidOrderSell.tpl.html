@@ -1,0 +1,81 @@
+<!--营销中心--付费预约-->
+<section id="paidOrderSellPage" class="ms-controller" ms-controller="paidOrderSellCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/paidOrderSell.js"></script>
+    <div class="panel section-item">
+        <div class="emphasize">
+            <div>
+                <span>当前预约模式：</span>
+                <select id="appointType" ms-change="appointTypeChange()">
+                    <option value="phone" ms-attr-selected="currPaidType == 'phone'">电话预约</option>
+                    <option value="appoint" ms-attr-selected="currPaidType == 'appoint'">免费预约</option>
+                    <option value="paid" ms-if="oaPaidSwitch" ms-attr-selected="currPaidType == 'paid'">定金预约</option>
+                    <option value="paid_full" ms-if="oaPaidSwitch" ms-attr-selected="currPaidType == 'paid_full'">全额预约</option>
+                </select>
+                <span>{{paidTip}}</span>
+            </div>
+            <div class="tip">
+                <span>注：</span>
+                <ul>
+                    <li>（1）免费、定金及全额预约，客户预约后会生成订单并有消息提醒技师或管理者；</li>
+                    <li>（2）订单可在首页、管理者APP、技师APP及9358服务查看，请及时进行操作。</li>
+                </ul>
+            </div>
+        </div>
+        <div class="appoint-amount" ms-if="currPaidType == 'paid' || currPaidType == 'paid_full'">
+            <div ms-if="currPaidType == 'paid'">预约定金：<input id="appointMoney" maxlength="8" ms-duplex="appointMoney"/>元</div>
+            <div class="tech-amount" >技师提成：<input id="techMoney" maxlength="8" ms-duplex="techMoney"/>元<span class="tip">（订单核销或爽约时给技师的提成）</span></div>
+        </div>
+    </div>
+
+    <div class="panel section-item" id="businessTime">
+        <div>营业时间段：
+            <select id="startTime" ms-change="startTimeChange()" ms-attr-disabled="isAllDay">
+                <option ms-repeat="times" ms-attr-value="el" ms-attr-selected="el == currStartTime">{{el}}</option>
+            </select>
+            -
+            <select id="endTime" ms-change="endTimeChange()" ms-attr-disabled="isAllDay">
+                <option value="">请选择</option>
+                <option ms-repeat="endTimes" ms-attr-value="el" ms-attr-selected="el == currEndTime">{{el}}</option>
+            </select>
+
+            <span class="checkbox" ms-class="checked:isAllDay" ms-click="toggleAllDay()">全天</span>
+            <span class="tip">（营业时段用于会所营业时间的设置）</span>
+        </div>
+    </div>
+
+    <div class="panel section-item" id="customerService">
+        <div>客服电话<span class="tip">（客服电话用于客户预约时联系会所）</span>
+            <div class="plus">
+                <a class="toolButton info" ms-visible="!isEditPhone" ms-click="doEditPhone()">编辑配置</a>
+                <a class="toolButton info" ms-visible="isEditPhone" ms-click="saveEditPhone()">保存配置</a>
+                <a class="toolButton" ms-visible="isEditPhone" ms-click="cancelEditPhone()">取消编辑</a>
+            </div>
+        </div>
+        <div class="phone-area">
+            <div ms-if="phones.length == 0">暂无客服电话</div>
+            <div class="phone-item" ms-repeat="phones">
+                <input type="text" maxlength="15" placeholder="请输入客服电话" ms-attr-readonly="!isEditPhone" ms-duplex="el">
+                <i ms-class-1="icon-subtract:!$last" ms-class-2="icon-plus:$last" ms-if="isEditPhone" ms-click="doOperationPhone($last,$index)"></i>
+            </div>
+            <!--<div class="phone-item">
+                <input type="text" maxlength="15" placeholder="请输入客服电话">
+                <i class="icon-plus"></i>
+            </div>-->
+        </div>
+    </div>
+
+    <div class="panel section-item" id="operationArea" ms-if="isEditing">
+        <div>
+            <a class="toolButton info" ms-click="save()">保存</a>
+            <a class="toolButton" ms-click="reset()">重置</a>
+        </div>
+    </div>
+
+    <div class="modal confirmModal" id="confirmModal">
+        <div>
+            <h3 class="header">确认<span>X</span></h3>
+            <div class="content">修改客服电话会变更会所资料中的客服电话，确认进行修改吗？</div>
+            <div class="footer"><a class="ok">确定</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+</section>

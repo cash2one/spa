@@ -1,0 +1,208 @@
+@import "../common/mixin.scss";
+section#noticeListPage{
+  div.form {
+    & > div {
+      padding: 8px 0;
+      border-bottom: 1px dotted #ddd;
+      & > input, & > select {
+        padding: 4px 5px;
+      }
+      & > input {
+        width: 220px;
+      }
+      & > label {
+        display: inline-block;
+        width: 130px;
+        text-align: right;
+      }
+      & > span {
+        margin-left: 4px;
+        color: #ff6666;
+      }
+      & > select {
+        margin-left: 0;
+      }
+    }
+    & > div.sex {
+      & > label {
+        float: left;
+      }
+      & > span {
+        display: block;
+        width: 40px;
+        position: relative;
+        float: left;
+        padding-left: 28px;
+        color: #6d6d6d;
+        font-weight: normal;
+        cursor: pointer;
+        & > i {
+          display: block;
+          position: absolute;
+          width: 21px;
+          height: 21px;
+          left: 0;
+          top: 0;
+          background: url("../../../img/common/radio.png");
+        }
+        &.active {
+          & > i {
+            background: url("../../../img/common/radio_act.png");
+          }
+        }
+      }
+    }
+    & > div.place {
+      & > select {
+        width: auto;
+        margin-right: 8px;
+      }
+
+    }
+  }
+  div#editTechModal {
+    & > div {
+      width: 765px;
+    }
+    & > div > div.form {
+      position: relative;
+      & > div {
+        margin:  8px 0 8px 165px;
+        &>label.ml-15{
+          width: auto;
+          margin-left: 15px;
+          color: #3b73af;
+          cursor: pointer;
+        }
+      }
+      &>div.avatar{
+        position: absolute;
+        margin: 0;
+        padding: 0;
+        left: 20px;
+        top: 12px;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        overflow: hidden;
+        border-bottom:0;
+        &>img{
+          width: 120px;
+          height: 120px;
+        }
+        &>span{
+          display: none;
+          width:120px;
+          height:40px;
+          position: absolute;
+          left:0;
+          bottom:0;
+          background-color: rgba(0,0,0,0.2);
+          color:#fff;
+          font-size:12px;
+          line-height: 40px;
+          text-align: center;
+          cursor: pointer;
+        }
+        &:hover{
+          &>span{
+            display: block;
+          }
+        }
+      }
+    }
+  }
+  div#addTechNoModal >div{
+    div.content{
+      div.radio{
+        border-bottom: none;
+        span{
+          width: 135px;
+        }
+      }
+      div.box{
+        padding: 0 25px 8px;
+        select{
+          width: 230px
+        }
+      }
+    }
+  }
+  div.uploadImgModal>div {
+    div.content {
+      @include transition(padding-bottom 0.3s);
+      form {
+        & > div {
+          position: relative;
+          height: 300px;
+          margin: 10px;
+          border: 1px dotted #ddd;
+          border-radius: 4px;
+          & > img {
+            //position: absolute;
+            max-width: 100% !important;
+          }
+          & > a {
+            position: absolute;
+            display: block;
+            width: 140px;
+            height: 50px;
+            top: 50%;
+            left: 50%;
+            margin-top: -25px;
+            margin-left: -70px;
+            line-height: 50px;
+            text-align: center;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #f9f9f9;
+            @include transition(all 0.3s);
+            &:hover {
+              background-color: $highlightColor;
+              color: #fff;
+              border-color: $highlightColor;
+            }
+          }
+          & > input {
+            position: absolute;
+            display: block;
+            width: 140px;
+            height: 50px;
+            top: 50%;
+            left: 50%;
+            margin-top: -25px;
+            margin-left: -70px;
+            opacity: 0;
+          }
+          & > span.selectionTxt {
+            display: none;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 4px 6px;
+            font-size: 12px;
+            & > b {
+              font-weight: normal;
+              margin-left: 5px;
+              &:first-child {
+                margin-left: 0;
+              }
+            }
+          }
+        }
+      }
+      &.hasImg {
+        padding-bottom: 50px;
+        & > form > div {
+          & > a, & > input {
+            top: 100%;
+            margin-top: 5px;
+          }
+        }
+      }
+    }
+  }
+}

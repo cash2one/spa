@@ -1,0 +1,179 @@
+<!--结算中心--账户金额-->
+<section id="accountInfoPage" class="ms-controller" ms-controller="accountInfoCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/accountInfo.js"></script>
+    <h3>账户余额：<b>{{dataObj.balance | bizMoneyToYuan}}</b>元</h3>
+    <div class="dataTable">
+        <table>
+            <thead>
+                <th>全部</th>
+                <th>未结算</th>
+                <th>已结算</th>
+                <th>划款</th>
+            </thead>
+            <tbody>
+                <td>{{dataObj.sum | bizMoneyToYuan}}</td>
+                <td>{{dataObj.unsettled | bizMoneyToYuan}}</td>
+                <td>{{dataObj.settled | bizMoneyToYuan}}</td>
+                <td>{{dataObj.transfer | bizMoneyToYuan}}</td>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="header">
+        <a ms-class="active:currType === 'all'" ms-click="changeSelectType('all')">全部</a>
+        <a ms-class="active:currType === 'unsettled'" ms-click="changeSelectType('unsettled')">未结算</a>
+        <a ms-class="active:currType === 'settled'" ms-click="changeSelectType('settled')">已结算</a>
+        <a ms-class="active:currType === 'transfer'" ms-click="changeSelectType('transfer')">划款</a>
+        <div class="times">
+            <a type="6">7天</a><a type="29" class="active">30天</a>
+            <input type="text" readonly/>
+            <!--<a>导出</a>-->
+        </div>
+    </div>
+
+    <div class="dataTable" ms-visible="currType === 'all'">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="8" class="header">
+                    全部
+                </th>
+            </tr>
+            <tr>
+                <th style="min-width:120px;">日期</th>
+                <th>
+                    <select ms-change="filterType()">
+                        <option value="">类型</option>
+                        <option value="unsettled">未结算</option>
+                        <option value="settled">已结算</option>
+                        <option value="transfer">划款</option>
+                    </select>
+                </th>
+                <th>资金变动金额</th>
+                <th>期初</th>
+                <th>期末</th>
+                <th>备注</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody ms-if="dataAllList.length == 0" class="noData">
+            <tr><td colspan="8">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="dataAllList.length != 0">
+            <tr ms-repeat="dataAllList">
+                <td>{{el.settleDate}}</td>
+                <td>{{el.tradeTypeDescription}}</td>
+                <td ms-class-1="text-red:el.amount - 0 > 0 &&　el.tradeType != 'transfer'" ms-class-2="text-green:el.tradeType == 'transfer'">{{el.tradeType != 'transfer' ? (el.amount - 0 > 0 ? '+':''):'-'}}{{el.amount | bizMoneyToYuan}}</td>
+                <td>{{el.originAmount | bizMoneyToYuan}}</td>
+                <td>{{el.currentAmount | bizMoneyToYuan}}</td>
+                <td ms-if="el.tradeType != 'transfer'"></td>
+                <td ms-if="el.tradeType == 'transfer'">划款时间：{{el.createTime}}<br>账期：{{el.periodStart}}至{{el.periodEnd}}</td>
+                <td>
+                    <a class="btn" ms-if="el.tradeType != 'transfer'" ms-attr-href="#!/accountInfoDetail?settledDate={{el.settleDate}}">详情</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="dataTable" ms-visible="currType === 'unsettled'">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="7" class="header">未结算</th>
+            </tr>
+            <tr>
+                <th>日期</th>
+                <th>订单笔数</th>
+                <th>总金额</th>
+                <th>技师提成</th>
+                <!--<th>退款</th>-->
+                <th>会所收入</th>
+                <th>手续费</th>
+                <th>会所实收</th>
+            </tr>
+            </thead>
+            <tbody ms-if="unsettledList.length == 0" class="noData">
+            <tr><td colspan="7">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="unsettledList.length != 0">
+            <tr ms-repeat="unsettledList">
+                <td>{{el.settleDate}}</td>
+                <td>{{el.tradeCount}}</td>
+                <td>{{el.tradeAmount | bizMoneyToYuan}}</td>
+                <td>{{el.techAmount | bizMoneyToYuan}}</td>
+                <!--<td>{{el.settleDate}}</td>-->
+                <td>{{el.clubAmount | bizMoneyToYuan}}</td>
+                <td>{{el.settleFee | bizMoneyToYuan}}</td>
+                <td>{{el.amount | bizMoneyToYuan}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="dataTable" ms-visible="currType === 'settled'">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="7" class="header">已结算</th>
+            </tr>
+            <tr>
+                <th>日期</th>
+                <th>订单笔数</th>
+                <th>总金额</th>
+                <th>技师提成</th>
+                <!--<th>退款</th>-->
+                <th>会所收入</th>
+                <th>手续费</th>
+                <th>会所实收</th>
+            </tr>
+            </thead>
+            <tbody ms-if="settledList.length == 0" class="noData">
+            <tr><td colspan="7">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="settledList.length != 0">
+            <tr ms-repeat="settledList">
+                <td>{{el.settleDate}}</td>
+                <td>{{el.tradeCount}}</td>
+                <td>{{el.tradeAmount | bizMoneyToYuan}}</td>
+                <td>{{el.techAmount | bizMoneyToYuan}}</td>
+                <!--<td>{{el.settleDate}}</td>-->
+                <td>{{el.clubAmount | bizMoneyToYuan}}</td>
+                <td>{{el.settleFee | bizMoneyToYuan}}</td>
+                <td>{{el.amount | bizMoneyToYuan}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="dataTable" ms-visible="currType === 'transfer'">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="6" class="header">划款</th>
+            </tr>
+            <tr>
+                <th>日期</th>
+                <th>划款时间</th>
+                <th>账期</th>
+                <th>划款金额</th>
+                <th>手续费</th>
+                <th>实际划款</th>
+            </tr>
+            </thead>
+            <tbody ms-if="transferList.length == 0" class="noData">
+            <tr><td colspan="6">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody  ms-if="transferList.length != 0">
+            <tr ms-repeat="transferList">
+                <td>{{el.settleDate}}</td>
+                <td>{{el.createTime}}</td>
+                <td><span>{{el.periodStart}}</span>至<span>{{el.periodEnd}}</span></td>
+                <td>{{el.amount | bizMoneyToYuan}}</td>
+                <td>{{el.settleFee | bizMoneyToYuan}}</td>
+                <td>{{el.amount | bizMoneyToYuan}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>

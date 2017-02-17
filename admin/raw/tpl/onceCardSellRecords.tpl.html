@@ -1,0 +1,76 @@
+<!--次卡销售记录-->
+<section id="onceCardSellRecordsPage" class="ms-controller" ms-controller="onceCardSellRecordsCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/onceCardSellRecords.js"></script>
+    <div class="panel">
+        <div class="panel-title"><h3>次卡销售记录</h3><div class="sizeOption" ms-if="dataList.length != 0">每页显示记录数：<select ms-change="changePageSize()"><option selected>20</option><option>50</option><option>100</option></select></div></div>
+        <div class="panel-content data-table">
+            <div class="dataTable">
+                <table>
+                    <thead>
+                    <tr class="search">
+                        <th colspan="14">
+                            <div class="searchForm name"><input class="customer-info" type="text" placeholder="输入客户名或者手机号" maxlength="50"/><a ms-click="doSearch()">搜索</a><a ms-click="doSearchAll()">查看全部</a></div>
+                            <div class="searchForm time"><a type="0">今天</a><a type="6">7天</a><a type="29">30天</a><a type="all" class="active">全部</a><input type="text" /></div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="width:4%">序号</th>
+                        <th style="width:9%"><select ms-change="changeCard()" style="max-width: 130px;"><option value="" ms-attr-selected="currCard==''">所有次卡</option><option ms-repeat="cardList" ms-attr-value="el.id" ms-attr-selected="currCard==el.id">{{ el.name }}</option></select></th>
+                        <th style="width:7%">购买时间</th>
+                        <th style="width:8%">有效期至</th>
+                        <th style="width:9%"><select ms-change="changeServiceItem()" style="max-width: 100px;"><option value="" ms-attr-selected="currServiceItem==''">所有项目</option><option ms-repeat="serviceItemList" ms-attr-value="el.id" ms-attr-selected="currServiceItem==el.id">{{ el.name }}</option></select></th>
+                        <th style="width:7%">套餐</th>
+                        <th style="width:7%">购买客户</th>
+                        <th style="width:7%">客户手机</th>
+                        <th style="width:6%">价格(元)</th>
+                        <th style="width:8%"><select ms-change="changeTech()" style="max-width: 110px;"><option value="" ms-attr-selected="currTech==''">所有技师</option><option ms-repeat="techList" ms-attr-value="el.id" ms-attr-selected="currTech==el.id">{{ el.name }}</option></select></th>
+                        <th style="width:7%">技师提成(元)</th>
+                        <th style="width:6%">已用/总量</th>
+                        <th style="width:8%"><select ms-change="changeStatus()"><option value="0" ms-attr-selected="currStatus==''">所有状态</option><option ms-repeat="statusList" ms-attr-value="el.value" ms-attr-selected="currStatus.length != 0 && currStatus==el.value">{{ el.label }}</option></select></th>
+                        <th style="width:7%">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody ms-if="dataList.length == 0" class="noData">
+                    <tr><td colspan="14">未能查询到数据！</td></tr>
+                    </tbody>
+                    <tbody ms-if="dataList.length != 0">
+                    <tr ms-repeat="dataList">
+                        <td>{{ $index+1+(currPage-1)*pageSize }}</td>
+                        <td>{{ el.name }}</td>
+                        <td>{{ el.createTime }}</td>
+                        <td>{{ el.useEndTime }}</td>
+                        <td>{{ el.itemName }}</td>
+                        <td>套餐{{ el.planName }}：买{{el.paidCount}}送{{el.giveCount}}</td>
+                        <td>{{ el.userName }}</td>
+                        <td>{{ el.telephone }}</td>
+                        <td>{{ el.amount | bizMoneyToYuan }}</td>
+                        <td class="red"><a ms-if="el.techId" ms-attr-href="'#!/techDetail?id='+el.techId">{{ el.techName  }}</a><span ms-if="!el.techId">-</span></td>
+                        <td><span ms-if="el.techAmount">{{ el.techAmount | bizMoneyToYuan }}</span><span ms-if="!el.techAmount">-</span></td>
+                        <td>{{ el.usedCount }} / {{ el.totalCount==0 ? "不限" : el.totalCount }}</td>
+                        <td>{{ el.statusName }}</td>
+                        <td><a class="btn" ms-click="doShowCheckRecord($index)">核销记录</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="pagination blue" id="dataListPagination" ms-visible="dataList.length != 0"><div class="pages"></div></div>
+
+    <!--核销记录-->
+    <div class="modal" id="checkRecordsModal">
+        <div>
+            <h3 class="header">核销记录<span>X</span></h3>
+            <div class="content">
+                <div class="list"><label>客户名：</label><span>{{ checkObj.userName }}</span><label>客户手机：</label><span>{{ checkObj.telephone }}</span></div>
+                <div class="list"><label>购买次卡：</label><span>{{checkObj.cardName}}</span><label>所购套餐：</label><span>套餐{{ checkObj.planName }}(买{{ checkObj.paidCount }}送{{ checkObj.giveCount }})</span></div>
+                <ul ms-visible="checkObj.list.length>0">
+                    <li ms-repeat="checkObj.list"><span>{{$index+1}}、</span>{{ el.verifyTime }}<span>核销人：</span>{{ el.name }}</li>
+                </ul>
+                <div ms-visible="checkObj.list.length==0" class="list"><label>核销记录：</label><span>无</span></div>
+                <div class="total">已核销：<span>{{ checkObj.list.length }}</span>剩余：{{ checkObj.paidCount+checkObj.giveCount-checkObj.list.length}}</div>
+            </div>
+            <div class="footer"><span class="tip"></span><a class="ok">确定</a></div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,36 @@
+<!--结算中心--技师优惠券提成-->
+<section id="techCouponRecordPage" class="ms-controller" ms-controller="accountRecordsCtrl">
+  <script type="text/javascript" src="club-admin/compressed/js/page/techCouponRecord.js"></script>
+  <div class="dataTable" id="dataListTable">
+    <table>
+      <thead>
+        <tr>
+          <th colspan="4" class="header">技师优惠券账户明细<div class="sizeOption" ms-if="dataList.length != 0">每页显示记录数：<select><option selected>20</option><option>50</option><option>100</option></select></div></th>
+        </tr>
+        <tr class="search">
+          <th colspan="4">
+            <div class="time"><a type="0">今天</a><a type="6">7天</a><a type="29">30天</a><a type="all" class="active">全部</a><input type="text" /></div>
+          </th>
+        </tr>
+        <tr>
+          <th style="width:25%">业务</th>
+          <th style="width:25%">优惠券名称</th>
+          <th style="width:25%">金额</th>
+          <th style="width:25%">时间</th>
+        </tr>
+      </thead>
+      <tbody ms-if="dataList.length == 0" class="noData">
+        <tr><td colspan="4">未能查询到数据！</td></tr>
+      </tbody>
+      <tbody ms-if="dataList.length != 0">
+        <tr ms-repeat="dataList">
+          <td>{{el.consumeType == "coupon_settlement" ? "优惠券结算" : "优惠券提成"}}</td>
+          <td>{{el.consumeRemark}}</td>
+          <td>{{el.consumeType == "coupon_settlement" ? el.consumeMoney/100.0:el.consumeMoney}}</td>
+          <td>{{el.consumeDate}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="pagination" id="dataListPagination" ms-visible="dataList.length != 0"><div class="pages"></div></div>
+</section>

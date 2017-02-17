@@ -1,0 +1,121 @@
+<!--优惠券-->
+<section id="oneYuanPage" class="ms-controller" ms-controller="oneYuanCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/oneYuan.js"></script>
+    <div class="dataTable" id="dataListTable">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="13" class="header">谁替我买单记录<a class="btn" ms-click="addOneYuan()">新增</a></th>
+            </tr>
+            <tr>
+                <th style="width:2%">序号</th>
+                <th style="width:7%">名称</th>
+                <th style="width:5%">连期期数</th>
+                <th style="width:5%">当前期数</th>
+                <th style="width: 4%">价格</th>
+                <th style="width: 7%">活动图</th>
+                <!--<th style="width:9%"><select ms-change="doChangeStatus()"><option ms-repeat="statusObj" ms-attr-value="{{el.value}}">{{el.name}}</option></select></th>-->
+                <th style="width:5%">状态</th>
+                <th style="width:5%">份数</th>
+                <th style="width:7%">剩余份数</th>
+                <th style="width:5%">已售出</th>
+                <th style="width:11%;">活动时间</th>
+                <th style="width: 10%">开奖日期</th>
+                <th style="width:24%;">操作</th>
+            </tr>
+            </thead>
+            <tbody ms-if="dataList.length == 0" class="noData">
+            <tr><td colspan="13">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="dataList.length != 0">
+            <tr ms-repeat="dataList">
+                <td>{{$index + pageSize * (currPage - 1) + 1}}</td>
+                <td>{{el.actName}}</td>
+                <td ms-if="el.maxPeriod == 0">无限期</td>
+                <td ms-if="el.maxPeriod == 1">不连期</td>
+                <td ms-if="el.maxPeriod > 1">共{{el.maxPeriod}}期</td>
+                <td>第{{el.currentPeriod}}期</td>
+                <td>{{el.actPrice}}</td>
+                <td>
+                    <a class="show-image" rel="activity-image" ms-attr-href="el.imageUrl"><img ms-attr-src="el.imageUrl" ></a>
+                </td>
+                <td>{{el.statusName}}</td>
+                <td>{{el.totalPaidCount}}</td>
+                <td>{{el.canPaidCount}}</td>
+                <td>{{el.paidCount}}</td>
+                <td ms-if="el.status !== 'not_online'"><span>{{el.startTime}}</span> - <span>{{el.endTime}}</span></td>
+                <td ms-if="el.status === 'not_online'">{{el.periodValidity}} 天</td>
+                <td>{{el.drawTime}}</td>
+                <td>
+                    <a class="btn" ms-if="(el.status == 'not_online' || el.status == 'end')  || el.currentPeriod <el.maxPeriod && (el.status=='refund' || el.status=='end' || el.status=='complete')" ms-click="doOperaConfirm('online',$index)">上线</a>
+                    <a class="btn" ms-if="el.isCanOffline == 'Y'" ms-click="doOperaConfirm('not_online',$index)">下线</a>
+                    <a class="btn" ms-if="el.maxPeriod != 1 && el.currentPeriod != el.maxPeriod && el.isPeriod == 'Y'" ms-click="doOperaConfirm('stop_period',$index)">停止连期</a>
+                    <a class="btn" ms-if="el.maxPeriod != 1 && el.currentPeriod != el.maxPeriod && el.isPeriod == 'N'" ms-click="doOperaConfirm('start_period',$index)">开始连期</a>
+                    <a class="btn" ms-click="doEditOneYuan($index)">修改</a>
+                    <a class="btn" ms-click="doCheckOneYuan($index)">详情</a>
+                    <a class="btn" ms-attr-href="'#/oneYuanSellRecords?oneYuanBaseId=' + el.oneYuanBaseId + '&currentPeriod=' + el.currentPeriod ">购买记录</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination" id="dataListPagination" ms-if="dataList.length != 0"><div class="pages"></div></div>
+
+    <div class="modal" id="confirmModal">
+        <div>
+            <h3 class="header">{{currOpera.title}}<span>X</span></h3>
+            <div class="content">{{currOpera.text}}</div>
+            <div class="footer"><a class="ok">{{currOpera.btnText}}</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+
+    <div class="modal" id="editOneYuanModal">
+        <div>
+            <h3 class="header">{{editObj.title}}<span>X</span></h3>
+            <div class="content">
+                <form id="editForm" action='club/one_yuan/edit' method="post" enctype='multipart/form-data'>
+                    <input type='hidden' name='id' id="currEditId"/>
+                    <input type='hidden' name='image' id="currEditImageId" />
+                    <input type='hidden' id='x' name='x' value='0' />
+                    <input type='hidden' id='y' name='y' value='0' />
+                    <input type='hidden' id='factor' name='factor' value='1' />
+                    <input type='hidden' id='w' name='width' value='1' />
+                    <input type='hidden' id='h' name='height' value='1' />
+                    <input type='hidden' id='imgFileName'/>
+                    <input type="hidden" id="actStatusDlg" name="status" value="not_online">
+                    <div class="img"><img /><a ms-if="editObj.flag != 'check'">上传项目图片</a><input type="file" id="uploadImgBtn" name="imgFile" ms-if="editObj.flag != 'check'"/><div id="fileManager">图片库选择</div><span class="selectionTxt"></span></div>
+                    <div class="item"><label>选择项目：</label><select id="itemSelect" name="prizeId" ms-click="projectChange()" ms-attr-disabled="editObj.flag == 'check'">
+                            <option value=""></option>
+                            <option ms-repeat="serviceItems" ms-attr-value="{{el.id}}">{{el.name}}</option>
+                        </select>
+                        <span class="item-tip">只显示价格小于1000的项目</span>
+                    </div>
+                    <div class="item amount"><label>连续期数：</label><input type="text" name="maxPeriod" id="maxPeriod" value="1" maxlength="4"  ms-attr-disabled="editObj.flag == 'check'" oninput="this.value=this.value.replace(/\D+/g,'')"/> 期
+                        <span class="item-tip">购买完成后自动创建下一期活动，填入1为不连期，填入0为无限期</span></div>
+                    <div class="item act-days">
+                        <label >活动时间：</label><input name="periodValidity" id="periodValidity" type="text" maxlength="7" ms-duplex="currPeriodValidity" ms-attr-disabled="editObj.flag == 'check'"  oninput="this.value=this.value.replace(/^[^1-9]|\D+$/g,'')"> 天
+                        <span class="item-tip">超过 {{currPeriodValidity}} 天未购买完将自动退款</span>
+                    </div>
+                    <div class="item">
+                        <label >项目价格：</label><span> {{currProjectPrice}} 元</span>
+                    </div>
+                    <div class="item amount">
+                        <label >活动单价：</label>
+                        <input type="text" name="unitPrice" id="unitPrice" ms-duplex="currUnitPrice"  ms-attr-disabled="editObj.flag == 'check'" oninput="this.value=this.value.replace(/^[^1-9]|\D+$/g,'')">
+                        <span class="item-tip">项目价格整除活动单价,向上取整得出活动份数，总共{{currCount}}份</span>
+                    </div>
+                    <textarea id="itemDescription" name="actDescription"></textarea>
+                    <div class="item rules clearfix"><label>描述：</label><div id="itemDescriptionContent" ms-attr-contenteditable="editObj.flag != 'check'"></div></div>
+                    <!--<div class="item" ms-if="editObj.flag == 'check' && editObj.status == 'complete'"><label>中奖用户：</label><span>kllnger 18579055596 (256)</span></div>-->
+                </form>
+            </div>
+            <div class="footer">
+                <span class="tip"></span>
+                <a class="ok" data-type="sureBtn" ms-if="editObj.flag == 'check'">确定</a>
+                <a class="ok" data-type="submit" ms-if="editObj.flag != 'check'">提交</a>
+                <a class="ok" data-type="submitAndPublish" ms-if="editObj.flag == 'add'">提交并发布</a>
+                <a class="cancel" ms-if="editObj.flag != 'check'">取消</a>
+            </div>
+        </div>
+    </div>
+</section>

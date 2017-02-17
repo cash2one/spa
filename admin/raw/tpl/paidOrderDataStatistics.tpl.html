@@ -1,0 +1,137 @@
+<!--数据统计--付费预约-->
+<section id="paidOrderDataStatisticsPage" class="ms-controller" ms-controller="paidOrderDataStatisticsCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/paidOrderDataStatistics.js"></script>
+    <div class="dataTable paidOrderTab">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="10" class="header">付费预约<div class="time statistic" ms-visible="paidOrderSwitch=='on'"><a type="0">今天</a><a type="6">7天</a><a type="thisMonth" class="active">本月</a><a type="lastMonth">{{lastMonth}}月</a><a type="all">全部</a><input type="text" /></div></th>
+            </tr>
+            <tr class="headerCol">
+                <th style="width:10%"></th>
+                <th style="width:10%">未处理订单</th>
+                <th style="width:10%">待接新单</th>
+                <th style="width:10%">已拒绝订单</th>
+                <th style="width:10%">超时订单</th>
+                <th style="width:10%">已接受订单</th>
+                <th style="width:10%">即将到店</th>
+                <th style="width:10%">已核销订单</th>
+                <th style="width:10%">爽约订单</th>
+                <th style="width:10%">应结算收入</th>
+            </tr>
+            </thead>
+            <tbody class="noData" ms-if="paidOrderSwitch=='off'">
+                <tr>
+                    <td colspan="10">当前未开通付费预约！</td>
+                </tr>
+            </tbody>
+            <tbody ms-if="paidOrderSwitch=='on'">
+            <tr>
+                <td>订单数量</td>
+                <td>{{countData.noHandlerCount}}</td>
+                <td>{{countData.submitCount}}</td>
+                <td>{{countData.rejectCount}}</td>
+                <td>{{countData.overtimeCount}}</td>
+                <td>{{countData.hasAcceptCount}}</td>
+                <td>{{countData.acceptCount}}</td>
+                <td>{{countData.completeCount}}</td>
+                <td>{{countData.expireCount}}</td>
+                <td>{{countData.incomeCount}}</td>
+            </tr>
+            <tr>
+                <td>会所收入(元)</td>
+                <td>{{countData.noHandlerSum}}</td>
+                <td>{{countData.submitSum}}</td>
+                <td>{{countData.rejectSum}}</td>
+                <td>{{countData.overtimeSum}}</td>
+                <td>{{countData.hasAcceptSum}}</td>
+                <td>{{countData.acceptSum}}</td>
+                <td>{{countData.clubCompleteSum}}</td>
+                <td>{{countData.clubExpireSum}}</td>
+                <td>{{countData.clubIncomeSum}}</td>
+            </tr>
+            <tr>
+                <td>技师提成(元)</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>{{countData.techCompleteSum}}</td>
+                <td>{{countData.techExpireSum}}</td>
+                <td>{{countData.techIncomeSum}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="note">
+        <div>注：</div>
+        <ul>
+            <li>① 付费预约 = 定金预约 + 全额预约</li>
+            <li>② 未处理订单 = 待接新单 + 已拒绝订单 + 超时订单</li>
+            <li>③ 已接受订单 = 即将到店 + 已核销订单 + 爽约订单</li>
+            <li>④ 应结算收入 = 已核销订单 + 爽约订单</li>
+        </ul>
+    </div>
+
+    <div class="dataTable" id="orderListDataTable">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="11" class="header">订单列表<div class="sizeOption">每页显示记录数：<select><option selected>20</option><option>50</option><option>100</option></select></div></th>
+            </tr>
+            <tr class="search">
+                <th colspan="11">
+                    <div class="name"><input type="text" id="search-serial" placeholder="请输入技师编号或者昵称" maxlength="10" ms-keypress="doSearchEnter()" /><a ms-click="doSearchQuery()">搜索</a></div>
+                </th>
+            </tr>
+            <tr>
+                <th style="width:4%">序号</th>
+                <th style="width:11%">预约时间</th>
+                <th style="width:10%">到店时间</th>
+                <th style="width:9%">技师名称</th>
+                <th style="width:9%">技师编号</th>
+                <th style="width:6%">预约人</th>
+                <th style="width:8%">预约人号码</th>
+                <th style="width:8%">
+                    <select id="appointTypeSelect" ms-change="appointTypeChange()">
+                        <option value="">预约类型</option>
+                        <!--<option value="appoint">免费预约</option>
+                        <option value="phone">电话预约</option>-->
+                        <option value="paid">定金预约</option>
+                        <option value="paid_full">全额预约</option>
+                    </select>
+                </th>
+                <th style="width:8%">所选项目</th>
+                <th style="width:11%">预约定金</th>
+                <th style="width:12%"><select ms-change="doChangeStatusQuery()"><option ms-repeat="$statusObj" ms-attr-value="{{el.value}}">{{el.name}}</option></select></th>
+            </tr>
+            </thead>
+            <tbody ms-if="orders.length == 0" class="noData">
+            <tr><td colspan="11">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="orders.length != 0" class="hasData">
+            <tr ms-repeat="orders">
+                <td>{{$index+1+(currPage-1)*pageSize}}</td>
+                <td>{{el.createdAt}}</td>
+                <td>{{!el.appointTime ? '-' : el.appointTime}}</td>
+                <td class="link">
+                    <a ms-if="el.isRemove=='N' && el.technicianName != null" ms-attr-href="'#!/techDetail?id='+el.technicianId">{{el.technicianName}}</a>
+                    <span ms-if="el.technicianName == null">-</span>
+                    <span ms-if="el.isRemove=='Y'">{{el.technicianName}}</span>
+                </td>
+                <td>{{el.technicianSerialNo=='' ? '-' : el.technicianSerialNo}}</td>
+                <td>{{el.customerName}}</td>
+                <td>{{el.phoneNum}}</td>
+                <td ms-class-1="c-red:el.payType == 2">{{$appointTypes[el.orderType == 'paid' ? el.payType:el.orderType]}}</td>
+                <td ms-class-1="c-red:el.payType == 2">{{el.serviceItemName ? el.serviceItemName : '-'}}</td>
+                <td>{{el.downPayment || '' }}</td>
+                <td>{{el.statusName}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination" id="dataListPagination" ms-visible="orders.length != 0"><div class="pages"></div></div>
+    <div class="linkGroup" ms-if="paidOrderSwitch=='on'"><a href="#!/paidOrderChartData">图表展示</a><a href="#!/paidOrderDailyData">每日数据</a></div>
+</section>

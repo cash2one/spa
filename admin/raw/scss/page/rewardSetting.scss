@@ -1,0 +1,222 @@
+@import "../common/mixin.scss";
+section#rewardSettingPage{
+  div.title{
+    position: relative;
+    height:42px;
+    line-height: 42px;
+    border-radius: 4px;
+    border:1px solid #ddd;
+    margin-bottom: 15px;
+    padding-left:10px;
+    @include ty(0 5px 5px rgba(0,0,0,.05));
+    &.gift{
+      margin-top: 12px;
+    }
+    >label{
+      font-weight: bold;
+    }
+    >div{
+      position: absolute;
+      right: 70px;
+      height: 22px;
+      top: 8px;
+      width: 58px;
+      background-color: #eee;
+      border: 1px solid #eee;
+      border-radius: 20px;
+      cursor: pointer;
+      &>i{
+        position: absolute;
+        display: block;
+        width: 22px;
+        height: 22px;
+        top: 0;
+        right: 35px;
+        background-color: #fff;
+        border-radius: 50%;
+        @include transition(all 0.3s);
+      }
+      &.active{
+        background-color: #fb5549;
+        border-color: #fb5549;
+        &>i{
+          right:0;
+        }
+      }
+    }
+    >span{
+      position: absolute;
+      right:12px;
+      font-weight: bold;
+    }
+  }
+
+  div.off-switch{
+    height: 152px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    line-height: 152px;
+    text-align: center;
+  }
+
+  div.radio{
+    border-top: 1px dotted #ddd;
+    text-align: center;
+    position: relative;
+    text-indent: 8px;
+    cursor: pointer;
+    &:before{
+      content: "";
+      position: absolute;
+      width: 21px;
+      height: 21px;
+      top: 9px;
+      left: 23px;
+      background: url("../../../img/common/radio.png");
+    }
+    &.selected{
+      &:before{
+        background: url("../../../img/common/radio_act.png");
+      }
+    }
+  }
+
+  div.list{
+    border:1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px 10px 0;
+    div.tools{
+      float: right;
+    }
+    >ul{
+      margin-top: 38px;
+      >li{
+        width: 180px;
+        margin-right: 30px;
+        border: 1px dotted #ccc;
+        border-radius: 4px;
+        float: left;
+        padding: 6px 0 0;
+        margin-bottom: 10px;
+        &.money{
+          >div{
+            height: 36px;
+            text-align: center;
+            line-height: 40px;
+            >input{
+              display: none;
+              padding: 2px 0;
+              text-align: center;
+            }
+            &:nth-of-type(1){
+              border-bottom: 1px dotted #ddd;
+              >input{
+                width: 50px;
+                margin-right: 3px;
+              }
+            }
+            &:nth-of-type(2){
+              >input{
+                width: 70px;
+              }
+            }
+          }
+        }
+        &.gift{
+          position: relative;
+          overflow: hidden;
+          >div{
+            &:nth-of-type(1){
+              padding: 8px 0;
+              >img{
+                display: block;
+                margin: 0 auto;
+                width: 50px;
+                height: 50px;
+              }
+            }
+            &:nth-of-type(2){
+              height: 28px;
+              line-height: 28px;
+              text-align: center;
+            }
+            &:nth-of-type(4){
+              position: absolute;
+              height: 100px;
+              line-height: 100px;
+              left:0;
+              top:0;
+              width: 100%;
+              background-color: rgba(0,0,0,0.5);
+              text-align: center;
+              color: #fff;
+              -webkit-transform: translateY(-100%);
+              -moz-transform: translateY(-100%);
+              transform: translateY(-100%);
+              -moz-transition: transform 0.3s ease-out;
+              -webkit-transition: transform 0.3s ease-out;
+              transition: transform 0.3s ease-out;
+              cursor: pointer;
+            }
+            &.radio{
+              height: 37px;
+              line-height: 37px;
+            }
+          }
+          &:hover{
+            >div:nth-of-type(4){
+              -moz-transform: translateY(0%);
+              -webkit-transform: translateY(0%);
+              transform: translateY(0%);
+            }
+          }
+        }
+        &:last-child{
+          margin-right: 0;
+        }
+      }
+      &.editable{
+        >li{
+          &.money{
+            >div{
+              >span{
+                display: none;
+              }
+              >input{
+                display: inline-block;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .gift-list{
+    padding: 15px 0 5px 10px;
+    >li{
+      width: 135px;
+      margin-right: 10px;
+      float: left;
+      border: 1px dotted #ccc;
+      border-radius: 4px;
+      padding: 6px 0;
+      margin-bottom: 10px;
+      cursor: pointer;
+      >img{
+        display: block;
+        width: 46px;
+        height: 46px;
+        margin: 0 auto;
+      }
+      >div{
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+      }
+      &.selected{
+        border:1px solid #fb5549;
+      }
+    }
+  }
+}

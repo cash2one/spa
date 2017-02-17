@@ -1,0 +1,164 @@
+@import "../common/mixin.scss";
+section#paidOrderDataStatisticsPage{
+  .paidOrderTab{
+    tr.headerCol>th:nth-of-type(4n+2),tr>td:nth-of-type(4n+2){
+      background-color: #ffeaea;
+    }
+    tr.headerCol>th{
+      height:70px;
+      font-style: italic;
+    }
+    tr.headerCol>th:nth-of-type(4n+2){
+      position: relative;
+      color:#6d6d8a;
+      font-weight: bold;
+      font-style: normal;
+    }
+    tr.headerCol>th:nth-of-type(10)>div.tip{
+      left:0;
+      @include tOrigin(80% 0);
+      &:after{
+        left:80%;
+      }
+    }
+    tr>td{
+      font-style: italic;
+      font-weight: bold;
+    }
+    tr>td:nth-of-type(1){
+      font-style: normal;
+    }
+    tr>td:nth-of-type(4n+2){
+      color:#fb5549;
+      font-size:24px;
+      font-style: normal;
+    }
+    tbody>tr{
+      border-top-color:#ccc;
+      td.c-red{
+        color: $red;
+      }
+    }
+  }
+
+  div.note{
+    border:1px solid #eee;
+    border-radius: 4px;
+    margin-top:8px;
+    padding:6px 10px;
+    background-color: #fdfdfd;
+    >div{
+      font-weight: bold;
+    }
+    >ul{
+      >li{
+        line-height: 1.6;
+        padding-left:32px;
+      }
+    }
+  }
+
+  div.linkGroup{
+    margin-top: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding:20px;
+    &>a{
+      padding: 8px 15px;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      margin-right:15px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+      @include transition(all 0.3s);
+      &:hover{
+        color:#fff;
+        background-color: $highlightColor;
+        border-color:$highlightColor;
+      }
+    }
+  }
+
+  table>thead{
+    div{
+      &>input{
+        padding:4px 8px;
+        width:230px;
+      }
+      &>select{
+        padding:4px 5px;
+      }
+      &>a{
+        color: #666;
+        cursor: pointer;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px 10px;
+        margin-right: 5px;
+        background-color: #f9f9f9;
+        font-weight: normal;
+        &:hover,&.active{
+          background-color: $highlightColor;
+          border-color:$highlightColor;
+          color:#fff;
+        }
+      }
+    }
+  }
+
+  div#orderListDataTable{
+    margin-top:15px;
+    &>table{
+      &>thead>tr.search>th{
+        font-size:14px;
+        padding:2px 0;
+        &>div{
+          &>input{
+            padding:4px 8px;
+            width:230px;
+          }
+          &>select{
+            padding:4px 5px;
+          }
+          &>a{
+            color: #666;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 10px;
+            margin-right: 5px;
+            background-color: #f9f9f9;
+            font-weight: normal;
+            &:hover,&.active{
+              background-color: $highlightColor;
+              border-color:$highlightColor;
+              color:#fff;
+            }
+          }
+        }
+        &>div.name{
+          float: left;
+          margin-left:10px;
+          &>input{
+            margin-right:5px;
+          }
+        }
+        &>div.time{
+          float: right;
+          margin-right:10px;
+        }
+      }
+      &>tbody{
+        td.link>a{
+          &:hover{
+            text-decoration: underline;
+            color:$highlightColor;
+          }
+        }
+        tr:nth-child(even){
+          background-color: #e3ffff;
+        }
+      }
+    }
+  }
+}

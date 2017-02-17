@@ -1,0 +1,71 @@
+@import "../common/mixin.scss";
+section#cashRechargePage{
+  div.dataTable{
+    &>table{
+      >thead>tr>th.header>div{
+        top:0;
+      }
+      &>thead>tr.search>th{
+        font-size:14px;
+        padding:2px 0;
+        &>div{
+          &>input{
+            padding:4px 8px;
+            width:230px;
+          }
+          &>select{
+            padding:4px 5px;
+          }
+          &>a{
+            color: #666;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 10px;
+            margin-right: 5px;
+            background-color: #f9f9f9;
+            font-weight: normal;
+            &:hover,&.active{
+              background-color: $highlightColor;
+              border-color:$highlightColor;
+              color:#fff;
+            }
+          }
+        }
+        &>div.time{
+          float: right;
+          margin-right:10px;
+        }
+      }
+    }
+  }
+
+  div.modal>div>h3.header>span {
+    font-size: 30px;
+  }
+  .table-row{
+    >div{
+      display: table;
+      width: 100%;
+      >div{
+        display: table-cell;
+        vertical-align: top;
+        &:first-child{
+          width: 180px;
+          >label{
+            display: inline-block;
+            width: 180px;
+            text-align: right;
+          }
+        }
+        &:last-child{
+          >textarea{
+            padding: 6px 10px;
+            width: 250px;
+            resize: none;
+          }
+        }
+      }
+    }
+  }
+}

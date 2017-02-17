@@ -1,0 +1,193 @@
+<!--营销中心--大转盘活动-->
+<section id="luckyWheelPage" class="ms-controller" ms-controller="luckyWheelCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/luckyWheel.js"></script>
+    <div class="panel">
+        <div class="panel-title"><h3>大转盘活动列表</h3><a class="toolButton info" ms-click="doAddDial()">添加</a></div>
+        <div class="panel-content data-table">
+            <div class="dataTable" id="dataListTable">
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width:4%">序号</th>
+                        <th style="width:15%">活动名称</th>
+                        <th style="width:25%">活动时间</th>
+                        <th style="width:10%">状态</th>
+                        <th style="width:10%">抽奖人次</th>
+                        <th style="width:36%;min-width: 245px;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody ms-if="dataList.length == 0" class="noData">
+                    <tr><td colspan="6">未能查询到数据！</td></tr>
+                    </tbody>
+                    <tbody ms-if="dataList.length != 0">
+                    <tr ms-repeat="dataList">
+                        <td>{{(page - 1)*pageSize+$index+1}}</td>
+                        <td>{{el.name}}</td>
+                        <td>{{el.startTime}} 至 {{el.endTime}}</td>
+                        <td >{{el.status == "0" ? "草稿" : (el.status == "1" ? "上线" : "下线")}}</td>
+                        <td>{{el.drawCount}}</td>
+                        <td>
+                            <a class="btn" ms-click="doline(el.id,el.status)">{{el.status == "1" ? "下线" : "上线"}}</a>
+                            <a class="btn" ms-visible="el.status != '1'" ms-click="doEditDial(el.id,'edit')">修改</a>
+                            <a class="btn" ms-click="doEditDial(el.id,'see')">详情</a>
+                            <a class="btn" ms-attr-href="#!/dialSellRecord?actId={{el.id}}">抽奖记录</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="pagination" id="dataListPagination" ms-visible="dataList.length != 0"><div class="pages"></div></div>
+
+    <div class="modal" id="seeDialSellModal">
+        <div>
+            <h3 class="header">查看奖品详情<span>X</span></h3>
+            <div class="content form">
+                <div>
+                    <label>活动名称：</label>{{activity.name}}
+                </div>
+                <div>
+                    <label>活动日期：</label>{{activity.startTime}} 至 {{activity.endTime}}
+                </div>
+                <div class="clearfix"  style="border-bottom:none">
+                    <label style="float: left">奖品设置：</label>
+                    <table style="float: left">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>类型</th>
+                            <th>奖品</th>
+                            <th>数量</th>
+                            <th>中奖概率</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ms-repeat="prizeList">
+                            <td class="level">{{$index+1}}</td>
+                            <td class="prizeTypeTab">{{el.type == "0" ? "积分" : (el.type == "1" ? "实物" : (el.type == "2" ? "优惠券" : (el.type == "3" ? "项目" : (el.type == "4" ? "抽奖机会" : (el.type == "5" ? "谢谢惠顾" : "-")))))}}</td>
+                            <td class="name">{{el.name}}</td>
+                            <td class="number">{{el.type != '4' && el.type != '5' ? el.prizeCount : '-'}}</td>
+                            <td class="concept">{{el.probability}} %</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <label>抽奖次数：</label>
+                    <b style="display: inline-flex;">
+                        每个用户每天能获得两次抽奖机会（每日抽奖次数不累计）<br/>分享可获得一次抽奖机会（每天仅限一次且可累计）</b>
+                </div>
+                <div class="clearfix">
+                    <label style="float: left">活动说明：</label>
+                    <div style="float: left;width: 650px" >{{activity.description | html }}</div>
+                </div>
+            </div>
+            <div class="footer">
+                <a class="cancel">取消</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="editDialSellModal">
+        <div>
+            <h3 class="header">{{editModal}}<span>X</span></h3>
+            <div class="content form">
+                <div>
+                    <label>活动名称：</label>
+                    <input type="text" maxlength="15" placeholder="" name="aticName" ms-attr-value="{{activity.name}}" > *最多输入15个字符
+                </div>
+                <div>
+                    <label>活动日期：</label>
+                    <input type="text" name="addTime" > *
+                </div>
+                <div class="clearfix"  style="border-bottom:none">
+                    <label style="float: left">奖品设置：</label>
+                    <table style="float: left">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>类型</th>
+                            <th>奖品</th>
+                            <th>数量</th>
+                            <th>中奖概率</th>
+                        </tr>
+                        </thead>
+                        <tbody class="add" ms-if="doPrizeList == 'add'">
+                        <tr ms-repeat="prizeTypeListNew">
+                            <td class="level">{{$index+1}}</td>
+                            <td class="prizeTypeTab">
+                                <select class="prizeType" ms-duplex-string="el.prizeType">
+                                    <option ms-repeat="prizeTypeList" ms-attr-value="{{el.prizeType}}">{{el.remark}}</option>
+                                </select>
+                            </td>
+                            <td class="name">
+                                <input type="text" placeholder="输入积分" ms-if="el.prizeType == '0'">
+                                <input type="text" placeholder="输入奖品名称" ms-if="el.prizeType == '1'">
+                                <select ms-if="el.prizeType == '2'">
+                                    <option ms-repeat="couponList" ms-attr-value="{{el.actId}}">{{el.actTitle}}</option>
+                                </select>
+                                <select ms-if="el.prizeType == '3'">
+                                    <option ms-repeat="projectList" ms-attr-value="{{el.projectId}}">{{el.projectName}}</option>
+                                </select>
+                            </td>
+                            <td class="number">
+                                <input type="text" ms-if="el.prizeType != '4' && el.prizeType != '5'">
+                            </td>
+                            <td class="concept"><input type="text" name="probability"> %</td>
+                        </tr>
+                        </tbody>
+
+                        <tbody  class="edit" ms-if="doPrizeList != 'add'">
+                        <tr ms-repeat="prizeList">
+                            <td class="level">{{$index+1}}</td>
+                            <td class="prizeTypeTab">
+                                <select class="prizeType" ms-duplex-string="el.type" ms-change="doChangeType(this)">
+                                    <option ms-repeat="prizeTypeList" ms-attr-value="{{el.prizeType}}">{{el.remark}}</option>
+                                </select>
+                            </td>
+                            <td class="name">
+                                <input type="text" placeholder="输入积分" ms-if="el.type == '0'" ms-attr-value="{{el.content}}">
+                                <input type="text" placeholder="输入奖品名称" ms-if="el.type == '1'" ms-attr-value="{{el.name}}">
+                                <select ms-if="el.type == '2'" ms-duplex-string="el.content">
+                                    <option ms-repeat="couponList" ms-attr-value="{{el.actId}}">{{el.actTitle}}</option>
+                                </select>
+                                <select ms-if="el.type == '3'" ms-duplex-string="el.content">
+                                    <option ms-repeat="projectList" ms-attr-value="{{el.projectId}}">{{el.projectName}}</option>
+                                </select>
+                            </td>
+                            <td class="number">
+                                <input type="text" ms-if="el.type != '4' && el.type != '5'" ms-attr-value="{{el.prizeCount}}">
+                            </td>
+                            <td class="concept">
+                                <input type="text" name="probability" ms-attr-value="{{el.probability}}"> %
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="probabilityTitle">
+                    <label></label>
+                    <span style="float: right">
+                        中奖概率总和必须为<b>100%</b>，当前总和<b>{{probability | number(2)}}%</b></span>
+                </div>
+                <div>
+                    <label>抽奖次数：</label>
+                    <b style="display: inline-flex;">
+                        每个用户每天能获得两次抽奖机会（每日抽奖次数不累计）<br/>分享可获得一次抽奖机会（每天仅限一次且可累计）</b>
+                </div>
+                <div class="clearfix">
+                    <label style="float: left">活动说明：</label>
+                    <div style="float: left" id="editActContent" contenteditable="true"></div>
+                </div>
+            </div>
+            <div class="footer">
+                <span class="tip"></span>
+                <a class="ok" ms-if="doPrizeList!='see'" ms-click="doSaveCoupon('saveAndOnline')">保存并发布</a>
+                <a class="ok" ms-if="doPrizeList!='see'" ms-click="doSaveCoupon('save')">保存</a>
+                <a class="cancel">取消</a>
+            </div>
+        </div>
+    </div>
+</section>

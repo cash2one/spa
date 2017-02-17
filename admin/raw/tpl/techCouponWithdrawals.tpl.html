@@ -1,0 +1,50 @@
+<!--结算中心--技师优惠券提成-->
+<section id="techCouponWithdrawalsPage" class="ms-controller" ms-controller="accountRecordsCtrl">
+  <script type="text/javascript" src="club-admin/compressed/js/page/techCouponWithdrawals.js"></script>
+  <div class="dataTable" id="dataListTable">
+    <table>
+      <thead>
+        <tr>
+          <th colspan="5" class="header">技师优惠券账户详情<div class="sizeOption" ms-if="dataList.length != 0">每页显示记录数：<select><option selected>20</option><option>50</option><option>100</option></select></div></th>
+        </tr>
+        <tr class="search">
+          <th colspan="5">
+            <div class="name"><input maxlength="30" placeholder="技师名称或编号" name="likeName"><input maxlength="30" placeholder="技师手机号" name="phoneNum"><a ms-click="doViewClubList">搜索</a></div>
+          </th>
+        </tr>
+        <tr>
+          <th style="width:20%">技师手机号</th>
+          <th style="width:20%">技师名称</th>
+          <th style="width:20%">技师编号</th>
+          <th style="width:20%">账户余额</th>
+          <th style="width:20%">操作</th>
+        </tr>
+      </thead>
+      <tbody ms-if="dataList.length == 0" class="noData">
+        <tr><td colspan="5">未能查询到数据！</td></tr>
+      </tbody>
+      <tbody ms-if="dataList.length != 0">
+        <tr ms-repeat="dataList">
+          <td>{{el.phoneNum}}</td>
+          <td>{{el.techName}}</td>
+          <td>{{el.serialNo}}</td>
+          <td>{{el.amount}}元</td>
+          <td><a ms-click="doStatement(el)">结算</a><a ms-href="#!/techCouponRecord?userId={{el.userId}}">查看明细</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="pagination" id="dataListPagination" ms-visible="dataList.length != 0"><div class="pages"></div></div>
+
+  <div class="modal" id="confirmModal">
+    <div>
+      <h3 class="header">确认<span>X</span></h3>
+      <div class="content form">
+        <div><label>余额：{{doStatementModal.amount}}</label></div>
+        <div><label>结算金额：</label><input type="text" maxlength="15" placeholder="" name="editAmount"><span>*</span></div>
+      </div>
+      <div class="footer"><span class="tip"></span><a class="ok">确定</a><a class="cancel">取消</a></div>
+    </div>
+  </div>
+
+</section>

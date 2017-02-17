@@ -1,0 +1,73 @@
+<!--买单设置-->
+<section id="fastPaySettingPage" class="ms-controller" ms-controller="fastPaySettingCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/fastPaySetting.js"></script>
+    <div class="switch-title">
+        <label>买单设置</label>
+        <div ms-class="{{fastPaySwitch ? 'active' : ''}}" ms-click="doClickSwitch()"><i></i></div>
+        <span>{{fastPaySwitch ? '已开启' : '已关闭'}}</span>
+    </div>
+
+    <div class="no-switch" ms-visible="!fastPaySwitch">当前未开启买单！需要开启请点击右上角开启按钮！</div>
+
+    <div class="panel" ms-visible="fastPaySwitch">
+        <div class="panel-title">
+            <h3>可买单技师<span>(共{{ enabledTechList.length }}人)</span></h3>
+            <div><a class="toolButton info" ms-click="doAddTech()">增加</a><a ms-click="doSave()" class="toolButton success">保存</a></div>
+        </div>
+        <div class="panel-content clearfix">
+            <div class="tech" ms-repeat="enabledTechList" ms-click="doViewTech(el.id)">
+                <div ms-attr-style="background-image: url({{el.avatarUrl}})"></div>
+                <div>{{ el.techNo }}</div>
+                <div>{{ el.name }}</div>
+                <div ms-click="doDelTech($index,$event)">&times;</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel" style="margin-top: 10px;" ms-visible="fastPaySwitch">
+        <div class="panel-title">
+            <h3>不可买单技师<span>(共{{ disabledTechList.length }}人)</span></h3>
+            <span>未设置工号的技师暂不可开通买单功能</span>
+        </div>
+        <div class="panel-content clearfix">
+            <div class="tech" ms-repeat="disabledTechList" ms-click="doViewTech(el.id)">
+                <div ms-attr-style="background-image: url({{el.avatarUrl}}),url({{defaultHeader}})"></div>
+                <div>{{ el.techNo }}</div>
+                <div>{{ el.name }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="selectTechModal">
+        <div>
+            <h3 class="header">选择技师<span>X</span></h3>
+            <div class="content table">
+                <div class="dataTable">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th style="width:25%">工号</th>
+                            <th style="width:50%">昵称</th>
+                            <th style="width:25%" class="check-box"><input ms-visible="showCheckAll" id="checkAllTech" type="checkbox" ms-change="doSelectAll()"/><label ms-visible="showCheckAll" for="checkAllTech">全选</label></th>
+                        </tr>
+                        </thead>
+                        <tbody ms-if="disabledTechList.length == 0" class="noData">
+                        <tr><td colspan="3">未能查询到数据！</td></tr>
+                        </tbody>
+                        <tbody ms-if="disabledTechList.length != 0">
+                        <tr ms-repeat="disabledTechList">
+                            <td>{{el.techNo}}</td>
+                            <td>{{el.name}}</td>
+                            <td>
+                                <div ms-visible="el.techNo" class="single-check-box" ms-class="checked: el.checked" ms-click="doSelectTech($index)"></div>
+                                <span ms-visible="!el.techNo">-</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="footer"><span class="tip"></span><a class="ok">确定</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+</section>

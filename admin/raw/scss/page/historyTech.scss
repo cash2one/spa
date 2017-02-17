@@ -1,0 +1,71 @@
+@import "../common/mixin.scss";
+section#historyTechPage{
+  div.title{
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom:15px;
+    @include ty(0 5px 5px rgba(0,0,0,.05));
+    padding:15px;
+    &>b{
+      font-weight: bold;
+    }
+    &>input,&>select{
+      margin-left:5px;
+      padding:5px;
+    }
+    &>input{
+      padding:5px 8px;
+      width:300px;
+      margin-right:5px;
+    }
+    &>a{
+      padding: 6px 8px;
+      margin-right:10px;
+      text-align: center;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+      font-weight: normal;
+      @include transition(all 0.3s);
+      &:hover{
+        background-color: $highlightColor;
+        color:#fff;
+        border-color:$highlightColor
+      }
+    }
+    >a.add,>a.export{
+      float: right;
+    }
+  }
+  #historyTechTable{
+    width: 78%;
+    float: left;
+    border: 0;
+    &>table{
+      border: 1px solid #ddd;
+    }
+  }
+  #historyTechTotal{
+    width: 20%;
+    float: right;
+    &>table{
+      &>tbody{
+        font-size: 18px;
+        &>tr>td{
+          &>div{
+            text-align: left;
+              span:nth-of-type(1){
+                margin-left: 20px;
+              }
+            span:nth-of-type(2){
+              float: right;
+              margin-right: 20px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,92 @@
+@import "../common/mixin.scss";
+section#fastPayRecordsPage{
+  tr.search{
+    div.name{
+      float: left;
+      margin-left: 10px;
+      >a{
+        margin-left: 5px;
+      }
+    }
+    div.time{
+      float: right;
+      margin-right: 10px;
+    }
+  }
+
+  td.otherTech{
+    >span{
+      margin-left: 4px;
+    }
+  }
+
+  td>a[href]{
+    color: $red;
+  }
+
+  #confirmModal{
+    div.tip{
+      color: #fb5549;
+      margin: 8px 20px 12px;
+      border: 1px dotted #fb5549;
+      text-align: center;
+      padding: 10px 0;
+      border-radius: 4px;
+    }
+    div.remark,div.techs{
+      margin: 5px 15px 10px;
+      >label{
+        width: 100px;
+        display: block;
+        text-align: right;
+        float: left;
+      }
+      >textarea,>a,>ul{
+        float: left;
+      }
+      >textarea{
+        width: 440px;
+        height: 90px;
+        padding: 8px 10px;
+      }
+      >a{
+        padding: 7px 15px;
+      }
+      >ul{
+        width: 470px;
+        max-height: 140px;
+        overflow-y: auto;
+        >li{
+          width: 60px;
+          text-align: center;
+          height: 40px;
+          line-height: 40px;
+          margin-right: 5px;
+          margin-bottom: 5px;
+          @include sl();
+          border:1px solid #d0d0d0;
+          border-radius: 4px;
+          float: left;
+          cursor: pointer;
+          &.active,&:hover{
+            border-color: #eea236;
+            color: #eea236;
+          }
+        }
+      }
+    }
+
+    div.techs{
+      margin-right: 0;
+    }
+  }
+
+  #revokeModal{
+    div.content{
+      height: 80px;
+      color: $red;
+      padding-left: 32px;
+      line-height: 80px;
+    }
+  }
+}

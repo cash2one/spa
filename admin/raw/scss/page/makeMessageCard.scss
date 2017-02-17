@@ -1,0 +1,115 @@
+@import "../common/mixin.scss";
+section#makeMessageCardPage{
+  .pre-draw-card{
+    width:900px;
+    height:500px;
+    display: none;
+    >canvas{
+      width:900px;
+      height:500px;
+    }
+  }
+
+  div.dataTable{
+    margin-top:10px;
+    th.header{
+      div.search{
+        left:8px;
+        width:350px;
+        padding-left:0;
+        text-align: left;
+        &>input{
+          padding:4px 6px;
+          width:200px;
+        }
+      }
+      div.sizeOption{
+        right:70px;
+      }
+      a.export{
+        position: absolute;
+        right:8px;
+        top:6px;
+      }
+      div.checkbox-area{
+        position: absolute;
+        right: 65px;
+        font-size: 14px;
+        >span{
+          position: relative;
+          cursor: pointer;
+          margin-right: 10px;
+          padding-left: 20px;
+          &>i{
+            position: absolute;
+            left:0;
+            top:0;
+            display: inline-block;
+            width:16px;
+            height:16px;
+            margin-right:4px;
+            background: url("../../../img/message/checkbox.png");
+          }
+          &.active{
+            &>i{
+              background: url("../../../img/message/checkbox-checked.png");
+            }
+          }
+        }
+      }
+    }
+    td>i,th>i{
+      display: inline-block;
+      width:16px;
+      height:16px;
+      cursor: pointer;
+      background: url("../../../img/common/checkbox.png");
+      &.active{
+        background: url("../../../img/common/check_active.png");
+      }
+    }
+    th.selectAll{
+      i{
+        margin-right:6px;
+        vertical-align: text-top;
+      }
+    }
+    td.header{
+      img{
+        width: 50px;
+        height: 50px;
+        border: 0;
+        border-radius: 50%;
+        margin: 0 10px;
+      }
+    }
+  }
+
+  div.loadAllTip{
+    line-height: 35px;
+    text-align: center;
+  }
+
+  div.group{
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom:15px;
+    @include ty(0 5px 5px rgba(0,0,0,.05));
+    padding:10px 15px;
+    a.btn{
+      padding: 8px;
+      text-align: center;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+      @include transition(all 0.3s);
+      margin-right:15px;
+      &:hover{
+        background-color: $highlightColor;
+        color:#fff;
+        border-color:$highlightColor
+      }
+    }
+  }
+}

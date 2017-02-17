@@ -1,0 +1,93 @@
+@import "../common/mixin.scss";
+section#luckyWheelPage{
+  #seeDialSellModal,#editDialSellModal{
+    input{
+      padding: 6px 10px;
+      width: 150px;
+    }
+    >div{
+      width: 800px;
+    }
+    .content>div {
+      > label {
+        width: 100px;
+      }
+      > input {
+        width: 347px;
+      }
+    }
+    table{
+      width: 675px;
+      >thead{
+        background: #b1b1b1;
+        > tr{
+          > th{
+            padding: 4px;
+          }
+        }
+      }
+      > tbody{
+        > tr{
+          border-bottom: 1px solid #eee;
+          > td{
+            padding: 4px;
+            select{
+              width: 110px;
+            }
+          }
+          > td.name{
+             input{
+               width: 250px;
+             }
+            select{
+              width: 266px;
+            }
+          }
+          > td.number{
+            input{
+              width: 90px;
+            }
+          }
+          > td.concept{
+            input{
+              width: 90px;
+            }
+          }
+        }
+      }
+    }
+    div#editActContent,div#addActContent {
+      width: 430px;
+      min-height: 50px;
+      max-height: 150px;
+      overflow-y: auto;
+      padding: 1px 5px;
+      line-height: 25px;
+      border-radius: 4px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+      -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+      -o-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+      transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+      &:focus {
+        border-color: #0099ff;
+        outline: 0;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(0, 153, 255, 0.6);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(0, 153, 255, 0.6);
+      }
+    }
+    div.probabilityTitle{
+      span{
+        b.blue{color: #00aa00}
+      }
+    }
+  }
+
+  .panel-title{
+    >a{
+      float: right;
+    }
+  }
+}

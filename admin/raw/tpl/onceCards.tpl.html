@@ -1,0 +1,74 @@
+<!--次卡列表-->
+<section id="onceCardsPage" class="ms-controller" ms-controller="onceCardsCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/onceCards.js"></script>
+    <div class="panel">
+        <div class="panel-title">
+            <h3>次卡列表</h3>
+            <a class="toolButton info" href="#!/onceCardEdit">新增</a>
+        </div>
+        <div class="panel-content data-table">
+            <div class="dataTable">
+                <table>
+                    <thead>
+                    <tr class="search">
+                        <th colspan="13">
+                            <div class="searchForm"><input placeholder="输入次卡名称或者项目名称" type="text" class="card-info" maxlength="30"/><a ms-click="doSearch()">搜索</a><a ms-click="doResetSearch()">重置</a></div>
+                            <div class="sizeOption" ms-if="dataList.length != 0">每页显示记录数：<select ms-change="changePageSize()"><option selected>20</option><option>50</option><option>100</option></select></div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="width:3%">序号</th>
+                        <th style="width:9%">名称</th>
+                        <th style="width:9%">可售时间</th>
+                        <th style="width:8%">项目</th>
+                        <th style="width:9%">特卖套餐</th>
+                        <th style="width:9%">价值</th>
+                        <th style="width:12%">特卖价</th>
+                        <th style="width:8%">优惠金额</th>
+                        <th style="width:8%">技师提成</th>
+                        <th style="width:5%">每人限购</th>
+                        <th style="width:6%">已售/总量</th>
+                        <th style="width:5%">状态</th>
+                        <th style="width:9%">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody ms-if="dataList.length == 0" class="noData">
+                    <tr><td colspan="13">未能查询到数据！</td></tr>
+                    </tbody>
+                    <tbody ms-if="dataList.length != 0">
+                    <tr ms-repeat="dataList" ms-class="{{el.clsName}}">
+                        <td ms-if="el.tag" ms-attr-rowspan="{{el.len}}">{{ el.index+1+(currPage-1)* pageSize }}</td>
+                        <td ms-if="el.tag" ms-attr-rowspan="{{el.len}}">{{ el.name }}</td>
+                        <td ms-if="el.tag" ms-attr-rowspan="{{el.len}}">{{ (el.startTime && el.endTime) ? (el.startTime+' ~ '+el.endTime) : (el.startTime ? el.startTime+'开始' : (el.endTime ? el.endTime+'结束' : '不限'))}}</td>
+                        <td ms-if="el.tag" ms-attr-rowspan="{{el.len}}">{{ el.itemName }}</td>
+                        <td class="highlight">套餐{{ el.plan.name }}：买{{ el.plan.paidCount }}送{{ el.plan.giveCount }}</td>
+                        <td>{{ el.plan.paidCount }}+{{ el.plan.giveCount }}次：{{ el.plan.itemAmount*(el.plan.paidCount+el.plan.giveCount) | bizMoneyToYuan | toRoundInt }}元</td>
+                        <td>{{ el.plan.actAmount | bizMoneyToYuan | toRoundInt }}元({{ el.plan.actAmount/(el.plan.paidCount+el.plan.giveCount) | bizMoneyToYuan | toRoundInt }}元/次)</td>
+                        <td class="highlight">{{ el.plan.actAmount - el.plan.itemAmount*(el.plan.paidCount+el.plan.giveCount) | bizMoneyToYuan | toRoundInt}}元</td>
+                        <td class="highlight need-right">{{ el.plan.techAmount | bizMoneyToYuan | toRoundInt }}元</td>
+                        <td ms-if="el.tag" ms-attr-rowspan="{{el.len}}">{{ el.personalLimit==0 ? '不限' : el.personalLimit }}</td>
+                        <td ms-if="el.tag" ms-attr-rowspan="{{el.len}}">{{ el.paidCount }} / {{ el.totalCount==0 ? '不限' : el.totalCount }}</td>
+                        <td ms-if="el.tag" ms-attr-rowspan="{{el.len}}">{{ el.statusName }}</td>
+                        <td ms-if="el.tag" ms-attr-rowspan="{{el.len}}">
+                            <a class="btn" ms-click="doChangeStatus(el.id, '1', el.name)" ms-visible="el.status==0 || (el.status==2 && el.canOnline)">上线</a>
+                            <a class="btn" ms-click="doChangeStatus(el.id, '2', el.name)" ms-visible="el.status==1 && (el.subStatus==2 || el.subStatus==1)">下线</a>
+                            <a class="btn" ms-click="doChangeStatus(el.id, '3', el.name)" ms-visible="!(el.status==1 && el.subStatus==2)">删除</a>
+                            <a class="btn" ms-attr-href="#!/onceCardEdit?id={{el.id}}" ms-visible="!(el.status==1 && (el.subStatus==2 || el.subStatus==4))">编辑</a>
+                            <a class="btn" ms-attr-href="#!/onceCardSellRecords?id={{el.id}}" >已售记录</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="pagination blue" id="dataListPagination" ms-visible="dataList.length != 0"><div class="pages"></div></div>
+
+    <div class="modal" id="confirmModal">
+        <div>
+            <h3 class="header">确认<span>X</span></h3>
+            <div class="content">{{ confirmTip }}</div>
+            <div class="footer"><span class="tip"></span><a class="ok">确定</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,46 @@
+<!--群发消息-->
+<section id="massMessagePage" class="ms-controller" ms-controller="massMessageCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/massMessage.js"></script>
+    <div class="tip no-auth" ms-visible="noAuth">当前会所未开通消息群发功能！</div>
+    <div class="tip" ms-visible="!noAuth">本月剩余发送次数：<b>{{ canSendCount }}</b>次（两次群发消息之间需要间隔{{sendInterval}}小时以上）<a class="btn" href="#!/massMessageSendRecord">发送记录</a></div>
+    <h3 class="title" ms-visible="!noAuth">步骤一：筛选客户<span>共选中<b>{{ selectedReceiveCount}}</b>位客户</span></h3>
+    <div class="dataTable" id="sendObjSelector" ms-visible="!noAuth">
+        <table>
+            <thead>
+            <tr>
+                <th style="width:20%">选择</th>
+                <th style="width:80%">客户类型</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td ms-attr-count="allCount" ms-class="active:selectedReceiver == ''" ms-click="doSelectReceiver('')"><div>全部客户</div></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td ms-attr-count="activeCount" ms-class="active:selectedReceiver == 'active'" ms-click="doSelectReceiver('active')"><div>活跃客户</div></td>
+                <td>近期内消费过的用户</td>
+            </tr>
+            <tr>
+                <td ms-attr-count="unActiveCount" ms-class="active:selectedReceiver == 'unactive'" ms-click="doSelectReceiver('unactive')"><div>有效客户</div></td>
+                <td>曾经消费过，但近期无消费的用户</td>
+            </tr>
+            <tr>
+                <td ms-attr-count="groupCount" ms-class="active:selectedReceiver == 'specified'" ms-click="doSelectReceiver('specified')"><div>分组客户</div><br/>管理者APP创建的自定义分组</td>
+                <td>
+                    <ul id="group-list" ms-visible="groupList.length>0">
+                        <li ms-attr-num="{{el.totalCount}}" ms-attr-gid="{{el.id}}" ms-repeat="groupList">{{el.name}}<span ms-if="el.description">（{{el.description}}）</span></li>
+                    </ul>
+                    <span ms-visible="groupList.length==0">当前分组无客户可选，如需设置分组，请前往管理者APP中设置分组</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <h3 class="title" ms-visible="!noAuth">步骤二：选择优惠活动：<select id="actSelector" ms-change="actSelectorChange()"><option value="0">无</option><option ms-repeat="acts" ms-attr-value="$index+1">{{ el.name }}</option></select></h3>
+    <h3 class="title" ms-visible="!noAuth">步骤三：添加图片（上传的图片需小于{{imgMaxSize}}M）</h3>
+    <div class="imgArea"><div class="add">+<input type="file" id="msgImgFile" accept="image/*.*"/></div><div class="del">删除</div></div>
+    <h3 class="title" ms-visible="!noAuth">步骤四：输入发送内容</h3>
+    <textarea id="msgContent" placeholder="限定100个字符" ms-visible="!noAuth"></textarea>
+    <h3 class="title btns" ms-visible="!noAuth"><a ms-click="doClickClearBtn()">清空</a><a ms-click="doClickSendBtn()">{{isSending ? '发送中...' : '发送'}}</a></h3>
+</section>

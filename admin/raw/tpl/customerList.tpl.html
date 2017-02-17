@@ -1,0 +1,51 @@
+<!--结算中心--结算记录-->
+<section id="customerListPage" class="ms-controller" ms-controller="customerListCtrl">
+    <script type="text/javascript" src="club-admin/raw/js/page/customerList.js"></script>
+    <div class="dataTable" id="dataListTable">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="9" class="header"> 客户列表
+                </th>
+            </tr>
+            <tr class="search">
+                <th colspan="9">
+                    <input type="text" placeholder="输入会员昵称" id="searchMemberName">
+                    <a  ms-click="searchMember()">搜索</a>
+                    <div class="sizeOption" ms-if="dataList.length != 0">每页显示记录数：<select><option selected>20</option><option>50</option><option>100</option></select></div>
+                </th>
+            </tr>
+            <tr>
+                <th style="width:10%">注册时间</th>
+                <th style="width:15%">用户名</th>
+                <th style="width:10%">联系方式</th>
+                <th style="width:10%">订单数</th>
+                <th style="width:10%">评论数</th>
+                <th style="width:10%">用户类型</th>
+                <th style="width:15%">所属技师</th>
+                <th style="width:10%">技师编号</th>
+                <th style="width:10%">操作</th>
+
+            </tr>
+            </thead>
+            <tbody ms-if="dataList.length == 0" class="noData">
+            <tr><td colspan="9">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="dataList.length != 0">
+            <tr ms-repeat-list="dataList">
+                <td>{{list.createTime}}</td>
+                <td>{{list.userName}}</td>
+                <td>{{list.phoneNum}}</td>
+                <td>{{list.orderCount}}</td>
+                <td>{{list.commentCount}}</td>
+                <td>{{list.userType =="temp" ? "领券用户" : (list.userType =="user" ? "粉丝用户" : (list.userType =="weixin" ? "微信用户" : "-"))}}</td>
+                <td><span class="red" ms-if="list.techName">{{list.techName}}(已离职)</span></td>
+                <td>{{list.techSerialNo}}</td>
+                <td> <a class="btn" ms-attr-href="#!/customerDetail?userId={{list.userId}}">详情</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination" id="dataListPagination" ms-visible="dataList.length != 0"><div class="pages"></div></div>
+
+</section>

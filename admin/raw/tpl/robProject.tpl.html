@@ -1,0 +1,137 @@
+<!--营销中心--抢购活动-->
+<section id="robProjectPage" class="ms-controller" ms-controller="robProjectCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/robProject.js"></script>
+    <div class="dataTable" id="dataListTable">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="10" class="header">限时抢记录<div class="sizeOption" ms-if="dataList.length != 0">每页显示记录数：<select><option selected>20</option><option>50</option><option>100</option></select></div></th>
+            </tr>
+            <tr class="search">
+                <th colspan="10">
+                    <!--<div class="time"><input type="text" /></div>-->
+                    <a class="btn" ms-click="addRobProject()">添加</a>
+                </th>
+            </tr>
+            <tr>
+                <th style="width:4%">序号</th>
+                <th style="width:8%">项目</th>
+                <th style="width:10%">抢购价格（元）</th>
+                <th style="width:6%" ms-visible="creditSwitch">抢购积分</th>
+                <th style="width:8%">原价格</th>
+                <th style="width:8%">数量</th>
+                <th style="width:8%">限购数量</th>
+                <th style="width:20%">活动时间</th>
+                <!--<th style="width:12%"><select ms-change="doChangeStatus()"><option ms-repeat="statusObj" ms-attr-value="{{el.value}}">{{el.name}}</option></select></th>-->
+                <th style="width:8%">状态</th>
+                <th style="width:20%;min-width: 245px;">操作</th>
+            </tr>
+            </thead>
+            <tbody ms-if="dataList.length == 0" class="noData">
+            <tr><td colspan="10">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="dataList.length != 0">
+            <tr ms-repeat="dataList">
+                <td>{{(page - 1)*pageSize+$index+1}}</td>
+                <td>{{el.name}}</td>
+                <td>{{el.amount}}</td>
+                <td ms-visible="creditSwitch">{{el.credits}}</td>
+                <td>{{el.price}}</td>
+                <td>{{el.canPaidCountText}}</td>
+                <td>{{el.userPaidCountText}}</td>
+                <td>{{el.startDate}} - {{el.endDate}}</td>
+                <td>{{el.statusName}}</td>
+                <td>
+                    <a class="btn" ms-if="el.status=='not_online' || el.status=='downline'" ms-click="robProjectOperaStatus($index,'online')">上线</a>
+                    <a class="btn" ms-if="el.status=='online'" ms-click="robProjectOperaStatus($index,'downline')">下线</a>
+                    <a class="btn" ms-if="el.status=='not_online'" ms-click="modifyRobProject($index)">修改</a>
+                    <a class="btn" ms-click="modifyRobProject($index,true)">详情</a>
+                    <a class="btn" ms-if="el.status!='not_online'" ms-attr-href="#!/robProjectPaidRecords?id={{el.id}}">购买记录</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination" id="dataListPagination" ms-visible="dataList.length != 0"><div class="pages"></div></div>
+
+    <div class="modal" id="robProjectModal">
+        <div>
+            <h3 class="header">{{editModalTitle}}<span>X</span></h3>
+            <div class="content form">
+                <div>
+                    <label>抢购项目：</label>
+                    <select id="actProject" ms-attr-disabled="operateType=='check'" ms-change="projectChange()">
+                        <option value=""></option>
+                        <option ms-repeat="serviceItems" ms-attr-value="{{el.id}}">{{el.name}}</option>
+                    </select>
+                    <span id="projectPrice"></span>
+                </div>
+                <div>
+                    <label>抢购价格：</label>
+                    <input type="text" maxlength="7" placeholder="请输入抢购价格，单位元" id="actAmount" ms-attr-disabled="operateType=='check'" oninput="this.value=this.value.replace(/[^\d]/g,'')"> 元
+                </div>
+                <div  ms-visible="creditSwitch">
+                    <label>抢购积分：</label>
+                    <input type="text" maxlength="11" placeholder="请输入抢购积分，若不允许积分购买则填入0" id="actCredits" ms-attr-disabled="operateType=='check'" oninput="this.value=this.value.replace(/[^\d]/g,'')">
+                </div>
+                <div>
+                    <label>数量：</label>
+                    <input type="text" maxlength="5" placeholder="请输入数量，0代表不限制" id="canPaidCount" ms-attr-disabled="operateType=='check'" oninput="this.value=this.value.replace(/[^\d]/g,'')">
+                </div>
+                <div>
+                    <label>限购数量：</label>
+                    <input type="text" maxlength="5" placeholder="限制每个人可购买次数,0代表不限制" id="userPaidCount" ms-attr-disabled="operateType=='check'" oninput="this.value=this.value.replace(/[^\d]/g,'')">
+                </div>
+                <div class="clearfix">
+                    <label>活动时间：</label>
+                    <div>
+                        <input type="text" placeholder="请输入活动开始时间" id="actStartDate" class="need-date" ms-attr-disabled="operateType=='check'">
+                        <select id="actStartTime" ms-attr-disabled="operateType=='check'">
+                            <option ms-repeat="hourArr" ms-attr-value="el+':00'">{{el}}:00</option>
+                        </select>
+                        至
+                        <input type="text" placeholder="请输入活动结束时间" id="actEndDate" class="need-date" ms-attr-disabled="operateType=='check'">
+                        <select id="actEndTime" ms-attr-disabled="operateType=='check'">
+                            <option ms-repeat="hourArr" ms-attr-value="el+':00'">{{el}}:00</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <label>项目有效期：</label>
+                    <div>
+                        <input type="text" placeholder="有效期起始日期" id="actExpiredStartDate" class="need-date" ms-attr-disabled="operateType=='check'">
+                        至
+                        <input type="text" placeholder="有效期结束日期" id="actExpiredEndDate" class="need-date" ms-attr-disabled="operateType=='check'">
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <label >使用时段：</label>
+                    <div>
+                        <span ms-repeat-week="weekArr" ms-class="active:week.checked" ms-arrt-data-value="week.value" ms-click="doCheckboxWeek(week)"><i></i>{{week.name}}</span>
+                        <br>
+                        <select id="useStartTime" ms-attr-disabled="operateType=='check'">
+                            <option value="">请选择</option>
+                            <option ms-repeat="hourArr" ms-attr-value="el">{{el}}:00</option>
+                        </select>
+                        <select id="useEndTime" ms-attr-disabled="operateType=='check'">
+                            <option value="">请选择</option>
+                            <option ms-repeat="useEndTimeArr" ms-attr-value="el" >{{el}}:00</option>
+                        </select>
+                        (注：不选择则代表无限制时段)
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <label>活动说明：</label>
+                    <div ms-attr-contenteditable="operateType!='check'" ms-input="onInputExplain()" id="actPlain" ms-class="disabled:operateType=='check'"></div>
+                    <span>0/150</span>
+                </div>
+            </div>
+            <div class="footer">
+                <span class="tip"></span>
+                <a class="ok" ms-if="operateType!='check'" ms-click="doSaveCoupon('saveAndOnline')">保存并发布</a>
+                <a class="ok" ms-if="operateType!='check'" ms-click="doSaveCoupon('save')">保存</a>
+                <a class="cancel">取消</a>
+            </div>
+        </div>
+    </div>
+</section>

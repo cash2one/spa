@@ -1,0 +1,137 @@
+<!--技师管理-技师详情-->
+<section id="historyTechDetailPage" class="ms-controller" ms-controller="historyTechDetailCtrl">
+    <script type="text/javascript" src="club-admin/raw/js/page/historyTechDetail.js"></script>
+    <div class="techInfo">
+        <div class="img">
+            <img ms-if="techInfoObj.avatarUrl" ms-attr-src="{{techInfoObj.avatarUrl}}"/>
+            <img ms-if="!techInfoObj.avatarUrl" src="club-admin/img/common/head.jpg"/>
+        </div>
+        <div class="info">
+            <h3><b>{{techInfoObj.name}}</b><span ms-if="techInfoObj.serialNo">[{{techInfoObj.serialNo}}]</span><i class="busy">离职</i></h3>
+            <div class="star">
+                <div ms-attr-style="width:{{techInfoObj.star}}%"></div>
+            </div>
+            <div class="info"><b>特长介绍</b>：{{techInfoObj.description}}</div>
+            <div class="info">
+                <b>性别：</b>{{techInfoObj.gender=='male' ? '男' : '女'}}
+                <b>籍贯：</b><span ms-if="techInfoObj.province && techInfoObj.province!='null'">{{techInfoObj.province}}</span><span ms-if="techInfoObj.city && techInfoObj.city!='null'">{{techInfoObj.city}}</span>
+                <b>联系方式：</b>{{techInfoObj.phoneNum}}</div>
+        </div>
+    </div>
+    <div class="service">
+        <h3><b>服务项目</b></h3>
+        <ul>
+            <li ms-repeat="serviceItems">{{el}}</li>
+        </ul>
+    </div>
+
+    <ul class="tab">
+        <li ms-class="active:selectedTab=='order'" ms-click="doChangeTab('order')">订单</li>
+        <li ms-class="active:selectedTab=='comment'" ms-click="doChangeTab('comment')">评论</li>
+        <li ms-class="active:selectedTab=='customer'" ms-click="doChangeTab('customer')">客户</li>
+    </ul>
+
+    <div class="dataTable" id="orderDataTable" ms-visible="selectedTab=='order'">
+        <table>
+            <thead>
+            <tr>
+                <th class="header" colspan="5">订单列表<div class="sizeOption" ms-if="orderList.length != 0">每页显示记录数：<select ms-change="onChangeOrderListPageSize()"><option selected>15</option><option>30</option><option>50</option></select></div></th>
+            </tr>
+            <tr>
+                <th style="width:20%">到店时间</th>
+                <th style="width:20%">预约时间</th>
+                <th style="width:20%">预约人</th>
+                <th style="width:20%">预约人号码</th>
+                <th style="width:20%"><select ms-change="doChangeQueryStatus()"><option value="">全部状态</option><option ms-repeat="orderStatus" ms-attr-value="{{el.value}}">{{el.name}}</option></select></th>
+            </tr>
+            </thead>
+            <tbody ms-if="orderList.length == 0" class="noData">
+            <tr>
+                <td colspan="5">未能查询到数据！</td>
+            </tr>
+            </tbody>
+            <tbody ms-if="orderList.length != 0">
+            <tr ms-repeat="orderList">
+                <td>{{el.appointTime}}</td>
+                <td>{{el.createdAt}}</td>
+                <td>{{el.customerName}}</td>
+                <td>{{el.phoneNum}}</td>
+                <td>{{el.statusName}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination" id="orderListPagination" ms-visible="orderList.length != 0 && selectedTab=='order'"><div class="pages"></div></div>
+
+    <div class="dataTable" id="commentDataTable" ms-visible="selectedTab=='comment'">
+        <table>
+            <thead>
+            <tr>
+                <th class="header" colspan="6">评论列表<div class="sizeOption" ms-if="commentList.length != 0">每页显示记录数：<select ms-change="onChangeCommentListPageSize()"><option selected>15</option><option>30</option><option>50</option></select></div></th>
+            </tr>
+            <tr>
+                <th style="width:15%">用户</th>
+                <th style="width:24%;">评分</th>
+                <th style="width:15%">印象点评</th>
+                <th style="width:30%">评论</th>
+                <th style="width:16%">评论时间</th>
+            </tr>
+            </thead>
+            <tbody ms-if="commentList.length == 0" class="noData">
+            <tr><td colspan="6">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="commentList.length != 0">
+            <tr ms-repeat="commentList">
+                <td>{{el.userInfo.name}}</td>
+                <td ms-if="el.attitudeRate > 0" class="star" style="min-width:270px;">
+                    态度：<div><div ms-attr-style="width:{{el.attitudeRate}}%"></div></div>
+                    &nbsp;&nbsp;仪容：<div><div ms-attr-style="width:{{el.appearanceRate}}%"></div></div><br/>
+                    技能：<div><div ms-attr-style="width:{{el.skillRate}}%"></div></div>
+                    &nbsp;&nbsp;偷钟：<div><div ms-attr-style="width:{{el.clockRate}}%"></div></div>
+                </td>
+                <td ms-if="el.attitudeRate == 0" class="star">综合：<div><div ms-attr-style="width:{{el.rate}}%"></div></div></td>
+                <td>{{el.impression}}</td>
+                <td>{{el.comment}}</td>
+                <td>{{el.createdAt}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination" id="commentListPagination" ms-visible="commentList.length != 0 && selectedTab=='comment'"><div class="pages"></div></div>
+
+    <div class="dataTable" id="customerDataTable" ms-visible="selectedTab=='customer'">
+        <table>
+            <thead>
+            <tr>
+                <th class="header" colspan="7">客户列表<div class="sizeOption" ms-if="customerList.length != 0">每页显示记录数：<select ms-change="onChangeCustomerListPageSize()"><option selected>15</option><option>30</option><option>50</option></select></div></th>
+            </tr>
+            <tr>
+                <th style="width:20%">注册时间</th>
+                <th style="width:15%">用户名</th>
+                <th style="width:15%">联系方式</th>
+                <th style="width:10%">订单数</th>
+                <th style="width:10%">评论数</th>
+                <th style="width:15%">用户类型</th>
+                <th style="width:15%">操作</th>
+            </tr>
+            </thead>
+            <tbody ms-if="customerList.length == 0" class="noData">
+            <tr>
+                <td colspan="7">未能查询到数据！</td>
+            </tr>
+            </tbody>
+            <tbody ms-if="customerList.length != 0">
+            <tr ms-repeat="customerList">
+                <td>{{el.createTime}}</td>
+                <td>{{el.userName}}</td>
+                <td>{{el.phoneNum}}</td>
+                <td>{{el.orderCount}}</td>
+                <td>{{el.commentCount}}</td>
+                <td>{{el.userType =="temp" ? "领券用户" : (el.userType =="user" ? "粉丝用户" : (el.userType =="weixin" ? "微信用户" : "-"))}}</td>
+                <td><a class="btn" ms-attr-href="#!/customerDetail?userId={{el.userId}}">详情</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination" id="customerListPagination" ms-visible="customerList.length != 0 && selectedTab=='customer'"><div class="pages"></div></div>
+</section>

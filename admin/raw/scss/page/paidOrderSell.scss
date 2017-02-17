@@ -1,0 +1,136 @@
+@import "../common/mixin.scss";
+section#paidOrderSellPage{
+  .section-item{
+    margin-bottom: 10px;
+
+    input,select{
+      padding: 4px 8px;
+    }
+
+    .emphasize{
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      background: $paleBlue;
+      padding: 10px;
+      overflow: hidden;
+      >div{
+        &:first-child{
+          margin-bottom: 10px;
+        }
+        &:last-child{
+          >span{
+            float: left;
+          }
+          >ul{
+            float: left;
+            margin: 0;
+          }
+        }
+      }
+    }
+
+    .appoint-amount{
+      border-top: 1px solid $borderColor;
+      padding: 10px;
+      >div{
+        >input{
+          margin-right: 5px;
+        }
+        &:first-child{
+          margin-bottom: 10px;
+        }
+        &:last-child{
+          border-top: 1px solid $borderColor;
+          padding-top: 10px;
+          margin-bottom: 0;
+        }
+        &.tech-amount{
+          >span.tip{
+            margin-left: 5px;
+          }
+        }
+      }
+    }
+
+    .tip{
+      font-size: 12px;
+      font-weight: bold;
+      color: #999999;
+    }
+
+    .checkbox{
+      cursor: pointer;
+      background: url('../../../img/common/checkbox.png') no-repeat left/center;
+      padding-left: 20px;
+      &.checked{
+        background-image: url('../../../img/common/check_active.png');
+      }
+    }
+
+    &#businessTime{
+      padding: 10px;
+      .checkbox{
+        margin-left: 5px;
+      }
+    }
+
+    &#customerService{
+      >div{
+        padding: 10px;
+        &:first-child{
+          >.plus{
+            float: right;
+          }
+          font-weight: bold;
+          border-bottom: 1px solid $borderColor;
+        }
+        &.phone-area{
+          overflow: hidden;
+          >.phone-item{
+            float: left;
+            margin-right: 30px;
+            >i{
+              display: inline-block;
+              position: relative;
+              top: 5px;
+              cursor: pointer;
+              margin-left: 3px;
+              width: 20px;
+              height: 20px;
+              &.icon-plus{
+                background: url('../../../img/common/plus.png') no-repeat;
+                &:hover{
+                  background-image: url('../../../img/common/plus_active.png');
+                }
+              }
+              &.icon-subtract{
+                background: url('../../../img/common/del.png') no-repeat;
+                &:hover{
+                  background-image: url('../../../img/common/del_active.png');
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &#operationArea{
+      padding: 5px;
+      text-align: center;
+      .toolButton{
+        display: inline-block;
+      }
+
+    }
+  }
+
+  #confirmModal{
+    .content{
+      padding: 10px 20px;
+      font-weight: bold;
+      font-size: 16px;
+      color: #212121;
+    }
+  }
+}

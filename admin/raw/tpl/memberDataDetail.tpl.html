@@ -1,0 +1,60 @@
+<!--账户数据详情-->
+<section id="memberDataDetailPage" class="ms-controller" ms-controller="memberDataDetailCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/memberDataDetail.js"></script>
+    <div class="dataTable" id="dataListTable">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="10" class="header">历史记录<div class="sizeOption" ms-if="dataList.length != 0">每页显示记录数：<select><option selected>20</option><option>50</option><option>100</option></select></div></th>
+            </tr>
+            <tr class="search">
+                <th colspan="10">
+                    <div class="name">
+                        <input type="text" id="userTelSearch" maxlength="11" placeholder="输入用户手机号码搜索"/>
+                        <a ms-click="doClickSearch()" class="btn btn-default hover-ok">搜索</a>
+                        <input type="text" class="time"/>
+                    </div>
+                </th>
+            </tr>
+            <tr>
+                <th >用户昵称</th>
+                <th>用户手机号</th>
+                <th>
+                    <select ms-change="switchType">
+                        <option value="">所有业务类型</option>
+                        <option value="consume">会员消费</option>
+                        <option value="pay_for_other">请客核销</option>
+                        <!--<option value="user_recharge">会员充值（线上）</option>-->
+                        <option value="line_recharge">会员充值</option>
+                    </select>
+                </th>
+                <th>订单金额</th>
+                <th>优惠金额</th>
+                <th>实际收款金额</th>
+                <th style="width: 150px;">时间</th>
+                <th >操作后账户余额</th>
+                <th>会员卡类型</th>
+                <th >优惠折扣</th>
+            </tr>
+            </thead>
+            <tbody ms-if="dataList.length == 0" class="noData">
+            <tr><td colspan="10">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="dataList.length != 0">
+            <tr ms-repeat="dataList">
+                <td>{{el.name}}</td>
+                <td>{{el.phoneNum}}</td>
+                <td>{{el.businessCategory | bizTypeFilter}}</td>
+                <td>{{el.orderAmount | bizMoneyToYuan}}</td>
+                <td>{{el.discountAmount | bizMoneyToYuan}}</td>
+                <td>{{el.amount | bizMoneyToYuan}}</td>
+                <td>{{el.createTime}}</td>
+                <td>{{el.accountAmount | bizMoneyToYuan}}</td>
+                <td>{{el.memberTypeName}}</td>
+                <td>{{el.discount | bizMoneyToYuan | discountFilter}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination" id="dataListPagination" ms-if="dataList.length != 0"><div class="pages"></div></div>
+</section>

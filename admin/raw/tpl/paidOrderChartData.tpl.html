@@ -1,0 +1,11 @@
+<!--数据统计--付费预约图表页面-->
+<section id="paidOrderChartDataPage" class="ms-controller dataStatisticsChart" ms-controller="paidOrderChartDataCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/paidOrderChartData.js"></script>
+    <div class="chartGroup" id="chartGroup" ms-if="paidOrderSwitch=='on'">
+        <div class="tool">
+            <a class="active btn" type="new">新增数</a><a class="btn" type="total">累计数</a>
+            <div><a class="btn" type="6">7天</a><a class="btn active" type="29">30天</a><input type="text" /></div>
+        </div>
+        <div class="chart"></div>
+    </div>
+</section>

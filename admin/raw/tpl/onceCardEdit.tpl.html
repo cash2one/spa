@@ -1,0 +1,78 @@
+<!--次卡编辑和新增-->
+<section id="onceCardEditPage" class="ms-controller" ms-controller="onceCardEditCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/onceCardEdit.js"></script>
+    <div class="panel">
+        <div class="panel-title"><h3>{{ cardStatus == "new" ? "新增" : "编辑" }}次卡</h3><a class="toolButton info" href="#!/onceCards">取消</a><a class="toolButton info" ms-click="doSave(0)">保存</a><a class="toolButton info" ms-click="doSave(1)">保存并发布</a></div>
+        <div class="panel-content form">
+            <form id="editForm" action='api/v2/manager/journal/image/upload' method="post" enctype='multipart/form-data'>
+                <input type="hidden" name="category" value="04"/>
+                <input type='hidden' id="currEditId"/>
+                <input type='hidden' id="currEditImageId" />
+                <input type='hidden' id='x' name='x' value='0' />
+                <input type='hidden' id='y' name='y' value='0' />
+                <input type='hidden' id='factor' name='factor' value='1' />
+                <input type='hidden' id='w' name='width' value='1' />
+                <input type='hidden' id='h' name='height' value='1' />
+                <input type='hidden' id='imgFileName'/>
+                <div class="item img">
+                    <img />
+                    <a ms-visible="cardStatus==0">上传图片</a>
+                    <input type="file" id="uploadImgBtn" name="imgFile" accept="image/*.*" ms-visible="cardStatus==0"/>
+                    <div id="fileManager" ms-visible="cardStatus==0">从图片库选择</div>
+                    <span class="selectionTxt"></span>
+                </div>
+                <div class="item">
+                    <label>名称：</label><input type="text" ms-attr-readOnly="cardStatus!=0" ms-attr-disabled="cardStatus==1" maxlength="10" id="onceCardName"/><span class="tip">（即客户在商城看到的商品名称，如不填默认为项目名称）</span>
+                </div>
+                <div class="item">
+                    <label>项目：</label><select ms-change="doChangeServiceItem()" class="service-item" ms-attr-readOnly="cardStatus!=0" ms-attr-disabled="cardStatus!=0"><option ms-repeat="serviceItems" ms-attr-value="el.id" ms-attr-selected="el.id==currSelectServiceItem.id">{{ el.name }}</option></select><span class="tip">（单价：{{ currSelectServiceItem.price }}元 / {{ currSelectServiceItem.duration }}{{currSelectServiceItem.durationUnit}}）</span>
+                </div>
+                <div class="item float clearfix packages">
+                    <label>套餐：</label>
+                    <ul class="clearfix">
+                        <li>
+                            <div>套餐A</div>
+                            <div class="pack-item">买<input type="text" class="int package" maxlength="5" package-index="0" ms-attr-readOnly="cardStatus!=0" ms-attr-disabled="cardStatus!=0"/>送<input type="text" class="int package" package-index="0" maxlength="5" ms-attr-readOnly="cardStatus!=0" ms-attr-disabled="cardStatus!=0"/></div>
+                            <div class="pack-item">（请填写大于0的整数）</div>
+                            <div class="pack-item split">技师佣金：<input type="text" class="int tech-tip" maxlength="8" ms-attr-readOnly="cardStatus!=0" ms-attr-disabled="cardStatus!=0"/> 元</div>
+                            <div class="pack-item price"><label>价值：</label><span>{{ packagePrice[0].originalAmount }}元</span><label>售价：</label><span>{{ packagePrice[0].actAmount }}元</span></div>
+                            <div class="pack-item price"><label>原价：</label><span>{{ currSelectServiceItem.price }}元/次</span><label>优惠价：</label><span>{{ packagePrice[0].actSinglePrice }}元/次</span></div>
+                        </li>
+                        <li>
+                            <div>套餐B</div>
+                            <div class="pack-item">买<input type="text" class="int package" maxlength="5" package-index="1" ms-attr-readOnly="cardStatus!=0" ms-attr-disabled="cardStatus!=0"/>送<input type="text" class="int package" maxlength="5" package-index="1" ms-attr-readOnly="cardStatus!=0" ms-attr-disabled="cardStatus!=0"/></div>
+                            <div class="pack-item">（请填写大于0的整数）</div>
+                            <div class="pack-item split">技师佣金：<input type="text" class="tech-tip" maxlength="8" ms-attr-readOnly="cardStatus!=0" ms-attr-disabled="cardStatus!=0"/> 元</div>
+                            <div class="pack-item price"><label>价值：</label><span>{{ packagePrice[1].originalAmount }}元</span><label>售价：</label><span>{{ packagePrice[1].actAmount }}元</span></div>
+                            <div class="pack-item price"><label>原价：</label><span>{{ currSelectServiceItem.price }}元/次</span><label>优惠价：</label><span>{{ packagePrice[1].actSinglePrice }}元/次</span></div>
+                        </li>
+                        <li>
+                            <div>套餐C</div>
+                            <div class="pack-item">买<input type="text" class="int package" maxlength="5" package-index="2" ms-attr-readOnly="cardStatus!=0" ms-attr-disabled="cardStatus!=0"/>送<input type="text" class="int package" maxlength="5" package-index="2" ms-attr-readOnly="cardStatus!=0" ms-attr-disabled="cardStatus!=0"/></div>
+                            <div class="pack-item">（请填写大于0的整数）</div>
+                            <div class="pack-item split">技师佣金：<input type="text" class="int tech-tip" maxlength="8" ms-attr-readOnly="cardStatus!=0" ms-attr-disabled="cardStatus!=0"/> 元</div>
+                            <div class="pack-item price"><label>价值：</label><span>{{ packagePrice[2].originalAmount }}元</span><label>售价：</label><span>{{ packagePrice[2].actAmount }}元</span></div>
+                            <div class="pack-item price"><label>原价：</label><span>{{ currSelectServiceItem.price }}元/次</span><label>优惠价：</label><span>{{ packagePrice[2].actSinglePrice }}元/次</span></div>
+                        </li>
+                    </ul>
+                    <span class="tip">（可设置1-3种套餐，每种套餐数量不能相同，低于3种请留空）</span>
+                </div>
+                <div class="item">
+                    <label>总数量：</label><input type="text" class="int" maxlength="5" id="totalCount" ms-attr-readOnly="cardStatus!=0" ms-attr-disabled="cardStatus!=0"/> 份<span class="tip">（即客户总共可以购买的数量，不填为不限）</span>
+                </div>
+                <div class="item">
+                    <label>每人限购：</label><input type="text" class="int" maxlength="5" id="personalLimit" ms-attr-readOnly="cardStatus!=0" ms-attr-disabled="cardStatus!=0"/> 份<span class="tip">（即每个客户可以购买的数量，不填为不限）</span>
+                </div>
+                <div class="item">
+                    <label>可售时间：</label><input type="text" id="can-sell-start-time" class="need-date" placeholder="开始时间"/> 至 <input type="text" id="can-sell-end-time" class="need-date" placeholder="结束时间"/><span class="tip">（即客户可以看到并购买的时间，不填则为长期有效）</span>
+                </div>
+                <div class="item">
+                    <label>有效期：</label><select id="cardPeriod" ms-attr-readOnly="cardStatus!=0" ms-attr-disabled="cardStatus!=0"><option ms-repeat="validPeriod" ms-attr-value="el.value" ms-attr-selected="el.selected">{{el.label}}</option></select><span class="tip">（即客户购买后可以使用的时间）</span>
+                </div>
+                <div class="item float clearfix">
+                    <label>补充说明：</label><textarea maxlength="250" id="act-description" ms-attr-readOnly="cardStatus!=0" ms-attr-disabled="cardStatus!=0"></textarea>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

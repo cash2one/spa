@@ -1,0 +1,42 @@
+<!--群发消息 发送记录-->
+<section id="massMessageSendRecordPage" class="ms-controller" ms-controller="massMessageSendRecordCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/massMessageSendRecord.js"></script>
+    <div class="panel">
+        <div class="panel-title">
+            <h3>群发消息</h3>
+            <a class="toolButton info" href="#!/massMessage" ms-visible="canSend">新增群发消息</a>
+            <div ms-visible="canSend" class="sizeOption" ms-if="dataList.length != 0">每页显示记录数：<select ms-change="pageSizeChange()"><option selected>20</option><option>50</option><option>100</option></select></div>
+        </div>
+        <div class="panel-content data-table">
+            <div class="dataTable" id="dataListTable">
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width:9%">序号</th>
+                        <th style="width:13%">发送人数</th>
+                        <th style="width:20%">消息</th>
+                        <th style="width:26%">优惠活动</th>
+                        <th style="width:13%">核销人数</th>
+                        <th style="width:19%">发送时间</th>
+                    </tr>
+                    </thead>
+                    <tbody ms-if="dataList.length == 0" class="noData">
+                    <tr><td colspan="6">{{canSend ? "未能查询到数据！" : "会所未开通群发功能！"}}</td></tr>
+                    </tbody>
+                    <tbody ms-if="dataList.length != 0">
+                    <tr ms-repeat="dataList">
+                        <td>{{$index+1+(currPage-1)*pageSize}}</td>
+                        <td>{{el.sendCount}}</td>
+                        <td>{{el.message}}</td>
+                        <td><span ms-visible="el.msgType">【{{typeObj[el.msgType]}}】</span>{{el.actName}}</td>
+                        <td>{{el.verificationCount}}</td>
+                        <td>{{el.sendDate}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="pagination blue" id="dataListPagination" ms-visible="dataList.length != 0"><div class="pages"></div></div>
+</section>

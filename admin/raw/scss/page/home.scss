@@ -1,0 +1,420 @@
+@import "../common/mixin.scss";
+
+section#homePage{
+  div#orderListDataTable{
+    &>table{
+      div.name{
+        float: left;
+        margin-left:10px;
+        &>input{
+          margin-right:5px;
+        }
+      }
+      div.time{
+        float: right;
+        margin-right:10px;
+      }
+      &>tbody{
+        td.c-red{
+          color: $red;
+        }
+        td.link>a{
+          &:hover{
+            text-decoration: underline;
+            color:$highlightColor;
+          }
+        }
+      }
+    }
+  }
+
+  div.techAndPayGroup{
+    margin-bottom: 10px;
+    &>div{
+      float: left;
+      box-sizing: border-box;
+    }
+    div.tech{
+      width:50%;
+      ul{
+        >li{
+          float: left;
+          width:33%;
+          border-right:1px dotted $borderColor;
+          text-align: center;
+          font-size:18px;
+          padding: 5px 0;
+          &:last-child{
+            border-right-width:0;
+          }
+          &>i{
+            display: inline-block;
+            width:50px;
+            height:50px;
+            margin-right:18px;
+            line-height: 50px;
+            font-style: normal;
+            border-radius: 50%;
+            font-size:18px;
+            color:#fff;
+            text-align: center;
+            vertical-align: middle;
+            transition: transform 0.3s;
+            &:hover{
+              transform: scale(1.2,1.2);
+            }
+            &.busy{
+              background-color: $red;
+            }
+            &.free{
+              background-color: #6c6;
+            }
+            &.total{
+              background-color: $borderColor;
+            }
+          }
+        }
+      }
+    }
+
+    div.pay{
+      margin-left:1%;
+      width:49%;
+      div.panel-content{
+        padding: 19px 15px;
+      }
+      input{
+        padding: 4px 10px;
+        width: 210px;
+        margin-right: 6px;
+      }
+    }
+  }
+
+  .fastPay{
+    margin-bottom: 10px;
+    .panel-title>a{
+      &:nth-of-type(1){
+        margin-right:0;
+      }
+      float: right;
+    }
+    .noData>tr>td{
+      height: 100px;
+    }
+    .tip{
+      text-align: right;
+      color: $red;
+      height: 30px;
+      line-height: 30px;
+      padding-right: 10px;
+      border-top: 1px solid $paleBlue;
+      >a{
+        &:hover{
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  #confirmFastPayModal{
+    div.tip{
+      color: #fb5549;
+      margin: 8px 20px 12px;
+      border: 1px dotted #fb5549;
+      text-align: center;
+      padding: 10px 0;
+      border-radius: 4px;
+    }
+    div.remark,div.techs{
+      margin: 5px 15px 10px;
+      >label{
+        width: 100px;
+        display: block;
+        text-align: right;
+        float: left;
+      }
+      >textarea,>a,>ul{
+        float: left;
+      }
+      >textarea{
+        width: 440px;
+        height: 90px;
+        padding: 8px 10px;
+      }
+      >a{
+        padding: 7px 15px;
+      }
+      >ul{
+        width: 470px;
+        max-height: 140px;
+        overflow-y: auto;
+        >li{
+          width: 60px;
+          text-align: center;
+          height: 40px;
+          line-height: 40px;
+          margin-right: 5px;
+          margin-bottom: 5px;
+          @include sl();
+          border:1px solid #d0d0d0;
+          border-radius: 4px;
+          float: left;
+          cursor: pointer;
+          &.active,&:hover{
+            border-color: #eea236;
+            color: #eea236;
+          }
+        }
+      }
+    }
+
+    div.techs{
+      margin-right: 0;
+    }
+  }
+
+  div#couponVerificationModal>div{
+    margin-top:3.5%;
+    width:750px;
+    &>div.content{
+      padding:10px 12px;
+      div.dataTable>table>thead>tr.search>th{
+        text-align: left;
+        &>input{
+          margin-left:4px;
+          margin-right:4px;
+          padding:4px 8px;
+        }
+        &>select{
+          padding:4px;
+          margin-left:5px;
+        }
+        &>a{
+          color: #666;
+          cursor: pointer;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          padding: 5px 10px;
+          margin-right: 5px;
+          background-color: #f9f9f9;
+          font-weight: normal;
+          &:hover,&.active{
+            background-color: $themeColor;
+            border-color:$themeColor;
+            color:#fff;
+          }
+        }
+      }
+      td>i{
+        display: inline-block;
+        width:21px;
+        height:21px;
+        background: url("../../../img/common/radio.png");
+        &.active{
+          background: url("../../../img/common/radio_act.png");
+        }
+      }
+
+      ul{
+        margin-top:15px;
+        border:1px dotted #ccc;
+        border-radius: 4px;
+        &>li{
+          line-height: 32px;
+          border-bottom:1px dotted #ddd;
+          padding:8px 15px;
+          &:last-child{
+            border-bottom-width:0;
+            max-height: 100px;
+            overflow-y: auto;
+          }
+          &>label{
+            font-weight: bold;
+          }
+          &>span.tip{
+            font-size: 12px;
+            font-weight: normal;
+            color: $red;
+          }
+        }
+      }
+    }
+    &>div.footer{
+      a.ok{
+        &.disabled{
+          background-color: #fff;
+          color:#999;
+          border-color:#eee;
+        }
+      }
+    }
+
+    .dataTable>table tfoot tr{
+      border-top:1px dotted #eee;
+      >td{
+        padding: 12px 4px;
+        text-align: center;
+        border-right: 1px solid #eee;
+        line-height: 1.5;
+        word-break: break-all;
+        word-wrap: break-word;
+      }
+      &.tf-header>td{
+        text-align: left;
+        font-weight: bold;
+        padding-left: 10px;
+      }
+      &.tf-header,&.tf-header+tr{
+        border-top-style: solid;
+      }
+    }
+  }
+
+  div#orderVerificationModal{
+    div.content{
+      div.search{
+        padding:20px 0;
+        text-align: center;
+        &>input{
+          padding:4px 8px;
+          width:300px;
+        }
+        &>a{
+          color: #666;
+          cursor: pointer;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          padding: 5px 10px;
+          margin-right: 5px;
+          background-color: #f9f9f9;
+          font-weight: normal;
+          &:hover,&.active{
+            background-color: $themeColor;
+            border-color:$themeColor;
+            color:#fff;
+          }
+        }
+      }
+      div.title{
+        border-top: 1px solid #eee;
+        text-align: center;
+        font-weight: bold;
+        font-size:16px;
+        letter-spacing: 2px;
+        padding-top:15px;
+      }
+      ul{
+        margin:15px;
+        border:1px dotted #ccc;
+        border-radius: 4px;
+        &>li{
+          line-height: 32px;
+          border-bottom:1px dotted #ddd;
+          padding:3px 12px;
+          &:last-child{
+            border-bottom-width:0;
+          }
+          &>label{
+            display: inline-block;
+            text-align: right;
+            width:80px;
+            font-weight: bold;
+          }
+          &>span.tip{
+            font-size: 12px;
+            font-weight: normal;
+            color: $red;
+          }
+        }
+      }
+    }
+  }
+
+  #treatVerificationModal,#luckyWheelVerificationModal{
+    .content{
+      div.item{
+        border-top:1px dotted #ddd;
+        line-height: 35px;
+        margin-left:12px;
+        margin-right:12px;
+        padding:3px 0;
+        &>label{
+          display: inline-block;
+          width:100px;
+          text-align: right;
+          font-weight: bold;
+        }
+        &>input{
+          padding:4px 5px;
+          width:250px;
+        }
+        >span.item-tip{
+          font-size: 12px;
+          color: #999;
+          margin-left: 5px;
+        }
+        >select{
+          padding: 4px 5px;
+          width: 200px;
+        }
+        &.amount,&.act-days{
+          &>input{
+            width:70px;
+          }
+        }
+        &.rules{
+          &>label{
+            float: left;
+          }
+          &>div{
+            float: left;
+            width:350px;
+            max-height: 120px;
+            min-height:50px;
+            overflow: auto;
+            padding:4px 8px;
+            line-height: 27px;
+            border-radius: 4px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+            &:focus{
+              border-color:#0099ff;
+              outline: 0;
+              -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) , 0 0 8px rgba(0,153,255,0.6);
+              box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) , 0 0 8px rgba(0,153,255,0.6);
+            }
+          }
+        }
+        &>a{
+          padding: 6px 12px;
+          border: 1px solid #eee;
+          border-radius: 4px;
+          margin-left: 15px;
+          background-color: #f5f5f5;
+          cursor: pointer;
+          @include transition(all 0.3s);
+          &:hover{
+            background-color: $highlightColor;
+            color:#fff;
+            border-color:$highlightColor;
+          }
+        }
+      }
+    }
+  }
+
+  #refundModal{
+    .content{
+      padding: 20px;
+      font-size: 20px;
+      text-align: center;
+      color: #fb5549;
+    }
+  }
+}

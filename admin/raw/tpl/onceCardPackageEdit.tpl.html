@@ -1,0 +1,59 @@
+<!--次卡套餐编辑和新增-->
+<section id="onceCardPackageEditPage" class="ms-controller" ms-controller="onceCardPackageEditCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/onceCardPackageEdit.js"></script>
+    <div class="panel">
+        <div class="panel-title"><h3>新增次卡套餐</h3><a class="toolButton info">保存</a><a class="toolButton info">保存并发布</a></div>
+        <div class="panel-content form">
+            <form id="editForm" action='' method="post" enctype='multipart/form-data'>
+                <input type='hidden' name='id' id="currEditId"/>
+                <input type='hidden' name='image' id="currEditImageId" />
+                <input type='hidden' id='x' name='x' value='0' />
+                <input type='hidden' id='y' name='y' value='0' />
+                <input type='hidden' id='factor' name='factor' value='1' />
+                <input type='hidden' id='w' name='width' value='1' />
+                <input type='hidden' id='h' name='height' value='1' />
+                <input type='hidden' id='imgFileName'/>
+                <div class="item img">
+                    <img />
+                    <a>上传图片</a>
+                    <input type="file" id="uploadImgBtn" name="imgFile"/>
+                    <div id="fileManager">从图片库选择</div>
+                    <span class="selectionTxt"></span>
+                </div>
+                <div class="item">
+                    <label>名称：</label><input type="text" placeholder="12字以内"/>
+                </div>
+                <div class="item service">
+                    <label>项目：</label><select><option>请选择项目</option></select><input type="text" placeholder="数量"/><span class="del">&times;</span>
+                </div>
+                <div class="item service">
+                    <label></label><select><option>请选择项目</option></select><input type="text" placeholder="数量"/><span class="add">+</span>
+                </div>
+                <div class="item">
+                    <label>套餐价值：</label><input type="text" class="int" maxlength="5"/> 元<span class="tip">（根据项目价格自动计算）</span>
+                </div>
+                <div class="item price">
+                    <label>购买价：</label><div class="single-check-box"></div><input type="text" class="int" maxlength="5"/> 元<span class="tip">（即客户购买时需要支付的现金价格）</span>
+                </div>
+                <div class="item price">
+                    <label></label><div class="single-check-box"></div><input type="text" class="int" maxlength="5"/> 积分<span class="tip">（即客户用积分全额购买的价格，不勾选为不可用积分）</span>
+                </div>
+                <div class="item">
+                    <label>总数量：</label><input type="text" class="int" maxlength="5"/> 份<span class="tip">（即客户总共可以购买的数量，不填为不限）</span>
+                </div>
+                <div class="item">
+                    <label>每人限购：</label><input type="text" class="int" maxlength="5"/> 份<span class="tip">（即每个客户可以购买的数量，不填为不限）</span>
+                </div>
+                <div class="item">
+                    <label>在线时间：</label><input type="text" id="online-start-time" class="need-date" placeholder="开始时间"/> 至 <input type="text" id="online-end-time" class="need-date" placeholder="结束时间"/><span class="tip">（即客户可以看到并购买的时间）</span>
+                </div>
+                <div class="item">
+                    <label>有效期：</label><input type="text" id="valid-start-time" class="need-date" placeholder="开始时间"/> 至 <input type="text" id="valid-end-time" class="need-date" placeholder="结束时间"/><span class="tip">（即每个客户购买后可以使用的时间）</span>
+                </div>
+                <div class="item float clearfix">
+                    <label>补充说明：</label><textarea maxlength="250"></textarea>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

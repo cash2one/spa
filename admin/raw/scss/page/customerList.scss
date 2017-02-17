@@ -1,0 +1,43 @@
+@import "../common/mixin.scss";
+section#customerListPage{
+  div#dataListTable{
+    &>table{
+      &>thead>tr.search>th{
+        font-size:14px;
+        padding:2px 8px;
+        text-align: left;
+        &>input{
+          padding:4px 8px;
+        }
+        &>select{
+          padding:4px 5px;
+        }
+        >a{
+          color: #666;
+          cursor: pointer;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          padding: 5px 10px;
+          margin-right: 5px;
+          background-color: #f9f9f9;
+          font-weight: normal;
+          @include transition(all 0.3s);
+          &:hover,&.active{
+            background-color: $highlightColor;
+            border-color:$highlightColor;
+            color:#fff;
+          }
+        }
+        &>div.sizeOption{
+          float: right;
+          margin-right: 8px;
+        }
+      }
+      &>tbody>tr>td{
+        >span.red{
+          color: #f66;
+        }
+      }
+    }
+  }
+}

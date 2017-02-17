@@ -1,0 +1,65 @@
+<section id="oneYuanSellRecordsPage" class="ms-controller" ms-controller="oneYuanSellRecordsCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/oneYuanSellRecords.js"></script>
+    <div class="dataTable" id="winnerInfoTable">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="4" class="header">购买记录</th>
+            </tr>
+            <tr class="sub-title">
+                <th colspan="4" ><div>第<select style="margin: 0 5px;" ms-change="changePeriod">
+                    <option ms-repeat="periods" ms-attr-value="el" ms-attr-selected="el==currPeriod">{{el}}</option>
+                </select>期中奖详情</div></th>
+            </tr>
+            <tr>
+                <th style="width:25%">中奖号码</th>
+                <th style="width:25%">用户昵称</th>
+                <th style="width:25%">用户手机号</th>
+                <th style="width:25%">状态</th>
+            </tr>
+            </thead>
+            <tbody ms-if="winnerInfo.length == 0" class="noData">
+            <tr><td colspan="4">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="winnerInfo.length > 0">
+            <tr ms-repeat="winnerInfo">
+                <td>{{el.ticketNo}}</td>
+                <td>{{el.userName}}</td>
+                <td>{{el.phoneNum}}</td>
+                <td>{{el.exchangeStatusName}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="dataTable" id="dataListTable">
+        <table>
+            <thead>
+            <tr class="sub-title">
+                <th colspan="6"><div>第{{selectedPeriod}}期购买详情 <span ms-visible="isRefund">本期未买满，已全部退款</span></div></th>
+            </tr>
+            <tr>
+                <th style="width:15%">序号</th>
+                <th style="width:15%">用户昵称</th>
+                <th style="width:15%">用户手机号</th>
+                <th style="width:15%">购买份数</th>
+                <th style="width:15%">金额</th>
+                <th style="width:35%">时间</th>
+            </tr>
+            </thead>
+            <tbody ms-if="dataList.length == 0" class="noData">
+            <tr><td colspan="6">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="dataList.length != 0">
+            <tr ms-repeat="dataList">
+                <td>{{$index + pageSize * (page - 1) + 1}}</td>
+                <td>{{el.userName}}</td>
+                <td>{{el.phoneNum}}</td>
+                <td>{{el.ticketCount}}</td>
+                <td>{{el.amountText}}</td>
+                <td>{{el.createdTime}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination" id="dataListPagination" ms-if="dataList.length != 0"><div class="pages"></div></div>
+</section>

@@ -1,0 +1,93 @@
+<!--结算中心--结算记录-->
+<section id="memberAccountListPage" class="ms-controller" ms-controller="memberAccountListCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/memberAccountList.js"></script>
+    <div class="dataTable" id="dataListTable">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="6" class="header">全部会员
+                <div>
+                    <a class="btn" ms-click="doRechargeMember(-1,'add')">添加会员</a>
+                    <a class="btn" ms-click="doRechargeMember(-1,true)">充值</a>
+                </div>
+                </th>
+            </tr>
+            <tr class="search">
+                <th colspan="6">
+                    <input type="text" placeholder="输入会员昵称" id="searchMemberName">
+                    <input type="text" placeholder="输入会员手机" id="searchMemberPhoneNum"  oninput="this.value=this.value.replace(/[^\d]/g,'')">
+                    <a  ms-click="searchMember()">搜索</a>
+
+                    <div class="sizeOption" ms-if="dataList.length != 0">每页显示记录数：<select><option selected>20</option><option>50</option><option>100</option></select></div>
+                </th>
+            </tr>
+            <tr>
+                <th style="width:16%">会员昵称</th>
+                <th style="width:16%">手机号码</th>
+                <th style="width:16%">会员卡号</th>
+                <th style="width:16%">余额（元）</th>
+                <th style="width:16%"><select ms-change="doChangeType()">
+                    <option value="">全部类型</option>
+                    <option ms-repeat="typeArr" ms-attr-value="{{el.id}}" ms-attr-selected="el.id == currMemberTypeId">{{el.name}}</option>
+                </select></th>
+                <th style="width:20%;min-width: 245px;">操作</th>
+            </tr>
+            </thead>
+            <tbody ms-if="dataList.length == 0" class="noData">
+            <tr><td colspan="6">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="dataList.length != 0">
+            <tr ms-repeat-list="dataList">
+                <td>{{list.name}}</td>
+                <td>{{list.phoneNum}}</td>
+                <td>{{list.cardNo}}</td>
+                <td>{{list.accountAmount | fenToYuanFilter}}</td>
+                <td>
+                    <select ms-change="doModifyType($index)">
+                        <option ms-repeat-tmp="typeArr" ms-attr-value="{{tmp.id}}" ms-attr-selected="tmp.id == list.memberTypeId" ms-attr-data-value="{{list.memberTypeId}}">{{tmp.name}}</option>
+                    </select>
+                </td>
+                <td>
+                    <a class="btn" ms-click="doRechargeMember($index,true)">充值</a>
+                    <!--<a class="btn" ms-click="doDeleteMember($index)">删除</a>-->
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination" id="dataListPagination" ms-visible="dataList.length != 0"><div class="pages"></div></div>
+
+    <div class="modal" id="editMemberModal">
+        <div>
+            <h3 class="header">{{editModalTitle}}<span>X</span></h3>
+            <div class="content form">
+                <div>
+                    <label>手机号码：</label>
+                    <input type="text" maxlength="11" placeholder="请输入手机号码" id="memberPhoneNum" ms-duplex="editObj.phoneNum" oninput="this.value=this.value.replace(/[^\d]/g,'')">
+                </div>
+                <div ms-visible="!editObj.isRecharge">
+                    <label>会员类型：</label>&nbsp;
+                    <select id="memberType" ms-duplex="editObj.typeId">
+                        <option ms-repeat="typeArr" ms-attr-value="{{el.id}}">{{el.name}}</option>
+                    </select>
+                </div>
+                <div>
+                    <label>充值金额：</label>
+                    <input type="text" maxlength="7" placeholder="请输入充值金额，单位元" id="rechargeAmount" ms-duplex="editObj.amount" oninput="this.value=this.value.replace(/^0|[^\d]/g,'')"> 元
+                </div>
+            </div>
+            <div class="footer">
+                <span class="tip"></span>
+                <a class="ok" ms-click="doSaveMember()">保存</a>
+                <a class="cancel">取消</a>
+            </div>
+        </div>
+    </div>
+    <div class="modal confirmModal" id="confirmModal">
+        <div>
+            <h3 class="header">确认</h3>
+            <div class="content">确认更改此会员的类型吗？</div>
+            <div class="footer"><a class="ok">确定</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+</section>

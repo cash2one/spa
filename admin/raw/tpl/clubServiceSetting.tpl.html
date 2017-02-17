@@ -1,0 +1,120 @@
+<!--资料设置--服务项目-->
+<section id="clubServiceSettingPage" class="ms-controller clubService" ms-controller="clubServiceSettingCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/clubServiceSetting.js"></script>
+    <h3 class="title">服务项目</h3>
+    <ul class="list item clearfix" id="serviceItemList">
+        <li ms-repeat="items" ms-attr-itemId="{{el.id}}">
+            <div>
+                <img ms-attr-src="{{el.imageUrl}}"/>
+                <div class="content">
+                    <h3>{{el.name}}</h3>
+                    <h4 ms-if="el.price && el.duration"><span ms-if="el.discountPrice"><span class="discount-price-area">网店价：{{el.discountPrice}}元</span> 原价：</span>{{el.price}}元/{{el.duration}}{{el.durationUnit}}</h4>
+                    <h4 ms-if="el.pricePlus">{{el.pricePlus}}元/{{el.durationPlus}}{{el.durationUnitPlus}}</h4>
+                </div>
+                <div class="mask"></div>
+                <ul>
+                    <li ms-click="doClickOfRemoveIndex(el.id)">移除首页</li>
+                    <li ms-click="doClickOfEdit($index)">编辑</li>
+                    <li ms-click="doClickOfDel(el.id)">删除</li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+
+    <h3 class="title">服务分类</h3>
+    <ul class="list category clearfix">
+        <li ms-repeat="categories">
+            <div>
+                <a ms-attr-href="#!/clubServiceDetail?id={{el.id}}"><img ms-attr-src="{{el.imageUrl}}" /></a>
+                <span>{{el.itemCount}}</span>
+            </div>
+        </li>
+    </ul>
+
+    <div class="modal center confirmModal" id="confirmModal" ms-attr-type="{{opeType}}" ms-attr-id="{{opeId}}">
+        <div>
+            <h3 class="header">确认<span>X</span></h3>
+            <div class="content">{{confirmContent}}</div>
+            <div class="footer"><a class="ok">确定</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+
+    <div class="modal" id="editItemModal">
+        <div>
+            <h3 class="header">编辑项目<span>X</span></h3>
+            <div class="content">
+                <form id="editForm" action='club/service/serviceItem/update' method="post" enctype='multipart/form-data'>
+                    <input type="hidden" name="itemCode" id="currSelectInnerCode">
+                    <input type='hidden' name='id' ms-attr-value="{{currEditId}}"/>
+                    <input type='hidden' name='image' id="currEditImageId" />
+                    <input type='hidden' id='x' name='x' value='0' />
+                    <input type='hidden' id='y' name='y' value='0' />
+                    <input type='hidden' id='factor' name='factor' value='1' />
+                    <input type='hidden' id='w' name='width' value='1' />
+                    <input type='hidden' id='h' name='height' value='1' />
+                    <input type='hidden' id='imgFileName'/>
+                    <input type='hidden' id='hasOnceCard'/>
+                    <input type='hidden' id='rawPrice'/>
+                    <input type='hidden' id='rawItemName'/>
+                    <div class="img" ms-class="cross-inner:isCrossInner"><img /><a>上传项目图片</a><input type="file" id="uploadImgBtn" name="imgFile"/><div id="fileManager">图片库选择</div><div id="crossInnerItem" ms-if="isCrossInner" ms-click="showCrossDialog()">关联内网项目</div><span class="selectionTxt"></span></div>
+                    <div class="item"><label>名称：</label><input id="itemName" type="text" placeholder="输入项目名称" maxlength="15" name="name"/></div>
+                    <div class="item price"><label>价格：</label><input id="itemPrice0" type="text" name="price0"/><span>元</span><input id="itemTime0" name="time0" type="text" /><select id="durationUnit" name="durationUnit"><option ms-repeat="units" ms-attr-value="{{el}}">{{el}}</option></select><a ms-click="doClickAddPlus()">添加加钟</a></div>
+
+                    <div class="item price"><label>网店价：</label><input type="text" id="discountPrice" name="discountPrice"><span>元</span><span class="item-tip">(网店价用于项目全额支付的显示)</span></div>
+                    <textarea id="discountDescription" name="discountDescription"></textarea>
+                    <div class="item rules clearfix float-tip-area"><label>网店价说明：</label><div id="discountDescriptionContent" contenteditable="true" ms-input="inputDiscount()"></div>
+                        <span class="float-tip" ms-visible="showFloatTip">请输入说明文字，如使用时段限制、会所特殊说明等</span></div>
+
+                    <div class="item price" ms-visible="addPlus"><label>加钟：</label><input id="itemPrice1" type="text" name="price1" /><span>元</span><input id="itemTime1" name="time1" type="text" /><select id="durationUnitPlus" name="durationUnitPlus"><option ms-repeat="units" ms-attr-value="{{el}}">{{el}}</option></select><a ms-click="doClickRemovePlus()">删除加钟</a></div>
+                    <textarea id="itemDescription" name="description"></textarea>
+                    <div class="item rules clearfix"><label>描述：</label><div id="itemDescriptionContent" contenteditable="true"></div></div>
+                </form>
+            </div>
+            <div class="footer"><span class="tip"></span><a class="ok">确定</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+
+    <div class="modal" id="crossInnerModal" ms-if="isCrossInner">
+        <div>
+            <h3 class="header">内网项目<span>X</span></h3>
+            <div class="content">
+                <div class="dataTable">
+                    <table>
+                        <thead>
+                            <tr class="search">
+                                <th colspan="3">
+                                    <input type="text" placeholder="输入内网项目编码或名称" id="crossSearchInput" ms-keypress="doSearchInner()">
+                                    <a ms-click="doClickSearchInner()">搜索</a>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th style="width: 20%;">项目名称</th>
+                                <th style="width: 60%;">项目价格</th>
+                                <th style="width: 20%;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody ms-if="crossItemList.length == 0" class="noData">
+                            <tr><td colspan="3">未能查询到数据！</td></tr>
+                        </tbody>
+                        <tbody ms-if="crossItemList.length != 0">
+                            <tr ms-repeat="crossItemList">
+                                <td>{{el.describe}}</td>
+                                <td>{{el.price}}</td>
+                                <td><a class="btn btn-default hover-ok" ms-click="selectCrossItem($index)">选择</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal center confirmModal" id="confirmOnceCardModal">
+        <div>
+            <h3 class="header">确认<span>X</span></h3>
+            <div class="content">该服务项目关联的次卡在售卖，确定修改将强制下线关联次卡，是否确认修改？</div>
+            <div class="footer"><a class="ok">确定</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+</section>

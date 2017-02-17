@@ -1,0 +1,91 @@
+<!--结算中心--结算记录-->
+<section id="memberAccountSettingPage" class="ms-controller" ms-controller="memberAccountSettingCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/memberAccountSetting.js"></script>
+    <div class="dataTable" id="dataListTable">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="5" class="header">会员卡类型
+                <div>
+                    <a class="btn" ms-click="doAddMemberCard()">添加会员卡类型</a>
+                </div>
+                </th>
+            </tr>
+            <tr>
+                <th style="width:16%">会员类型</th>
+                <th style="width:8%">折扣</th>
+                <th style="width:12%">人数</th>
+                <th style="width:44%">会员卡说明</th>
+                <th style="width:20%;min-width: 245px;">操作</th>
+            </tr>
+            </thead>
+            <tbody ms-if="dataList.length == 0" class="noData">
+            <tr><td colspan="5">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="dataList.length != 0">
+            <tr ms-repeat="dataList">
+                <td>{{el.name}}</td>
+                <td>{{el.discount | fenToYuanFilter}}</td>
+                <td><a ms-attr-href="#!/memberAccountList?typeId={{el.id}}" class="link">{{el.memberCount}}</a></td>
+                <td ms-html="el.description | descriptionFilter" style="text-align: left;"></td>
+                <td>
+                    <a class="btn" ms-click="doModifyMemberCard($index)">编辑</a>
+                    <a class="btn" ms-click="deleteMemberCard($index)">删除</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal" id="editMemberCardModal">
+        <div>
+            <h3 class="header">{{editModalTitle}}<span>X</span></h3>
+            <div class="content form">
+                <div>
+                    <label>会员卡名称：</label>
+                    <input type="text" maxlength="7" placeholder="请输入会员卡名称" id="memberCardName" ms-duplex="editObj.memberCardName">
+                </div>
+                <div>
+                    <label>享受折扣：</label>
+                    <input type="text" maxlength="4" placeholder="请输入会员可享受的折扣" id="memberCardDiscount" ms-duplex="editObj.memberCardDiscount" oninput="this.value=this.value.replace(/[^\d\.]/g,'')">
+                </div>
+                <div>
+                    <label>会员卡样式：</label>
+                    <span class="selected" data-type="1"></span><span data-type="2"></span><span data-type="3"></span><span data-type="4"></span><span data-type="5"></span><span data-type="6"></span>
+                </div>
+                <div>
+                    <label>会员卡说明：</label>
+                    <textarea id="memberCardExplain"></textarea>
+                </div>
+            </div>
+            <div class="footer">
+                <span class="tip"></span>
+                <a class="ok" ms-click="doSaveMemberCard()">保存</a>
+                <a class="cancel">取消</a>
+            </div>
+            <div class="member-tpl tpl-type-1">
+                <div>
+                    <div>
+                        <img /> <span>皇朝休闲会所</span>
+                    </div>
+                    <div>
+                        <span>-</span> 折
+                    </div>
+                    <div>--会员</div>
+                </div>
+                <div>
+                    <div>ID:<span>XXXX XXXX XXXX XX</span>
+                        <img src="club-admin/img/member/ic_QR.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal confirmModal" id="confirmModal">
+        <div>
+            <h3 class="header">确认<span>X</span></h3>
+            <div class="content">确认删除此会员卡类型吗？</div>
+            <div class="footer"><a class="ok">确定</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+</section>

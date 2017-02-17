@@ -1,0 +1,63 @@
+<!--技师管理-所有技师-->
+<section id="historyTechPage" class="ms-controller" ms-controller="historyTechCtrl">
+    <script type="text/javascript" src="club-admin/raw/js/page/historyTech.js"></script>
+    <div class="title">
+        <b>离职技师</b>
+        <input type="text" id="techNoOrName" placeholder="输入技师昵称或者编号" maxlength="15"/>
+        <a ms-click="doClickSearchBtn()">搜索</a>
+    </div>
+    <div class="dataTable" id="historyTechTable">
+        <table class="list">
+            <thead>
+            <tr>
+                <th style="width:5%">序号</th>
+                <th style="width:10%">原技师编号</th>
+                <th style="width:20%">技师名称</th>
+                <th style="width:20%">联系方法</th>
+                <th style="width:15%">离职时间</th>
+                <th style="width:15%">归属客户数</th>
+                <th style="width:15%;">操作</th>
+            </tr>
+            </thead>
+            <tbody ms-if="dataList.length == 0" class="noData">
+            <tr><td colspan="7">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="dataList.length != 0">
+            <tr ms-repeat-list="dataList">
+                <td>{{(currPage-1)*pageSize+$index + 1}}</td>
+                <td>{{list.respObj.serialNo}}</td>
+                <td>{{list.respObj.name}}</td>
+                <td>{{list.respObj.phoneNum}}</td>
+                <td>{{list.respObj.createTime}}</td>
+                <td>{{list.customNum  || "0"}}</td>
+                <td>
+                    <a class="btn" ms-attr-href="#!/historyTechDetail?historyTechId={{list.respObj.id}}&techId={{list.respObj.techId}}">详情</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="pagination" id="dataListPagination" ms-visible="dataList.length != 0"><div class="pages"></div></div>
+    </div>
+
+
+    <div class="dataTable" id="historyTechTotal">
+        <table class="total">
+            <thead>
+            <tr>
+                <th style="width:100%">离职数据统计</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><div><span>离职技师数</span><span>{{totalData.historyTechNum}}</span></div></td>
+            </tr>
+            <tr>
+                <td><div><span>离职所属客户</span><span>{{totalData.techCustomNum}}</span></div></td>
+            </tr>
+            <tr>
+                <td><a class="btn" href="#!/customerList">客户列表</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>

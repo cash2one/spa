@@ -1,0 +1,24 @@
+@import "../common/mixin.scss";
+section#onceCardPackagesPage{
+  .panel-title{
+    a{
+      float: right;
+      margin-right: 0;
+    }
+  }
+
+  .dataTable{
+    td.highlight{
+      color: $red;
+    }
+  }
+
+  #confirmModal{
+    .content{
+      height: 80px;
+      color: $red;
+      padding-left: 32px;
+      line-height: 80px;
+    }
+  }
+}

@@ -1,0 +1,68 @@
+@import "../common/mixin.scss";
+section#checkInfoRecordsPage{
+  .tip{
+    font-size: 12px;
+    font-weight: normal;
+    color: $red;
+  }
+  .dataTable{
+    td>img{
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+    tr.search>th{
+      font-size:14px;
+      padding:2px 0;
+      select{
+        padding:4px 5px;
+        width: 160px;
+      }
+      div.type{
+        float: left;
+        margin-left:10px;
+        &>input{
+          margin-right:5px;
+          width:160px;
+        }
+      }
+      div.time{
+        float: right;
+        margin-right:10px;
+      }
+    }
+  }
+
+  #detailModal{
+    .content{
+      position: relative;
+      padding: 5px 25px 5px;
+    }
+    .detail-info,.top-wrap{
+      padding: 5px 170px 8px 15px;
+      >div{
+        padding: 7px 0;
+        >label{
+          font-weight: bold;
+        }
+      }
+    }
+    .top-wrap{
+      border-bottom: 1px dotted #aaa;
+    }
+    div.header{
+      position: absolute;
+      top: 20px;
+      right: 50px;
+      >img{
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+      }
+      >div{
+        margin-top: 6px;
+        text-align: center;
+      }
+    }
+  }
+}

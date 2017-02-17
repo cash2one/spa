@@ -1,0 +1,189 @@
+<!--会所资料--子账号管理-->
+<section id="subAccountListPage" class="ms-controller" ms-controller="subAccountListCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/subAccountList.js"></script>
+    <!--子账号列表-->
+    <div class="dataTable" id="dataListTable">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="7" class="header">会所子账号列表<span>({{dataList.length}}/10)</span><div><a ms-click="doAddAccount()">新增</a></div></th>
+            </tr>
+            <tr>
+                <th style="width:6%">序号</th>
+                <th style="width:14%">账号登录名</th>
+                <th style="width:14%">账号用户名</th>
+                <th style="width:14%">手机号码</th>
+                <th style="width:18%">关联角色</th>
+                <th style="width:16%">创建时间</th>
+                <th style="width:18%;min-width:160px;">操作</th>
+            </tr>
+            </thead>
+            <tbody ms-if="dataList.length == 0" class="noData">
+            <tr><td colspan="7">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="dataList.length != 0">
+            <tr ms-repeat="dataList">
+                <td>{{$index+1}}</td>
+                <td>{{el.loginName}}</td>
+                <td>{{el.name}}</td>
+                <td>{{el.phoneNum}}</td>
+                <td>{{el.roles}}</td>
+                <td>{{el.createTime}}</td>
+                <td>
+                    <a class="btn" ms-click="doEditAccount(el.id)">编辑</a>
+                    <a class="btn" ms-click="doChangeAccountPw($index)">修改密码</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--账号角色权限-->
+    <div class="dataTable" id="authListTable">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="4" class="header">账号角色权限<div ms-visible="resourcesGroupList.length != 0" class="sizeOption">每页显示记录数：<select ms-change="onChangeOfAuthListPage()"><option selected>10</option><option>30</option><option>50</option></select></div></th>
+            </tr>
+            <tr>
+                <th style="width:15%">角色名称</th>
+                <th style="width:10%">是否启用</th>
+                <th style="width:60%">所含权限</th>
+                <th style="width:15%;min-width:140px;">操作</th>
+            </tr>
+            </thead>
+            <tbody ms-if="resourcesGroupList.length == 0" class="noData">
+            <tr><td colspan="4">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="resourcesGroupList.length != 0">
+            <tr ms-repeat="resourcesGroupList">
+                <td>{{el.name}}</td>
+                <td>{{el.enabled=="Y" ? "启用" : "禁用"}}</td>
+                <td>{{el.remark | html}}</td>
+                <td>
+                    <a class="btn" ms-click="doClickAssociateAuthBtn(el.id)">关联</a>
+                    <a class="btn" ms-click="doViewResourceGroupDetail(el.id,el.name)">详情</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination" id="authListTablePagination" ms-visible="resourcesGroupList.length != 0"><div class="pages"></div></div>
+
+    <!--修改子账户modal-->
+    <div class="modal" id="editAccountModal">
+        <div>
+            <h3 class="header">{{modelHeaderStr}}<span>X</span></h3>
+            <div class="content form">
+                <div><label>账号登录名：</label><input type="text" ms-attr-disabled="opeType=='changePw'" id="loginName" placeholder="请输入登录名" maxlength="15"/><span><b>*</b></span></div>
+                <div ms-visible="opeType!='edit'"><label>账号密码：</label><input type="password" id="loginPassword" placeholder="请输入账号密码" maxlength="15" /><span><b>*</b></span></div>
+                <div ms-visible="opeType !='changePw'"><label>账号名称：</label><input type="text" id="accountName" placeholder="请输入账号名称" maxlength="30" /></div>
+                <div ms-visible="opeType !='changePw'"><label>手机号码：</label><input type="text" id="accountTel" placeholder="请输入手机号码" maxlength="11" /></div>
+                <div class="roleList" ms-visible="opeType == 'add' || opeType == 'edit' ">
+                    <label>关联角色：</label>
+                    <div>
+                        <ul>
+                            <li ms-repeat="selectedRoleArr" ms-attr-roleId="{{el.id}}">{{el.name}}<a ms-click="doDelRoleRel(el.id,$index)">删除</a></li>
+                        </ul>
+                        <a ms-click="doAddRole()">新增<span>*</span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer"><span class="tip"></span><a class="ok">确定</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+
+    <!--角色列表modal-->
+    <div class="modal" id="roleListModal">
+        <div>
+            <h3 class="header">角色列表<span>X</span></h3>
+            <div class="content">
+                <div class="dataTable">
+                    <table>
+                        <thead>
+                        <tr class="search">
+                            <th colspan="3"><input placeholder="输入角色名" maxlength="30" id="roleListSearch"/><a class="toolButton" ms-click="doRoleListSearch()">搜索</a></th>
+                        </tr>
+                        <tr>
+                            <th style="width:15%">序号</th>
+                            <th style="width:60%">角色</th>
+                            <th style="width:25%">选择</th>
+                        </tr>
+                        </thead>
+                        <tbody ms-if="roleList.length == 0" class="noData">
+                        <tr><td colspan="3">未能查询到数据！</td></tr>
+                        </tbody>
+                        <tbody ms-if="roleList.length != 0">
+                        <tr ms-repeat="roleList">
+                            <td>{{$index+1+5*(currRoleListPage-1)}}</td>
+                            <td>{{el.name}}</td>
+                            <td><a class="btn" ms-if="!el.selected" ms-click="doSelectRole(el.id,el.name,$index)">选择</a><span ms-if="el.selected">已选</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="roleListModalPagination" ms-visible="roleList.length != 0"><div class="pages"></div></div>
+            </div>
+            <div class="footer"><span class="tip"></span><a class="ok">关闭</a></div>
+        </div>
+    </div>
+
+    <!--角色关联子账号modal-->
+    <div class="modal" id="roleAssociateUserModal">
+        <div>
+            <h3 class="header">子账户关联选择<span>X</span></h3>
+            <div class="content">
+                <div class="dataTable">
+                    <table>
+                        <thead>
+                        <tr class="search">
+                            <th colspan="4"><input id="roleAssociateUserSearch" placeholder="输入登录名" maxlength="30"/><a class="toolButton" ms-click="doSearchInAssociateUserModal()">搜索</a></th>
+                        </tr>
+                        <tr>
+                            <th style="width:25%">登录名</th>
+                            <th style="width:25%">用户名</th>
+                            <th style="width:28%">角色</th>
+                            <th style="width:22%">选择</th>
+                        </tr>
+                        </thead>
+                        <tbody ms-if="associateUserList.length == 0" class="noData">
+                        <tr><td colspan="4">未能查询到数据！</td></tr>
+                        </tbody>
+                        <tbody ms-if="associateUserList.length != 0">
+                        <tr ms-repeat="associateUserList">
+                            <td>{{el.loginName}}</td>
+                            <td>{{el.name}}</td>
+                            <td>{{el.roles}}</td>
+                            <td><a class="btn" ms-click="doSelectAssociateUser(el.id)">选择</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div ms-visible="associateUserList.length != 0" class="pagination" id="roleAssociateUserModalPagination"><div class="pages"></div></div>
+            </div>
+            <div class="footer"><span class="tip"></span><a class="ok">确定</a></div>
+        </div>
+    </div>
+
+    <!--查看资源权限组modal-->
+    <div class="modal" id="resourceGroupDetailModal">
+        <div>
+            <h3 class="header">{{currViewRoleName}}角色详情<span>X</span></h3>
+            <div class="content">
+                <ul class="tab">
+                    <li ms-class="active:selectedTab=='pc'" ms-click="doChangeResourceViewTab('pc')">管理者PC</li>
+                    <li ms-class="active:selectedTab=='app'" ms-click="doChangeResourceViewTab('app')">管理者APP</li>
+                </ul>
+
+                <div class="dataTable" ms-visible="selectedTab=='pc'">
+                    <table id="resourceGroupDataTable-PC"></table>
+                </div>
+
+                <div class="dataTable" ms-visible="selectedTab=='app'">
+                    <table id="resourceGroupDataTable-APP"></table>
+                </div>
+            </div>
+            <div class="footer"><span class="tip"></span><a class="ok">关闭</a></div>
+        </div>
+    </div>
+</section>

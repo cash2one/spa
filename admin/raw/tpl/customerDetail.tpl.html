@@ -1,0 +1,125 @@
+<!--技师管理-技师详情-->
+<section id="customerDetailPage" class="ms-controller" ms-controller="customerDetailCtrl">
+    <script type="text/javascript" src="club-admin/raw/js/page/customerDetail.js"></script>
+    <div class="customerInfo">
+        <div class="img">
+            <img ms-if="customerObj.userHeadimgurl" ms-attr-src="{{customerObj.userHeadimgurl}}"/>
+            <img ms-if="!customerObj.userHeadimgurl" src="club-admin/img/common/head.jpg"/>
+            <a ms-repeat="albums" class="cboxElement techHeader" ref="techHeader" ms-attr-href="{{el.imageUrl}}"></a>
+        </div>
+        <div class="info">
+            <h3><b>{{customerObj.userName}}</b><i ms-class="free">{{customerObj.userType =="temp" ? "领券用户" : (customerObj.userType =="user" ? "粉丝用户" : (customerObj.userType =="weixin" ? "微信用户" : "-"))}}</i></h3>
+            <div class="info">
+                {{customerObj.phoneNum}}
+            </div>
+            <div class="info" ms-if="customerObj.techName"><b>所属技师</b>：{{customerObj.techName}}</div>
+            <div class="info"><b>性别：</b>{{customerObj.gender=='male' ? '男' : '女'}}</div>
+        </div>
+    </div>
+    <ul class="tab">
+        <li ms-class="active:selectedTab=='order'" ms-click="doChangeTab('order')">订单</li>
+        <li ms-class="active:selectedTab=='comment'" ms-click="doChangeTab('comment')">评论</li>
+        <li ms-class="active:selectedTab=='coupon'" ms-click="doChangeTab('coupon')">领券</li>
+    </ul>
+
+    <div class="dataTable" id="orderDataTable" ms-visible="selectedTab=='order'">
+        <table>
+            <thead>
+            <tr>
+                <th class="header" colspan="5">订单列表<div class="sizeOption" ms-if="orderList.length != 0">每页显示记录数：<select ms-change="onChangeOrderListPageSize()"><option selected>15</option><option>30</option><option>50</option></select></div></th>
+            </tr>
+            <tr>
+                <th style="width:20%">到店时间</th>
+                <th style="width:20%">预约时间</th>
+                <th style="width:20%">预约技师</th>
+                <th style="width:20%">预约人号码</th>
+                <th style="width:20%"><select ms-change="doChangeQueryStatus('order')"><option ms-repeat="$statusObj" ms-attr-value="{{el.value}}">{{el.name}}</option></select></th>
+            </tr>
+            </thead>
+            <tbody ms-if="orderList.length == 0" class="noData">
+            <tr>
+                <td colspan="5">未能查询到数据！</td>
+            </tr>
+            </tbody>
+            <tbody ms-if="orderList.length != 0">
+            <tr ms-repeat="orderList">
+                <td>{{el.appointTime}}</td>
+                <td>{{el.createdAt}}</td>
+                <td>{{el.techName}}</td>
+                <td>{{el.phoneNum}}</td>
+                <td>{{el.status=="submit" ? "待接受" : (el.status=="accept" ? "已接受" : (el.status=="reject" ? "拒绝" : (el.status=="complete" ? "完成" : (el.status=="failure" ? "失效" : (el.status=="overtime" ? "超时" : "-")))))}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination" id="orderListPagination" ms-visible="orderList.length != 0 && selectedTab=='order'"><div class="pages"></div></div>
+
+    <div class="dataTable" id="commentDataTable" ms-visible="selectedTab=='comment'">
+        <table>
+            <thead>
+            <tr>
+                <th class="header" colspan="6">评论列表<div class="sizeOption" ms-if="commentList.length != 0">每页显示记录数：<select ms-change="onChangeCommentListPageSize()"><option selected>15</option><option>30</option><option>50</option></select></div></th>
+            </tr>
+            <tr>
+                <th style="width:15%">用户</th>
+                <th style="width:24%;">评分</th>
+                <th style="width:15%">印象点评</th>
+                <th style="width:30%">评论</th>
+                <th style="width:16%">评论时间</th>
+            </tr>
+            </thead>
+            <tbody ms-if="commentList.length == 0" class="noData">
+            <tr><td colspan="6">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="commentList.length != 0">
+            <tr ms-repeat="commentList">
+                <td>{{el.techName}}</td>
+                <td ms-if="el.attitudeRate > 0" class="star" style="min-width:270px;">
+                    态度：<div><div ms-attr-style="width:{{el.attitudeRate}}%"></div></div>
+                    &nbsp;&nbsp;仪容：<div><div ms-attr-style="width:{{el.appearanceRate}}%"></div></div><br/>
+                    技能：<div><div ms-attr-style="width:{{el.skillRate}}%"></div></div>
+                    &nbsp;&nbsp;偷钟：<div><div ms-attr-style="width:{{el.clockRate}}%"></div></div>
+                </td>
+                <td ms-if="el.attitudeRate == 0" class="star">综合：<div><div ms-attr-style="width:{{el.rate}}%"></div></div></td>
+                <td>{{el.impression}}</td>
+                <td>{{el.comment}}</td>
+                <td>{{el.createdAt}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination" id="commentListPagination" ms-visible="commentList.length != 0 && selectedTab=='comment'"><div class="pages"></div></div>
+
+    <div class="dataTable" id="couponDataTable" ms-visible="selectedTab=='coupon'">
+        <table>
+            <thead>
+            <tr>
+                <th class="header" colspan="5">领券列表<div class="sizeOption" ms-if="couponList.length != 0">每页显示记录数：<select ms-change="onChangeCouponListPageSize()"><option selected>15</option><option>30</option><option>50</option></select></div></th>
+            </tr>
+            <tr>
+                <th style="width:20%">优惠券</th>
+                <th style="width:20%">优惠券类型</th>
+                <th style="width:20%">领取时间</th>
+                <th style="width:20%">分享者</th>
+                <th style="width:20%">状态</th>
+            </tr>
+            </thead>
+            <tbody ms-if="couponList.length == 0" class="noData">
+            <tr>
+                <td colspan="5">未能查询到数据！</td>
+            </tr>
+            </tbody>
+            <tbody ms-if="couponList.length != 0">
+            <tr ms-repeat="couponList">
+                <td>{{el.actTitle}}({{el.useTypeName}})</td>
+                <td>{{el.couponTypeName}}</td>
+                <td>{{el.getDate}}</td>
+                <td>{{el.techName || "-"}}<span ms-if="el.techNo">[{{el.techNo}}]</span></td>
+                <td>{{el.actStatusName}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination" id="couponListPagination" ms-visible="couponList.length != 0 && selectedTab=='coupon'"><div class="pages"></div></div>
+
+</section>

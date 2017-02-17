@@ -1,0 +1,74 @@
+@import "../common/mixin.scss";
+section#onceCardSellRecordsPage{
+  tr.search{
+    div.name{
+      float: left;
+      margin-left: 10px;
+      >a{
+        margin-left: 5px;
+      }
+    }
+    div.time{
+      float: right;
+      margin-right: 10px;
+    }
+  }
+
+  td.red{
+    color: $red;
+  }
+
+  #checkRecordsModal{
+    .content{
+      >div.list{
+        margin: 2px 15px;
+        line-height: 38px;
+        border-bottom: 1px dotted #ddd;
+        >label,>span{
+          display: inline-block;
+        }
+        >label{
+          width: 110px;
+          text-align: right;
+        }
+        >span{
+          width: 145px;
+        }
+      }
+      >ul{
+        position: relative;
+        padding-left: 125px;
+        padding-top: 5px;
+        &:before{
+          content: "核销记录：";
+          display: block;
+          position: absolute;
+          top: 9px;
+          left: 0;
+          width: 125px;
+          text-align: right;
+        }
+        >li{
+          line-height: 32px;
+          >span{
+            margin-right: 5px;
+            &:last-child{
+              margin-left: 20px;
+            }
+          }
+        }
+      }
+      >div.total{
+        line-height: 38px;
+        margin: 0 15px;
+        border-top:1px dotted #ddd;
+        text-align: right;
+        >span{
+          font-weight: bold;
+          margin-right: 8px;
+          color: $red;
+        }
+      }
+    }
+  }
+}

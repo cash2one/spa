@@ -1,0 +1,102 @@
+@import "../common/mixin.scss";
+section#fastPaySettingPage{
+  .panel-title{
+    h3{
+      float: left;
+    }
+    >span{
+      float: right;
+      color: $red;
+      text-align: right;
+    }
+    div{
+      float: right;
+      >a{
+        &:first-child{
+          margin-right: 12px;
+        }
+        &:last-child{
+          margin-right: 0;
+        }
+      }
+    }
+  }
+
+  .panel-content{
+    padding: 15px 0 5px 10px;
+  }
+
+  .no-switch{
+    border: 1px solid $borderColor;
+    height: 150px;
+    line-height: 150px;
+    text-align: center;
+    color: $red;
+    border-radius: 4px;
+  }
+
+  .tech{
+    position: relative;
+    width: 80px;
+    height: 55px;
+    padding: 8px 8px 8px 71px;
+    border-radius: 4px;
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #e0e0e0;
+    cursor: pointer;
+    >div{
+      &:nth-of-type(1){
+        position: absolute;
+        width: 55px;
+        height: 55px;
+        top: 8px;
+        left: 8px;
+        background-size: cover;
+        border-radius: 4px;
+        border: 1px dotted #ddd;
+      }
+      &:nth-of-type(2),&:nth-of-type(3){
+        @include sl();
+      }
+      &:nth-of-type(2){
+        line-height: 30px;
+        height: 30px;
+      }
+      &:nth-of-type(3){
+        line-height: 30px;
+      }
+      &:nth-of-type(4){
+        display: none;
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        top: -9px;
+        right: -9px;
+        line-height: 18px;
+        border-radius: 50%;
+        text-align: center;
+        background: $orange;
+        color: #fff;
+        cursor: pointer;
+      }
+    }
+    &:hover{
+      border-color: $orange;
+      >div:nth-of-type(4){
+        display: block;
+      }
+    }
+  }
+
+  #selectTechModal{
+    .content{
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    td>span{
+      color: $red;
+    }
+  }
+}

@@ -1,0 +1,61 @@
+<!--打赏自定义-->
+<section id="rewardSettingPage" class="ms-controller" ms-controller="rewardSettingCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/rewardSetting.js"></script>
+    <div class="title">
+        <label>技师金钱打赏设置</label>
+        <div ms-class="{{moneyRewardSwitch ? 'active' : ''}}" ms-click="doClickMoneyRewardSwitch()"><i></i></div>
+        <span>{{moneyRewardSwitch ? '已开启' : '已关闭'}}</span>
+    </div>
+    <div class="list" ms-visible="moneyRewardSwitch">
+        <div class="tools">
+            <a class="toolButton" ms-click="doEditMoneyReward()">{{editMoneyReward? "取消": ""}}编辑</a>
+            <a class="toolButton" ms-click="doClickRestoreMoneyDefault()">恢复默认</a>
+            <a class="toolButton" ms-click="doClickSaveMoneySetting()">保存</a>
+        </div>
+        <ul class="money-reward-setting clearfix" ms-class="{{editMoneyReward ? 'editable' : ''}}">
+            <li class="money" ms-repeat="moneyRewardSetting">
+                <div>打赏金额：<input class="money" maxlength="8" type="text" ms-attr-value="{{ (el.amount/100).toFixed(2) }}"/><span>{{ el.amount | bizMoneyToYuan}}</span>元</div>
+                <div>文字描述：<input class="desc" maxlength="3" type="text" ms-attr-value="el.description"/><span>{{ el.description }}</span></div>
+                <div class="radio" ms-class="selected: defaultRewardType==1 && defaultRewardId==el.id" ms-click="doSelectDefault(el.id,1)">设为默认选中</div>
+            </li>
+        </ul>
+    </div>
+    <div class="off-switch" ms-visible="!moneyRewardSwitch">当前设置不可进行金钱打赏，如需要开启请点击右上角开关！</div>
+
+    <div class="title gift">
+        <label>技师积分打赏设置</label>
+        <div ms-class="{{giftRewardSwitch ? 'active' : ''}}" ms-click="doClickGiftRewardSwitch()"><i></i></div>
+        <span>{{giftRewardSwitch ? '已开启' : '已关闭'}}</span>
+    </div>
+
+    <div class="list" ms-visible="giftRewardSwitch">
+        <div class="tools">
+            <a class="toolButton" ms-click="doClickRestoreGiftDefault()">恢复默认</a>
+            <a class="toolButton" ms-click="doClickSaveGiftSetting()">保存</a>
+        </div>
+        <ul class="clearfix gift-reward-setting">
+            <li class="gift" ms-repeat="giftRewardSetting">
+                <div><img ms-attr-src="el.imgPath || defaultGiftImg"/></div>
+                <div>{{el.credit}}积分</div>
+                <div class="radio" ms-click="doSelectDefault(el.rewardId,0)" ms-class="selected: defaultRewardType==0 && defaultRewardId==el.rewardId">设为默认选中</div>
+                <div ms-click="doShowEditGift($index)">编辑</div>
+            </li>
+        </ul>
+    </div>
+    <div class="off-switch" ms-visible="!giftRewardSwitch">当前设置不可进行金钱打赏，如需要开启请点击右上角开关！</div>
+
+    <div class="modal" id="editRewardGiftModal">
+        <div>
+            <h3 class="header">编辑打赏项目<span>X</span></h3>
+            <div class="content">
+                <ul class="gift-list clearfix">
+                    <li ms-repeat="gifts" ms-class="{{currSelectedGift==$index ? 'selected' : ''}}" ms-click="doSelectGift($index)" ms-visible="el.show">
+                        <img ms-attr-src="el.imgPath"/>
+                        <div>{{el.credit}}积分</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="footer"><span class="tip"></span><a class="ok">确定</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+</section>

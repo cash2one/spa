@@ -1,0 +1,301 @@
+﻿<!--首页-->
+<section id="homePage" class="ms-controller" ms-controller="homeCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/home.js"></script>
+    <div class="techAndPayGroup clearfix" ms-class="noPaidOrder:paidOrderSwitch!='on'">
+        <div class="panel tech">
+            <div class="panel-title"><h3>技师</h3></div>
+            <div class="panel-content">
+                <ul class="clearfix">
+                    <li><i class="total">总数</i>{{ freeCount+inProgressCount }}</li>
+                    <li><i class="busy">忙</i>{{ inProgressCount }}</li>
+                    <li><i class="free">闲</i>{{ freeCount }}</li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel pay">
+            <div class="panel-title"><h3>核销</h3></div>
+            <div class="panel-content">
+                <input type="text" id="check-code-input" placeholder="输入手机号或核销码进行核销" ms-keypress="useAllKeyPress()" oninput="this.value=this.value.replace(/\D+/g,'')">
+                <a class="toolButton info" ms-click="useAllClick()">核销</a>
+                <a class="toolButton info" href="#!/checkInfoRecords">核销记录</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel fastPay" ms-visible="menuAuth.fastPayRemind">
+        <div class="panel-title"><h3>买单提醒</h3><a class="toolButton info" href="#!/fastPayRecords">全部记录</a><a class="toolButton info" ms-click="doRefreshFastPay()">刷新</a></div>
+        <div class="panel-content data-table">
+            <div class="dataTable">
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width:9%">买单时间</th>
+                        <th style="width:8%">客户昵称</th>
+                        <th style="width:9%">手机号</th>
+                        <th style="width:10%">服务技师</th>
+                        <th style="width:9%">买单金额</th>
+                        <th style="width:10%;min-width:115px;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody ms-if="fastPayDataList.length == 0" class="noData">
+                    <tr><td colspan="12">未能查询到数据！</td></tr>
+                    </tbody>
+                    <tbody ms-if="fastPayDataList.length != 0">
+                    <tr ms-repeat="fastPayDataList">
+                        <td>{{el.createTime}}</td>
+                        <td>{{el.userName}}</td>
+                        <td>{{el.telephone}}</td>
+                        <td><a ms-attr-href="'#!/techDetail?id='+el.techId">{{el.techName}}<span ms-visible="el.techNo"> [{{el.techNo}}]</span></a></td>
+                        <td>{{el.payAmount | bizMoneyToYuan}}</td>
+                        <td>
+                            <a class="btn" ms-visible="el.status=='paid'" ms-click="doConfirmPay('pass',el.id)">确认</a>
+                            <a class="btn" ms-visible="el.status=='paid'" ms-click="doConfirmPay('unpass',el.id)">异常</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="tip"><a href="#!/fastPayRecords">已处理通知请在全部记录查询</a></div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-title"><h3>订单列表</h3><div class="sizeOption">每页显示记录数：<select><option selected>15</option><option>30</option><option>50</option><option>100</option></select></div></div>
+        <div class="panel-content data-table">
+            <div class="dataTable" id="orderListDataTable">
+                <table>
+                    <thead>
+                    <tr class="search">
+                        <th ms-attr-colspan="{{paidOrderSwitch=='on' ? 11 : 10}}">
+                            <div class="searchForm name"><input type="text" id="search-serial" placeholder="请输入技师编号或者昵称" maxlength="10" ms-keypress="doSearchEnter()" /><a ms-click="doSearchQuery()">搜索</a></div>
+                            <div class="searchForm time"><a type="0">今天</a><a type="6">7天</a><a type="29" class="active">30天</a><input type="text" /></div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="width:12%">预约时间</th>
+                        <th style="width:11%">到店时间</th>
+                        <th style="width:5%">技师名称</th>
+                        <th style="width:9%">技师编号</th>
+                        <th style="width:6%">预约人</th>
+                        <th style="width:8%">预约人号码</th>
+                        <th style="width:8%">
+                            <select id="appointTypeSelect" ms-change="appointTypeChange()">
+                                <option value="">预约类型</option>
+                                <option value="appoint">免费预约</option>
+                                <option value="phone">电话预约</option>
+                                <option value="paid">定金预约</option>
+                                <option value="paid_full">全额预约</option>
+                            </select>
+                        </th>
+                        <th style="width:8%">所选项目</th>
+                        <th ms-if="paidOrderSwitch=='on'" style="width:8%">预约定金</th>
+                        <th style="width:9%"><select ms-change="doChangeStatusQuery()"><option ms-repeat="$statusObj" ms-attr-value="{{el.value}}">{{el.name}}</option></select></th>
+                        <th style="width:15%">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody ms-if="orders.length == 0" class="noData">
+                    <tr><td ms-attr-colspan="{{paidOrderSwitch=='on' ? 11 : 10}}">未能查询到数据！</td></tr>
+                    </tbody>
+                    <tbody ms-if="orders.length != 0">
+                    <tr ms-repeat="orders">
+                        <td>{{el.createdAt}}</td>
+                        <td>{{!el.appointTime ? '-' : el.appointTime}}</td>
+                        <td class="link">
+                            <a ms-if="el.isRemove=='N' && el.technicianName != null" ms-attr-href="'#!/techDetail?id='+el.technicianId">{{el.technicianName}}</a>
+                            <span ms-if="el.technicianName == null">-</span>
+                            <span ms-if="el.isRemove=='Y'">{{el.technicianName}}</span>
+                        </td>
+                        <td>{{el.technicianSerialNo=='' ? '-' : el.technicianSerialNo}}</td>
+                        <td>{{el.customerName}}</td>
+                        <td>{{el.phoneNum}}</td>
+                        <td ms-class-1="c-red:el.payType == 2">{{$appointTypes[el.orderType == 'paid' ? el.payType:el.orderType]}}</td>
+                        <td>{{el.serviceItemName ? el.serviceItemName : '-'}}</td>
+                        <td ms-if="paidOrderSwitch=='on'" ms-class-1="c-red:el.payType == 2">{{el.downPayment}}</td>
+                        <td>{{el.statusName}}</td>
+                        <td>
+                            <a ms-if="el.status=='待接受'" class="btn" ms-click="doHandlerOrder(el.id,'accept')">接受</a>
+                            <a ms-if="el.status=='待接受'" class="btn" ms-click="doHandlerOrder(el.id,'reject')">拒绝</a>
+                            <a ms-if="el.orderType=='paid' && el.status=='已接受' && el.isExpire==true" class="btn" ms-click="doHandlerUsePaidOrder(el.id,'verified',el.orderNo)">核销</a>
+                            <a ms-if="el.orderType=='paid' && el.status=='已接受' && el.isExpire==true" class="btn" ms-click="doHandlerUsePaidOrder(el.id,'expire',el.orderNo)">过期</a>
+                            <a ms-if="isCrossInner && el.downPayment>0 && (el.status=='待接受' || el.status=='已接受')" ms-click="doHandlerRefund($index)" class="btn">退款</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="pagination blue" id="dataListPagination" ms-visible="orders.length != 0"><div class="pages"></div></div>
+
+    <!--核销券-->
+    <div class="modal" id="couponVerificationModal">
+        <div>
+            <h3 class="header" ms-if="currCodeType != 'service_item_coupon'">{{couponSwitch=="on" ? "核销优惠券/点钟券" : "核销优惠劵" }}<span>X</span></h3>
+            <h3 class="header" ms-if="currCodeType == 'service_item_coupon'">核销项目券<span>X</span></h3>
+            <div class="content">
+                <div class="dataTable">
+                    <table>
+                        <thead>
+                        <tr class="search">
+                            <th colspan="5">
+                                <select id="couponSearchTypeSelect" ms-if="currCodeType != 'service_item_coupon'" disabled><option value="tel" ms-attr-selected="currUseType == 'tel'">手机号码</option><option value="couponNo"  ms-attr-selected="currUseType == 'coupon'">券优惠码</option></select>
+                                <input placeholder="请输入手机号码" maxlength="11" ms-visible="couponVerifyType=='tel'" id="search-tel-input" ms-attr-value="currUsePhone" disabled/>
+                                <input placeholder="请输入券优惠码" maxlength="12" ms-visible="couponVerifyType!='tel'" id="search-couponNo-input" ms-attr-value="currUseCode" disabled/><a ms-click="doSearchCoupon(1)" style="display: none;">搜索</a>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style="width: 10%">卡券类型</th>
+                            <th style="width: 27%">卡券名称</th>
+                            <th style="width: 35%">券有效期</th>
+                            <th style="width: 10%">状态</th>
+                            <th style="width: 9%">选择</th>
+                        </tr>
+                        </thead>
+                        <tbody ms-if="coupons.length == 0" class="noData">
+                        <tr>
+                            <td colspan="5">未能查询到数据！</td>
+                        </tr>
+                        </tbody>
+                        <tbody ms-if="coupons.length != 0">
+                        <tr ms-repeat="coupons">
+                            <td>{{el.useTypeName}}</td>
+                            <td>{{el.actTitle}}({{el.couponTypeName}})</td>
+                            <td>{{el.couponPeriod}}</td>
+                            <td>{{el.actStatusName}}</td>
+                            <td><i ms-class="active:verifyCouponSuaId==el.suaId" ms-click="deSelectVerifyCoupon(el.suaId,$index)"></i></td>
+                        </tr>
+                        </tbody>
+                        <tfoot ms-if="settledList.length > 0 && verifyCouponSuaId == ''">
+                            <tr class="tf-header">
+                                <td colspan="5">最近不可用券</td>
+                            </tr>
+                            <tr ms-repeat="settledList">
+                                <td>{{el.useTypeName}}</td>
+                                <td>{{el.actTitle}}({{el.couponTypeName}})</td>
+                                <td>{{el.couponPeriod}}</td>
+                                <td>{{el.actStatusName}}</td>
+                                <td>不可用</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="pagination" id="couponPagination" ms-visible="coupons.length != 0 && couponsPage>1"><div class="pages"></div></div>
+                <ul ms-if="selectCoupon.length > 0" ms-repeat="selectCoupon">
+                    <li ms-if="el.couponType != 'service_item'"><label>{{el.consumeMoneyDescription}}</label></li>
+                    <li ms-if="el.couponType == 'service_item'"><label>活动名称：</label>{{el.actSubTitle}}</li>
+                    <li ms-if="el.couponType == 'service_item'"><label>活动类型：</label>{{el.useTypeName ? el.useTypeName : el.couponTypeName}}</li>
+                    <li ms-if="el.couponType == 'service_item' && el.paidType !== 'credits' && el.paidType !== 'free'"><label>购买金额：</label>{{el.actAmount}}</li>
+                    <li ms-if="el.couponType == 'service_item' && el.paidType === 'credits'"><label>购买积分：</label>{{el.creditAmount}}</li>
+                    <li ms-if="el.couponType == 'service_item' && el.paidType === 'free'"><label>卡券来源：</label>奖品赠送</li>
+                    <li><label>领取时间：</label>{{el.getDate}}</li>
+                    <li><label>使用时段：</label>{{el.useTimePeriod}}</li>
+                    <li><label>使用说明：</label>{{el.actContent  | html}}</li>
+                </ul>
+            </div>
+            <div class="footer"><span class="tip"></span><a class="ok" ms-class="disabled:verifyCouponSuaId==''">核销</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+
+    <!--核销预付费订单-->
+    <div class="modal" id="orderVerificationModal">
+        <div>
+            <h3 class="header">核销预付费订单<span>X</span></h3>
+            <div class="content">
+                <div class="search" style="display: none;">
+                    <input placeholder="请输入订单预约号码" maxlength="12"  id="search-order-input" ms-attr-value="currUseCode" />
+                    <a ms-click="doSearchOrder()">搜索</a>
+                </div>
+                <div class="title" ms-if="selectOrder.id !=''">订单信息</div>
+                <ul ms-if="selectOrder.id !=''">
+                    <li><label>预约人：</label>{{selectOrder.customerName}}<span ms-if="selectOrder.phoneNum">({{selectOrder.phoneNum}})</span></li>
+                    <li><label>到店时间：</label>{{selectOrder.appointTime}}</li>
+                    <li><label>下单时间：</label>{{selectOrder.createdAt}}</li>
+                    <li><label>预约技师：</label>{{selectOrder.techName || '无'}}</li>
+                    <li><label>预付定金：</label>{{selectOrder.downPaymentYuan}}<span class="tip" ms-if="selectOrder.orderType == 'paid_full'">（全额预约）</span></li>
+                    <li><label>订单状态：</label>{{selectOrder.statusName}}</li>
+                </ul>
+            </div>
+            <div class="footer">
+                <span class="tip"></span>
+                <a class="ok" ms-visible="selectOrder.status=='accept'" ms-click="doUsePaidOrder('verified')">确认核销</a>
+                <a class="ok" ms-visible="selectOrder.status=='accept' && selectOrder.isExpire" ms-click="doUsePaidOrder('expire')">确认过期</a>
+                <a class="cancel">取消</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 核销请客或抢项目 -->
+    <div class="modal" id="treatVerificationModal">
+        <div>
+            <h3 class="header">{{defaultInfo.title}}<span>X</span></h3>
+            <div class="content" ms-repeat="defaultInfo.detail">
+                <div class="item"><label>授权码：</label>{{currUseCode}}</div>
+                <div class="item" ms-if="el.needAmount">
+                    <label>消费金额：</label><input placeholder="请输入客人消费金额" maxlength="7"  id="moneyInput" oninput="this.value=this.value ? (this.value.replace(/[^\d\.]/g,'').split('.').length > 2 ? this.value.replace(/[^\d\.]/g,'').split('.')[0] + '.' + this.value.replace(/[^\d\.]/g,'').split('.')[1] : this.value.replace(/[^\d\.]/g,'')).replace(/(\d+\.\d{2})\d*$/,'$1'):''" />
+                </div>
+                <div class="item" ms-if="el.info && el.info.list" ms-repeat-item="el.info.list"><label>{{item.title}}：</label>{{item.text}}</div>
+                <div class="item rules clearfix" ms-if="el.info && (el.info.remark == '' || el.info.remark)">
+                    <label>备注说明：</label>
+                    <div ms-if="el.info.remark" ms-html="el.info.remark"></div>
+                    <div ms-if="!el.info.remark">无</div>
+                </div>
+            </div>
+            <div class="footer">
+                <span class="tip"></span>
+                <a class="ok">核销</a>
+                <a class="cancel">取消</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 核销大转盘奖品 -->
+    <div class="modal" id="luckyWheelVerificationModal">
+        <div>
+            <h3 class="header">核销物品<span>X</span></h3>
+            <div class="content" ms-repeat="luckyWheelInfo">
+                <div class="item"><label>核销码：</label>{{currUseCode}}</div>
+                <div class="item"><label>活动名称：</label>{{el.activityName}}</div>
+                <div class="item"><label>活动类型：</label>大转盘</div>
+                <div class="item"><label>奖品名称：</label>{{el.prizeName}}</div>
+                <div class="item rules clearfix">
+                    <label>活动说明：</label>
+                    <div ms-html="el.description"></div>
+                </div>
+            </div>
+            <div class="footer">
+                <span class="tip"></span>
+                <a class="ok">核销</a>
+                <a class="cancel">取消</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal confirmModal" id="refundModal">
+        <div>
+            <h3 class="header">订单退款<span>X</span></h3>
+            <div class="content">一旦退款后订单将失效，请确认是否进行退款操作</div>
+            <div class="footer"><a class="ok">确认退款</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+
+    <!-- 买单确认操作弹窗 -->
+    <div class="modal" id="confirmFastPayModal">
+        <div>
+            <h3 class="header">买单{{ confirmFastPayTitle }}<span>X</span></h3>
+            <div class="content">
+                <div class="tip" ms-visible="confirmType=='pass'">请确认此买单信息无误，点击"确定"后技师将可看到同步信息。</div>
+                <div class="tip" ms-visible="confirmType=='unpass'">请确认此买单信息有异常，点击"确定"后技师将可看到同步信息。</div>
+                <div class="remark clearfix">
+                    <label>备注：</label>
+                    <textarea id="confirm-fast-pay-remark" maxlength="250"></textarea>
+                </div>
+                <div class="techs clearfix">
+                    <label>增加技师：</label>
+                    <a class="toolButton info" ms-visible="!showCanSelectTechList" ms-click="doSwitchShowTechList()">选择</a>
+                    <ul class="clearfix" ms-visible="showCanSelectTechList"><li ms-repeat="canSelectTechList" ms-click="doSelectPayTech($index)" ms-class="active: el.isSelected" ms-visible="el.techNo">{{el.techNo}}</li></ul>
+                </div>
+            </div>
+            <div class="footer"><span class="tip"></span><a class="ok">确定</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+</section>

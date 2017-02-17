@@ -1,0 +1,78 @@
+<!--技师管理-所有技师-导出二维码-->
+<section id="techExportQrCodePage" class="ms-controller" ms-controller="techExportQrCodeCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/techExportQrCode.js"></script>
+    <div class="formGroup">
+        <div class="title">选择二维码样式：</div>
+        <ul class="codeImg clearfix">
+            <li><div ms-class="active:currCodeStyle==1" ms-click="doChangeCodeStyle(1)"><img src="club-admin/img/tech/1.jpg"/></div></li>
+            <li><div ms-class="active:currCodeStyle==2" ms-click="doChangeCodeStyle(2)"><img src="club-admin/img/tech/2.jpg"/></div></li>
+            <li><div ms-class="active:currCodeStyle==3" ms-click="doChangeCodeStyle(3)"><img src="club-admin/img/tech/3.jpg"/></div></li>
+            <li><div ms-class="active:currCodeStyle==4" ms-click="doChangeCodeStyle(4)"><img src="club-admin/img/tech/4.jpg"/></div></li>
+            <li><div ms-class="active:currCodeStyle==5" ms-click="doChangeCodeStyle(5)"><img src="club-admin/img/tech/5.png"/></div></li>
+        </ul>
+    </div>
+    <div class="canvasImg">
+        <canvas id="c1" width="641" height="1008"></canvas>
+        <canvas id="c2" width="641" height="1008"></canvas>
+        <canvas id="c3" width="641" height="1008"></canvas>
+        <canvas id="c4" width="641" height="1008"></canvas>
+        <canvas id="c5" width="948" height="886"></canvas>
+        <div id="tempQrCode"></div>
+    </div>
+    <div class="drawCanvas">
+        <canvas id="rectStyle" width="641" height="1008"></canvas>
+        <canvas id="heartStyle" width="948" height="886"></canvas>
+    </div>
+
+    <div class="dataTable dataList" id="dataListTable">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="7" class="header">
+                    技师列表
+                    <div class="search">
+                        <input type="text" id="search-text" placeholder="输入技师昵称或编号" maxlength="50"/>
+                        <a class="toolButton" ms-click="doClickSearchBtn()">搜索</a>
+                    </div>
+                    <div class="checkbox-area"><!--<span ms-class="active:isCheckedDetail" ms-click="toggleDetailQr()"><i></i>技师二维码</span>--><span ms-class="active:isCheckedComment"><i></i>点评二维码</span></div>
+                    <a class="update-tech-card toolButton" ms-click="updateTechCard()">更新技师微信图片</a>
+                    <a class="export toolButton" ms-click="doClickExportBtn()" ms-visible="dataList.length != 0">导出</a>
+                </th>
+            </tr>
+            <tr>
+                <th style="width:12%" class="selectAll"><i ms-click="doClickSelectAll()" ms-class="active:isSelectedAll" ms-visible="dataList.length != 0"></i>全选</th>
+                <th style="width:28%">技师编号</th>
+                <th style="width:20%">技师名称</th>
+                <th style="width:20%">技师手机号码</th>
+                <th style="width:20%">技师头像</th>
+            </tr>
+            </thead>
+            <tbody ms-if="dataList.length == 0" class="noData">
+            <tr><td colspan="7">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="dataList.length != 0">
+            <tr ms-repeat="dataList">
+                <td><i ms-class="active:el.selected" ms-click="deSelectTech($index)"></i></td>
+                <td ms-class-1="noSerial : !el.techNo" ms-class-2="spare: el.name === '备用技师'">{{el.techNo || "技师工号为空，不可导出工牌，只可更新微信图片" }}</td>
+                <td ms-class="spare: el.name === '备用技师'">{{el.name}}</td>
+                <td ms-class="spare: el.name === '备用技师'">{{el.telephone}}</td>
+                <td class="header"><img ms-if="el.avatarUrl && el.avatarUrl != 'null'" ms-attr-src="el.avatarUrl"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="loadAllTip" ms-if="dataList.length != 0">已加载全部数据</div>
+
+    <div class="pre-draw-card">
+        <canvas class="tech" width="900" height="500"></canvas>
+        <canvas class="logo"></canvas>
+        <canvas class="card" width="900" height="500"></canvas>
+    </div>
+    <div class="progress-bar">
+        <div>
+            <span>处理中：</span>
+            <div><div style="width:0%"></div></div>
+            <span class="text"></span>
+        </div>
+    </div>
+</section>

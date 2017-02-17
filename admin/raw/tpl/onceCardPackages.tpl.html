@@ -1,0 +1,60 @@
+<!--次卡套餐列表-->
+<section id="onceCardPackagesPage" class="ms-controller" ms-controller="onceCardPackagesCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/onceCardPackages.js"></script>
+    <div class="panel">
+        <div class="panel-title"><h3>次卡套餐列表</h3><a class="toolButton info" href="#!/onceCardEdit">新增</a></div>
+        <div class="panel-content data-table">
+            <div class="dataTable">
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width:4%">序号</th>
+                        <th style="width:9%">图片</th>
+                        <th style="width:8%">名字</th>
+                        <th style="width:9%">内容</th>
+                        <th style="width:10%">现金价格</th>
+                        <th style="width:9%">积分价格</th>
+                        <th style="width:10%">原价</th>
+                        <th style="width:9%">已售/总量</th>
+                        <th style="width:6%">售卖时间</th>
+                        <th style="width:6%">状态</th>
+                        <th style="width:10%">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody ms-if="dataList.length == 0" class="noData">
+                    <tr><td colspan="11">未能查询到数据！</td></tr>
+                    </tbody>
+                    <tbody ms-if="dataList.length != 0">
+                    <tr ms-repeat="dataList">
+                        <td>{{ $index+1 }}</td>
+                        <td>{{ el.a }}</td>
+                        <td>{{ el.a }}</td>
+                        <td>{{ el.a }}</td>
+                        <td>{{ el.a }}</td>
+                        <td>{{ el.a }}</td>
+                        <td>{{ el.a }}</td>
+                        <td>{{ el.a }}</td>
+                        <td>{{ el.a }}</td>
+                        <td>{{ el.a }}</td>
+                        <td>
+                            <a class="btn" ms-click="doChangeStatus()">上线</a>
+                            <a class="btn" ms-click="doChangeStatus()">下线</a>
+                            <a class="btn" ms-click="doDel()">删除</a>
+                            <a class="btn" ms-click="doCopy()">复制</a>
+                            <a class="btn" href="#!/onceCardEdit?id=111">编辑</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="confirmModal">
+        <div>
+            <h3 class="header">确认<span>X</span></h3>
+            <div class="content">{{ confirmTip }}</div>
+            <div class="footer"><span class="tip"></span><a class="ok">确定</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+</section>

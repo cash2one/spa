@@ -1,0 +1,50 @@
+@import "../common/mixin.scss";
+section#onceCardsPage{
+  .panel-title{
+    a{
+      float: right;
+      margin-right: 0;
+      margin-left: 10px;
+    }
+  }
+
+  .dataTable{
+    th{
+      >div.sizeOption{
+        float: right;
+        margin-right: 10px;
+      }
+      >div.searchForm{
+        float: left;
+        margin-left: 8px;
+        >input{
+          margin-right: 5px;
+        }
+      }
+    }
+    td.highlight{
+      color: $red;
+    }
+    td.need-right{
+      border-right-width: 1px;
+    }
+    tr.classB{
+      background-color: #fff !important;
+    }
+    tr.classA{
+      background-color: #e9f5fb !important;
+    }
+    tr{
+      border-top-color: #d0d0d0 !important;
+    }
+  }
+
+  #confirmModal{
+    .content{
+      height: 80px;
+      color: $red;
+      padding-left: 32px;
+      line-height: 80px;
+    }
+  }
+}

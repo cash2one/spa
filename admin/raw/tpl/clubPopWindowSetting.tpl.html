@@ -1,0 +1,123 @@
+<!--资料设置--服务项目-->
+<section id="clubPopWindowSettingPage" class="ms-controller" ms-controller="clubPopWindowSettingCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/clubPopWindowSetting.js"></script>
+    <h3 class="title">弹窗设置</h3>
+    <div class="setting-area">
+        <div>
+            <div>
+                <div>当前弹窗</div>
+                <div class="act-preview" ms-class="coupon:isCoupon">
+                    <img ms-attr-src="actTypeImage" alt="未设置活动弹窗">
+                    <div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div>弹窗优先级</div>
+                <div class="act-list">
+                    <ul>
+                        <li class="act-item" ms-repeat="list" ms-attr-data-index="$index">
+                            <div>
+                                <div class="act-no">
+                                    <div>{{$index + 1}}</div>
+                                </div>
+                                <div class="act-name">{{el.activityName}}</div>
+                                <div class="act-date"><span>{{el.startTime}}</span><span> -- </span><span>{{el.endTime}}</span></div>
+                                <div class="act-action">
+                                    <div>
+                                        <a ms-if="$index > 0" ms-click="setTopPop($index)">立即弹窗</a>
+                                        <a ms-click="deletePop($index)">删除</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="new-item" ms-if="list.length < 10 && actTypeList.length > 0">
+                    <a ms-click="addPop()">新增</a>
+                </div>
+                <div class="new-item" ms-if="actTypeList.length == 0">
+                    <span class="no-act-tip">注：您的会所当前无可用活动或优惠券</span>
+                </div>
+            </div>
+        </div>
+        <div class="remark-area">
+            <div>备注：</div>
+            <ol>
+                <li>1号弹窗为当前弹窗</li>
+                <li>弹窗仅可设置目前已发布的活动</li>
+                <li>弹窗序列可拖动切换排序</li>
+                <li>弹窗仅可展示已开始的活动</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="modal" id="popWindowModal">
+        <div style="width: 650px;">
+            <h3 class="header">设置弹窗<span>X</span></h3>
+            <div class="content form">
+                <div>
+                    <label>选择活动：</label>
+                    <select id="actItem" ms-change="changeActType()">
+                        <option value="">请选择</option>
+                        <option ms-repeat="actTypeList" ms-attr-value="el.id" ms-attr-data-type="el.type" ms-attr-data-name="el.name" ms-attr-data-start-date="el.startTime" ms-attr-data-end-date="el.endTime">{{el.name}}</option>
+                    </select>
+                </div>
+                <div>
+                    <label>弹窗优先级：</label>
+                    <select name="" id="actPriority">
+                        <option value="1">立即弹窗</option>
+                        <option value="2">1</option>
+                        <option value="3">2</option>
+                        <option value="4">3</option>
+                        <option value="5">4</option>
+                        <option value="6">5</option>
+                        <option value="7">6</option>
+                        <option value="8">7</option>
+                        <option value="9">8</option>
+                        <option value="10">9</option>
+                    </select>
+                </div>
+                <div class="dialog-act-date">
+                    <label>弹窗时间：</label>
+                    <div>
+                        <input type="text" placeholder="弹窗起始日期" id="actPopStartDate" class="need-date">
+                        <select id="actPopStartTime" >
+                            <option ms-repeat="hourArr" ms-attr-value="el+':00'">{{el}}:00</option>
+                        </select>
+                        至
+                        <input type="text" placeholder="弹窗结束日期" id="actPopEndDate" class="need-date">
+                        <select id="actPopEndTime" >
+                            <option ms-repeat="hourArr" ms-attr-value="el+':00'">{{el}}:00</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="dialog-act-preview">
+                    <label>弹窗效果：</label>
+                    <div>
+                        <div ms-class="coupon:modalIsCoupon">
+                            <img ms-attr-src="modalSelectTypeImage" alt="未选择活动">
+                            <div>
+                                <div>模版</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <span class="tip"></span>
+                <a class="ok">提交</a>
+                <a class="cancel">取消</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="confirmDelModal">
+        <div>
+            <h3 class="header">确认<span>X</span></h3>
+            <div class="content">确认要删除此弹窗设置吗？</div>
+            <div class="footer"><a class="ok">确定</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+</section>

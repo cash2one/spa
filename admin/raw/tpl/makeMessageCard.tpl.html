@@ -1,0 +1,56 @@
+<!--消息推送 卡片制作-->
+<section id="makeMessageCardPage" class="ms-controller" ms-controller="makeMessageCardCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/makeMessageCard.js"></script>
+    <div class="pre-draw-card">
+        <canvas class="tech" width="900" height="500"></canvas>
+        <canvas class="club" width="900" height="500"></canvas>
+        <canvas class="logo"></canvas>
+        <canvas class="card" width="900" height="500"></canvas>
+    </div>
+    <div class="group">
+        <a class="btn" ms-click="updateClubCard()">更新会所微信图片</a>
+        <a class="btn" ms-click="updateTechCard()">更新技师微信图片</a>
+    </div>
+    <div class="dataTable dataList" id="dataListTable">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="5" class="header">
+                    技师列表
+                    <div class="search">
+                        <input type="text" id="search-text" placeholder="输入技师昵称或编号" maxlength="50"/>
+                        <a class="toolButton" ms-click="doClickSearchBtn()">搜索</a>
+                    </div>
+                </th>
+            </tr>
+            <tr>
+                <th style="width:12%" class="selectAll"><i ms-click="doClickSelectAll()" ms-class="active:isSelectedAll" ms-visible="dataList.length != 0"></i>全选</th>
+                <th style="width:28%">技师编号</th>
+                <th style="width:20%">技师名称</th>
+                <th style="width:20%">技师手机号码</th>
+                <th style="width:20%">技师头像</th>
+            </tr>
+            </thead>
+            <tbody ms-if="dataList.length == 0" class="noData">
+            <tr><td colspan="5">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="dataList.length != 0">
+            <tr ms-repeat="dataList">
+                <td><i ms-class="active:el.selected" ms-click="deSelectTech($index)"></i></td>
+                <td>{{el.techNo}}</td>
+                <td>{{el.name}}</td>
+                <td>{{el.telephone}}</td>
+                <td class="header"><img ms-if="el.avatar && el.avatar != 'null'" ms-attr-src="el.avatar"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="loadAllTip" ms-if="dataList.length != 0">已加载全部数据</div>
+    <div class="progress-bar">
+        <div>
+            <span>更新中：</span>
+            <div><div style="width:0%"></div></div>
+            <span class="text"></span>
+        </div>
+    </div>
+</section>

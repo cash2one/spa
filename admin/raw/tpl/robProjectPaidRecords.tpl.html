@@ -1,0 +1,78 @@
+<!--结算中心--结算记录-->
+<section id="robProjectPaidRecordsPage" class="ms-controller" ms-controller="robProjectCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/robProjectPaidRecords.js"></script>
+    <div class="dataTable" id="recordsInfoTable">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="8" class="header">限时抢购买记录</th>
+            </tr>
+            <tr>
+                <th style="width:14%">项目</th>
+                <th style="width:8%">抢购价格（元）</th>
+                <th style="width:8%">抢购积分</th>
+                <th style="width:12%">原价格</th>
+                <th style="width:14%">数量</th>
+                <th style="width:30%">活动时间</th>
+                <!--<th style="width:12%"><select ms-change="doChangeStatus()"><option ms-repeat="statusObj" ms-attr-value="{{el.value}}">{{el.name}}</option></select></th>-->
+                <th style="width:14%">状态</th>
+            </tr>
+            </thead>
+            <tbody ms-if="!paidItem" class="noData">
+            <tr><td colspan="8">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="paidItem">
+            <tr>
+                <td>{{paidItem.name}}</td>
+                <td>{{paidItem.amount}}</td>
+                <td>{{paidItem.credits}}</td>
+                <td>{{paidItem.price}}</td>
+                <td>{{paidItem.canPaidCountText}}</td>
+                <td>{{paidItem.startDate}} - {{paidItem.endDate}}</td>
+                <td>{{paidItem.statusName}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="dataTable" id="dataListTable">
+        <table>
+            <thead>
+            <tr class="search">
+                <th colspan="8">
+                    <div class="name">
+                        <input type="text" id="userTelSearch" maxlength="11" placeholder="输入用户手机号码搜索" ms-keypress="doKeypress()"/>
+                        <a ms-click="doClickSearch()" class="btn">搜索</a>
+                    </div>
+                    <!--<div class="time"><input type="text" /></div>-->
+                    <div class="sizeOption" ms-if="userPaidItems.length != 0">每页显示记录数：<select><option selected>10</option><option>30</option><option>100</option></select></div>
+                </th>
+            </tr>
+            <tr>
+                <th style="width:8%">序号</th>
+                <th style="width:15%">用户名称</th>
+                <th style="width:15%">用户手机号</th>
+                <th style="width:15%">购买份数</th>
+                <th style="width:15%">金额（元）</th>
+                <th style="width:15%">积分</th>
+                <!--<th style="width:12%"><select ms-change="doChangeStatus()"><option ms-repeat="statusObj" ms-attr-value="{{el.value}}">{{el.name}}</option></select></th>-->
+                <th style="width:16%">时间</th>
+            </tr>
+            </thead>
+            <tbody ms-if="userPaidItems.length == 0" class="noData">
+            <tr><td colspan="8">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="userPaidItems.length != 0">
+            <tr ms-repeat="userPaidItems">
+                <td>{{(page - 1)*pageSize+$index+1}}</td>
+                <td>{{el.userName}}</td>
+                <td>{{el.telephone}}</td>
+                <td>1</td>
+                <td>{{el.actValue}}</td>
+                <td>{{el.credits}}</td>
+                <td>{{el.getDate}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination" id="dataListPagination" ms-visible="userPaidItems.length != 0"><div class="pages"></div></div>
+</section>

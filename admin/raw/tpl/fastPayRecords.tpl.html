@@ -1,0 +1,87 @@
+<!--全部买单记录-->
+<section id="fastPayRecordsPage" class="ms-controller" ms-controller="fastPayRecordsCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/fastPayRecords.js"></script>
+    <div class="panel">
+        <div class="panel-title"><h3>全部买单记录</h3><div class="sizeOption" ms-if="dataList.length != 0">每页显示记录数：<select ms-change="changePageSize()"><option selected>20</option><option>50</option><option>100</option></select></div></div>
+        <div class="panel-content data-table">
+            <div class="dataTable">
+                <table>
+                    <thead>
+                    <tr class="search">
+                        <th colspan="12">
+                            <div class="searchForm name"><input class="tech-info" type="text" placeholder="输入技师编号或者昵称" maxlength="50"/><a ms-click="doSearch()">搜索</a></div>
+                            <div class="searchForm time"><a type="0">今天</a><a type="6">7天</a><a type="29" class="active">30天</a><input type="text" /></div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="width:4%">序号</th>
+                        <th style="width:9%">买单时间</th>
+                        <th style="width:8%">客户昵称</th>
+                        <th style="width:8%">手机号</th>
+                        <th style="width:10%">服务技师</th>
+                        <th style="width:8%">买单金额</th>
+                        <th style="width:10%">最近操作人</th>
+                        <th style="width:9%">操作时间</th>
+                        <th style="width:6%">状态</th>
+                        <th style="width:10%">合并技师</th>
+                        <th style="width:8%">备注</th>
+                        <th style="width:10%;min-width:125px;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody ms-if="dataList.length == 0" class="noData">
+                    <tr><td colspan="12">未能查询到数据！</td></tr>
+                    </tbody>
+                    <tbody ms-if="dataList.length != 0">
+                    <tr ms-repeat="dataList">
+                        <td>{{$index+1+(currPage-1)*pageSize}}</td>
+                        <td>{{el.createTime}}</td>
+                        <td>{{el.userName}}</td>
+                        <td>{{el.telephone}}</td>
+                        <td><a ms-attr-href="'#!/techDetail?id='+el.techId">{{el.techName}}<span ms-visible="el.techNo"> [{{el.techNo}}]</span></a></td>
+                        <td>{{el.payAmount | bizMoneyToYuan}}</td>
+                        <td>{{el.operatorName}}</td>
+                        <td>{{el.modifyTime}}</td>
+                        <td>{{statusObj[el.status]}}</td>
+                        <td class="otherTech">{{el.otherTechNames | techNameSplit | html}}</td>
+                        <td>{{el.description}}</td>
+                        <td>
+                            <a class="btn" ms-visible="el.status=='paid'" ms-click="doConfirm('pass',el.id)">确认</a>
+                            <a class="btn" ms-visible="el.status=='paid'" ms-click="doConfirm('unpass',el.id)">异常</a>
+                            <a class="btn" ms-visible="el.status!='paid'" ms-click="doRevoke(el.id)">撤销</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="pagination blue" id="dataListPagination" ms-visible="dataList.length != 0"><div class="pages"></div></div>
+
+    <div class="modal" id="confirmModal">
+        <div>
+            <h3 class="header">买单{{ confirmTitle }}<span>X</span></h3>
+            <div class="content">
+                <div class="tip" ms-visible="confirmType=='pass'">请确认此买单信息无误，点击"确定"后技师将可看到同步信息。</div>
+                <div class="tip" ms-visible="confirmType=='unpass'">请确认此买单信息有异常，点击"确定"后技师将可看到同步信息。</div>
+                <div class="remark clearfix">
+                    <label>备注：</label>
+                    <textarea id="confirm-remark" maxlength="250"></textarea>
+                </div>
+                <div class="techs clearfix">
+                    <label>增加技师：</label>
+                    <a class="toolButton info" ms-visible="!showCanSelectTechList" ms-click="doSwitchShowTechList()">选择</a>
+                    <ul class="clearfix" ms-visible="showCanSelectTechList"><li ms-repeat="canSelectTechList" ms-click="doSelectTech($index)" ms-class="active: el.isSelected" ms-visible="el.techNo">{{el.techNo}}</li></ul>
+                </div>
+            </div>
+            <div class="footer"><span class="tip"></span><a class="ok">确定</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+
+    <div class="modal" id="revokeModal">
+        <div>
+            <h3 class="header">确认撤销<span>X</span></h3>
+            <div class="content">撤销后，付款消息将恢复"未确认"状态，可重新进行操作！</div>
+            <div class="footer"><span class="tip"></span><a class="ok">确定</a><a class="cancel">取消</a></div>
+        </div>
+    </div>
+</section>

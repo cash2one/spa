@@ -1,0 +1,82 @@
+<!--核销记录-->
+<section id="checkInfoRecordsPage" class="ms-controller" ms-controller="checkInfoRecordsCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/checkInfoRecords.js"></script>
+
+    <div class="panel">
+        <div class="panel-title">
+            <h3>核销记录</h3>
+            <div class="sizeOption" ms-if="dataList.length != 0">每页显示记录数：<select ms-change="pageSizeChange()"><option selected>20</option><option>50</option><option>100</option></select></div>
+        </div>
+        <div class="panel-content data-table">
+            <div class="dataTable">
+                <table>
+                    <thead>
+                    <tr class="search">
+                        <th colspan="9">
+                            <div class="searchForm type">
+                                <select ms-change="typeChange()"><option ms-repeat="typeList" ms-attr-value="el.value">{{el.label}}</option></select>
+                                <input type="text" placeholder="输入用户手机号" class="user-tel" maxlength="11" />
+                                <a  ms-click="doSearch()">搜索</a>
+                            </div>
+                            <div class="searchForm time"><a type="0">今天</a><a type="6">7天</a><a type="29" class="active">30天</a><input type="text" /></div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="width:7%">序号</th>
+                        <th style="width:12%">用户名</th>
+                        <th style="width:12%">头像</th>
+                        <th style="width:12%">手机号</th>
+                        <th style="width:10%">类型</th>
+                        <th style="width:15%">详情</th>
+                        <th style="width:14%">核销时间</th>
+                        <th style="width:9%">核销人</th>
+                        <th style="width:9%">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody ms-if="dataList.length == 0" class="noData">
+                    <tr><td colspan="9">未能查询到数据！</td></tr>
+                    </tbody>
+                    <tbody ms-if="dataList.length != 0">
+                    <tr ms-repeat="dataList">
+                        <td>{{$index+1+(page-1)*pageSize}}</td>
+                        <td>{{el.userName}}</td>
+                        <td><img ms-if="el.avatarUrl" ms-attr-src="el.avatarUrl"/></td>
+                        <td>{{el.telephone}}</td>
+                        <td>{{el.businessTypeName}}</td>
+                        <td>{{el.description}}<span ms-visible="(el.businessType=='coupon' || el.businessType=='service_item_coupon' || el.businessType=='paid_coupon') && el.sourceTypeName">（{{el.sourceTypeName}}）</span>
+                            <span class="tip" ms-if="el.sourceType == 'paid_full'">（全额预约）</span>
+                        </td>
+                        <td>{{el.verifyTime}}</td>
+                        <td>{{el.operatorName}}</td>
+                        <td><a class="btn" ms-click="doViewDetail($index)">详情</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="pagination blue" id="dataListPagination" ms-visible="dataList.length != 0"><div class="pages"></div></div>
+
+    <!-- 详情modal-->
+    <div class="modal" id="detailModal">
+        <div>
+            <h3 class="header">查看详情<span>X</span></h3>
+            <div class="content">
+                <div class="top-wrap">
+                    <div><label>手机：</label>{{ detailObj.telephone }}</div>
+                    <div><label>核销类型：</label>{{ detailObj.businessTypeName }}<span class="tip" ms-if="detailObj.sourceType == 'paid_full'">（全额预约）</span></div>
+                    <div><label>核销时间：</label>{{ detailObj.verifyTime }}</div>
+                    <div><label>核销人：</label>{{ detailObj.operatorName }}</div>
+                    <div><label>核销码：</label>{{ detailObj.verifyCode }}</div>
+                </div>
+                <div class="header">
+                    <img ms-attr-src="detailObj.avatarUrl"/>
+                    <div>{{ detailObj.userName }}</div>
+                </div>
+                <div class="detail-info" ms-visible="detailObj.info.length>0">
+                    <div ms-repeat="detailObj.info"><label>{{ el.title }}：</label>{{ el.text }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

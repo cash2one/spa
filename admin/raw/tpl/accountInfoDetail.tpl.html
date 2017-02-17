@@ -1,0 +1,84 @@
+<!--结算中心--账户金额详情-->
+<section id="accountInfoDetailPage" class="ms-controller" ms-controller="accountInfoDetailCtrl">
+    <script type="text/javascript" src="club-admin/compressed/js/page/accountInfoDetail.js"></script>
+    <div class="dataTable total">
+        <table>
+            <thead>
+            <tr>
+                <th class="header" colspan="8">账户总览
+                    <div class="selectMonth">
+                        <input type="text" readonly>
+                    </div>
+                </th>
+            </tr>
+            <tr>
+                <th>账户类型</th>
+                <th>订单笔数</th>
+                <th>总金额</th>
+                <th>技师提成</th>
+                <!--<th>退款金额</th>-->
+                <th>会所收入</th>
+                <th>手续费</th>
+                <th>会所实收</th>
+            </tr>
+            </thead>
+            <tbody ms-if="accounts.length == 0" class="noData">
+            <tr><td colspan="7">未能查询到数据！</td></tr>
+            </tbody>
+            <tbody ms-if="accounts.length != 0">
+                <tr class="need-hover" ms-class-1="selected:isSelected[$index]" ms-repeat="accounts" ms-click="selectAcc($index)">
+                    <td>{{el.businessCategoryDesc}}（元）</td>
+                    <td>{{el.tradeCount}}</td>
+                    <td>{{el.tradeAmount | bizMoneyToYuan}}</td>
+                    <td>{{el.techAmount | bizMoneyToYuan}}</td>
+                    <td>{{el.clubAmount | bizMoneyToYuan}}</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+                <tr class="high-light" ms-repeat="accountTotal">
+                    <td>总计</td>
+                    <td>{{el.tradeCount}}</td>
+                    <td>{{el.tradeAmount | bizMoneyToYuan}}</td>
+                    <td>{{el.techAmount | bizMoneyToYuan}}</td>
+                    <td>{{el.clubAmount | bizMoneyToYuan}}</td>
+                    <td>{{el.settleFee | bizMoneyToYuan}}</td>
+                    <td>{{el.amount | bizMoneyToYuan}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="dataTable  detail">
+        <table>
+            <thead>
+            <tr>
+                <th class="header" colspan="7">账户明细</th>
+            </tr>
+            <tr>
+                <th>序号</th>
+                <th>时间</th>
+                <th>账户类型</th>
+                <th>订单金额</th>
+                <th>技师提成</th>
+                <!--<th>退款金额</th>-->
+                <th>会所收入</th>
+            </tr>
+            </thead>
+            <tbody ms-if="singleAccDetail.length == 0" class="noData">
+            <tr>
+                <td colspan="6" ms-if="isNullData">未能查询到数据！</td>
+                <td colspan="6" ms-if="!isNullData">请选择一账户！</td>
+            </tr>
+            </tbody>
+            <tbody>
+            <tr ms-repeat="singleAccDetail">
+                <td>{{$index+1}}</td>
+                <td >{{el.dealTime}}</td>
+                <td >{{el.businessCategoryDesc}}</td>
+                <td >{{el.tradeAmount | bizMoneyToYuan}}</td>
+                <td >{{el.techAmount | bizMoneyToYuan}}</td>
+                <td >{{el.clubAmount | bizMoneyToYuan}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>

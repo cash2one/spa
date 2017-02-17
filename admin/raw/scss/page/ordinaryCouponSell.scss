@@ -1,0 +1,30 @@
+@import "../common/mixin.scss";
+section#ordinaryCouponSellPage{
+  div#confirmModal>div{
+    div.content{
+      font-size:16px;
+      line-height: 80px;
+      padding-left:40px;
+      font-weight: bold;
+    }
+  }
+
+  .panel-title{
+    >a{
+      float: right;
+    }
+  }
+
+  div#qrCodeModal>div>div.content{
+    padding:20px 0;
+    &>img{
+      display: block;
+      width:200px;
+      height:200px;
+      margin:0 auto;
+      line-height: 200px;
+      text-align: center;
+      border:1px solid #eee;
+    }
+  }
+}
