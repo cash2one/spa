@@ -224,9 +224,9 @@ div.telDetail{
 
 div#app-tip{
   display: none;
-  position: absolute;
+  position: fixed;
   z-index: 3;
-  top: 80%;
+  top: 60%;
   opacity: 0;
   width: 100%;
   text-align: center;
@@ -240,15 +240,15 @@ div#app-tip{
           opacity:1;
         }
         10%{
-          top:80%;
+          top:60%;
           opacity:1;
         }
         90%{
-          top:80%;
+          top:60%;
           opacity:1;
         }
         100%{
-          top:80%;
+          top:60%;
           opacity:0;
         }
       }
@@ -258,15 +258,15 @@ div#app-tip{
           opacity:1;
         }
         10%{
-          top:80%;
+          top:60%;
           opacity:1;
         }
         90%{
-          top:80%;
+          top:60%;
           opacity:1;
         }
         100%{
-          top:80%;
+          top:60%;
           opacity:0;
         }
       }
@@ -276,15 +276,15 @@ div#app-tip{
           opacity:1;
         }
         10%{
-          top:80%;
+          top:60%;
           opacity:1;
         }
         90%{
-          top:80%;
+          top:60%;
           opacity:1;
         }
         100%{
-          top:80%;
+          top:60%;
           opacity:0;
         }
       }
@@ -294,15 +294,15 @@ div#app-tip{
           opacity:1;
         }
         10%{
-          top:80%;
+          top:60%;
           opacity:1;
         }
         90%{
-          top:80%;
+          top:60%;
           opacity:1;
         }
         100%{
-          top:80%;
+          top:60%;
           opacity:0;
         }
       }
@@ -343,15 +343,16 @@ div.page-back-btn{
   height:2.222rem;
   border-radius: 50%;
   z-index:3;
-  left:0.667rem;
+  left: 50%;
   top:0.5rem;
   background-color: rgba(0,0,0,0.5);
+  transform: translateX(-9.333rem);
   &::before{
     position: absolute;
     content: "";
     display: block;
-    width: .6rem;
-    height: .6rem;
+    width: .45rem;
+    height: .45rem;
     top: 50%;
     left: 50%;
     margin-top: -.3rem;

@@ -6,7 +6,7 @@
         <page-title title-text="电子期刊"></page-title>
         <div class="list" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }">
             <div class="list-item" v-for="item in dataList" @click="doViewJournal(item)">
-                <div class='logo' :style="{ backgroundImage : 'url('+journalImg+')' }">NO.{{ item.sequenceNo }}</div>
+                <div class='logo' :style="{ backgroundImage : 'url(images/journal/'+item.templateId+'.png)' }">NO.{{ item.sequenceNo }}</div>
                 <div class='title'>
                     <div>{{ item.title }}</div>
                     <div>发布时间：{{ item.modifyDate }}</div>
@@ -27,8 +27,7 @@
         data: function () {
             return {
                 global: Global.data,
-                dataList: [],
-                journalImg: 'images/journal/1.png'
+                dataList: []
             }
         },
         created: function () {

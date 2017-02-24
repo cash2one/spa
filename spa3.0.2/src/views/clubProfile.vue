@@ -3,9 +3,9 @@
 </style>
 <template>
     <div>
-        <div class="page-back-btn" @click="doClickPageBack()"></div>
+        <page-back></page-back>
         <div class="club-profile-page-num" v-show="totalPage>0"><span id="profile-page-num">1</span>/{{totalPage}}</div>
-        <div class="page" id="club-profile-page" :style="{ height : global.winHeight+'px'}">
+        <div class="page" id="club-profile-page" :style="{ height : global.winHeight + 'px' }">
             <swiper class="profile-swipe" :options="swiperOption">
                 <swiper-slide v-for="item in profileData">
                     <div class="profile-top">
@@ -55,11 +55,6 @@
                 Util.tipShow(global.loadError)
                 that.$router.back()
             })
-        },
-        methods: {
-            doClickPageBack: function () { // 点击返回按钮
-                history.back()
-            }
         }
     }
 </script>

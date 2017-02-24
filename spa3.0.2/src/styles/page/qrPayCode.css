@@ -1,4 +1,5 @@
 div#qrpay-code-page {
+  height: 100%;
   background: #c2c2be url("../../images/qrPay/bg_icon.png");
   background-size: 15rem; }
   div#qrpay-code-page div.page-title {

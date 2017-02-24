@@ -44,14 +44,11 @@
     top: 4.833rem;
     z-index: 11;
     overflow: visible;
-    //opacity: 0;
-    //pointer-events: none;
     @include scale(1,0);
     @include tOrigin(top center);
     @include transition(transform .3s ease);
+    @include gpu();
     &.active{
-      //opacity: 1;
-      //pointer-events: auto;
       @include scale(1,1);
     }
     >div{

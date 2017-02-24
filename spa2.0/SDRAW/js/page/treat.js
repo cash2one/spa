@@ -91,7 +91,7 @@
     });
 
     $.ajax({
-        url:'../api/v2/finacial/account/'+accountId,
+        url:'../api/v2/financial/account/'+accountId,
         isReplaceUrl:true,
         type:'post',
         success: function (result) {
@@ -106,7 +106,7 @@
                             $sureBtn.Class('processing');
                             $sureBtn.Text('授权中...');
                             $.ajax({
-                                url:'../api/v2/finacial/account/payforother/auth',
+                                url:'../api/v2/financial/account/payforother/auth',
                                 isReplaceUrl:true,
                                 type:'post',
                                 data:{
@@ -121,7 +121,8 @@
                                     if(result.statusCode != '200'){
                                         $.tipShow(result.msg || '授权失败。');
                                     }else {
-                                        $.page('treatDetail&backAccount=true&detailId='+result.respData);
+                                        $.sessionStorage('tmpTreat_cache',JSON.stringify(result.respData));
+                                        $.page('treatDetail&backAccount=true&detailId='+result.respData.id);
                                     }
                                 },
                                 error: function (msg) {

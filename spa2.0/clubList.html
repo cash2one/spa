@@ -161,18 +161,6 @@
             <div><span>加载中...</span><img src="img/loading.gif"></div>
         </div>
         <div class="fourth-page hide">
-            <div>
-                <div>
-                    <div data-type="distance">全部会所</div>
-                </div>
-                <div>
-                    <div data-type="sort">默认排序</div>
-                </div>
-                <div>
-                    <div data-type="filter">筛选</div>
-                </div>
-                <div></div>
-            </div>
             <!--<div>
                 <div>
                     <span>附近会所</span>
@@ -218,6 +206,19 @@
     <div id="mapInfo" style="display: none;"></div>
 </div>
 
+<div id="filterMenu">
+    <div>
+        <div data-type="distance">全部会所</div>
+    </div>
+    <div>
+        <div data-type="sort">距离最近</div>
+    </div>
+    <div>
+        <div data-type="filter">筛选</div>
+    </div>
+    <div></div>
+</div>
+
 <div class="pop-select-layer" id="clubFilterPop">
     <div>
         <div class="normal" id="distancePop">
@@ -230,8 +231,8 @@
             <div data-item="0" class="active">全部会所</div>
         </div>
         <div class="normal" id="sortPop">
-            <div data-item="" class="active">默认排序</div>
-            <div data-item="distance">距离最近</div>
+            <div data-item="">默认排序</div>
+            <div data-item="distance" class="active">距离最近</div>
             <div data-item="uv">人气最高</div>
         </div>
         <div class="normal" id="filterPop">

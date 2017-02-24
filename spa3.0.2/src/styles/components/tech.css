@@ -36,7 +36,8 @@ div.tech-item-wrap {
       font-size: .722rem; }
   div.tech-item-wrap > div.list-item {
     position: relative;
-    padding: .833rem .667rem .833rem 3.5rem;
+    padding: .833rem .667rem .833rem 0;
+    margin-left: 3.5rem;
     border-bottom: 1px solid #e0e0e0; }
     div.tech-item-wrap > div.list-item > div:nth-of-type(1) {
       position: absolute;
@@ -44,14 +45,14 @@ div.tech-item-wrap {
       height: 2.778rem;
       border-radius: 50%;
       top: .833rem;
-      left: 0;
+      left: -3.5rem;
       background-size: 2.778rem 2.778rem;
       background-repeat: no-repeat; }
     div.tech-item-wrap > div.list-item > div:nth-of-type(2) {
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.2rem;
       color: #212121;
       font-size: .994rem;
-      line-height: 1; }
+      line-height: 1.2; }
       div.tech-item-wrap > div.list-item > div:nth-of-type(2) > span {
         color: #f66; }
     div.tech-item-wrap > div.list-item > div:nth-of-type(3) {
@@ -63,7 +64,7 @@ div.tech-item-wrap {
       div.tech-item-wrap > div.list-item > div:nth-of-type(3) span {
         margin-left: 0.4rem; }
     div.tech-item-wrap > div.list-item > div:nth-of-type(4) {
-      line-height: 1;
+      line-height: 1.2;
       padding-left: 1rem;
       background-position: left center;
       background-size: 0.611rem 0.611rem;

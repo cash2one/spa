@@ -6,7 +6,7 @@
         <page-title title-text="交易记录"></page-title>
         <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <div class="list-item" v-for="item in dataList">
-                <div>{{ tradeType[item.bizType] }}<span :class="{ recharge : item.income }">{{ item.income ? '+' : '-' }}{{item.amount}}元</span></div>
+                <div>{{ tradeType[item.businessCategory] }}<span :class="{ recharge : item.income }">{{ item.income ? '+' : '-' }}{{item.amount}}元</span></div>
                 <div>{{ item.createDatetime }}</div>
             </div>
             <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><div>加载数据</div></div>
@@ -45,14 +45,14 @@
         created: function () {
             var that = this
             var global = that.global
-            var pageParams = global.currPage.query
+            var query = global.currPage.query
 
-            that.accountId = pageParams.accountId
+            that.accountId = query.accountId
             if (!that.accountId) {
                 Util.tipShow(global.visitError)
                 that.$router.back()
             } else {
-                this.queryRecord()
+                that.queryRecord()
             }
         },
         methods: {
@@ -70,7 +70,7 @@
                 that.showFinishLoadTip = false
                 that.isDataAddEnd = false
 
-                that.$http.get('../api/v2/finacial/account/trades/{accountId}', {
+                that.$http.get('../api/v2/financial/account/trades/{accountId}', {
                     params: {
                         page: page,
                         pageSize: that.pageSize,

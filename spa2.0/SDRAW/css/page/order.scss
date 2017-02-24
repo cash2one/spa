@@ -35,6 +35,9 @@ $activeColor:#fb5549;
             &.refund,&.refunded{
               background-color: #78909C;
             }
+            &.hide{
+              display: none;
+            }
             &:nth-of-type(2){
               top: 4.2rem;
             }

@@ -94,18 +94,24 @@
               }
             }
             &:nth-of-type(3){
-              height: 4.056rem;
               margin:1.417rem .972rem 0;
-              @include img('../../../img/follow9358/voucher.png',16.722rem 4.056rem);
-              background-position: center;
               padding-top: .194rem;
-              display: none;
               &.club{
-                display: block;
+                height: 4.056rem;
+                @include img('../../../img/follow9358/voucher.png',16.722rem 4.056rem);
+                background-position: center;
+                >div{
+                  &:nth-of-type(1){
+                    @include sx();
+                  }
+                  &:nth-of-type(2){
+                    display: none;
+                  }
+                }
               }
-              >div{
+              >div:nth-of-type(1){
                 height: 3.056rem;
-                @include sx();
+                display: none;
                 >div{
                   &:nth-of-type(1){
                     width: 4.5rem;
@@ -147,6 +153,14 @@
                   }
                 }
               }
+              >div:nth-of-type(2){
+                width: 10rem;
+                margin: 0 auto;
+                text-align: center;
+                line-height: 2rem;
+                font-size: .778rem;
+                color: #616161;
+              }
             }
             &:nth-of-type(4){
               height: 12.278rem;
@@ -163,19 +177,31 @@
               @include img('../../../img/follow9358/box.jpg',11.083rem 2.556rem);
               background-position: center;
               padding: 0 3.694rem 0 5.972rem;
+
               >div{
                 height: 2.556rem;
                 color: #616161;
                 font-size: .778rem;
                 //text-align: center;
-                padding-left: .944rem;
                 >div{
-                  height: 1.278rem;
-                  line-height: 1.278rem;
+                  height: 2.556rem;
+                  line-height: 2.556rem;
+                  text-align: center;
+                  &:nth-of-type(2){
+                    display: none;
+                  }
                 }
 
                 &.club{
                   padding-left: 1.5rem;
+                  >div{
+                    text-align: left;
+                    height: 1.278rem;
+                    line-height: 1.278rem;
+                    &:nth-of-type(2){
+                      display: block;
+                    }
+                  }
                 }
               }
             }

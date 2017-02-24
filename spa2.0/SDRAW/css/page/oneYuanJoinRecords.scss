@@ -1,0 +1,121 @@
+@import "../common/common.scss";
+
+#_content>#oneYuanJoinRecords {
+  #content {
+    width: 20rem;
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    background-color: #efeff4;
+    /*padding-top: 2.611rem;*/
+    box-sizing: border-box;
+    #title{
+      background-color: #ededed;
+    }
+    >div.list{
+      >div.item{
+        padding: 0 .667rem;
+        background-color: #ffffff;
+        >div{
+          padding: .556rem 0;
+          border-bottom: 1px solid #EEEEEE;
+          line-height: 1;
+          @include sx();
+          >div{
+            &:nth-of-type(1){
+              width: 2.222rem;
+              height: 2.222rem;
+              -webkit-border-radius: 50%;
+              -moz-border-radius: 50%;
+              border-radius: 50%;
+              margin-right: .5rem;
+              border: 1px solid #e0e0e0;
+              @include imgBgFix(2.222rem 2.222rem);
+            }
+            &:nth-of-type(2){
+              @include boxFlex(1);
+              >div{
+                &:nth-of-type(1){
+                  margin-top: .222rem;
+                  font-size: .778rem;
+                  @include sx();
+                  >div{
+                    &:nth-of-type(1){
+                      @include boxFlex(1);
+                      @include sl();
+                      color: #212121;
+                    }
+                    &:nth-of-type(2){
+                      margin-left: .5rem;
+                      color: #999999;
+                      >span{
+                        color: #ff6666;
+                      }
+                    }
+                  }
+                }
+                &:nth-of-type(2){
+                  margin: .389rem 0 .167rem;
+                  font-size: .722rem;
+                  color: #999999;
+                }
+              }
+            }
+          }
+
+        }
+      }
+    }
+
+    #loadTip{
+      @include wq();
+      height: 2rem;
+      width:20rem;
+      border-top: 1px solid #d9d9d9;
+      background-color: #fff;
+      &.none{
+        display: none;
+      }
+      >div{
+        &:nth-of-type(1){
+          width: 0.778rem;
+          height: 0.778rem;
+          @include img('../../../img/loading.gif',0.778rem 0.778rem);
+        }
+        &:nth-of-type(2){
+          font-size: 0.778rem;
+          margin-left: 0.2rem;
+          line-height: 2rem;
+          color: #666;
+        }
+      }
+    }
+    #finishTip{
+      @include wq();
+      width:20rem;
+      height: 2rem;
+      border-top: 1px solid #d9d9d9;
+      background-color: #fff;
+      &.none{
+        display: none;
+      }
+      >div{
+        &:nth-of-type(1){
+        }
+        &:nth-of-type(2){
+          font-size: 0.778rem;
+          margin-left: 0.2rem;
+          line-height: 2rem;
+          color: #666;
+        }
+      }
+    }
+
+    .border-t{
+      border-top:1px solid #E0E0E0;
+    }
+    .border-b{
+      border-bottom:1px solid #E0E0E0;
+    }
+  }
+}

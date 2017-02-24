@@ -1,4 +1,5 @@
 div#treat-page {
+  height: 100%;
   position: relative; }
   div#treat-page div.treat-area {
     background-color: #fff; }

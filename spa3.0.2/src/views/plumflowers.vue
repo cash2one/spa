@@ -335,9 +335,14 @@
                             that.telOfInputFirst = that.tel
                             that.telOfInputNotice = that.tel
                         }
+                        global.loading = false
                     } else {
                         Util.tipShow(res.msg || '数据请求失败！')
+                        that.$router.back()
                     }
+                }, function () {
+                    Util.tipShow('数据请求失败！')
+                    that.$router.back()
                 })
             },
             // 设置分享

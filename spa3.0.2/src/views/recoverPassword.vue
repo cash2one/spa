@@ -66,8 +66,7 @@
                     that.$http.post('../api/v1/user/checkLoginName', {loginName: that.tel}).then(function (res) {
                         res = res.body
                         if (res + '' == '-1') {
-                            Util.tipShow('用户尚未注册！')
-                            return
+                            return Util.tipShow('用户尚未注册！')
                         }
                         that.$http.post('../api/v1/user/resetPassword', {
                             username: that.tel,

@@ -90,8 +90,7 @@
                         processClass='failure'
                     }else
                         processClass=data[i]["status"];
-
-                    //<div "+($.$.visitChannel=="9358" ? "" : "style='display:none'" )+">"+data[i]["clubName"]+"</div>\
+                    //<div "+($.$.visitChannel=="9358" ? "" : "style='disrejectplay:none'" )+">"+data[i]["clubName"]+"</div>\
                     str +=
                         "<div orderId='"+data[i]["id"]+"' clubId='"+data[i]["clubId"]+"' techid='"+(data[i]["techId"] || '')
                         +"' itemid='"+(data[i]["serviceItemId"] || '')
@@ -107,7 +106,7 @@
                         str +="<a orderId='"+data[i]["id"]+"'>评论</a>"
                     }*/
                     //str += "<div style='display:none;'><img src='https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQHW8DoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL28wbmo2a0RsQW05N0V0aDVoV0ZrAAIE6oJJVgMEAAAAAA=='/><div>预约号：32877642</div></div></div>";
-                    var isPaid = data[i].orderType == 'paid',
+                    var isPaid = data[i].orderType == 'paid' ||  data[i].orderType == 'paid_full',
                         isCrossInner = !!data[i].innerProvider;
                     switch (data[i]['status']){     //根据状态显示不同的按钮
                         case 'unpaid':{
@@ -202,7 +201,6 @@
                         }(data[i]);
                     }
                 }
-
                 //显示数据修正
                 if(page==1){
                     listBox.Html(str);
@@ -276,6 +274,7 @@
         $.sessionStorage('order_end',dataAddEnd);
         $.sessionStorage('order_ID',JSON.stringify(listID));
         $.sessionStorage('order_top',content$[0].scrollTop);
+        $.sessionStorage('unpaidDatas',JSON.stringify(unpaidDatas));
     }
 
     function setListClick(){
@@ -332,30 +331,31 @@
                                     inPaid = false;
                                     if (res.err_msg.indexOf("ok")>=0) {//支付成功之后
                                         $.tipShow("支付成功！");
-                                        $('div[orderid="'+data.id+'"][tradeyear] > a.paid[orderid="'+data.id+'"]').Class('disabled');
+                                        $('div[orderid="'+data.id+'"][tradeyear] > div:nth-of-type(1) > span:nth-of-type(2)').Text('付款处理中');
+                                        $('div[orderid="'+data.id+'"][tradeyear] > a.paid[orderid="'+data.id+'"]').Class('hide');
                                         $.ajax({
                                             url: ($.$.clubID ? "../" : "") + "../profile/user/order/view",
                                             data: {id: data.id},
                                             success: function (response) {
                                                 if(response.statusCode == 200){
                                                     response = response.respData.order;
-                                                    if(response.statusNow == 'submit'){
+                                                    if(response.status == 'submit'){
                                                         var item$ = $('div[orderid="'+data.id+'"][tradeyear]'),dv = document.createElement('div'),
                                                             aa$ = $('div[orderid="'+data.id+'"][tradeyear] > a.paid[orderid="'+data.id+'"]'),
                                                             span = document.createElement('span');
                                                         dv.style.display = 'none';
-                                                        dv.innerHTML = '<img src="'+response.qrCodeUrl+'" /><div>预约号：'+response.orderNo+'</div>';
+                                                        dv.innerHTML = '<img src="'+response.qrCodeUrl+'" /><div>'+(response.orderNo ? '预约号：'+response.orderNo:'')+'</div>';
                                                         item$.Children().Index(1)[0].appendChild(dv);
 
                                                         span.classList.add('expandBtn');
                                                         span.innerHTML = '展开';
                                                         item$[0].appendChild(span);
-                                                        $('div[orderid="'+data.id+'"][tradeyear] > div:nth-of-type(1) > span:nth-of-type(2)').Text(statusObj[response.statusNow].name);
+                                                        $('div[orderid="'+data.id+'"][tradeyear] > div:nth-of-type(1) > span:nth-of-type(2)').Text(statusObj[response.status].name);
                                                         aa$.ClassClear('paid');
                                                         aa$.Class('reminder');
-                                                        aa$.ClassClear('disabled');
+                                                        aa$.ClassClear('hide');
                                                         aa$.Text('催单');
-                                                    }else if(response.statusNow == 'error'){
+                                                    }else if(response.status == 'error'){
                                                         var item$ = $('div[orderid="'+data.id+'"][tradeyear]'),
                                                             aa$ = $('div[orderid="'+data.id+'"][tradeyear] > a.paid[orderid="'+data.id+'"]'),
                                                             newA = document.createElement('a');
@@ -363,11 +363,11 @@
                                                         newA.textContent = '退款';
                                                         item$[0].appendChild(newA);
 
-                                                        $('div[orderid="'+data.id+'"][tradeyear] > div:nth-of-type(1) > span:nth-of-type(2)').Text(statusObj[response.statusNow].name);
+                                                        $('div[orderid="'+data.id+'"][tradeyear] > div:nth-of-type(1) > span:nth-of-type(2)').Text(statusObj[response.status].name);
                                                         aa$.ClassClear('paid');
                                                         aa$.Class('reAppoint');
                                                         aa$.Text('预约');
-                                                        aa$.ClassClear('disabled');
+                                                        aa$.ClassClear('hide');
                                                         var _tx = $('#reAppointDlg>div>p:nth-of-type(2)'),
                                                             _txStr = _tx.Html().replace(/\{\d+\}/g, function () {
                                                                 return response['techName'];

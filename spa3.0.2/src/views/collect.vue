@@ -2,7 +2,7 @@
     @import '../styles/page/collect.css';
 </style>
 <template>
-    <div class="page" id="collect-page" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="collect-page">
         <page-title title-text="我的收藏"></page-title>
         <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <div class="list-item" v-for="singleClubData in dataList">
@@ -56,7 +56,7 @@
                 isAddData: false // 数据是否正在加载
             }
         },
-        mounted: function () {
+        created: function () {
             var that = this
             that.isQueryAll = that.global.pageMode != 'club' || that.global.currPage.query.all == 'true'
             that.global.loading = false
@@ -114,18 +114,19 @@
                 var that = this
                 var item
                 var dataIndex
+                var dataList = that.dataList
                 for (var k = 0; k < data.length; k++) {
                     item = data[k]
-                    if (!item['tags'] || item['tags'].length == 0) {
-                        item['tags'] = [{tagName: '(无)'}]
+                    if (!item.tags || item.tags.length == 0) {
+                        item.tags = [{tagName: '(无)'}]
                     }
                     dataIndex = that.dataIndex[item['clubId']]
                     if (dataIndex == undefined) {
-                        dataIndex = that.dataList.length
+                        dataIndex = dataList.length
                         that.dataIndex[item['clubId']] = dataIndex
-                        that.dataList.push({clubName: item.clubName, list: []})
+                        dataList.push({clubName: item.clubName, list: []})
                     }
-                    that.dataList[dataIndex].list.push(item)
+                    dataList[dataIndex].list.push(item)
                 }
             }
         }

@@ -2,7 +2,7 @@
     @import '../styles/page/integral.css';
 </style>
 <template>
-    <div class="page" id="integral-all-page" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="integral-all-page">
         <page-title title-text="所有账户"></page-title>
         <div class="list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <router-link class="list-item" v-for="item in dataList" :to="{ name : 'integralDetail', query : { clubId : item.clubId } }">

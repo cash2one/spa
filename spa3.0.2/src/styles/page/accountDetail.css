@@ -1,5 +1,6 @@
 div#account-detail-page {
-  background: #f5f5f5; }
+  background: #f5f5f5;
+  min-height: 100%; }
   div#account-detail-page.noMember {
     background: #fff; }
   div#account-detail-page div.page-title {

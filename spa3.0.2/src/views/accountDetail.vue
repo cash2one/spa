@@ -2,7 +2,7 @@
     @import '../styles/page/accountDetail.css';
 </style>
 <template>
-    <div class="page" id="account-detail-page" :class="{ noMember : !hasMember }" :style="{ 'min-height' : global.winHeight+'px' }">
+    <div class="page" id="account-detail-page" :class="{ noMember : !hasMember }">
         <page-title title-text="会员卡详情"></page-title>
         <template v-if="hasMember">
             <router-link v-if="memberCard" class="member-card" :class="'tpl-0'+memberCard.styleId" :to="{ name : 'qrPayCode' , query : { accountId : accountId }}">
@@ -83,7 +83,7 @@
             var that = this
             var global = that.global
             var pageParams = global.currPage.query
-            var queryDataUrl = '../api/v2/finacial/'
+            var queryDataUrl = '../api/v2/financial/'
             var isFromClub = false
 
             that.accountId = pageParams.accountId || ''
@@ -107,7 +107,8 @@
                         if (res.memberTypes) {
                             var list = res.memberTypes
                             var arr = []
-                            for (var k = 0; k < list.length; k++) {
+                            var k
+                            for (k = 0; k < list.length; k++) {
                                 arr.push(that.doHandlerMemberCard(list[k]))
                             }
                             that.cardList = arr

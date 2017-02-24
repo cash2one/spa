@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="page info-page" id="info-page">
-        <page-title title-text="资料编辑"><div @click="doClickSaveBtn()">保存</div></page-title>
+        <page-title title-text="资料编辑"><div @click="doClickSaveBtn()">保存{{ inSubmit ? '中...' : '' }}</div></page-title>
         <div class="info-content">
             <div>
                 <input type="file" accept="image/*" capture="camcorder" @change="doImgChange($event)"/>
@@ -26,7 +26,8 @@
         data: function () {
             return {
                 global: Global.data,
-                nickName: ''
+                nickName: '',
+                inSubmit: false
             }
         },
         created: function () {
@@ -46,8 +47,13 @@
                 if (that.nickName.length == 0) {
                     return Util.tipShow('昵称不能为空！')
                 }
+                if (that.inSubmit) {
+                    return Util.tipShow('正在保存，请稍候...')
+                }
+                that.inSubmit = true
                 that.$http.post('../api/v2/profile/user/info/eidt', {name: that.nickName}).then(function (res) {
                     res = res.body
+                    that.inSubmit = false
                     if (res.statusCode == 200) {
                         that.global.userName = that.nickName
                         Util.localStorage('userName', that.nickName)
@@ -56,6 +62,9 @@
                     } else {
                         Util.tipShow(res.msg || '保存失败！')
                     }
+                }, function () {
+                    Util.tipShow('保存失败！')
+                    that.inSubmit = false
                 })
             },
             doImgChange: function (event) {

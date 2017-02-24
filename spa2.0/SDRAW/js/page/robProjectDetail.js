@@ -46,8 +46,13 @@
             success: function (result) {
                 if(result.statusCode == 200){
                     result = result.respData;
+                    $('#content>div>div:nth-of-type(1)>div>div:nth-of-type(1)').CSS('background-image','url('+ $.$.clubLogo +')');
+                    $('#content>div>div:nth-of-type(1)>div>div:nth-of-type(2)').Text($.$.clubName);
                     //$('#content>div>div:nth-of-type(1)>img').Attr('src',result.imageUrl);
-                    $('#content>div>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)').Text(result.name);
+                    $('#content>div>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)').Text(result.name);
+                    if(result.usePeriod && (result.usePeriod.match(/(\d)/g).length != 7 || result.endTime)){    //判断是否要显示“限时用”
+                        $('#content>div>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(2)').ClassClear('hide');
+                    }
                     if(result.canPaidCount == 0 || result.canPaidCount - result.paidCount > 0 ){
                         isCanPaid = true;
                     }
@@ -77,7 +82,8 @@
                         }
                     });
 
-                    var startDate = +new Date(result.startDate.replace(/-/g,'/')),endDate = +new Date(result.endDate.replace(/-/g,'/')),isStart = false,isEnd = false;
+                    var startDate = +new Date(result.startDate.replace(/-/g,'/')),endDate = +new Date(result.endDate.replace(/-/g,'/')),isStart = false,isEnd = false,
+                      isOnline = result.status == 'online';
                     calcTime();
                     function calcTime(){
                         //===========抢项目 活动倒计时==========//
@@ -85,7 +91,7 @@
                           currTime = +new Date(),
                           millisec,sec,min,hour,day
                           ,spans = $('#content>div>div:nth-of-type(3)>span')
-                          ,labels = $('#content>div>div:nth-of-type(3)>span>div'),timeData
+                          ,labels = $('#content>div>div:nth-of-type(3)>span'),timeData
                           ,isStartMillis = false;       //是否启用毫秒
                         if(startDate > currTime){
                             millis = startDate - currTime;
@@ -112,19 +118,18 @@
                             hour = floor(endTimeProject/3600%24);
                             day = floor(endTimeProject/3600/24);
 
-                            timeData = [floor(day/10),day%10,floor(hour/10),hour%10,floor(min/10),min%10,floor(sec/10),sec%10,floor(millisec/10),floor(millis%10)];
+                            timeData = [day,floor(hour/10),hour%10,floor(min/10),min%10,floor(sec/10),sec%10,floor(millisec/10),floor(millis%10)];
                             //timeData = [0,0,0,0,0,0,0,5,9,5];
 
-                            labels.Index(0).Children().Text(timeData[0]);
-                            labels.Index(1).Children().Text(timeData[1]);
-                            labels.Index(2).Children().Text(timeData[2]);
-                            labels.Index(3).Children().Text(timeData[3]);
-                            labels.Index(4).Children().Text(timeData[4]);
-                            labels.Index(5).Children().Text(timeData[5]);
-                            labels.Index(6).Children().Text(timeData[6]);
-                            labels.Index(7).Children().Text(timeData[7]);
-                            labels.Index(8).Children().Text(timeData[8]);
-                            labels.Index(9).Children().Text(timeData[9]);
+                            labels.Index(0).Text(timeData[0]);
+                            labels.Index(1).Text(timeData[1]);
+                            labels.Index(2).Text(timeData[2]);
+                            labels.Index(3).Text(timeData[3]);
+                            labels.Index(4).Text(timeData[4]);
+                            labels.Index(5).Text(timeData[5]);
+                            labels.Index(6).Text(timeData[6]);
+                            labels.Index(7).Text(timeData[7]);
+                            labels.Index(8).Text(timeData[8]);
 
                             //== 开始计时
                             if(day == 0 && !isStartMillis){
@@ -135,42 +140,14 @@
                             }
                             setTimeout(startToggle,millis%1000);
 
-
-                            //==== 添加动画回调事件 =======
-                            spans.Event((function(){
-                                var t,el = document.createElement('tmpelement'),
-                                  transitions = {
-                                      'transition':'transitionend',
-                                      'OTransition':'oTransitionEnd',
-                                      'MozTransition':'transitionend',
-                                      'WebkitTransition':'webkitTransitionEnd',
-                                      'MsTransition':'msTransitionEnd'
-                                  };
-
-                                for(t in transitions){
-                                    if( el.style[t] !== undefined ){
-                                        return transitions[t];
-                                    }
-                                }
-                            }()), function (e, item) {
-                                var $item = $(item),cs = $item.Children().Index(0).Children();
-                                cs.Index(1).Text(cs.Index(0).Text());
-                                $item.ClassClear('toggle');
-                                if(timeData[0] == 0 && timeData[1] == 0 && !isStartMillis){
-                                    isStartMillis = true;
-                                    $('.rob-day').Class('hide');
-                                    $('.rob-milli').ClassClear('hide');
-                                }
-                            });
-
                             //========= 数值渐变 =========
                             function startToggleMillis(){
-                                if(timeData[9]>0){
-                                    timeData = [timeData[0],timeData[1],timeData[2],timeData[3],timeData[4],timeData[5],timeData[6],timeData[7],timeData[8],timeData[9] - 1];
-                                    changeNums([9]);
-                                }else if(timeData[8]>0){
-                                    timeData = [timeData[0],timeData[1],timeData[2],timeData[3],timeData[4],timeData[5],timeData[6],timeData[7],timeData[8]-1,9];
-                                    changeNums([8,9]);
+                                if(timeData[8]>0){
+                                    timeData = [timeData[0],timeData[1],timeData[2],timeData[3],timeData[4],timeData[5],timeData[6],timeData[7],timeData[8] - 1];
+                                    changeNums([8]);
+                                }else if(timeData[7]>0){
+                                    timeData = [timeData[0],timeData[1],timeData[2],timeData[3],timeData[4],timeData[5],timeData[6],timeData[7]-1,9];
+                                    changeNums([7,8]);
                                 }else{
                                     if(timeData.join('').replace(/0/g,'') == ''){
                                         if(!isStart||!isEnd){
@@ -186,30 +163,27 @@
                             }
                             function startToggle(){
                                 var tmpArr = [];
-                                if(timeData[7]>0){
-                                    timeData = [timeData[0],timeData[1],timeData[2],timeData[3],timeData[4],timeData[5],timeData[6],timeData[7] - 1,9,9];
-                                    tmpArr = tmpArr.concat([7]);
-                                }else if(timeData[6]>0){
-                                    timeData = [timeData[0],timeData[1],timeData[2],timeData[3],timeData[4],timeData[5],timeData[6] - 1,9,9,9];
-                                    tmpArr = tmpArr.concat([6,7]);
+                                if(timeData[6]>0){
+                                    timeData = [timeData[0],timeData[1],timeData[2],timeData[3],timeData[4],timeData[5],timeData[6] - 1,9,9];
+                                    tmpArr = tmpArr.concat([6]);
                                 }else if(timeData[5]>0){
-                                    timeData = [timeData[0],timeData[1],timeData[2],timeData[3],timeData[4],timeData[5] - 1,5,9,9,9];
-                                    tmpArr = tmpArr.concat([5,6,7]);
+                                    timeData = [timeData[0],timeData[1],timeData[2],timeData[3],timeData[4],timeData[5] - 1,9,9,9];
+                                    tmpArr = tmpArr.concat([5,6]);
                                 }else if(timeData[4]>0){
-                                    timeData = [timeData[0],timeData[1],timeData[2],timeData[3],timeData[4] - 1,9,5,9,9,9];
-                                    tmpArr = tmpArr.concat([4,5,6,7]);
+                                    timeData = [timeData[0],timeData[1],timeData[2],timeData[3],timeData[4] - 1,5,9,9,9];
+                                    tmpArr = tmpArr.concat([4,5,6]);
                                 }else if(timeData[3]>0){
-                                    timeData = [timeData[0],timeData[1],timeData[2],timeData[3] - 1,5,9,5,9,9,9];
-                                    tmpArr = tmpArr.concat([3,4,5,6,7]);
+                                    timeData = [timeData[0],timeData[1],timeData[2],timeData[3] - 1,9,5,9,9,9];
+                                    tmpArr = tmpArr.concat([3,4,5,6]);
                                 }else if(timeData[2]>0){
-                                    timeData = [timeData[0],timeData[1],timeData[2]-1,9,5,9,5,9,9,9];
-                                    tmpArr = tmpArr.concat([2,3,4,5,6,7]);
+                                    timeData = [timeData[0],timeData[1],timeData[2] - 1,5,9,5,9,9,9];
+                                    tmpArr = tmpArr.concat([2,3,4,5,6]);
                                 }else if(timeData[1]>0){
-                                    timeData = [timeData[0],timeData[1] - 1,2,4,5,9,5,9,9,9];
-                                    tmpArr = tmpArr.concat([1,2,3,4,5,6,7]);
+                                    timeData = [timeData[0],timeData[1]-1,9,5,9,5,9,9,9];
+                                    tmpArr = tmpArr.concat([1,2,3,4,5,6]);
                                 }else if(timeData[0]>0){
-                                    timeData = [timeData[0] - 1,9,2,4,5,9,5,9,9,9];
-                                    tmpArr = tmpArr.concat([0,1,2,3,4,5,6,7]);
+                                    timeData = [timeData[0] - 1,2,4,5,9,5,9,9,9];
+                                    tmpArr = tmpArr.concat([0,1,2,3,4,5,6]);
                                 }else{
                                     if(timeData.join('').replace(/0/g,'') == '') {
                                         if (!isStart || !isEnd) {
@@ -226,27 +200,36 @@
                             }
                             function changeNums(_indexs){
                                 _indexs.forEach(function (v) {
-                                    labels.Index(v).Children().Index(0).Text(timeData[v]);
-                                    spans.Index(v).Class('toggle');
+                                    labels.Index(v).Text(timeData[v]);
                                 })
                             }
                         }
                     }
 
 
-                    $('#content>div>div:nth-of-type(4)>div:nth-of-type(1)').CSS('background-image','url('+ $.$.clubLogo +')');
-                    $('#content>div>div:nth-of-type(4)>div:nth-of-type(2)').Text($.$.clubName);
-                    $('#projectExplain>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(2)')
-                      .Text(result.startDate + ' - ' + result.endDate);
-                    $('#projectExplain>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(1)>span')
-                      .Text(result.useStartDate.split(' ')[0] + ' - ' + result.useEndDate.split(' ')[0]);
-                    if(result.usePeriod){
-                        $('#projectExplain>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)>span')
-                          .Text((result.usePeriod || '').replace(/(\d)/g,function(){return ['周日','周一','周二','周三','周四','周五','周六'][arguments[1]]}) + ' '+ (result.startTime ? (result.startTime.replace(/:00$/g,'') + ':00 - ' + result.endTime.replace(/:00$/g,'') + ':00'):''));      //可用时段
+                    /*$('#content>div>div:nth-of-type(4)>div:nth-of-type(1)').CSS('background-image','url('+ $.$.clubLogo +')');
+                    $('#content>div>div:nth-of-type(4)>div:nth-of-type(2)').Text($.$.clubName);*/
+                    $('#projectExplain>div:nth-of-type(2)>div.explain-item:nth-of-type(1)>div:nth-of-type(2)>div:nth-of-type(1)')
+                      .Text(result.useStartDate.split(' ')[0].replace(/-/g,'.') + ' - ' + result.useEndDate.split(' ')[0].replace(/-/g,'.'));
+                    if(result.usePeriod && (result.usePeriod.match(/(\d)/g).length != 7 || result.endTime)){
+                        var periodStr = '仅限';
+                        if(result.usePeriod === '1,2,3,4,5'){   //工作日
+                            periodStr += '工作日（周一至周五）';
+                        }else if(result.usePeriod === '6,0'){
+                            periodStr += '周末（周六、周日）';
+                        }else if(result.usePeriod.match(/(\d)/g).length == 7){
+                            periodStr += '周一至周日';
+                        }else{
+                            periodStr += (result.usePeriod || '').replace(/(\d)/g,function(){return ['周日','周一','周二','周三','周四','周五','周六',' 至 '][arguments[1]]});
+                        }
+                        $('#projectExplain>div:nth-of-type(2)>div.explain-item:nth-of-type(1)>div:nth-of-type(2)>div:nth-of-type(2)')
+                          .Text(periodStr + ' '+ (result.startTime ? (result.startTime.replace(/:00$/g,'') + ':00 - ' + result.endTime.replace(/:00$/g,'') + ':00'):'') + '可用');      //可用时段
                     }else{
-                        $('#projectExplain>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)').CSS('display','none');
+                        $('#projectExplain>div:nth-of-type(2)>div.explain-item:nth-of-type(1)>div:nth-of-type(2)>div:nth-of-type(2)').CSS('display','none');
                     }
-                    $('#projectExplain>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(3)').Html(result.instructions);
+                    $('#projectExplain>div:nth-of-type(2)>div.explain-item:nth-of-type(2)>div:nth-of-type(2)').Html(result.instructions);
+                    $('#projectExplain>div:nth-of-type(2)>div.explain-item:nth-of-type(3)>div:nth-of-type(2)')
+                      .Text(result.startDate.replace(/-/g,'.') + ' - ' + result.endDate.replace(/-/g,'.'));
                     $('#itemExplain>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)')
                       .CSS('background-image','url('+ result.imageUrl +')');
                     $('#itemExplain>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(2)>div:nth-of-type(1)').Text(result.name);
@@ -256,7 +239,7 @@
                       .Text(result.pricePlus?(result.pricePlus+'元/'+result.durationPlus+result.durationUnit):'');
                     $('#itemExplain>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(1)').Html(result.description || '无');
 
-                    $('#content>div>div:nth-of-type(4)').Click(function () {
+                    $('#content>div>div:nth-of-type(1)>div').Click(function () {
                         $.page('home',-1,true);
                     });
 
@@ -295,12 +278,14 @@
                     }
                     //===== 购买 ====
                     var confirmBtn = $('#confirmBtn'),confirmBtnDiv = $('#confirmBtn>div');
+                    if(!isOnline) confirmBtn.Class('disabled');
                     confirmBtnDiv.Index(0).Click(function () {
-                        if(!checkLoginOrBindPhone()) return;
                         if(!isStart) return $.tipShow('活动未开始');
                         if(isEnd) return $.tipShow('活动已结束');
+                        if(!isOnline) return $.tipShow('活动未上线');
+                        if(confirmBtn.ClassHave('disabled')) return;
+                        if(!checkLoginOrBindPhone()) return;
                         if(isCredits){
-                            if(confirmBtn.ClassHave('disabled')) return;
                             if(confirmBtn.ClassHave('processing')){
                                 return $.tipShow('购买中，请稍候...');
                             }
@@ -319,7 +304,7 @@
                                     confirmBtnDiv.Index(0).ClassClear('loading').Text('积分购买');
                                     if(response.statusCode == 200){
                                         $.tipShow("支付成功！");
-                                        $.page('robProjectSuccess&id='+response.respData);
+                                        $.page('robProjectSuccess&isIntegral=true&id='+response.respData);
                                     }else{
                                         $.tipShow(response.msg || '积分支付失败');
                                     }
@@ -331,23 +316,24 @@
                     });
 
                     confirmBtnDiv.Index(1).Click(function () {
-                        if(!checkLoginOrBindPhone()) return;
                         if(!isStart) return $.tipShow('活动未开始');
                         if(isEnd) return $.tipShow('活动已结束');
-                        if(!$.$.ua.isWX){
-							if($.checkAccessMenu('robProjectDetail')){
-								$.tipShow('请在微信中打开')
-							}
-							return ;
-						} 
+                        if(!isOnline) return $.tipShow('活动未上线');
                         if(confirmBtn.ClassHave('disabled')) return;
                         if(confirmBtn.ClassHave('processing')){
                             return $.tipShow('购买中，请稍候...');
                         }
+                        if(!$.$.ua.isWX){
+                          if($.checkAccessMenu('robProjectDetail')){
+                            $.tipShow('请在微信中打开')
+                          }
+                          return ;
+                        }
+                        if(!checkLoginOrBindPhone()) return;
                         confirmBtn.Class('processing');
                         confirmBtnDiv.Index(1).Class('loading').Text('购买中...');
                         $.ajax({
-                            url : '../api/v2/wx/pay/paid_service_item',
+                            url : '../api/v2/wx/pay/paid_service_item/save',
                             isReplaceUrl:true,
                             type:'post',
                             data : {
@@ -371,19 +357,19 @@
                                           },
                                           function (res) {
                                               confirmBtn.ClassClear('processing');
-                                              if (res.err_msg.indexOf("ok")>=0) {//支付成功之后
+                                              if (res.err_msg && res.err_msg.indexOf("ok")>=0) {//支付成功之后
                                                   $.tipShow("支付成功！");
-                                                  $.page('robProjectSuccess&id='+result.bizId);
+                                                  $.page('robProjectSuccess&id='+result.payId);
                                               }// res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠
                                               else{
                                                   confirmBtnDiv.Index(1).ClassClear('loading').Text('现金购买');
                                                   $.tipShow("未能成功支付！");
                                                   //==== 支付失败，删除预支付订单 ===
                                                   $.ajax({
-                                                      url:'../api/v2/club/user_paid_service_item/delete/paid',
+                                                      url:'../api/v2/wx/pay/activity/payment/cancel',
                                                       isReplaceUrl:true,
                                                       data:{
-                                                          id: result.bizId
+                                                          payId: result.payId
                                                       },
                                                       success: function () {}
                                                   });

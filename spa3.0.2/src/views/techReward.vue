@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="submit-button" :class="submitStatusCls" @click="doClickSubmitBtn()" v-show="moneyList.length>0 || giftList.length>0">{{ submitBtnText }}</div>
-            <div class="submit-button view-button" @click="doClickViewClub()">查看会所</div>
+            <router-link class="submit-button view-button" tag="div" :to="{ path: '/'+clubId+'/home' }">查看会所</router-link>
         </div>
         <credit-tip></credit-tip>
     </div>
@@ -42,12 +42,14 @@
                 techInfo: null,
                 techId: '',
                 commentId: '',
+                isAnonymous: 'N',
                 paramData: null,
                 payAuthCode: '',
                 clubId: '',
                 currIntegralAccount: 0, // 当前账户积分
                 payRequestObj: null,
-                prePayId: ''
+                prePayId: '',
+                openId: ''
             }
         },
         created: function () {
@@ -61,30 +63,24 @@
                 that.$router.back()
             } else {
                 that.commentId = params.commentId
+                that.isAnonymous = params.isAnonymous || 'N'
                 that.paramData = Util.localStorage('tech-reward-param')
                 that.payAuthCode = params.code
                 that.clubId = global.clubId
                 global.isFollowed = !!(global.isFollowed || Util.localStorage('spa_user_isFollowed') - 0 || false)
 
                 if (global.userAgent.isWX && that.paramData && that.payAuthCode) {
-                    // 获取openID 与其他页面获取openid的接口不一样
-                    that.$http.post('../api/v2/wx/oauth2/user/openid', {
-                        code: that.payAuthCode,
-                        scope: 'snsapi_userinfo',
-                        wxmp: '9358',
-                        userType: 'user',
-                        state: 'tech-reward'
+                    Global.getOpenId({
+                        authCode: that.payAuthCode,
+                        state: 'tech-reward',
+                        scope: 'snsapi_userinfo'
                     }).then(function (res) {
-                        res = res.body
-                        if (res.statusCode == 200) {
-                            Util.removeLocalStorage('tech-reward-param')
-                        } else if (res.statusCode == 935801) {
-                            Util.localStorage('tech-reward-param', that.selectVal)
-                            Global.getOauthCode('', '9358', 'tech_reward', 'userInfo')
-                        } else {
-                            Util.tipShow('未能获取OpenId！')
-                            that.$router.back()
-                        }
+                        Util.removeLocalStorage('tech-reward-param')
+                        that.openId = res
+                        that.init()
+                    }, function (error) {
+                        Util.tipShow(error || '未能获取OpenId！')
+                        that.$router.back()
                     })
                 } else {
                     that.init()
@@ -109,7 +105,15 @@
                     that.$http.get('../api/v2/user/reward/tipList', {params: {clubId: that.clubId}}).then(function (res) {
                         res = res.body
                         if (res.statusCode == 200) {
-                            that.moneyList = res.respData
+                            var moneyList = res.respData
+                            that.moneyList = moneyList
+                            for (var k = 0; k < moneyList.length; k++) {
+                                if (moneyList[k].defaultChoose) {
+                                    that.selectType = 'money'
+                                    that.selectVal = k
+                                    break
+                                }
+                            }
                         }
                     })
 
@@ -123,6 +127,13 @@
                                     giftRes = giftRes.respData
                                     if (giftRes.length > 4) { // 只显示前4个
                                         giftRes = giftRes.slice(0, 4)
+                                    }
+                                    for (var i = 0; i < giftRes.length; i++) {
+                                        if (giftRes[i].defaultChoose) {
+                                            that.selectType = 'gift'
+                                            that.selectVal = giftRes[i]
+                                            break
+                                        }
                                     }
                                     that.giftList = giftRes
                                 }
@@ -150,10 +161,8 @@
             },
             doClickSubmitBtn: function () {
                 var that = this
-                var global = that.global
                 if (that.submitStatusCls == 'processing') {
-                    Util.tipShow('打赏中，请稍候...')
-                    return
+                    return Util.tipShow('打赏中，请稍候...')
                 }
                 if (that.selectType == 'gift') { // 送积分礼物
                     var selectGift = that.selectVal
@@ -175,25 +184,29 @@
                             that.submitStatusCls = ''
                             that.submitBtnText = '打赏'
                             if (res.statusCode == 200) {
+                                Util.tipShow('打赏礼物成功！')
                                 console.log('发送一条礼物消息给技师')
                             } else {
                                 Util.tipShow(res.msg || '打赏礼物请求失败！')
                             }
+                        }, function () {
+                            Util.tipShow('打赏礼物请求失败！')
                         })
                     }
                 } else { // 打赏金钱
                     that.submitStatusCls = 'processing'
                     that.submitBtnText = '打赏中...'
                     that.$http.post('../api/v2/wx/pay/user_reward', {
-                        consumeMoney: (that.moneyList[that.selectVal].amount / 100).toFixed(2),
-                        openId: global.openId,
+                        consumeMoney: that.moneyList[that.selectVal].amount,
+                        openId: that.openId,
                         clubId: that.clubId,
                         consumeType: 'user_reward',
                         consumeChanel: 'user_reward',
                         techId: that.techId,
                         prePayId: '',
                         paySessionType: '9358_fw',
-                        commentId: that.commentId
+                        commentId: that.commentId,
+                        isAnonymous: that.isAnonymous
                     }).then(function (res) {
                         res = res.body
                         if (res.statusCode == 200) {
@@ -214,6 +227,10 @@
                             that.submitBtnText = '打赏'
                             Util.tipShow(res.msg || '支付失败！')
                         }
+                    }, function () {
+                        that.submitStatusCls = ''
+                        that.submitBtnText = '打赏'
+                        Util.tipShow('支付失败！')
                     })
                 }
             },
@@ -233,16 +250,13 @@
                     that.submitBtnText = '打赏'
                     if (res.err_msg.indexOf('ok') >= 0) { // 支付成功之后
                         that.$http.post('../api/v2/wx/pay/pay_result', {prePayId: that.prePayId}).then(function () {
+                            Util.tipShow('打赏成功！')
                             console.log('发送一条打赏消息给技师')
                         })
                     } else {
                         Util.tipShow('未能成功支付！')
                     }
                 })
-            },
-            doClickViewClub: function () { // 点击查看会所
-                var that = this
-                that.$router.push({path: '/' + that.clubId + '/home'})
             }
         },
         filters: {

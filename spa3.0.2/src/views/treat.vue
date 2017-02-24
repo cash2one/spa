@@ -2,7 +2,7 @@
     @import '../styles/page/treat.css';
 </style>
 <template>
-    <div class="page" id="treat-page" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="treat-page">
         <page-title title-text="我要请客"></page-title>
         <div class="treat-area">
             <div>
@@ -63,7 +63,7 @@
                 Util.tipShow(global.visitError)
                 return that.$router.back()
             } else {
-                that.$http.get('../api/v2/finacial/account/' + that.accountId).then(function (res) {
+                that.$http.get('../api/v2/financial/account/' + that.accountId).then(function (res) {
                     res = res.body
                     if (res.statusCode == 200) {
                         res = res.respData
@@ -71,9 +71,12 @@
                         that.accountMoney = (res.amount / 100).toFixed(2)
                         global.loading = false
                     } else {
-                        Util.tipShow(global.loadError)
+                        Util.tipShow(res.msg || global.loadError)
                         that.$router.back()
                     }
+                }, function () {
+                    Util.tipShow(global.loadError)
+                    that.$router.back()
                 })
             }
         },
@@ -86,7 +89,7 @@
                     } else {
                         that.isProcessing = true
                         that.confirmBtnText = '授权中...'
-                        that.$http.post('../api/v2/finacial/account/payforother/auth', {
+                        that.$http.post('../api/v2/financial/account/payforother/auth', {
                             accountId: that.accountId,
                             amount: parseFloat(that.money) * 100,
                             open: that.canVisible ? 'Y' : 'N',
@@ -98,9 +101,11 @@
                             if (res.statusCode != 200) {
                                 Util.tipShow(res.msg || '授权失败！')
                             } else {
+                                res = res.respData
+                                Util.sessionStorage('tmpTreat_cache', JSON.stringify(res))
                                 that.$router.push({
                                     name: 'treatDetail',
-                                    query: {backAccount: true, detailId: res.respData}
+                                    query: {backAccount: true, detailId: res.id}
                                 })
                             }
                         })

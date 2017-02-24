@@ -187,7 +187,7 @@ div#service-item-page div.service-item-tech {
   div#service-item-page div.service-item-tech > div:last-child {
     border-bottom: 0; }
 
-div.confirm-btn {
+div#service-item-page div.confirm-btn {
   position: fixed;
   bottom: 0;
   height: 3.333rem;
@@ -195,7 +195,7 @@ div.confirm-btn {
   right: 0;
   background-color: #e1e1e1;
   z-index: 10; }
-  div.confirm-btn > a {
+  div#service-item-page div.confirm-btn > a {
     display: block;
     height: 2.444rem;
     line-height: 2.444rem;

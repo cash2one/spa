@@ -20,6 +20,7 @@
 </template>
 <script>
     import { Global } from '../libs/global'
+    import Util from '../libs/util'
 
     module.exports = {
         data: function () {
@@ -43,7 +44,12 @@
                 res = res.body
                 if (res.statusCode == 200) {
                     that.dataList = res.respData
+                } else {
+                    Util.tipShow(res.msg || global.loadError)
                 }
+                global.loading = false
+            }, function () {
+                Util.tipShow(global.loadError)
             })
         }
     }

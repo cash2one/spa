@@ -148,14 +148,26 @@
             //生成推荐项目
             str = '';
             for (i = 0, length = data['serviceItems'].length; i < length; i++) {
-                str +=
-                    '<div hh="' + data['serviceItems'][i]['id'] + '">\
+                //data['serviceItems'][i]['discountPrice']  = data['serviceItems'][i]['price1'];  //测试
+                if(data['serviceItems'][i]['discountPrice']){
+                    str +=
+                      '<div hh="' + data['serviceItems'][i]['id'] + '">\
+                     <div '+(i==0?'class="recommend-label"':'')+' style="background-image: url(\'' + (data['serviceItems'][i]['imageUrl'] || $.$.defaultService) + '\')"><div>' + data['serviceItems'][i]['name'] + '</div></div>\
+                        <div class="has-discount">\
+                            <div >网店价<span>￥</span>'+data['serviceItems'][i]['discountPrice']+'</div>\
+                            <div ><span>￥</span>'+data['serviceItems'][i]['price1']+'</div>\
+                        </div>\
+                    </div>';
+                }else{
+                    str +=
+                      '<div hh="' + data['serviceItems'][i]['id'] + '">\
                      <div '+(i==0?'class="recommend-label"':'')+' style="background-image: url(\'' + (data['serviceItems'][i]['imageUrl'] || $.$.defaultService) + '\')"><div>' + data['serviceItems'][i]['name'] + '</div></div>\
                         <div>\
                             <div' + (data['serviceItems'][i]['price1'] ? '' : ' style="visibility:hidden;"') + '><span>￥</span>'+data['serviceItems'][i]['price1']+'</div>\
                             <div' + (data['serviceItems'][i]['price1'] ? '' : ' style="visibility:hidden;"') + '>' + data['serviceItems'][i]['duration1'] + '<span>' + (data['serviceItems'][i]['durationUnit'] || '分钟') + '</span></div>\
                         </div>\
                     </div>';
+                }
             }
             $('.service>div:nth-of-type(2)').Html(str);
             if (length == 0) {
@@ -189,10 +201,19 @@
                     top.location.href = href;
             });
 
+            if(data['journal'] && data['journal']['id']){
+                $(".journal").CSS('display','block');
+                $(".journal>div>span").Text(data['journal']['title']).Click(function(){
+                    location.href = location.origin+"/spa-manager/journal/#/"+(data['journal']['templateId'] || 1)+"/?id="+data['journal']['id'];
+                })
+                //点击全部期刊
+                $(".journal>div>div").Page("journalList")
+            }
+
             //点击会所简介
             $('.banner>div:nth-of-type(2)').Page('clubProfile');
             //点击优惠活动
-            $('#paidCoupon').Page('promotions');
+            $('#paidCoupon').Page('activities');
             //点击服务项目
             //$('.menu>div:nth-of-type(3)').Page('serviceList');
             //切换到地图
@@ -319,100 +340,114 @@
             $.sessionStorageClear('home_top');
             //点击预约技师
             $('#orderBtn').Page('technicianList');
-            //点击红包
-            var coupons = $('#coupons'),
-                getCouponsTime = $.localStorage('getCouponsTime' + $.$.clubID) || 0,
-                getFlowersTime = $.localStorage('getFlowersTime' + $.$.clubID) || 0,
-                nowTime = new Date().getTime(),
-                isNeedCoupun = nowTime - getCouponsTime > 24 * 3600 * 1000,
-                //isNeedFlowers = nowTime - getFlowersTime > 24 * 3600 * 1000;
-                isNeedFlowers = true;
-            if (isNeedCoupun || isNeedFlowers) {
-                if(isNeedCoupun){
-                    coupons.Click(function (e, item) {
-                        e.preventDefault();
-                        if (e.target == item) {
-                            coupons.Hide();
-                            $.localStorage('getCouponsTime' + $.$.clubID, nowTime);
-                        }
-                    });
-                    coupons.Event('touchmove', function (e) {
-                        e.preventDefault();
-                    }, false);
-                    $('#coupons>div:nth-of-type(3)').Click(function () {
-                        coupons.Hide();
-                        $.localStorage('getCouponsTime' + $.$.clubID, nowTime);
-                    });
-                }
 
-                //弹出红包
-                $.ajax({
-                    url: 'top_popup/data',
-                    success: function (data) {
-                        if (data['statusCode'] == 200) {
-                            if(data.respData.type == 'coupon' && isNeedCoupun){
-                                var titleLen = (function (words) {
-                                    var len = 0, a;
-                                    for (var i = 0; i < words.length; i++) {
-                                        a = words.charAt(i);
-                                        if (a.match(/[^\x00-\xff]/ig) != null)len += 2;
-                                        else len += 1;
+            //==== 获取弹窗数据 ===
+            var coupons = $('#coupons'),activityPop = $('.activity-pop'),timeLimit = $('#timeLimit')
+              ,oneYuan = $('#oneYuan'),luckyWheel = $('#luckyWheel'),popJournal = $('#journal');
+            $('.activity-pop>div>div:nth-of-type(2)').Click(function(){
+                activityPop.ClassClear('active');
+            });
+            activityPop.Event('touchmove', function (e, item) {
+                e.preventDefault();
+            });
+
+            $.ajax({
+                url:'../api/v2/club/popup/get',
+                isReplaceUrl:true,
+                data:{
+                    clubId: $.$.clubID
+                },
+                success: function (popResult) {
+                    if(popResult.statusCode == 200){
+                        popResult = popResult.respData;
+                        if(!popResult) return;
+                        var pastPopInfo = $.localStorage('pastPopInfo_'+ $.$.clubID) ? JSON.parse($.localStorage('pastPopInfo_'+ $.$.clubID)) : {};
+                        if( pastPopInfo.id != popResult.id || (pastPopInfo.id && pastPopInfo.time && new Date() - new Date(pastPopInfo.time) > 24 * 3600 * 1000)){
+                            $.localStorage('pastPopInfo_' + $.$.clubID, JSON.stringify({
+                                id: popResult.id,
+                                time: new Date().getTime()
+                            }));
+                            switch (popResult.activityType){
+                                case 'coupon':{                 //优惠券
+                                    popResult.activityName = popResult.activityName.substring(popResult.activityName.indexOf('】'));
+                                    var titleLen = (function (words) {
+                                        var len = 0, a;
+                                        for (var i = 0; i < words.length; i++) {
+                                            a = words.charAt(i);
+                                            if (a.match(/[^\x00-\xff]/ig) != null)len += 2;
+                                            else len += 1;
+                                        }
+                                        return len;
+                                    })(popResult.activityName);
+
+                                    var titlePDiv = $('#coupons>div:nth-of-type(1)>div'),
+                                      titleDiv = $('#coupons>div:nth-of-type(1)>div>div');
+                                    titleDiv.Html(popResult.activityName);
+
+                                    if (titleLen <= 10) {
+                                        //////default
                                     }
-                                    return len;
-                                })(data['respData']['actTitle']);
-
-                                var titlePDiv = $('#coupons>div:nth-of-type(1)>div'),
-                                  titleDiv = $('#coupons>div:nth-of-type(1)>div>div');
-                                titleDiv.Html(data['respData']['actTitle']);
-
-                                if (titleLen <= 10) {
-                                    //////default
-                                }
-                                else if (titleLen <= 12) {
-                                    titlePDiv.Class("spec-6");
-                                }
-                                else if (titleLen <= 14) {
-                                    titlePDiv.Class("spec-7");
-                                }
-                                else if (titleLen <= 16) {
-                                    titlePDiv.Class("spec-8");
-                                }
-                                else {
-                                    titlePDiv.Class("two-line");
-                                    if (titleLen > 32) {
-                                        titleDiv.Html(data['respData']['actTitle'].substr(0, 14) + "...");
+                                    else if (titleLen <= 12) {
+                                        titlePDiv.Class("spec-6");
                                     }
-                                }
-                                function jump() {
-                                    $.localStorage('getCouponsTime' + $.$.clubID, nowTime);
-                                    location.href = data['respData']['shareUrl'];
-                                }
-                                $('#coupons>div:nth-of-type(1)').Click(jump);
-                                $('#coupons>div:nth-of-type(2)').Click(jump);
-                                coupons.Show();
-                            }else if(data.respData.type == 'plumFlower' && isNeedFlowers){
-                                var _bgDom = $('#getPlumflowers>div>div:nth-of-type(1)>div'),
-                                    bgFlag = true;
-                                function aniBg(){
-                                    bgFlag?_bgDom.Class('toggle'):_bgDom.ClassClear('toggle');
-                                    bgFlag = !bgFlag;
-                                    setTimeout(aniBg,800);
-                                }
-                                setTimeout(aniBg,800);
-                                $('#getPlumflowers').Class('active');
-                                $('#getPlumflowers>div>div:nth-of-type(2)').Click(function () {
-                                    $('#getPlumflowers').ClassClear('active');
-                                    $.localStorage('getFlowersTime' + $.$.clubID, nowTime);
-                                });
-                                $('#getPlumflowers>div>div:nth-of-type(1)>a').Click(function () {
-                                    $.localStorage('getFlowersTime' + $.$.clubID, nowTime);
-                                    location.href = data['respData']['shareUrl'];
-                                });
+                                    else if (titleLen <= 14) {
+                                        titlePDiv.Class("spec-7");
+                                    }
+                                    else if (titleLen <= 16) {
+                                        titlePDiv.Class("spec-8");
+                                    }
+                                    else {
+                                        titlePDiv.Class("two-line");
+                                        if (titleLen > 32) {
+                                            titleDiv.Html(popResult['activityName'].substr(0, 14) + "...");
+                                        }
+                                    }
+                                    function jump() {
+                                        location.href = location.origin + '/spa-manager/coupons/#home&actId='+popResult.activityId+'&chanel=index'
+                                    }
+                                    $('#coupons>div:nth-of-type(1),#coupons>div:nth-of-type(2)').Click(jump);
+                                    coupons.Event('touchmove', function (e) {
+                                        e.preventDefault();
+                                    }, false);
+                                    $('#coupons>div:nth-of-type(3)').Click(function () {
+                                        coupons.Hide();
+                                    });
+                                    coupons.Show();
+                                }break;
+                                case 'paid_service_item':{      //限时抢
+                                    timeLimit.Class('active');
+                                    $('#timeLimit>div>div:nth-of-type(1)>div').Click(function (e, item) {
+                                        $.page('robProjectDetail&robProjectId='+popResult.activityId);
+                                    });
+                                }break;
+                                case 'one_yuan':
+                                case 'paid_plumflowe':{                       //一元夺
+                                    oneYuan.Class('active');
+                                    $('#oneYuan>div>div:nth-of-type(1)>div').Click(function (e, item) {
+                                        if(popResult.activityType == 'one_yuan'){
+                                            $.page('oneYuanDetail&oneYuanBaseId='+popResult.activityId);
+                                        }else{
+                                            $.page('plumflowers&id='+popResult.activityId);
+                                        }
+                                    });
+                                }break;
+                                case 'luckyWheel':{         //大转盘
+                                    luckyWheel.Class('active');
+                                    $('#luckyWheel>div>div:nth-of-type(1)>div').Click(function (e, item) {
+                                        location.href = location.origin+'/spa-manager/luckyWheel/?actId='+popResult.activityId+'&clubId='+popResult.clubId;
+                                    });
+                                }break;
+                                case 'journal':{
+                                    popJournal.Class('active');
+                                    $('#journal>div>div:nth-of-type(1)>div').Click(function (e, item) {
+                                        location.href = location.origin+"/spa-manager/journal?id="+popResult.activityId;
+                                    });
+                                }break;
                             }
                         }
                     }
-                });
-            }
+                }
+            });
 
             //==== 抢项目列表 ====
             var actEnds = [];
@@ -429,228 +464,329 @@
                         if(response.length <= 0){
                             return;
                         }
-                        $('.activity').ClassClear('hide');
                         response.forEach(function (resp,index) {
                             var currTime = +new Date();
-                            _html.push('<div class="act-detail act-rob-project" data-item-id="'+resp.id+'" data-act-index="'+index+'">\
-                                          <div>\
-                                            <div style="background-image:url('+resp.imageUrl+')"></div>\
+                            if(resp.actType == 'paid_item'){
+                                actEnds[index] = (resp.canPaidCount > 0 && resp.canPaidCount - resp.paidCount == 0) || new Date() - new Date(resp.endDate.replace(/-/g,'/')).getTime() >= 0 ? true : resp;
+                                _html.push('<div class="act-detail act-paid_item '+(actEnds[index] === true ?'act-end':'')+'" data-act-id="'+resp.id+'" data-act-index="'+index+'">\
+                                    <div>\
+                                        <div style="background-image: url('+ (resp.imageUrl || $.$.defaultService)+')"></div>\
+                                        <div>\
                                             <div>\
-                                              <div>\
-                                                <div>'+resp.name+'</div>\
-                                                '+(resp.canPaidCount > 0 && resp.canPaidCount - resp.paidCount == 0?(actEnds[index] = true,'<div class="act-end">抢光了</div>'):('<div>'+(resp.canPaidCount>0?('剩余<span>'+(resp.canPaidCount - resp.paidCount)+'</span>份'):'<span>不限份数</span>')+'</div>'))+'\
-                                              </div>\
-                                              <div>￥'+resp.amount+'<span>原价：<span>'+resp.price+'</span>元</span><span '+((currTime>new Date(resp.startDate.replace(/-/g,'/')).getTime() && currTime < new Date(resp.endDate.replace(/-/g,'/')).getTime())&&((resp.canPaidCount - resp.paidCount>0)|| resp.canPaidCount == 0)?'':'class="hide"')+'>去抢购</span>\
-                                              </div>\
-                                              '+((resp.canPaidCount == 0 || resp.canPaidCount - resp.paidCount > 0) && new Date().getTime() < new Date(resp.endDate.replace(/-/g,'/')).getTime() ?('<div>'+(function(){
-                                                      var flag = currTime<new Date(resp.startDate.replace(/-/g,'/')).getTime();
-                                                      if(flag){
-                                                          itemTimes[index] = {
-                                                              startDate:new Date(resp.startDate.replace(/-/g,'/')).getTime(),
-                                                              endDate:new Date(resp.endDate.replace(/-/g,'/')).getTime()
-                                                          };
-                                                          return '<div>距开始：</div>';
-                                                      }else if(currTime < new Date(resp.endDate.replace(/-/g,'/')).getTime()){
-                                                          itemTimes[index] = {
-                                                              startDate:new Date(resp.startDate.replace(/-/g,'/')).getTime(),
-                                                              endDate:new Date(resp.endDate.replace(/-/g,'/')).getTime()
-                                                          };
-                                                          isCanPay = true;
-                                                          return '<div>距结束：</div>';
-                                                      }else{
-                                                          return '<div>已结束：</div>';
-                                                      }
-                                                  }())+'\
-                                              <span class="rob-day"><div><div>0</div><div>0</div></div></span>\
-                                              <span class="rob-day"><div><div>0</div><div>0</div></div></span> <div class="rob-day">天</div>\
-                                              <span><div><div>0</div><div>0</div></div></span>\
-                                              <span><div><div>0</div><div>0</div></div></span> <div>时</div>\
-                                              <span><div><div>0</div><div>0</div></div></span>\
-                                              <span><div><div>0</div><div>0</div></div></span> <div>分</div>\
-                                              <span><div><div>0</div><div>0</div></div></span>\
-                                              <span><div><div>0</div><div>0</div></div></span> <div>秒</div>\
-                                              <span class="rob-millis hide"><div><div>0</div><div>0</div></div></span>\
-                                              <span class="rob-millis hide"><div><div>0</div><div>0</div></div></span> <div class="rob-millis hide">毫秒</div>\
-                                              </div>'):(actEnds[index] = true,'<div class="act-end">活动已结束，欢迎下次抢购！</div>'))+'\
+                                                <div><div>'+resp.name+'</div><div '+(resp.usePeriod && (resp.usePeriod.match(/(\d)/g).length != 7 || resp.endTime) ? '':'class="hide"')+'>限时用</div></div>\
+                                                '+(actEnds[index] === true?'<div style="display:none;"></div>':('<div>'+(resp.canPaidCount>0?('剩余<span>'+(resp.canPaidCount - resp.paidCount)+'</span>份'):'<span>不限份数</span>')+'</div>'))+'\
                                             </div>\
-                                          </div>\
-                                        </div>');
-                        });
-                        $('.activity>div:nth-of-type(2)').Html(_html.join('')).Delegate('click','.act-rob-project', function (e, item) {
-                            if(actEnds[item.dataset.actIndex] !== true){
-                                $.page('robProjectDetail&robProjectId='+item.dataset.itemId);
+                                            <div>\
+                                                <div>\
+                                                    <span>'+resp.amount+'</span><span>元</span><span '+(resp.credits > 0?'':'style="display:none;"')+'>（或<span>'+resp.credits+'</span><span>积分</span>）</span>\
+                                                </div>\
+                                                <div>\
+                                                    <div>\
+                                                        <div>'+(actEnds[index] === true?'抢光了':'马上抢')+'</div>\
+                                                        <div></div>\
+                                                    </div>\
+                                                </div>\
+                                            </div>\
+                                            <div>\
+                                                <div>原价：'+resp.price+'元</div>\
+                                                <div class="count-down">\
+                                                    <div>距开始：</div>\
+                                                    <div>12</div>\
+                                                    <div>天</div>\
+                                                    <div>23</div>\
+                                                    <div>时</div>\
+                                                    <div>59</div>\
+                                                    <div>分</div>\
+                                                </div>\
+                                            </div>\
+                                            <div>活动已结束，欢迎下次抢购！</div>\
+                                        </div>\
+                                    </div>\
+                                </div>');
+                            }
+                            else if(resp.actType == 'one_yuan'){
+                                resp.status == 'end' ? actEnds.push(resp) : actEnds.push(false);
+                                _html.push('<div class="act-detail act-one_yuan '+((resp.status == 'online' && currTime - new Date(resp.startDate.replace(/-/g,'/')) > 0) ? 'act-started':(resp.status == 'complete' ? 'act-complete': ''))
+                                  +'" data-item-id="'+resp.id+'" data-act-index="'+index+'">\
+                                        <div>\
+                                            <div style="background-image:url('+(resp.imageUrl || $.$.defaultService)+')"></div>\
+                                            <div>\
+                                                <div>\
+                                                    <div>'+resp.name+'<span>(第'+resp.currentPeriod+'期)</span></div>\
+                                                    '+(function(){
+                                                          if(resp.status == 'online' && currTime - new Date(resp.startDate.replace(/-/g,'/')) > 0){
+                                                              return '<div>剩余<span>'+resp.canPaidCount+'</span>份</div>';
+                                                          }else if(resp.status == 'end'){
+                                                              return '<div>待开奖</div>';
+                                                          }else{
+                                                              return '<div>未开始</div>';
+                                                          }
+                                                      }())+'\
+                                                </div>\
+                                                <div>\
+                                                    <div><span>'+resp.amount+'<span>元</span></span><span>原价：<span>'+resp.price+'</span>元</span></div>\
+                                                </div>\
+                                                <div>\
+                                                    <div class="countDown">\
+                                                        <div>揭晓倒计时：</div>\
+                                                        <div>00</div>\
+                                                        <div>时</div>\
+                                                        <div>00</div>\
+                                                        <div>分</div>\
+                                                        <div>00</div>\
+                                                        <div>秒</div>\
+                                                    </div>\
+                                                    <div>\
+                                                        <div>开奖进度：</div>\
+                                                        <div>'+(resp.paidCount/(resp.totalPaidCount) * 100).toFixed(0)+'%</div>\
+                                                        <div>\
+                                                            <div style="width:'+((resp.paidCount)/resp.totalPaidCount * 100).toFixed(0)+'%"></div>\
+                                                        </div>\
+                                                        <div>\
+                                                            <div>\
+                                                                <div>一元抢</div>\
+                                                                <div></div>\
+                                                            </div>\
+                                                        </div>\
+                                                    </div>\
+                                                </div>\
+                                                <div>已揭晓</div>\
+                                            </div>\
+                                        </div>\
+                                    </div>');
                             }
                         });
-                        itemTimes.forEach(function (time,i) {
-                            calcRobProject(time,i);
-                        })
+                        //return;
+                        if(_html.length > 0){
+                            $('.activity').ClassClear('hide');
+                            $('.activity>div:nth-of-type(2)').Html(_html.join('')).Delegate('click','.act-paid_item', function (e, item) {
+                                if(actEnds[item.dataset.actIndex] !== true){
+                                    $.page('robProjectDetail&robProjectId='+item.dataset.actId);
+                                }
+                            }).Delegate('click','.act-one_yuan',function(e,item){
+                                $.page('oneYuanDetail&oneYuanId='+item.dataset.itemId);
+                            });
+                            actEnds.forEach(function (tl,i) {
+                                if(tl.actType == 'paid_item' && tl !== true){
+                                    +function countDown(tl,i){
+                                        var drawTime,
+                                          times= ['揭晓倒计时：','00','时','00','分','00','秒'],
+                                          calcFunc, d, h, m, sec,
+                                          timeSpans = $('.activity .act-paid_item:nth-of-type('+(i + 1)+') .count-down>div'),
+                                          showTimes = function () {
+                                              timeSpans.Index(0).Text(times[0]);
+                                              timeSpans.Index(1).Text(times[1]);
+                                              timeSpans.Index(2).Text(times[2]);
+                                              timeSpans.Index(3).Text(times[3]);
+                                              timeSpans.Index(4).Text(times[4]);
+                                              timeSpans.Index(5).Text(times[5]);
+                                              timeSpans.Index(6).Text(times[6]);
+                                          },intervalTime;
+                                        if(new Date() - new Date(tl.startDate.replace(/-/g,'/')).getTime() < 0 ){
+                                            times[0] = '距开始：';
+                                            drawTime = new Date(tl.startDate.replace(/-/g,'/'));
+                                        }else if( new Date() - new Date(tl.endDate.replace(/-/g,'/')).getTime() < 0 ){
+                                            times[0] = '距结束：';
+                                            drawTime = new Date(tl.endDate.replace(/-/g,'/'));
+                                        }
+                                        showTimes();
+                                        calcFunc = function(){
+                                            var currTime = new Date();
+                                            if(drawTime - currTime > 0){
+                                                var dvaule = (drawTime - currTime)/1000;
+                                                sec = ~~(dvaule%60);
+                                                m = ~~(dvaule/60%60);
+                                                h = ~~(dvaule/3600%24);
+                                                d = ~~(dvaule/3600/24);
+                                                if(d > 0 ){
+                                                    times = [times[0],d<10?'0'+d:d,'天',h<10?'0'+h:h,'时',m<10?'0'+m:m,'分'];
+                                                    intervalTime = (sec + 1) * 1000;
+                                                }else{
+                                                    times = [times[0],h<10?'0'+h:h,'时',m<10?'0'+m:m,'分',sec<10?'0'+sec:sec,'秒'];
+                                                    intervalTime = 1000;
+                                                }
+                                                setTimeout(calcFunc,intervalTime);
+                                            }else{
+                                                if(times[0] == '距开始：'){
+                                                    times[0] = '距结束：';
+                                                    drawTime = new Date(tl.endDate.replace(/-/g,'/'));
+                                                    calcFunc();
+                                                }else{
+                                                    $('.activity .act-paid_item:nth-of-type('+(i + 1)+')').Class('act-end');
+                                                    $('.activity .act-paid_item:nth-of-type('+(i + 1)+')>div:nth-of-type(1)>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)>div>div:nth-of-type(1)').Text('抢光了');
+                                                }
+                                            }
+                                            showTimes();
+                                        };
+                                        calcFunc();
+                                    }(tl,i);
+                                }
+                                else if (tl.actType == 'one_yuan'){
+                                    if(tl){
+                                        +function countDown(tl,i){
+                                            var drawTime,
+                                              completeTime = new Date(tl.completeTime),
+                                              times= ['距开始：','00','时','00','分','00','秒'],
+                                              calcFunc, d, h, m, sec,
+                                              timeSpans = $('.activity .act-one_yuan:nth-of-type('+(i + 1)+') .countDown>div'),
+                                              showTimes = function () {
+                                                  timeSpans.Index(0).Text(times[0]);
+                                                  timeSpans.Index(1).Text(times[1]);
+                                                  timeSpans.Index(2).Text(times[2]);
+                                                  timeSpans.Index(3).Text(times[3]);
+                                                  timeSpans.Index(4).Text(times[4]);
+                                                  timeSpans.Index(5).Text(times[5]);
+                                                  timeSpans.Index(6).Text(times[6]);
+                                              },intervalTime;
+                                            var todayDrawTime = new Date();
+                                            if(completeTime - new Date($.commonDateFormat(todayDrawTime,'yyyy/MM/dd 20:30:00')) > 0){
+                                                todayDrawTime.setDate(todayDrawTime.getDate() + 1);
+                                            }
+                                            drawTime = new Date($.commonDateFormat(todayDrawTime,'yyyy/MM/dd 21:00:00'));
+                                            calcFunc = function(){
+                                                var currTime = new Date();
+                                                if(drawTime - currTime > 0){
+                                                    var dvaule = (drawTime - currTime)/1000;
+                                                    sec = ~~(dvaule%60);
+                                                    m = ~~(dvaule/60%60);
+                                                    h = ~~(dvaule/3600%24);
+                                                    d = ~~(dvaule/3600/24);
+                                                    if(d > 0 ){
+                                                        times = [times[0],d<10?'0'+d:d,'天',h<10?'0'+h:h,'时',m<10?'0'+m:m,'分'];
+                                                        intervalTime = (sec + 1) * 1000;
+                                                    }else{
+                                                        times = [times[0],h<10?'0'+h:h,'时',m<10?'0'+m:m,'分',sec<10?'0'+sec:sec,'秒'];
+                                                        intervalTime = 1000;
+                                                    }
+                                                    setTimeout(calcFunc,intervalTime);
+                                                }else{
+                                                    $('.activity .act-one_yuan:nth-of-type('+(i + 1)+')').Class('act-complete');
+                                                }
+                                                showTimes();
+                                            };
+                                            calcFunc();
+                                        }(tl,i);
+                                    }
+                                }
+                            })
+                        }
                     }
                 }
             });
-            //===========抢项目 活动倒计时==========//
 
-            function calcRobProject(time,timeIndex){
-                var startDate = time.startDate,endDate = time.endDate,isStart = false,isEnd = false;
-                calcTime();
-                function calcTime(){
-                    var round = Math.round,floor = Math.floor,millis,endTimeProject,
-                      currTime = +new Date(),
-                      millisec,sec,min,hour,day
-                      ,spans = $('.activity>div:nth-of-type(2)>div:nth-of-type('+(timeIndex+1)+')>div>div:nth-of-type(2)>div:nth-of-type(3)>span')
-                      ,labels = $('.activity>div:nth-of-type(2)>div:nth-of-type('+(timeIndex+1)+')>div>div:nth-of-type(2)>div:nth-of-type(3)>span>div'),timeData
-                      ,isStartMillis = false;       //是否启用毫秒
-                    if(startDate > currTime){
-                        millis = startDate - currTime;
-                        $('.activity>div:nth-of-type(2)>div:nth-of-type('+(timeIndex+1)+')>div>div:nth-of-type(2)>div:nth-of-type(3)>div:nth-of-type(1)').Text('距开始：')
-                    }else if(endDate > currTime){
-                        millis = endDate - currTime;
-                        $('.activity>div:nth-of-type(2)>div:nth-of-type('+(timeIndex+1)+')>div>div:nth-of-type(2)>div:nth-of-type(3)>div:nth-of-type(1)').Text('距结束：')
-                        $('.activity>div:nth-of-type(2)>div:nth-of-type('+(timeIndex+1)+')>div:nth-of-type(2)').ClassClear('hide')
-                        isStart = true;
-                        $('.activity>div:nth-of-type(2)>div:nth-of-type('+(timeIndex+1)+')>div>div:nth-of-type(2)>div:nth-of-type(2)>span:nth-of-type(2)').ClassClear('hide');
-                    }else{
-                        isStart = true;
-                        isEnd = true;
-                        actEnds[timeIndex] = true;
-                        $('.activity>div:nth-of-type(2)>div:nth-of-type('+(timeIndex+1)+')>div>div:nth-of-type(2)>div:nth-of-type(3)').Class('act-end').Html('活动已结束，欢迎下次抢购！')
-                        $('.activity>div:nth-of-type(2)>div:nth-of-type('+(timeIndex+1)+')>div:nth-of-type(2)').Class('hide')
-                        $('.activity>div:nth-of-type(2)>div:nth-of-type('+(timeIndex+1)+')>div>div:nth-of-type(2)>div:nth-of-type(2)>span:nth-of-type(2)').Class('hide');
-                        return;
-                    }
-                    endTimeProject = millis/1000;
-                    if(endTimeProject > 0){
-                        millisec = floor(millis%1000/10);
-                        sec = floor(endTimeProject%60);
-                        min = floor(endTimeProject/60%60);
-                        hour = floor(endTimeProject/3600%24);
-                        day = floor(endTimeProject/3600/24);
+            //=== 点击全部活动 ===
+            $('.activity>div:nth-of-type(1)').Page('activities');
 
-                        timeData = [floor(day/10),day%10,floor(hour/10),hour%10,floor(min/10),min%10,floor(sec/10),sec%10,floor(millisec/10),floor(millis%10)];
-                        //timeData = [0,0,0,0,0,2,0,1,9,5];
-
-                        labels.Index(0).Children().Text(timeData[0]);
-                        labels.Index(1).Children().Text(timeData[1]);
-                        labels.Index(2).Children().Text(timeData[2]);
-                        labels.Index(3).Children().Text(timeData[3]);
-                        labels.Index(4).Children().Text(timeData[4]);
-                        labels.Index(5).Children().Text(timeData[5]);
-                        labels.Index(6).Children().Text(timeData[6]);
-                        labels.Index(7).Children().Text(timeData[7]);
-                        labels.Index(8).Children().Text(timeData[8]);
-                        labels.Index(9).Children().Text(timeData[9]);
-                        //== 开始计时
-                        if(day == 0 && !isStartMillis){
-                            isStartMillis = true;
-                            $('.activity>div:nth-of-type(2)>div:nth-of-type('+(timeIndex+1)+') .rob-day').Class('hide');
-                            $('.activity>div:nth-of-type(2)>div:nth-of-type('+(timeIndex+1)+') .rob-millis').ClassClear('hide');
-                            setTimeout(startToggleMillis,10);
-                        }
-                        setTimeout(startToggle,millis%1000);        //毫秒与秒分别计时，因为只用毫秒的话，误差会越来越大
-
-
-                        //==== 添加动画回调事件 =======
-                        spans.Event((function(){
-                            var t,el = document.createElement('tmpelement'),
-                              transitions = {
-                                  'transition':'transitionend',
-                                  'OTransition':'oTransitionEnd',
-                                  'MozTransition':'transitionend',
-                                  'WebkitTransition':'webkitTransitionEnd',
-                                  'MsTransition':'msTransitionEnd'
-                              };
-
-                            for(t in transitions){
-                                if( el.style[t] !== undefined ){
-                                    return transitions[t];
+            if($.$.accessMenus.onceCardMall && !$.$.accessMenus.onceCardMall.isOff){
+                // 查询项目次卡
+                $.ajax({
+                    url: "../api/v2/club/item_card/activity/list",
+                    data: { clubId: $.$.clubID },
+                    isReplaceUrl: true,
+                    success: function(onceCardRes){
+                        if(onceCardRes.statusCode == 200){
+                            onceCardRes = onceCardRes.respData;
+                            if(onceCardRes && onceCardRes.activityList.length>0){
+                                var cards = onceCardRes.activityList, cardList = [];
+                                cardList.push(cards[0]);
+                                cardList[0].tag="new";
+                                var count = 1;
+                                if(cards[0].id != onceCardRes.optimalActivity.id){
+                                    cardList.push(onceCardRes.optimalActivity);
+                                    cardList[1].tag="best";
                                 }
-                            }
-                        }()), function (e, item) {
-                            var $item = $(item),cs = $item.Children().Index(0).Children();
-                            cs.Index(1).Text(cs.Index(0).Text());
-                            $item.ClassClear('toggle');
-                            if(timeData[0] == 0 && timeData[1] == 0 && !isStartMillis){
-                                isStartMillis = true;
-                                $('.activity>div:nth-of-type(2)>div:nth-of-type('+(timeIndex+1)+') .rob-day').Class('hide');
-                                $('.activity>div:nth-of-type(2)>div:nth-of-type('+(timeIndex+1)+') .rob-millis').ClassClear('hide');
-                            }
-                        });
-
-                        //========= 数值渐变 =========
-                        function startToggleMillis(){
-                            if(timeData[9]>0){
-                                timeData = [timeData[0],timeData[1],timeData[2],timeData[3],timeData[4],timeData[5],timeData[6],timeData[7],timeData[8],timeData[9] - 1];
-                                changeNums([9]);
-                            }else if(timeData[8]>0){
-                                timeData = [timeData[0],timeData[1],timeData[2],timeData[3],timeData[4],timeData[5],timeData[6],timeData[7],timeData[8]-1,9];
-                                changeNums([8,9]);
-                            }else{
-                                if(timeData.join('').replace(/0/g,'') == ''){
-                                    if(!isStart||!isEnd){
-                                        calcTime();
-                                    }else{
-                                        actEnds[timeIndex] = true;
-                                        $('.activity>div:nth-of-type(2)>div:nth-of-type('+(timeIndex+1)+')>div>div:nth-of-type(2)>div:nth-of-type(2)>span:nth-of-type(2)').Class('hide');
+                                while(cardList.length<=3 && count<cards.length){
+                                    if(cards[count].id != onceCardRes.optimalActivity.id){
+                                        cardList.push(cards[count])
                                     }
-                                    return true;
+                                    count++;
                                 }
-                            }
-                            setTimeout(startToggleMillis,10);
-                        }
-                        function startToggle(){
-                            var tmpArr = [];
-                            if(timeData[7]>0){
-                                timeData = [timeData[0],timeData[1],timeData[2],timeData[3],timeData[4],timeData[5],timeData[6],timeData[7] - 1,9,9];
-                                tmpArr = tmpArr.concat([7]);
-                            }else if(timeData[6]>0){
-                                timeData = [timeData[0],timeData[1],timeData[2],timeData[3],timeData[4],timeData[5],timeData[6] - 1,9,9,9];
-                                tmpArr = tmpArr.concat([6,7]);
-                            }else if(timeData[5]>0){
-                                timeData = [timeData[0],timeData[1],timeData[2],timeData[3],timeData[4],timeData[5] - 1,5,9,9,9];
-                                tmpArr = tmpArr.concat([5,6,7]);
-                            }else if(timeData[4]>0){
-                                timeData = [timeData[0],timeData[1],timeData[2],timeData[3],timeData[4] - 1,9,5,9,9,9];
-                                tmpArr = tmpArr.concat([4,5,6,7]);
-                            }else if(timeData[3]>0){
-                                timeData = [timeData[0],timeData[1],timeData[2],timeData[3] - 1,5,9,5,9,9,9];
-                                tmpArr = tmpArr.concat([3,4,5,6,7]);
-                            }else if(timeData[2]>0){
-                                timeData = [timeData[0],timeData[1],timeData[2]-1,9,5,9,5,9,9,9];
-                                tmpArr = tmpArr.concat([2,3,4,5,6,7]);
-                            }else if(timeData[1]>0){
-                                timeData = [timeData[0],timeData[1] - 1,2,4,5,9,5,9,9,9];
-                                tmpArr = tmpArr.concat([1,2,3,4,5,6,7]);
-                            }else if(timeData[0]>0){
-                                timeData = [timeData[0] - 1,9,2,4,5,9,5,9,9,9];
-                                tmpArr = tmpArr.concat([0,1,2,3,4,5,6,7]);
-                            }else{
-                                if(timeData.join('').replace(/0/g,'') == '') {
-                                    if (!isStart || !isEnd) {
-                                        calcTime();
-                                    } else {
-                                        actEnds[timeIndex] = true;
-                                        $('.activity>div:nth-of-type(2)>div:nth-of-type('+(timeIndex+1)+')>div>div:nth-of-type(2)>div:nth-of-type(2)>span:nth-of-type(2)').Class('hide');
+                                var cardStr = "", cardItem, plan, price;
+                                for(count = 0; count< cardList.length; count++){
+                                    cardItem = cardList[count];
+                                    for(i=0;i<cardItem.itemCardPlans.length;i++){
+                                        plan = cardItem.itemCardPlans[i];
+                                        if(plan.optimal == "Y"){
+                                            price = plan.actAmount/100/(plan.giveCount+plan.paidCount);
+                                            if(price>1.001){
+                                                price = Math.round(price)
+                                            } else {
+                                                if(price<0.01){
+                                                    price = 0.01;
+                                                }
+                                                price = price.toFixed(2)
+                                            }
+                                            var progress = 0
+                                            if (cardItem.totalCount != 0 && cardItem.paidCount > cardItem.totalCount * 0.49) {
+                                                progress = (cardItem.paidCount / cardItem.totalCount) * 100
+                                            }
+                                            cardStr += "<li cardId='"+cardItem.id+"' class='"+(cardItem.statusName=="已售完" ? "sellOut" : (cardItem.statusName=="已过期" ? "expired" : ""))+"'>\
+                                                                <div style='background-image: url("+(cardItem.imageUrl || $.$.defaultService)+")'><div>"+cardItem.name+"</div></div>\
+                                                                <div><b>"+price+"</b>元/次<span>买"+plan.paidCount+"送"+plan.giveCount+"</span></div>\
+                                                                <div>"+Math.round(plan.itemAmount/100)+"元/次"+(progress ? "<div>"+progress+"%<div style='left:"+progress+"%'></div></div>" : "")+"</div>"+(cardItem.tag ? "<div class='"+cardItem.tag+"'>"+(cardItem.tag=='new' ? '最新' : '最优惠')+"</div>" : "")+"\
+                                                            </li>";
+                                            break;
+                                        }
                                     }
-                                    return true;
                                 }
+                                $(".discount-service").Show();
+                                $(".discount-service>ul")[0].innerHTML = cardStr;
+                                $(".discount-service>ul>li").Click(function(e,item){
+                                    $.page("onceCardDetail&id="+item.getAttribute("cardId"))
+                                })
+                                $(".discount-service>div>div:nth-of-type(2)").Click(function(){
+                                    $.page("discountMall")
+                                })
                             }
-                            changeNums(tmpArr);
-                            setTimeout(startToggle,1000);
                         }
-
-                        function changeNums(_indexs){
-                            _indexs.forEach(function (v) {
-                                labels.Index(v).Children().Index(0).Text(timeData[v]);
-                                spans.Index(v).Class('toggle');
-                            })
-                        }
-
                     }
-                }
+                })
             }
-
 
             //执行页面切换
             $.pageSwitch();
+
+            //=== 获取大转盘活动 ===
+            /*var luckyWheelTip = $('#luckyWheelTip');
+            $.ajax({
+                url:'../api/v2/user/luckyWheel/clubActList',
+                isReplaceUrl:true,
+                data:{
+                    clubId: $.$.clubID
+                },
+                success: function (result) {
+                    if(result.statusCode == 200){
+                        if(result.respData && result.respData.length > 0){
+                            if($.$.userToken){
+                                $.ajax({
+                                    url:'../api/v2/user/luckyWheel/getUserLeftDrawCount',
+                                    isReplaceUrl:true,
+                                    data:{
+                                        clubId: $.$.clubID
+                                    },
+                                    success: function (res) {
+                                        if(res.statusCode == 200){
+                                            if(res.respData && res.respData - 0 > 0){
+                                                luckyWheelTip.Class('active').Click(function (e, item) {
+                                                    location.href = location.origin+'/spa-manager/luckyWheel/?actId='+result.respData[0].id+'&clubId='+ $.$.clubID;
+                                                });
+                                            }
+                                        }else{
+                                            $.tipShow(res.msg || '查询可抽奖次数失败');
+                                        }
+                                    }
+                                });
+                            }else{
+                                luckyWheelTip.Class('active').Click(function (e, item) {
+                                    location.href = location.origin+'/spa-manager/luckyWheel/?actId='+result.respData[0].id+'&clubId='+ $.$.clubID;
+                                });
+                            }
+                        }
+                    }else{
+                        $.tipShow(result.msg || '查询大转盘活动失败');
+                    }
+                }
+            });*/
         },
         error: function (res) {
         }

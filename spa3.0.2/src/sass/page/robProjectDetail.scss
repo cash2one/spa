@@ -13,9 +13,21 @@ div#rob-project-detail-page{
     >div:nth-of-type(1){
       font-size: 1.222rem;
       color: #212121;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      >div{
+        float: left;
+        max-width: 15rem;
+        @include sl();
+      }
+      >span{
+        float: left;
+        line-height: 0.889rem;
+        padding: 0.1rem 0.3rem;
+        color: #ff9a0c;
+        font-size: .667rem;
+        border: 1px solid #ff9a0c;
+        border-radius: .2rem;
+        margin-left: .2rem;
+      }
     }
     >div:nth-of-type(2){
       margin-top: .944rem;
@@ -26,7 +38,7 @@ div#rob-project-detail-page{
           font-size: 1.278rem;
           color: #fb5549;
           padding-left: 1.333rem;
-          //@include img('../../images/robProject/renminbi.png',1rem 1rem);
+          @include img('../../images/robProject/renminbi.png',1rem 1rem);
           background-position: left center;
         }
         &:nth-of-type(2){
@@ -65,57 +77,38 @@ div#rob-project-detail-page{
     }
   }
 
-  div.counter{
-    height:2.149rem;
-    border-top:.056rem solid #e0e0e0;
-    border-bottom:.056rem solid #e0e0e0;
-    padding: .278rem .667rem;
-    background-color: #fef7e3;
-    font-size: .778rem;
-    @include sx();
-    div.counter-wrap{
-      &:before{
-        content : "";
-        display: block;
-        margin-right: .667rem;
-        width: .889rem;
-        height: .889rem;
-        float: left;
-        @include img('../../images/robProject/clock.png',.889rem .889rem);
-      }
-      font-size:0.778rem;
-      color:#616161;
-    }
+  div.clock-wrap{
+    border-bottom: 0.417rem solid #fff;
   }
 
   div.club{
-    background-color: #fff;
     padding: .333rem .667rem;
     @include sx();
+    &:after{
+      content: '';
+      display: block;
+      width: .611rem;
+      height: .611rem;
+      border-left: .1rem solid #fff;
+      border-bottom: .1rem solid #fff;
+      @include rotate(-135deg);
+    }
     >div{
       &:nth-of-type(1){
         width: 1.556rem;
         height: 1.556rem;
         margin-right: .722rem;
-        -webkit-border-radius: 50%;
-        -moz-border-radius: 50%;
         border-radius: 50%;
+        border:2px solid #fff;
         @include imgBgFix(1.556rem 1.556rem);
       }
       &:nth-of-type(2){
         @include boxFlex(1);
         font-size: .833rem;
-        color: #4a4a4a;
+        color: #fff;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-      }
-      &:nth-of-type(3){
-        width: .611rem;
-        height: .611rem;
-        border-left: .1rem solid #666;
-        border-bottom: .1rem solid #666;
-        @include rotate(-135deg);
       }
     }
   }
@@ -126,12 +119,12 @@ div#rob-project-detail-page{
     color:#616161;
     >div{
       &:nth-of-type(1){
-        padding:.556rem 1.944rem;
+        padding:.25rem 1.944rem;
         font-size: .833rem;
         @include imgBgFix(.833rem .833rem);
         background-position: .667rem center;
         border-bottom: .056rem solid #e0e0e0;
-        line-height: 1;
+        color: #999;
         &.node-pad-icon{
           background-image: url('../../images/robProject/nodepad.png');
         }
@@ -139,96 +132,123 @@ div#rob-project-detail-page{
           background-image: url('../../images/robProject/info-icon.png');
         }
       }
-      &:nth-of-type(2){
-        padding-left: .667rem;
-        >div{
-          &:nth-of-type(1){
-            border-bottom: .056rem solid #E0E0E0;
-            >div{
-              padding: .667rem 0;
-              line-height: 1;
-              &:nth-of-type(1){
-                font-size: .889rem;
-                color: #FF9D09;
-                @include sx();
-                >div{
-                  &:nth-of-type(1){
-                    width: 2.833rem;
-                    height: 2.833rem;
-                    margin-right: .556rem;
-                    -webkit-border-radius: .278rem;
-                    -moz-border-radius: .278rem;
-                    border-radius: .278rem;
-                    @include imgBgFix(2.833rem 2.833rem);
-                  }
-                  &:nth-of-type(2){
-                    @include boxFlex(1);
-                    >div{
-                      line-height: 1;
-                      &:nth-of-type(1){
-                        font-size: .944rem;
-                        color: #4a4a4a;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
-                      }
-                      &:nth-of-type(2){
-                        margin-top: .944rem;
-                        font-size: .833rem;
-                        color: #616161;
-                      }
-                    }
-                  }
-                }
-              }
-              &:nth-of-type(2){
-                font-size: .833rem;
-                padding: 0 0 .667rem;
-              }
-            }
-          }
-          &:nth-of-type(2){
-            padding: .667rem .667rem .667rem 0;
+    }
+  }
+
+  .item-desc>div{
+    &:nth-of-type(2){
+      padding-left: .667rem;
+      >div{
+        &:nth-of-type(1){
+          border-bottom: .056rem solid #E0E0E0;
+          >div{
+            padding: .667rem 0;
             line-height: 1;
-            >div{
-              &:nth-of-type(1){
-                font-size: .944rem;
-                color: #FF9D09;
-              }
-              &:nth-of-type(2){
-                margin-top: .556rem;
-                font-size: .833rem;
-                line-height: 1.5;
-                >div:nth-of-type(1),>div:nth-of-type(2){
-                  >span{
-                    color: #616161;
-                  }
+            &:nth-of-type(1){
+              font-size: .889rem;
+              color: #FF9D09;
+              @include sx();
+              >div{
+                &:nth-of-type(1){
+                  width: 2.833rem;
+                  height: 2.833rem;
+                  margin-right: .556rem;
+                  border-radius: .278rem;
+                  @include imgBgFix(2.833rem 2.833rem);
                 }
-                >div{
-                  >ul{
-                    margin: .556rem 0 0;
-                    padding-left: .85rem;
-                    >li{
-                      margin-top: .556rem;
-                      &:first-child{
-                        margin-top: 0;
-                      }
+                &:nth-of-type(2){
+                  @include boxFlex(1);
+                  >div{
+                    line-height: 1;
+                    &:nth-of-type(1){
+                      font-size: .944rem;
+                      color: #4a4a4a;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      white-space: nowrap;
                     }
-                    ul{
-                      margin: 0;
-                      padding-left: 0;
-                      list-style-type: none;
+                    &:nth-of-type(2){
+                      margin-top: .944rem;
+                      font-size: .833rem;
+                      color: #616161;
                     }
                   }
                 }
               }
             }
+            &:nth-of-type(2){
+              font-size: .833rem;
+              padding: 0 0 .667rem;
+            }
           }
-          .spec{
-            margin-top:0 !important;
+        }
+        &:nth-of-type(2){
+          padding: .667rem .667rem .667rem 0;
+          line-height: 1;
+          >div{
+            &:nth-of-type(1){
+              font-size: .944rem;
+              color: #FF9D09;
+            }
+            &:nth-of-type(2){
+              margin-top: .556rem;
+              font-size: .833rem;
+              line-height: 1.5;
+              >div:nth-of-type(1),>div:nth-of-type(2){
+                >span{
+                  color: #616161;
+                }
+              }
+              >div{
+                >ul{
+                  margin: .556rem 0 0;
+                  padding-left: .85rem;
+                  >li{
+                    margin-top: .556rem;
+                    &:first-child{
+                      margin-top: 0;
+                    }
+                  }
+                  ul{
+                    margin: 0;
+                    padding-left: 0;
+                    list-style-type: none;
+                  }
+                }
+              }
+            }
           }
         }
       }
+    }
+  }
+
+  .act-desc-info{
+    padding: 0 0 0.667rem 0.667rem;
+    .item-title{
+      color: #ff9d09;
+      font-size: 0.889rem;
+      margin-top: 0.5rem;
+    }
+    .use-time{
+      font-weight: bold;
+    }
+    .desc{
+      ul{
+        list-style: disc inside;
+        >li{
+          list-style: disc inside;
+          margin-top:0.556rem;
+          &:first-child{
+            margin-top: 0.2rem;
+          }
+        }
+      }
+    }
+    .desc,.act-time,.use-time{
+      color: #616161;
+      font-size: 0.833rem;
+      line-height: 1.3;
     }
   }
 }
@@ -241,7 +261,7 @@ div.rob-project-confirm-btn{
   background-color: #d9d9d9;
   padding: .25rem .667rem;
   @include sx();
-  &>div{
+  >div{
     @include boxFlex(1);
     background-color: #fb5549;
     color:#fff;
@@ -249,8 +269,6 @@ div.rob-project-confirm-btn{
     text-align: center;
     height:2.444rem;
     line-height: 2.444rem;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
     border-radius: 5px;
     &:nth-of-type(1){
       margin-right: .556rem;
@@ -263,16 +281,16 @@ div.rob-project-confirm-btn{
     >div{
       background-color: #ccc;
       &.processing{
-        background: url("../../images/common/loading.gif") no-repeat 15% 45%;
+        background: url("../../images/common/loading.gif") no-repeat 13% 50%;
       }
     }
   }
   &.disabled{
     >div{
-      background-color: #CCC;
+      background-color: #ccc;
       &:nth-of-type(1){
-        border-color: #CCC;
-        color: #FFF;
+        border-color: #ccc;
+        color: #fff;
       }
     }
   }

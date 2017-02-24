@@ -73,6 +73,8 @@ exports.Global = {
         clubName: '',                                                                             // 当前会所名称
         clubTelephone: [],                                                                      // 当前会所联系电话
 
+        pageScrollTop: 0, // 页面滚动条的位置
+
         clubCfg: {                                                                           // 当前会所的一些配置信息、开关
             accountSwitch: null, // 账户系统
             creditSwitch: false, // 积分系统是否开启
@@ -93,6 +95,7 @@ exports.Global = {
         var that = this
         var data = that.data
         var userAgent = data.userAgent
+        var body = document.querySelector('body')
 
         userAgent.isWX = /micromessenger/.test(ua)
         userAgent.isiPhone = /iPhone/i.test(ua)
@@ -112,6 +115,9 @@ exports.Global = {
             that.resizeWidth()
         })
 
+        body.addEventListener('scroll', function () {
+            console.log('body.scrollTop：' + body.scrollTop)
+        })
         that.resizeWidth()
     },
     /*
@@ -499,7 +505,9 @@ exports.Global = {
             }).then(function (res) {
                 res = res.body
                 if (res.statusCode == 200) {
-                    resolve(res.respData.openid)
+                    res = res.respData.openid
+                    that.data.openId = res
+                    resolve(res)
                 } else if (res.statusCode == 40029) {
                     that.getOauthCode('', '9358', option.state || '9358', 'base')
                     reject('重新获取授权！')
@@ -529,6 +537,10 @@ exports.Global = {
                 }, 200)
             }
         })
+    },
+
+    bindPhone: function () {
+
     },
 
     // 设置页面标题

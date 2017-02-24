@@ -2,7 +2,7 @@
     @import '../styles/page/integralDetail.css';
 </style>
 <template>
-    <div class="page" id="integral-detail-page" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="integral-detail-page">
         <page-title title-text="积分中心"></page-title>
         <div class="total">
             <div>现有积分<router-link :to="{ name : 'integralExplain' }">积分规则</router-link><i></i></div>
@@ -90,6 +90,8 @@
                             Util.tipShow('获取账户积分信息失败！')
                         }
                     }
+                }, function () {
+                    Util.tipShow(global.loadError)
                 })
             },
             queryRecord: function (page) {

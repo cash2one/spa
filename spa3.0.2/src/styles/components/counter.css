@@ -1,10 +1,18 @@
 div.counter-wrap {
   height: 0.917rem;
-  color: #212121;
+  color: #616161;
   font-size: .667rem;
   line-height: 0.917rem; }
   div.counter-wrap > label {
     float: left; }
+  div.counter-wrap > span {
+    float: left;
+    color: #f66;
+    font-size: 0.722rem;
+    border: 1px solid #e0e0e0;
+    padding: 0.1rem;
+    margin: 0 0.1rem;
+    line-height: 1; }
   div.counter-wrap > div {
     float: left;
     margin-right: .2rem;

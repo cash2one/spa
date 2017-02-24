@@ -3,42 +3,33 @@
 </style>
 <template>
     <div>
-        <div class="page-back-btn" @click="doClickPageBack()"></div>
         <div class="page" id="rob-project-detail-page" :style="{ height : (global.winHeight-2.943*16*global.winScale)+'px' }">
-            <div class="top-banner"></div>
+            <div class="top-banner">
+                <router-link class="club" tag="div" :to="{ name: 'home' }"><div :style="{ 'background-image': 'url('+global.clubLogoUrl+')' }"></div><div>{{ global.clubName }}</div></router-link>
+            </div>
             <div class="info">
-                <div>{{ itemData.name }}</div>
+                <div class="clear-fix"><div>{{ itemData.name }}</div><span v-show="isShowLimitUseTag">限时用</span></div>
                 <div><span>{{ itemData.amount }}</span> 元<span v-show="itemData.credits>0">或</span><span v-show="itemData.credits>0"><span>{{ itemData.credits }}</span> 积分</span></div>
                 <div>
                     <div><span>原价{{ itemData.price }}元</span></div>
                     <div><span v-if="itemData.canPaidCount>0">剩余{{ itemData.canPaidCount - itemData.paidCount }}份</span><span v-else>不限份数</span></div>
                 </div>
             </div>
-            <div class="counter">
-                <counter v-if="itemData.startDate" :start="itemData.startDate" :end="itemData.endDate" :tip-text="tipText" @status-change="doCounterStatusChange"></counter>
-            </div>
-            <router-link class="club" tag="div" :to="{ name : 'home' }">
-                <div :style="{ backgroundImage : 'url('+global.clubLogoUrl+')' }"></div>
-                <div>{{ global.clubName }}</div>
-                <div></div>
-            </router-link>
+            <clock v-if="itemData.startDate" :start="itemData.startDate" :end="itemData.endDate" @status-change="doCounterStatusChange"></clock>
+
             <div class="act-desc">
                 <div class="node-pad-icon">活动说明</div>
-                <div>
-                    <div v-show="false">
-                        <div>活动时间</div>
-                        <div>{{ itemData.startDate }}-{{ itemData.endDate }}</div>
-                    </div>
-                    <div>
-                        <div v-show="false">活动说明</div>
-                        <div class="spec">
-                            <div>使用时间：<span v-if="itemData.useStartDate">{{ itemData.useStartDate.split(' ')[0] }}-{{ itemData.useEndDate.split(' ')[0] }}</span></div>
-                            <div>可用时段：<span>{{ itemData.usePeriod | WeekDayFormatter }}  {{ itemData.startTime }} - {{ itemData.endTime }}</span></div>
-                            <div v-html="itemData.instructions"></div>
-                        </div>
-                    </div>
+                <div class="act-desc-info">
+                    <div class="item-title">可用时段</div>
+                    <div class="use-time">{{ itemData.useStartDateStr }} - {{ itemData.useEndDateStr }}</div>
+                    <div class="use-time" v-show="isShowLimitUseTag">{{ periodStr }}</div>
+                    <div class="item-title">活动说明</div>
+                    <div class="desc" v-html="itemData.instructions"></div>
+                    <div class="item-title">活动时间</div>
+                    <div class="act-time">{{ itemData.actTimeStr }}</div>
                 </div>
             </div>
+
             <div class="item-desc">
                 <div class="info-icon">项目说明</div>
                 <div>
@@ -60,7 +51,8 @@
                 </div>
             </div>
         </div>
-        <div class="rob-project-confirm-btn" :class="{ 'disabled' : status != 'started', 'processing' : isProcessing }">
+
+        <div class="rob-project-confirm-btn" :class="{ 'disabled' : (status != 'started' || itemData.status != 'online' ), 'processing' : isProcessing }">
             <div v-show="isCredits" @click="doClickPayBtnOfCredit()" :class="{ processing : creditProcessing }">{{creditProcessing ? '购买中...' : '积分购买' }}</div>
             <div @click="doClickPayBtnOfCash()" :class="{ processing : cashProcessing }">{{ cashProcessing ? '购买中...' :'现金购买' }}</div>
         </div>
@@ -86,8 +78,10 @@
                 isProcessing: false,
                 creditProcessing: false, // 积分购买中
                 cashProcessing: false, // 现金购买中
-                tipText: {'notStarted': '距开始还剩：', 'started': '距结束还剩：', 'over': '已结束'},
-                cashPayData: null
+                cashPayData: null,
+
+                periodStr: '',
+                isShowLimitUseTag: false // 是否显示限时用标记
             }
         },
         beforeRouteEnter: function (to, from, next) {
@@ -101,11 +95,7 @@
                 next(false)
             } else {
                 if (paramData && code) {
-                    Global.getOpenId({
-                        authCode: code,
-                        userType: 'user',
-                        state: 'confirm-order'
-                    }).then(function () {
+                    Global.getOpenId({authCode: code, userType: 'user', state: 'confirm-order'}).then(function () {
                         next(function (vm) {
                             vm.init()
                         })
@@ -127,27 +117,36 @@
                 that.$http.get('../api/v2/club/paid_service_item/view', {params: {id: that.itemId}}).then(function (res) {
                     res = res.body
                     if (res.statusCode == 200) {
-                        that.itemData = res = res.respData
+                        res = res.respData
+                        res.useStartDateStr = res.useStartDate.split(' ')[0].replace(/-/g, '.')
+                        res.useEndDateStr = res.useEndDate.split(' ')[0].replace(/-/g, '.')
+                        res.actTimeStr = res.startDate.replace(/-/g, '.') + ' - ' + res.endDate.replace(/-/g, '.')
+                        if (res.usePeriod && (res.usePeriod.match(/(\d)/g).length != 7 || res.endTime)) {
+                            that.isShowLimitUseTag = true
+                        }
                         if (res.canPaidCount == 0 || res.canPaidCount - res.paidCount > 0) {
                             that.isCanPaid = true
                         }
+                        if (that.isShowLimitUseTag) {
+                            that.formatPeriodData(res)
+                        }
+                        that.itemData = res
+
                         Global.getClubSwitches(global.clubId).then(function (switchRes) {
                             if (switchRes.creditSwitch && res.credits > 0) {
                                 that.isCredits = true
                             }
                         })
                         that.shareSetting(res.shareUrl, res.imageUrl, res.name)
-
-                        if (Util.sessionStorage('con-rob-project-param')) {
-                            that.doClickPayBtnOfCash()
-                        }
+                        global.loading = false
                     } else {
                         Util.tipShow(res.msg || '查询抢项目详情失败！')
+                        that.$router.back()
                     }
+                }, function () {
+                    Util.tipShow('查询抢项目详情失败！')
+                    that.$router.back()
                 })
-            },
-            doClickPageBack: function () {
-                this.$router.go(-1)
             },
             doCounterStatusChange: function (status) {
                 this.status = status
@@ -162,7 +161,6 @@
                     link: shareUrl || location.href,
                     imgUrl: imageUrl,
                     success: function () {
-                        // $('#_shareMask',true).ClassClear('active');
                     },
                     fail: function () {
                         Util.tipShow('分享失败！请刷新页面后再试！')
@@ -177,24 +175,26 @@
                     Global.login(that.$router)
                     return false
                 } else if (!global.userTel) {
-                    /* $.$.loginUrl = location.hash;
-                     $.bindPhone(true);
-                     return false; */
+                    Global.bindPhone(true)
+                    return false
                 }
                 return true
             },
-
             // 点击积分购买按钮
             doClickPayBtnOfCredit: function () {
                 var that = this
                 var global = that.global
                 var query = global.currPage.query
-                if (!that.doCheck()) return
+
                 if (that.status == 'notStarted') {
                     return Util.tipShow('活动未开始！')
                 } else if (that.status == 'over') {
                     return Util.tipShow('活动已结束！')
+                } else if (that.itemData.status != 'online') {
+                    return Util.tipShow('活动未上线！')
                 }
+                if (!that.doCheck()) return
+
                 if (that.isCredits) {
                     if (that.isProcessing) {
                         return Util.tipShow('购买中，请稍候...')
@@ -213,10 +213,14 @@
                         that.creditProcessing = false
                         if (res.statusCode == 200) {
                             Util.tipShow('支付成功！')
-                            that.$router.push({name: 'robProjectSuccess', query: {id: res.respData}})
+                            that.$router.push({name: 'robProjectSuccess', query: {id: res.respData, isIntegral: 'true'}})
                         } else {
                             Util.tipShow(res.msg || '积分支付失败！')
                         }
+                    }, function () {
+                        that.isProcessing = false
+                        that.creditProcessing = false
+                        Util.tipShow('积分支付失败！')
                     })
                 } else {
                     Util.tipShow('未开通积分购买！')
@@ -228,12 +232,14 @@
                 var global = that.global
                 var query = global.currPage.query
 
-                if (!that.doCheck()) return
                 if (that.status == 'notStarted') {
                     return Util.tipShow('活动未开始！')
                 } else if (that.status == 'over') {
                     return Util.tipShow('活动已结束！')
+                } else if (that.itemData.status != 'online') {
+                    return Util.tipShow('活动未上线！')
                 }
+
                 if (!global.userAgent.isWX) {
                     if (Global.checkAccess('robProjectDetail')) {
                         return Util.tipShow('请在微信中打开页面！')
@@ -241,12 +247,14 @@
                         return Util.tipShow('未开通此权限！')
                     }
                 }
+                if (!that.doCheck()) return
                 if (that.isProcessing) {
                     return Util.tipShow('购买中，请稍候...')
                 }
+
                 that.isProcessing = true
                 that.cashProcessing = true
-                that.$http.post('../api/v2/wx/pay/paid_service_item', {
+                that.$http.post('../api/v2/wx/pay/paid_service_item/save', {
                     paidServiceItemId: that.itemId,
                     clubId: that.itemData.clubId,
                     tradeChannel: 'wx',
@@ -276,32 +284,47 @@
                     that.cashProcessing = false
                 })
             },
-
             onBridgeReady: function () {
                 var that = this
                 var cashPayData = that.cashPayData
                 WeixinJSBridge.invoke('getBrandWCPayRequest', {
-                    'appId': cashPayData.appId,
-                    'timeStamp': cashPayData.timeStamp + '',
-                    'nonceStr': cashPayData.nonceStr,
-                    'package': cashPayData.package,
-                    'signType': cashPayData.signType,
-                    'paySign': cashPayData.paySign
+                    appId: cashPayData.appId,
+                    timeStamp: cashPayData.timeStamp + '',
+                    nonceStr: cashPayData.nonceStr,
+                    package: cashPayData.package,
+                    signType: cashPayData.signType,
+                    paySign: cashPayData.paySign
                 }, function (res) {
                     that.isProcessing = false
                     if (res.err_msg.indexOf('ok') >= 0) {
                         Util.tipShow('支付成功！')
-                        that.$router.push({name: 'robProjectSuccess', query: {id: cashPayData.bizId}})
+                        that.$router.push({name: 'robProjectSuccess', query: {id: cashPayData.payId}})
                     } else {
                         that.cashProcessing = false
                         Util.tipShow('未能成功支付！')
                         // 支付失败，删除预支付订单
-                        that.$http.get('../api/v2/club/user_paid_service_item/delete/paid', {params: {id: cashPayData.bizId}})
+                        that.$http.get('../api/v2/wx/pay/activity/payment/cancel', {params: {payId: cashPayData.payId}})
                     }
                 })
+            },
+            formatPeriodData: function (res) {
+                var that = this
+                var usePeriod = res.usePeriod || ''
+                var str = '仅限'
+                if (usePeriod === '1,2,3,4,5') {
+                    str += '工作日（周一至周五）'
+                } else if (usePeriod === '6,0') {
+                    str += '周末（周六、周日）'
+                } else if (usePeriod.match(/(\d)/g).length == 7) {
+                    str += '周一至周日'
+                } else {
+                    str += (usePeriod || '').replace(/(\d)/g, function () {
+                        return ['周日', '周一', '周二', '周三', '周四', '周五', '周六', ' 至 '][arguments[1]]
+                    })
+                }
+
+                that.periodStr = str + ' ' + (res.startTime ? (res.startTime.replace(/:00$/g, '') + ':00 - ' + res.endTime.replace(/:00$/g, '') + ':00') : '') + '可用'
             }
-        },
-        beforeDestroy: function () {
         }
     }
 </script>

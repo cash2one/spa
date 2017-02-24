@@ -23,7 +23,7 @@
             var authCode = to.query.code
             if (global.userAgent.isWX && (!global.openId || global.openId.length < 10)) {
                 if (authCode) {
-                    Global.getOpenId().then(function () {
+                    Global.getOpenId({authCode: authCode}).then(function () {
                         next(function (vm) {
                             vm.init()
                         })
@@ -53,7 +53,7 @@
                     if (searchText) {
                         that.$router.push({name: 'clubList-search', query: {'search_text': searchText}})
                     } else {
-                        that.$router.push({name: 'clubList-' + (that.isOldUser ? 'all' : 'nearby')})
+                        that.$router.push({name: 'clubList-' + (that.isOldUser ? 'nearby' : 'all')})
                     }
                 }
                 that.initLocationInfo()

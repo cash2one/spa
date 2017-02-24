@@ -11,6 +11,7 @@
         inReward = false,
         currIntegralAccount=0;
     $.$.isFollowed = !!($.$.isFollowed || $.localStorage('spa_user_isFollowed') - 0 || false);      //用户是否已经关注了公众号
+
     if (!techId) {
         $.tipShow("技师不存在！");
         return $.pageCancel();
@@ -84,7 +85,7 @@
         //点击"确认打赏"
         payBtn.Click(function () {
             var selectItem = $("#content>div:nth-of-type(3)>div.active"),
-                itemValue = parseInt(selectItem.Attr("v"));
+                itemValue = parseFloat(selectItem.Attr("v"));
             if(selectItem.length == 0){
                 return $.tipShow('请选择打赏的金额或积分');
             }
@@ -104,10 +105,10 @@
 
         //取消按钮
         $('#cancelReward').Click(function () {
-            back();
+            back(true);
         });
 
-        $.ajax({//获取技师信息
+        $.ajax({ //获取技师信息
             url:  '../api/v2/club/technician/'+ techId,
             isReplaceUrl: true,
             success: function (data) {
@@ -115,12 +116,53 @@
                 techInfo.emchatId = data.emchatId;
                 techInfo.clubName = data['clubName'];
                 clubId =techInfo.clubId;
-                if(paramData){
-                    var _index = { 1 : 1, 2 : 2, 8 : 3, 20 : 4 }[paramData];
-                    $("#content>div:nth-of-type(3)>div:nth-of-type("+_index+")")[0].click();
-                    $.localStorageClear('tech-reward-param');
-                    doReward(paramData);
-                }
+
+                var loadMoneyRewardSettingData = false,
+                    loadGiftRewardSettingData = false,
+                    defaultRewardType = '',
+                    defaultRewardIndex = '';
+
+                // 获取会所的打赏设置
+                $.ajax({
+                    url: "../api/v2/user/reward/tipList",
+                    data: { clubId: clubId },
+                    isReplaceUrl: true,
+                    success: function(res){
+                        if(res.statusCode == 200){
+                            res = res.respData;
+                            var _html = "", i = 0, rewardItem, amount, lastSelectIndex = -1;
+                            for(;i<res.length;i++){
+                                rewardItem = res[i];
+                                if(rewardItem.defaultChoose){
+                                    defaultRewardType = 1
+                                    defaultRewardIndex = i
+                                }
+                                amount = (rewardItem.amount/100).toFixed(2)
+                                if(paramData && amount==paramData){
+                                    lastSelectIndex = i;
+                                }
+                                _html += "<div class='money' v='"+amount+"'>\
+                                                    <div>"+amount+"</div>\
+                                                    <div>"+rewardItem.description+"</div>\
+                                                </div>";
+                            }
+                            rewardList[0].innerHTML = _html;
+                            if(res.length != 0){
+                                payBtn.Show();
+                            }
+
+                            if(paramData && lastSelectIndex != -1){
+                                $("#content>div:nth-of-type(3)>div:nth-of-type("+(lastSelectIndex+1)+")")[0].click();
+                                $.localStorageClear('tech-reward-param');
+                                doReward(paramData);
+                            }
+                        }
+                        loadMoneyRewardSettingData = true
+                        if(loadGiftRewardSettingData){
+                            doSelectDefault(defaultRewardType,defaultRewardIndex)
+                        }
+                    }
+                })
                 $.pageSwitch(true,false);
 
                 ///////////////////////////////////////////获取积分礼物
@@ -132,16 +174,29 @@
                         switchRes = switchRes.respData;
                         if (switchRes && switchRes.clubSwitch == "on") {
                             $.ajax({
-                                url: "../api/v2/credit/gift/list",
+                                url: "../api/v2/user/reward/creditList",
+                                data: { clubId: clubId },
                                 isReplaceUrl: true,
                                 success: function (giftRes) {
                                     giftRes = giftRes.respData;
                                     if (giftRes && giftRes.length>0) {
                                         var giftHtmlStr = "";
+                                        if(giftRes.length>4){
+                                            giftRes = giftRes.slice(0,4)
+                                        }
                                         for(k=0;k<giftRes.length;k++){
-                                            giftHtmlStr += "<div class='gift' v='"+giftRes[k]["ratio"]+"' gift-id='"+giftRes[k]["id"]+"' gift-name='"+giftRes[k]["name"]+"'><div><img src='"+giftRes[k]["iconUrl"]+"'></div><div>"+giftRes[k]["ratio"]+"积分</div></div>";
+                                            if(giftRes[k].defaultChoose){
+                                                defaultRewardType = 0
+                                                defaultRewardIndex = k
+                                            }
+                                            giftHtmlStr += "<div class='gift' v='"+giftRes[k]["credit"]+"' gift-id='"+giftRes[k]["belongingsId"]+"' gift-name='"+giftRes[k]["rewardName"]+"'><div><img src='"+(giftRes[k]["imgPath"] || "img/chat/gift.png")+"'></div><div>"+giftRes[k]["credit"]+"积分</div></div>";
                                         }
                                         rewardList[0].innerHTML += giftHtmlStr;
+                                        payBtn.Show();
+                                    }
+                                    loadGiftRewardSettingData = true;
+                                    if(loadMoneyRewardSettingData){
+                                        doSelectDefault(defaultRewardType,defaultRewardIndex)
                                     }
                                 }
                             });
@@ -168,10 +223,28 @@
                             $("#giftNotEnoughTip>div>div.btn>div.cancel").Click(function(){
                                 giftNotEnoughTip.ClassClear("active");
                             });
+                        } else {
+                            loadGiftRewardSettingData = true
+                            doSelectDefault(defaultRewardType,defaultRewardIndex)
                         }
                     }
                 })
             }});
+    }
+
+    function doSelectDefault(type,index){
+        var list = $("#content>div.reward-list")[0]
+        if(type == 1 || (type == 0 && list.children.length <=4)){
+        } else if(type == 0){
+            index = index + 4;
+        }
+        if(isNaN(index)){
+            index = 1
+        }
+        var ele = list.children[index]
+        if(ele){
+            ele.classList.add("active")
+        }
     }
 
     function doReward(val,type,giftId,giftName) {
@@ -194,7 +267,8 @@
                     clubId: clubId,
                     emchatId: techInfo.emchatId,
                     giftId: giftId,
-                    num: 1
+                    num: 1,
+                    commentId:commentId || ''
                 },
                 success: function (res) {
                     if (res.statusCode == 200) {
@@ -211,6 +285,11 @@
                         else {
                             sendRewardMsg(val,"gift",giftId,giftName);
                         }
+                    } else {
+                        inReward = false;
+                        $.tipShow(res.msg || "打赏失败！");
+                        payBtn.ClassClear('disabled');
+                        payBtn.Text('打赏');
                     }
                 }
             });
@@ -221,7 +300,7 @@
                 type: 'post',
                 isReplaceUrl: true,
                 data: {
-                    consumeMoney: val,
+                    consumeMoney: (parseFloat(val) * 100).toFixed(0),
                     openId: $.$.payOpenId,
                     clubId: clubId,
                     consumeType: "user_reward",
@@ -229,22 +308,24 @@
                     techId: techId,
                     prePayId: $.$.prePayId || '',
                     paySessionType : "9358_fw",
-                    commentId:commentId
+                    commentId:commentId || '',
+                    isAnonymous: $.param('isAnonymous') || 'N'
                 },
                 success: function (result) {
                     if (result.statusCode == 200) {
-                        $.$.prePayId = result.respData.package.split("=")[1];
+                        var respData = JSON.parse(result.respData);
+                        $.$.prePayId = respData.package.split("=")[1];
                         $.localStorage("prePayId", $.$.prePayId);
 
                         function onBridgeReady() {
                             WeixinJSBridge.invoke(
                                 'getBrandWCPayRequest', {
-                                    "appId": result.respData.appId,     //公众号名称，由商户传入
-                                    "timeStamp": result.respData.timeStamp+""  ,  //时间戳，自1970年以来的秒数
-                                    "nonceStr": result.respData.nonceStr, //随机串
-                                    "package": result.respData.package,
-                                    "signType": result.respData.signType,   //微信签名方式
-                                    "paySign" : result.respData.paySign
+                                    "appId": respData.appId,     //公众号名称，由商户传入
+                                    "timeStamp": respData.timeStamp+""  ,  //时间戳，自1970年以来的秒数
+                                    "nonceStr": respData.nonceStr, //随机串
+                                    "package": respData.package,
+                                    "signType": respData.signType,   //微信签名方式
+                                    "paySign" : respData.paySign
                                 },
                                 function (res) {
                                     inReward = false;
@@ -332,7 +413,7 @@
         };
 
         if(type == "money"){
-            msgObj.data = "<i></i>打赏：<span>"+val+"</span>元";
+            msgObj.data = "<i></i>打赏：<span>"+(val - 0).toFixed(2)+"</span>元";
             msgObj.ext.msgType = "reward";
         }
         else{
@@ -377,17 +458,56 @@
             back();
         }
     }
-    function back(){
+
+    function back(goHome){
         if($.$.ua.isWX && !$.$.isFollowed){//如果已关注，则正常跳转，否则跳转到引导关注页
+            $.ajax({
+                url:'../api/v2/wx/isSubscribed',
+                isReplaceUrl:true,
+                data:{
+                    openId: $.$.openId,
+                    sessionType: '9358'
+                },
+                success: function (result) {
+                    if(result.statusCode == 200){
+                        $.$.isFollowed = result.respData.toString() == 'true';
+                        if(!$.$.isFollowed){
+                            goToFollow();
+                        }else{
+                            normalBack(goHome);
+                        }
+                    }else{
+                        goToFollow();
+                    }
+                },
+                error: function(){  //请求出错，跳转到引导关注页
+                    goToFollow();
+                }
+            });
+        }else{
+            normalBack(goHome);
+        }
+
+        function goToFollow(){
             $.$.tmpHash = location.hash.substring(1).split('/');          //用于在引导页请求失败时，跳转回正常页面
             $.$.tmpHash = $.$.tmpHash.slice(0,$.$.tmpHash.length - 1).join('/');
             $.page('follow9358&techId='+techId);
-        }else{
-            var hash = location.hash.substring(1).split('/');
-            if(hash[hash.length - 2]&&hash[hash.length - 2].indexOf('comment&') == 0){
-                location.hash = '#'+hash.slice(0,hash.length - 2).join('/');
+        }
+
+        function normalBack(goHome){
+            if(goHome){
+                $.page('home',-1,true);
             }else{
-                $.page();
+                var hash = location.hash.substring(1).split('/');
+                if(hash[hash.length - 2]&&hash[hash.length - 2].indexOf('comment&') == 0){
+                    hash = hash.slice(0,hash.length - 2).join('/');
+                    if(hash.indexOf('fastPay')>=0){
+                        hash = "home";
+                    }
+                    location.hash = '#'+hash;
+                }else{
+                    $.page();
+                }
             }
         }
 

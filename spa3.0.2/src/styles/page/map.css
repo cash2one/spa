@@ -57,3 +57,6 @@ div#map-page {
       top: 100%;
       left: 50%;
       margin-left: -0.416rem; }
+
+div.map-page-wrap {
+  height: 100%; }

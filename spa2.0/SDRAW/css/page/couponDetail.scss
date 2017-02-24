@@ -109,6 +109,11 @@
         height:7rem;
         line-height: 5rem;
         opacity: 0;
+        &.native{
+          margin: .533rem auto .833rem;
+          width: 6.167rem;
+          height: 6.167rem;
+        }
       }
       &>span{
         display: block;
@@ -169,7 +174,7 @@
       }
     }
 
-    &>div.rob-item{
+    &>div.explain-item{
       margin-top: .556rem;
       border-bottom: 1px solid #d9d9d9;
       border-top: 1px solid #d9d9d9;
@@ -215,7 +220,13 @@
                           white-space: nowrap;
                         }
                         &:nth-of-type(2){
-                          margin-top: .944rem;
+                          font-size: .833rem;
+                          color: #616161;
+                          margin-top: .2rem;
+                        }
+                        &:nth-of-type(3){
+                          /*margin-top: .944rem;*/
+                          margin-top: .2rem;
                           font-size: .833rem;
                           color: #616161;
                           >span{
@@ -237,18 +248,24 @@
             &:nth-of-type(2){
               padding: .667rem .667rem .667rem 0;
               line-height: 1;
+              >ol{
+                margin: 0;
+                padding-left: .85rem;
+                font-size: .889rem;
+                color: #212121;
+              }
               >div{
-                &:nth-of-type(1),&:nth-of-type(2){
+                &:not(:last-child){
                   font-size: .889rem;
                   color: #212121;
                   >span{
                     color: #616161;
                   }
                 }
-                &:nth-of-type(3){
+                &:last-child{
                   margin-top: .556rem;
                   font-size: .833rem;
-                  color: #616161;
+                  color: #212121;
                   >ul{
                     margin: .556rem 0 0;
                     padding-left: .85rem;

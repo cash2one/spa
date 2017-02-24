@@ -7,7 +7,7 @@
       > div {
         width: 20rem;
         height: 100%;
-        background: #eeeeee;
+        background: #eee;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         >div{
@@ -30,7 +30,7 @@
                   @include ty(0,0,5px,0,rgba(205, 194, 194, 0.5));
                 }
                 &:nth-of-type(2) {
-                  margin-left: 1rem;
+                  margin-left: 0.8rem;
                   >div {
                     &:nth-of-type(1) {
                       color: #666666;
@@ -232,15 +232,37 @@
     left:0;
     right:0;
     background-color: #e1e1e1;
+    padding: 0 .667rem;
+    @include sx();
     &>div{
-      margin:0.444rem 0.667rem 0;
-      background-color: #fb5549;
-      color:#ffffff;
+      @include boxFlex(1);
+      width: 49%;
       font-size:1.056rem;
       text-align: center;
       height:2.444rem;
       line-height: 2.444rem;
       border-radius: 5px;
+      box-sizing: border-box;
+      &:nth-of-type(1){
+        background-color: #fb5549;
+        color:#ffffff;
+      }
+      &:nth-of-type(2){
+        background-color: #fb5549;
+        color:#ffffff;
+        margin-left: 2%;
+        display: none;
+      }
+    }
+    &.has-discount{
+      >div:nth-of-type(1){
+        background-color: transparent;
+        border: .139rem solid #fb5549;
+        color: #fb5549;
+      }
+      >div:nth-of-type(2){
+        display: block;
+      }
     }
   }
 }

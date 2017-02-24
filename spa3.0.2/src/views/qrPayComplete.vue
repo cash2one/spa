@@ -2,7 +2,7 @@
     @import '../styles/page/qrPayComplete.css';
 </style>
 <template>
-    <div class="page" id="qrpay-complete-page" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="qrpay-complete-page">
         <page-title title-text="支付完成"></page-title>
         <div class="success-info">
             <div>
@@ -27,7 +27,7 @@
         </div>
         <div class="comment-title">会所评价</div>
         <textarea class="comment-text" placeholder="您的建设很重要，来点评下吧！" v-model="commentStr"></textarea>
-        <div class="submit-btn" @click="doClickSubmitBtn()">提交</div>
+        <div class="submit-btn" @click="doClickSubmitBtn()" :class="{ processing: inSubmit }">{{ inSubmit ? '正在提交...' : '提交' }}</div>
     </div>
 </template>
 <script>
@@ -44,7 +44,8 @@
                 environmentScore: 100,
                 serviceScore: 100,
                 commentStr: '',
-                payToken: ''
+                payToken: '',
+                inSubmit: false
             }
         },
         created: function () {
@@ -53,11 +54,8 @@
             var pageParams = global.currPage.query
 
             that.money = pageParams.money
-            that.clubId = pageParams.clubId
+            that.clubId = pageParams.clubId || global.clubId || ''
             that.payToken = pageParams.payToken
-            if (!that.clubId && global.pageMode == 'club') {
-                that.clubId = global.clubId
-            }
             if (!that.money || !that.clubId) {
                 Util.tipShow(global.visitError)
                 that.$router.back()
@@ -77,6 +75,10 @@
             },
             doClickSubmitBtn: function () {
                 var that = this
+                if (that.inSubmit) {
+                    return Util.tipShow('正在提交，请稍候...')
+                }
+                that.inSubmit = true
                 that.$http.post('../api/v2/profile/user/feedback/create', {
                     clubId: that.clubId,
                     environmentalScore: that.environmentScore,
@@ -85,12 +87,16 @@
                     token: that.payToken
                 }).then(function (res) {
                     res = res.body
+                    that.inSubmit = false
                     if (res.statusCode == 200) {
                         Util.tipShow('提交成功！')
                         that.$router.push({name: 'home'})
                     } else {
                         Util.tipShow(res.msg || '提交失败！')
                     }
+                }, function () {
+                    that.inSubmit = false
+                    Util.tipShow('提交失败！')
                 })
             }
         }

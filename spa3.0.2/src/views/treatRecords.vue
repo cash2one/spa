@@ -102,7 +102,7 @@
                 that.showFinishLoadTip = false
                 that.isDataAddEnd = false
 
-                that.$http.get('../api/v2/finacial/account/payforother/list', {
+                that.$http.get('../api/v2/financial/account/payforother/list', {
                     params: {
                         page: page,
                         pageSize: that.pageSize,

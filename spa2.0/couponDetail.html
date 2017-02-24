@@ -19,6 +19,8 @@
     <div class="hide">有效期：<span></span></div>
     <div class="hide">购买时间：<span></span></div>
     <div class="hide">剩余 <span>3</span>天</div>
+    <!-- 项目券 -->
+    <div class="hide">所选技师：<span>李好美</span></div>
   </div>
 
   <div class="item">分享给朋友<br/>朋友使用后可再获得一次使用机会<div>立即分享</div></div>
@@ -48,19 +50,37 @@
     <div></div>
   </div>
 
-  <div class="rob-item hide" id="actExplain">
+  <div class="explain-item rob-item hide" id="actExplain">
     <div>活动说明</div>
     <div>
       <div style="display: none;"></div>
       <div>
         <div>使用时间：<span></span></div>
-        <div>可用时段：<span>周一，周二，周三，周四，周五，周五，周六，周日 15:00 - 23:00</span></div>
+        <div>可用时段：<span>---</span></div>
+        <div></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="explain-item hide" id="projectCouponExplain">
+    <div>使用说明</div>
+    <div>
+      <div class="hide"></div>
+      <div>
+        <!--<div>1、本项目券逾期不消费不退还款项，请尽快消费！</div>
+        <div>2、本项目券只参<span id="projectName">按头</span>项目有效；</div>
+        <div>3、消费不受会所项目价格变动，只以当时支付价格为准；</div>-->
+        <ol>
+          <li>本项目券逾期不消费不退还款项，请尽快消费！</li>
+          <li>本项目券只对 <span id="projectName">按头</span> 项目有效；</li>
+          <li>消费不受会所项目价格变动，只以当时支付价格为准；</li>
+        </ol>
         <div></div>
       </div>
     </div>
   </div>
 
-  <div class="rob-item hide" id="projectExplain">
+  <div class="explain-item rob-item hide" id="projectExplain">
     <div>项目说明</div>
     <div>
       <div>
@@ -68,7 +88,8 @@
           <div></div>
           <div>
             <div></div>
-            <div>
+            <div>&nbsp;</div>
+            <div>原价：
               <span></span>
               <span></span>
             </div>
@@ -91,4 +112,8 @@
     <div>长按复制您的专属链接，发送给您的朋友<br/>赢取更多优惠</div>
     <div>关闭</div>
   </div>
+</div>
+
+<div id="couponQrCode" style="display: none;">
+
 </div>

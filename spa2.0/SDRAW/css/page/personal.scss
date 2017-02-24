@@ -106,14 +106,29 @@
               &.coupon{
                 background-image: url("../../../img/personal/coupon_icon.png");
               }
+              &.activities{
+                 background-image: url("../../../img/personal/activities_icon.png");
+               }
               &.order{
                 background-image: url("../../../img/personal/order_icon.png");
+              }
+              &.lucky{
+                background-image: url("../../../img/personal/lucky_icon.png");
+              }
+              &.fastPay{
+                background-image: url("../../../img/personal/fastPay_icon.png");
+              }
+              &.onceCard{
+                background-image: url("../../../img/personal/onceCard_icon.png");
               }
               &.collect{
                 background-image: url("../../../img/personal/collect_icon.png");
               }
               &.contacts{
                 background-image: url("../../../img/personal/contacts_icon.png");
+              }
+              &.oneYuan{
+                background-image: url("../../../img/personal/oneYuan_icon.png");
               }
             }
             &:nth-of-type(2){

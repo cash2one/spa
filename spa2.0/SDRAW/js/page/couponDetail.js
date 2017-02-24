@@ -1,6 +1,6 @@
 (function(){
     var userActId = $.param('userActId'),couponType = $.param('couponType'),
-      isPaidServiceItem = couponType == 'paid_service_item';
+      isPaidServiceItem = couponType === 'paid_service_item' || couponType === 'service_item';
     if(!userActId){
         $.tipShow("地址栏缺少参数！");
         return $.pageCancel();
@@ -14,12 +14,12 @@
     }
     var url = "../api/v2/club/userredpacket/"+userActId;
     if(isPaidServiceItem){
-        url = '../api/v2/club/user_paid_service_item/view';
+        url = '../api/v2/club/user/service_item_coupon/view';
     }
     $.ajax({
         url : url,
         isReplaceUrl:true,
-        data : { userType : "user",id:userActId },
+        data : { userType : "user",id:userActId, suaId: userActId},
         success : function(result){
             if(result.statusCode != 200){
                 $.tipShow(result.msg || "数据请求失败！");
@@ -28,7 +28,7 @@
             result = result.respData;
             var useDefaultShareConfig = true;
             if(isPaidServiceItem){
-                result.userAct = result;
+                //result.userAct = result;
                 //隐藏别的
                 $('#content>div:nth-of-type(3)>div:nth-of-type(3),#content>div:nth-of-type(3)>div:nth-of-type(4),' +
                   '#content>div:nth-of-type(3)>div:nth-of-type(5),#content>div:nth-of-type(3)>div:nth-of-type(6)').Class('hide');
@@ -42,12 +42,19 @@
                 $("#content>div:nth-of-type(3)>div:nth-of-type(1)").Text(result.userAct.couponTypeName);
                 $("#content>div:nth-of-type(3)>div:nth-of-type(2)").Text( result.userAct.actTitle);
                 if(result.userAct.paidType == 'credits'){
-                    $('#content>div:nth-of-type(3)>div:nth-of-type(7)>span').Text(result.userAct.credits + ' 积分');
-                }else{
+                    $('#content>div:nth-of-type(3)>div:nth-of-type(7)>span').Text(result.userAct.actValue + ' 积分');
+                }else if(result.userAct.paidType == 'give'){
+                    $('#content>div:nth-of-type(3)>div:nth-of-type(7)').Html('卡券来源：<span>奖品赠送</span>');
+                }else {
                     $('#content>div:nth-of-type(3)>div:nth-of-type(7)>span').Text(result.userAct.actValue + ' 元');
                 }
                 $('#content>div:nth-of-type(3)>div:nth-of-type(8)>span').Text(result.userAct.couponPeriod);
                 $('#content>div:nth-of-type(3)>div:nth-of-type(9)>span').Text(result.userAct.getDate);
+                if(result.userAct.techId){
+                    $('#content>div:nth-of-type(3)>div:nth-of-type(11)').ClassClear('hide');
+                    $('#content>div:nth-of-type(3)>div:nth-of-type(11)>span').Text(result.userAct.techName);
+                }
+
                 var tmpDate = new Date(result.userAct.useEndDate.split(' ')[0].replace(/-/g,'/') + " 23:59:59").getTime() - new Date().getTime();
                 if(Math.floor(tmpDate/86400000)>0){
                     tmpDate = '<span>'+ Math.floor(tmpDate/86400000) + '</span> 天';
@@ -58,25 +65,49 @@
                 }
                 $('#content>div:nth-of-type(3)>div:nth-of-type(10)').Html('剩余 '+tmpDate);
                 result.userAct.status == "settled" ? ($('#content>div:nth-of-type(3)>div:nth-of-type(10)').Text('已使用'),$('#content>div:nth-of-type(5)').CSS('display','none')):'';
-                //==活动说明
-                $('#actExplain>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(1)>span').Text(result.userAct.useStartDate.split(' ')[0] + ' - ' + result.userAct.useEndDate.split(' ')[0]);
-                if(result.userAct.usePeriod){
-                    $('#actExplain>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)>span')
-                      .Text((result.userAct.usePeriod || '').replace(/(\d)/g,function(){return ['周日','周一','周二','周三','周四','周五','周六'][arguments[1]]}) + ' '+ (result.userAct.startTime ? (result.userAct.startTime.replace(/:00$/g,'') + ':00 - ' + result.userAct.endTime.replace(/:00$/g,'') + ':00'):''));      //可用时段
+
+                //==活动说明  === 抢项目
+                if(couponType === 'paid_service_item'){
+                    $('#actExplain>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(1)>span').Text(result.userAct.useStartDate.split(' ')[0] + ' - ' + result.userAct.useEndDate.split(' ')[0]);
+                    if(result.userAct.useDay){
+                        if(result.userAct.useDay.match(/(\d)/g).length == 7){
+                            result.userAct.useDay = '170';
+                        }
+                        $('#actExplain>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)>span')
+                          .Text((result.userAct.useDay || '').replace(/(\d)/g,function(){return ['周日','周一','周二','周三','周四','周五','周六',' 至 '][arguments[1]]}) + ' '+ (result.userAct.startTime ? (result.userAct.startTime.replace(/:00$/g,'') + ':00 - ' + result.userAct.endTime.replace(/:00$/g,'') + ':00'):''));      //可用时段
+                    }else if(result.userAct.usePeriod){
+                        $('#actExplain>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)>span').Text(result.userAct.usePeriod);
+                    }else{
+                        $('#actExplain>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)').CSS('display','none');
+                    }
+                    $('#actExplain>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(3)').Html(result.userAct.actContent);
                 }else{
-                    $('#actExplain>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)').CSS('display','none');
+                    $('#actExplain').Class('hide');
+                    $('#projectCouponExplain').ClassClear('hide');
+                    //=== 使用说明 ===  项目券的
+                    $('#projectName').Text(result.userAct.actTitle);
+                    $('#projectCouponExplain>div:nth-of-type(2)>div:nth-of-type(2)>div').Html(decodeURIComponent(result.userAct.actContent));
                 }
-                $('#actExplain>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(3)').Html(result.userAct.actContent);
 
                 //== 项目说明
-                $('#projectExplain>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)').CSS('background-image','url('+result.userAct.imageUrl+')');
+                $('#projectExplain>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)').CSS('background-image','url('+(result.userAct.imageUrl || $.$.defaultService)+')');
                 $('#projectExplain>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(2)>div:nth-of-type(1)').Text(result.userAct.actTitle);
-                $('#projectExplain>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)' +
-                  '>div:nth-of-type(2)>div:nth-of-type(2)>span:nth-of-type(1)').Text(result.userAct.price+'元/'+result.userAct.duration+result.userAct.durationUnit);
-                if(result.userAct.pricePlus){
-                    $('#projectExplain>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)' +
-                      '>div:nth-of-type(2)>div:nth-of-type(2)>span:nth-of-type(2)').Text(result.userAct.pricePlus+'元/'+result.userAct.durationPlus+result.userAct.durationUnitPlus);
+                if(couponType === 'service_item'){
+                    if(result.userAct.useType !== 'paid_service_item'){
+                        $('#projectExplain>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)' +
+                          '>div:nth-of-type(2)>div:nth-of-type(2)').Text('网店价：'+result.userAct.actValue+'元/'+result.userAct.duration+result.userAct.durationUnit);
+                        $('#projectExplain>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)' +
+                          '>div:nth-of-type(2)>div:nth-of-type(3)>span:nth-of-type(1)').Text(result.userAct.price+'元/'+result.userAct.duration+result.userAct.durationUnit);
+                        if(result.userAct.pricePlus){
+                            $('#projectExplain>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)' +
+                              '>div:nth-of-type(2)>div:nth-of-type(3)>span:nth-of-type(2)').Text(result.userAct.pricePlus+'元/'+result.userAct.durationPlus+result.userAct.durationUnitPlus);
+                        }
+                    }else{
+                        $('#projectExplain>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)' +
+                          '>div:nth-of-type(2)>div:nth-of-type(3)').Html('<span>'+result.userAct.price+'元/'+result.userAct.duration+result.userAct.durationUnit+'</span>'+(result.userAct.pricePlus?'<span>'+result.userAct.pricePlus+'元/'+result.userAct.durationPlus+result.userAct.durationUnitPlus+'</span>':''));
+                    }
                 }
+
                 $('#projectExplain>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)').Html(result.userAct.description || '无');
             }else{
                 var isMoneyCoupon = (result.userAct.useType == "money"),
@@ -235,7 +266,14 @@
             }
 
             function getQrCodeImg(){
-                getQrCodeCount++;
+                var qrCode = new QRCode($('#couponQrCode')[0],{
+                    width:430,
+                    height:430
+                });
+                qrCode.makeCode(result.userAct.couponNo);
+                qrCodeImg.src = $('#couponQrCode>canvas')[0].toDataURL();
+                $(qrCodeImg).Class('native');
+                /*getQrCodeCount++;
                 $.ajax({
                     url : getQrCodeUrl ,
                     isReplaceUrl:true,
@@ -251,7 +289,7 @@
                             getQrCodeImg();
                         }
                     }
-                });
+                });*/
             }
 
             $("#content>div:nth-of-type(5)>span").Text(result.userAct.couponNo.substr(0,4)+" "+result.userAct.couponNo.substr(4,4)+" "+result.userAct.couponNo.substr(8));

@@ -1,0 +1,147 @@
+@import "../common/common.scss";
+
+#_content>#oneYuanRecordsDetail {
+  #content {
+    >div{
+      &.club-info{
+        @include sx();
+        background-color: #bfbfbf;
+        height: 1.75rem;
+        padding: 0 .667rem;
+        >div{
+          &:nth-of-type(1){
+            width: 1.361rem;
+            height: 1.361rem;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+            border: .1rem solid #FFFFFF;
+            @include imgBgFix(1.361rem 1.361rem);
+          }
+          &:nth-of-type(2){
+            margin: 0 .667rem;
+            @include boxFlex(1);
+            @include sl();
+            color: #FFFFFF;
+            font-size: .889rem;
+          }
+          &:nth-of-type(3){
+            @include arrowRight(#fff);
+          }
+        }
+      }
+      &.project-info{
+        background-color: #ffffff;
+        padding: 1.25rem .667rem 1rem;
+        @include sx();
+        >div{
+          &:nth-of-type(1){
+            width: 3.833rem;
+            height: 3.833rem;
+            -webkit-border-radius: .3rem;
+            -moz-border-radius: .3rem;
+            border-radius: .3rem;
+            @include imgBgFix(3.833rem 3.833rem);
+          }
+          &:nth-of-type(2){
+            @include boxFlex(1);
+            margin-left: .5rem;
+            >div{
+              &:nth-of-type(1){
+                @include sx();
+                >div{
+                  &:nth-of-type(1){
+                    @include boxFlex(1);
+                    font-size: 1rem;
+                    color: #616161;
+                    @include sl();
+                  }
+                  &:nth-of-type(2){
+                    color: #F24F52;
+                    font-size: .889rem;
+                  }
+                }
+              }
+              &:nth-of-type(2),&:nth-of-type(3){
+                color: #999;
+                font-size: .833rem;
+                >span{
+                  color: #616161;
+                }
+              }
+            }
+          }
+        }
+      }
+      &.qr-info{
+        margin-top: .5rem;
+        background-color: #ffffff;
+        padding:0.444rem 0 0.222rem;
+        color:#4d4d4d;
+        font-size:0.667rem;
+        text-align: center;
+        &>div{
+          margin-left:0.917rem;
+          text-align: left;
+        }
+        &>img{
+          display: block;
+          margin:-0.3rem auto 0;
+          width:7rem;
+          height:7rem;
+          line-height: 5rem;
+        }
+        &>span{
+          display: block;
+          text-align: center;
+          margin-top:-0.8rem;
+          letter-spacing: 1px;
+        }
+      }
+      &.explain-item{
+        background-color: #ffffff;
+        margin-top: .5rem;
+        padding-left: .667rem;
+        padding-bottom: .667rem;
+        border-bottom: 1px solid #d9d9d9;
+        >.exp-item-header{
+          height: 1.75rem;
+          line-height: 1.75rem;
+          font-size: .889rem;
+          color: #FF9C0A;
+        }
+        >.exp-item-plain{
+          font-size: .833rem;
+          color: #212121;
+          >span{
+            color: #616161;
+          }
+        }
+        >.exp-item-ul{
+          font-size: .833rem;
+          color: #616161;
+          line-height: 1;
+          >ul{
+            margin: .556rem 0 0;
+            padding-left: .85rem;
+            >li{
+              margin-top: .556rem;
+              &:first-child{
+                margin-top: 0;
+              }
+            }
+            ul{
+              margin: 0;
+              padding-left: 0;
+              list-style-type: none;
+            }
+          }
+        }
+      }
+
+      &:nth-of-type(6){
+        margin-bottom: 1rem;
+      }
+    }
+  }
+}

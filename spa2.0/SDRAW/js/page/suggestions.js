@@ -4,7 +4,8 @@
         starLayer=$('#content>div:nth-of-type(2)>div>div:nth-of-type(2)'),
         star=$('#content>div:nth-of-type(2)>div>div:nth-of-type(2)>div'),
         scoreText=$('#content>div:nth-of-type(2)>div>div:nth-of-type(3)'),
-        footer=$('#footer>div');
+        footer=$('#suggestionsFooter>div>div:nth-of-type(2)'),
+        isAnonymous = $('#suggestionsFooter>div>div:nth-of-type(1)') ;
     /*************************************加载数据*************************************/
     scoreText.Text(score[4]);
     /*************************************定义逻辑*************************************/
@@ -14,12 +15,20 @@
         star[index].style.width=v*20+'%';
         scoreText[index].innerHTML=score[v-1];
     });
+    //点击 匿名评价
+    isAnonymous.Click(function () {
+        if(isAnonymous.ClassHave('checked')){
+            isAnonymous.ClassClear('checked');
+        }else{
+            isAnonymous.Class('checked');
+        }
+    });
     //点击提交
     footer.Class('active');
     footer.Click(function(){
         var contentStr = $("#content>div:nth-of-type(3)>div:nth-of-type(2)>textarea")[0].value;
         if(contentStr && contentStr.length>1000) 
-	contentStr = contentStr.substr(0,1000);
+	          contentStr = contentStr.substr(0,1000);
         $.ajax({
             url : "../../profile/user/feedback/create",
             type : "post",
@@ -28,7 +37,8 @@
                 "clubId" : $.$.clubID,
                 "environmentalScore" : star[0].style.width.slice(0,-1),
                 "serviceScore" : star[1].style.width.slice(0,-1),
-                "comments" : contentStr
+                "comments" : contentStr,
+                isAnonymous:isAnonymous.ClassHave('checked') ? 'Y' : 'N'
             },
             success : function(){
                 $.tipShow("提交成功！");

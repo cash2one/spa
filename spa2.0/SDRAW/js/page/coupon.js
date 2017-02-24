@@ -8,6 +8,8 @@
         dataLength,
         isAddData = false,
         prevCouponType,
+        currCouponType,
+        isServiceItem = false,
         page = 1,
         dataAddIcon = $('#loadTip'),
         dataFinishIcon = $('#finishTip'),
@@ -74,11 +76,21 @@
                     for (i = 0, dataLength = data.length; i < dataLength; i++) {
                         //if(listID[data[i]['actId']]) continue;
                         //else listID[data[i]['actId']]=1;
-                        if(prevCouponType != data[i]["clubId"]+'-'+data[i].useType){
-                            str +='<div class="coupon-type">'+data[i].useTypeName+'</div>';
-                            prevCouponType = data[i]["clubId"]+'-'+data[i].useType;
+                        if(data[i].actTitle){
+                        if(data[i].useType == 'paid_service_item' || data[i].useType == 'discount_item'){
+                            currCouponType = data[i]["clubId"]+'-service_item';
+                            isServiceItem = true;
+                        }else{
+                            currCouponType = data[i]["clubId"]+'-'+data[i].useType
+                            isServiceItem = false;
+                        }
+                        if(prevCouponType != currCouponType){
+                            str +='<div class="coupon-type">'+(isServiceItem?'项目抵用券':data[i].useTypeName)+'</div>';
+                            prevCouponType = currCouponType;
                         }
                         str += generateItemHtml(data[i]);
+                        }
+                        
                     }
 
                     if (page == 1) {
@@ -184,9 +196,9 @@
         }
         var htmlStr = "<div type='" + itemData["couponType"] + "' hh='" + itemData["userActId"] + "' class='item " + (isExpire ? "expire" : "") + "'>\
                         <i></i>\
-                        <div>" + (/*itemData["useType"] == "money" ? itemData["actValue"] + "元" :*/ itemData["actTitle"] + (isPaidServiceItem?'券':'')) + "</div>\
+                        <div>" + (/*itemData["useType"] == "money" ? itemData["actValue"] + "元" :*/ itemData["actTitle"] + (isPaidServiceItem || isServiceItem?'券':'')) + "</div>\
                         <div>" + (itemData.useType == 'money'?(itemData.actValue+'元现金券，'):'') + itemData["consumeMoneyDescription"] + "</div>\
-                        <div>券有效期：" + (isPaidServiceItem?(itemData["couponPeriod"].replace(/(\d{2}:\d{2})(:\d{2})/g,'$1')):itemData["couponPeriod"]) + "</div>\
+                        <div>券有效期：" + (isPaidServiceItem || isServiceItem?(itemData["couponPeriod"].replace(/(\d{2}:\d{2})(:\d{2})/g,'$1')):itemData["couponPeriod"]) + "</div>\
                         <div>" + itemData["useTypeName"] + "</div>";
         if (isExpire) {
             htmlStr += "<span>" + itemData["couponStatusDescription"] + "</span>";

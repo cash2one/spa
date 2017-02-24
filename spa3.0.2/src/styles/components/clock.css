@@ -1,0 +1,26 @@
+div.clock-wrap {
+  padding: .278rem .667rem;
+  background-color: #ffeeee;
+  font-size: .778rem;
+  color: #f66;
+  display: -webkit-box;
+  display: -moz-box;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -webkit-box-align: center;
+  -moz-box-align: center; }
+  div.clock-wrap:before {
+    content: "";
+    display: block;
+    width: .889rem;
+    height: .889rem;
+    margin-right: .467rem;
+    background-size: 0.889rem 0.889rem;
+    background-image: url("../../images/robProject/clock.png");
+    background-repeat: no-repeat; }
+  div.clock-wrap > b {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-right: 0.18rem; }
+  div.clock-wrap > label, div.clock-wrap > span {
+    font-size: 0.778rem; }

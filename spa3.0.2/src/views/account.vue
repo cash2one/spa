@@ -2,11 +2,11 @@
     @import '../styles/page/account.css';
 </style>
 <template>
-    <div class="page" id="account-page" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="account-page">
         <page-title title-text="所有会员卡"></page-title>
         <div class="search-area">
-            <input type="text" placeholder="输入会所名称" maxlength="50" v-model="searchText" @keypress.enter="doClickSearch()"/>
-            <span @click="doClickSearch()"></span>
+            <input type="text" placeholder="输入会所名称" maxlength="50" v-model="searchText" @keypress.enter="doSearch()"/>
+            <span @click="doSearch()"></span>
         </div>
         <div class="list">
             <router-link class="member-card" :class="'tpl-0'+item.styleId" v-for="(item,index) in dataList" v-show="showList[index]" :to="{ name : 'accountDetail', query : { accountId : item.id } }">
@@ -49,13 +49,14 @@
         created: function () {
             var that = this
             var global = that.global
-            that.$http.get('../api/v2/finacial/accounts').then(function (res) {
+            that.$http.get('../api/v2/financial/accounts').then(function (res) {
                 res = res.body
                 if (res.statusCode == 200) {
                     res = res.respData
                     var showList = []
                     var item
-                    for (var i = 0; i < res.length; i++) {
+                    var i
+                    for (i = 0; i < res.length; i++) {
                         item = res[i]
                         if (item.discount / 100 >= 10) {
                             item.isVip = true
@@ -82,7 +83,7 @@
             })
         },
         methods: {
-            doClickSearch: function () {
+            doSearch: function () {
                 var that = this
                 var searchText = that.searchText.trim()
                 var list = that.dataList

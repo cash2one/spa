@@ -168,7 +168,7 @@
                                     <div><div>'+(itemData['techName']|| $.$.defaultTechName)+'</div>[<div>'+(itemData['serialNo']||'')+'</div>]</div>\
                                     <div>\
                                         <div class="stars"><div style="width:'+itemData['star']+'%"></div></div>\
-                                        <div>'+itemData['commentCount']+'评论</div>\
+                                        <div>'+(itemData['commentCount'] || 0)+'评论</div>\
                                     </div>\
                                 </div>\
                                 <div>'+itemData['tags'][0]['tagName']+'</div>\

@@ -79,7 +79,7 @@
                                             </div>\
                                             <div>\
                                                 <div><div style='width:"+result[i].rate+"%'></div></div>\
-                                                <div style='display: "+(result[i].rewardAmount==0 ? "none" : "")+"'><i></i>打赏：<span>"+result[i].rewardAmount+"</span>元</div>\
+                                                <div style='display: "+(result[i].rewardAmount==0 ? "none" : "")+"'><i></i>打赏：<span>"+(result[i].rewardAmount/100).toFixed(2)+"</span>元</div>\
                                             </div>\
                                             <div>"+result[i].comment+"</div>\
                                         </li>";

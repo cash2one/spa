@@ -41,16 +41,16 @@
         &.money{
           font-size:1.056rem;
           line-height: 4.167rem;
-          /*>div{
+          >div{
             &:nth-of-type(1){
               height: 2.0835rem;
               line-height: 2.7rem;
             }
             &:nth-of-type(2){
               line-height: 1.4rem;
-              font-size: 1rem;
+              font-size: .667rem;
             }
-          }*/
+          }
         }
         &.gift{
           &>div:nth-of-type(1){
@@ -79,17 +79,18 @@
     }
 
     &>div:nth-of-type(4){
+      display: none;
       height:2.444rem;
       text-align: center;
       color:#fff;
       font-size:1.056rem;
       line-height: 2.444rem;
-      margin:3rem 0.667rem 2rem;
+      margin:3rem 0.667rem 1rem;
       border-radius: 4px;
       background-color: #fb5549;
       letter-spacing: 2px;
       &.disabled{
-        background-color: #CCC;
+        background-color: #ccc;
         background-image: url(../../../img/loading.gif);
         background-repeat:no-repeat;
         background-position: 30% 45%;
@@ -97,13 +98,15 @@
     }
 
     >#cancelReward{
-      position: absolute;
-      left: .667rem;
-      bottom: .667rem;
-      font-size: .778rem;
-      color: #616161;
-      text-decoration: underline;
-      line-height: 1;
+      height:2.444rem;
+      text-align: center;
+      font-size:1.056rem;
+      line-height: 2.444rem;
+      margin:1rem 0.667rem 2rem;
+      border-radius: 4px;
+      letter-spacing: 2px;
+      background-color: #e0e0e0;
+      color: #999;
     }
   }
 }

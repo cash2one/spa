@@ -39,6 +39,9 @@
         methods: {
             doClickSaveBtn: function () {
                 var that = this
+                if (that.inPostData) {
+                    return Util.tipShow('正在保存，请稍候...')
+                }
                 that.inPostData = true
                 eventHub.$emit('get-base64', {width: 160, height: 160})
             },

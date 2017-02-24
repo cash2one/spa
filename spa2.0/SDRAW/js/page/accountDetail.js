@@ -6,10 +6,10 @@
         return $.pageCancel();
     }else if(accountId != ''){
         isFromClub = false;
-        url = '../api/v2/finacial/account/'+accountId;
+        url = '../api/v2/financial/account/'+accountId;
     }else{
         isFromClub = true;
-        url = '../api/v2/finacial/club/account'
+        url = '../api/v2/financial/club/account'
         $("#title>div:nth-of-type(2)").Click(function(event){
             event.stopImmediatePropagation();
             $.page('personal',-1,true);

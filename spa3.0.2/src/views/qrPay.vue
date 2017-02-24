@@ -2,7 +2,7 @@
     @import '../styles/page/qrPay.css';
 </style>
 <template>
-    <div class="page" id="qrpay-page" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="qrpay-page">
         <page-title title-text="支付"></page-title>
         <div class="club-info">
             <div>
@@ -90,7 +90,6 @@
             init: function () {
                 var that = this
                 var global = that.global
-                global.loading = false
                 that.$http.get('../api/v2/club/{clubId}/clubName', {params: {clubId: that.clubId}}).then(function (res) {
                     res = res.body
                     if (res.name) {
@@ -103,6 +102,7 @@
                         that.payBtnStatusCls = ''
                         that.doClickPayBtn()
                     }
+                    global.loading = false
                 })
             },
             doClickClearBtn: function () {

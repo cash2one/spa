@@ -14,12 +14,12 @@ div#hour-ticket-list-page{
       position: relative;
       color:#f24f52;
       padding:0.556rem;
-      &>div:nth-of-type(1){
+      >div:nth-of-type(1){
         font-size:1.667rem;
         font-weight: 900;
         position: relative;
         margin-bottom: 0.4rem;
-        &>span{
+        >span{
           position: absolute;
           top:0;
           left:0;
@@ -27,14 +27,14 @@ div#hour-ticket-list-page{
           font-weight: normal;
         }
       }
-      &>span:nth-of-type(1){
-        padding:0.222rem 1.389rem;
+      >span:nth-of-type(1){
+        padding:0.111rem 1.389rem;
         background-color: #fbcacb;
         font-size:0.778rem;
         border-radius: 1.2rem;
         margin-bottom:0.111rem;
       }
-      &>div:nth-of-type(2){
+      >div:nth-of-type(2){
         position: absolute;
         height:3.528rem;
         width:6.333rem;
@@ -44,11 +44,11 @@ div#hour-ticket-list-page{
         border-left:1px dashed #d9d9d9;
         font-size:0.889rem;
         text-align: center;
-        &>div:nth-of-type(1){
+        >div:nth-of-type(1){
           height:2.138rem;
           line-height: 2.138rem;
         }
-        &>div:nth-of-type(2){
+        >div:nth-of-type(2){
           height:1.39rem;
           line-height: 1.39rem;
           width:5rem;
@@ -58,7 +58,7 @@ div#hour-ticket-list-page{
           border-radius: 5px;
         }
       }
-      &>div:nth-of-type(3),&>div:nth-of-type(4){
+      >div:nth-of-type(3),&>div:nth-of-type(4){
         position: absolute;
         width:0.583rem;
         height: 0.583rem;
@@ -67,22 +67,22 @@ div#hour-ticket-list-page{
         right:6.0415rem;
         background-color: #ededed;
       }
-      &>div:nth-of-type(3){
+      >div:nth-of-type(3){
         top:-0.2915rem;
       }
-      &>div:nth-of-type(4){
+      >div:nth-of-type(4){
         bottom:-0.2915rem;
       }
 
     }
     &.already_get,&.finish_get{
-      &>div{
+      >div{
         color:#c0c0c0;
-        &>span:nth-of-type(1){
+        >span:nth-of-type(1){
           background-color: #ececec;
         }
-        &>div:nth-of-type(2){
-          &>div:nth-of-type(2){
+        >div:nth-of-type(2){
+          >div:nth-of-type(2){
             background-color: #ececec;
           }
         }

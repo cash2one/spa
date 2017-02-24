@@ -24,6 +24,8 @@
         pageSize = 10,
         agile = 0.4;     //自裁加载下页的灵敏度  值越小越灵敏（0.4表示当前面有40%的内容在可视区域时就加载下一页的数据）
     var decodeExpressionReg,sessionItem;
+    var defaultMagagerLogo = './img/chat/defaultClubLogo.png';
+    var defaultTechLogo = './img/chat/defaultUserLogo.png';
     var expressionObj = { //------表情编码的索引值
         "/::O": "/大笑", "/::Y": "/坏笑", "/::B": "/害羞", "/::A": "/色", "/::C": "/晕", "/::D": "/红心", "/::X": "/心碎了",
         "/::Z": "/握手", "/::F": "/抱拳", "/::E": "/花", "/::T": "/花谢了", "/::P": "/示爱", "/::G": "/亲亲", "/::H": "/大哭",
@@ -32,6 +34,10 @@
     },
     //=== 活动消息 ===
       activityMsg = {
+          'plumFlower': {
+              title: '一元夺',
+              subTitle: '我和你只有一块钱的距离'
+          },
           'oneYuan': {
               title: '一元夺',
               subTitle: '我和你只有一块钱的距离'
@@ -44,6 +50,10 @@
               title: '大转盘',
               subTitle: '那一世转山转水，只为相见'
           },
+          'journal': {
+              title: '会所期刊',
+              subTitle: '有美女、有福利，你就是我的VIP！'
+          }
       };
     ///////////////////////////////////////////////////构造解析表情的正则
     decodeExpressionReg = new RegExp('/::[A-Zab]+', "g");
@@ -61,21 +71,24 @@
     }
     sortArr.sort(function(a,b){ return (a.time> b.time ? -1 : 1) });
     var msgNewCount = 0;
+    var isManager = false
     for(i=0;i<sortArr.length;i++){
         sessionObj = sl[sortArr[i].id];
         if(!sessionObj.name) continue;
-        htmlStr += '<div class="msg-item list_'+sortArr[i].id+'" chatId="'+sortArr[i].id+'" data-msg-num="'+sessionObj.new+'">\
-                        <div style="background-image: url('+(sessionObj.header || $.$.defaultHeader) +')"></div>\
+
+        isManager = !sessionObj.techId
+        htmlStr += '<div type="'+(isManager ? 'manager' : 'tech')+'" class="msg-item list_'+sortArr[i].id+'" chatId="'+sortArr[i].id+'" data-msg-num="'+sessionObj.new+'">\
+                        <div style="background-image:'+(sessionObj.header ? 'url('+sessionObj.header+'),' : '')+'url('+(isManager ? defaultMagagerLogo : defaultTechLogo)+')'+'"></div>\
                         <div>\
                             <div>\
                                 <div>\
                                     <div>'+sessionObj.name+'</div>\
-                                    <div style="'+(sessionObj.no && sessionObj.no.length>0 ?'':'display:none;')+'">'+sessionObj.no+'</div>\
+                                    <div class="'+(isManager ? 'manager' : (sessionObj.no && sessionObj.no.length>0 ? 'tech' : 'none'))+'">'+(isManager ? '店长' : sessionObj.no)+'</div>\
                                 </div>\
                                 <div>'+ $.formatMsgTime(sessionObj.time)+'</div>\
                             </div>\
                             <div>\
-                                <div>'+(activityMsg[sessionObj.msg.msgType]? activityMsg[sessionObj.msg.msgType].subTitle : decodeTextMsg(sessionObj.msg.data.replace(/<br>|<br\/>/g,"")))+'</div>\
+                                <div>'+(activityMsg[sessionObj.msg.msgType] ? activityMsg[sessionObj.msg.msgType].subTitle : decodeTextMsg(sessionObj.msg.data.replace(/<br>|<br\/>/g,"")))+'</div>\
                                 <div '+(sessionObj.new==0 ? "style='display:none;'" : "")+'>'+sessionObj.new+'</div>\
                             </div>\
                         </div>\
@@ -118,17 +131,18 @@
             itemDiv.className = "msg-item list_"+chatId;
             itemDiv.setAttribute("chatId",chatId);
             itemDiv.dataset['msgNum'] = sessionObj.new;
-            itemDiv.innerHTML = '<div style="background-image: url('+(sessionObj.header || $.$.defaultHeader) +')"></div>\
+            isManager = !sessionObj.techId
+            itemDiv.innerHTML = '<div style="background-image: '+(sessionObj.header ? 'url('+sessionObj.header+'),' : '')+'url('+(isManager ? defaultMagagerLogo : defaultTechLogo)+')'+'"></div>\
                                 <div>\
                                     <div>\
                                         <div>\
                                             <div>'+sessionObj.name+'</div>\
-                                            <div style="'+(sessionObj.no && sessionObj.no.length>0 ?'':'display:none;')+'">'+sessionObj.no+'</div>\
+                                            <div class="'+(isManager ? 'manager' : (sessionObj.no && sessionObj.no.length>0 ? 'tech' : 'none'))+'">'+(isManager ? '店长' : sessionObj.no)+'</div>\
                                         </div>\
                                         <div>'+ $.formatMsgTime(sessionObj.time)+'</div>\
                                     </div>\
                                     <div>\
-                                        <div>'+(activityMsg[sessionObj.msg.msgType]? activityMsg[sessionObj.msg.msgType].subTitle : decodeTextMsg(sessionObj.msg.data.replace(/<br>|<br\/>/g,"")))+'</div>\
+                                        <div>'+(activityMsg[sessionObj.msg.msgType] ? activityMsg[sessionObj.msg.msgType].subTitle : decodeTextMsg(sessionObj.msg.data.replace(/<br>|<br\/>/g,"")))+'</div>\
                                         <div '+(sessionObj.new==0 ? "style='display:none;'" : "")+'>'+sessionObj.new+'</div>\
                                     </div>\
                                 </div>';
@@ -171,7 +185,6 @@
             };
             $.page("chat&techId="+(sessionObj.techId || "")+(!$.$.clubID ? "&clubId="+sessionObj.clubId : ""));
         }
-
     }
 
     //解析文本消息里面的表情
@@ -186,14 +199,17 @@
         $.hideOrderMenu();
         confirmDelMsgDiv.Class('active');
     });
+
     //==== 清空列表及聊天记录 ====
     $('#conListAndRecords').Click(function () {
         deleteListFunc(true);
     });
+
     //==== 清空聊天记录 ====
     $('#conRecords').Click(function () {
         deleteListFunc(false);
     });
+
     //==== 清空列表及聊天记录 ====
     $('#conCancel').Click(function () {
         $.showOrderMenu();
@@ -315,14 +331,15 @@
                         msg = decodeTextMsg(sessionItem.msg.data.replace(/<br>|<br\/>/g,""));
                         d = sessionItem.time;
                     }*/
+                    isManager = data[i].toType == 'manager';
                     str += "<div class='contact-item' data-chat-Id='"+data[i].friendChatId+"' data-target-Id='"+data[i].friendUserId+"'  data-club-Id='"+(data[i].clubId || '')
                       +"'  data-friend-Name='"+(data[i].friendName || '')+"' data-to-type='"+data[i].toType+"' data-header='"+data[i].friendAvatarUrl+"'>\
-                                <div style='background-image: url("+(data[i].friendAvatarUrl || (data[i].toType == 'manager'?$.$.defaultClubLogo:$.$.defaultHeader)) +")'></div>\
+                                <div style='background-image: "+(data[i].friendAvatarUrl ? "url("+data[i].friendAvatarUrl+")," : "")+"url("+(isManager ? defaultMagagerLogo : defaultTechLogo)+")"+"'></div>\
                                 <div>\
                                     <div>\
                                         <div>\
                                             <div>"+data[i].friendName+"</div>\
-                                            <div "+(data[i].techNo && data[i].techNo.length>0 ? "":"style='display:none;'")+">"+data[i].techNo+"</div>\
+                                            <div class='"+(isManager ? 'manager' : (data[i].techNo && data[i].techNo.length>0 ? 'tech' : 'none'))+"'>"+(isManager ? '店长' : data[i].techNo)+"</div>\
                                         </div>\
                                         <div><div>"+msg+"</div><div style='display:none;'>"+ $.formatMsgTime(d)+"</div></div>\
                                     </div>\
@@ -477,10 +494,8 @@
         }
     }
 
-
     //缓存加载
     if (contentData) {
-        console.log(111);
         switch2Contacts(tabs[1],true);
         page = parseInt(contentPage);
         listBox.Html(contentData);
@@ -501,77 +516,4 @@
     $.sessionStorageClear('msg_contacts_top');
     $.sessionStorageClear('msg_contacts_page');
     $.sessionStorageClear('msg_contacts_page_height');       //一页内容的高度
-
-    /*
-    function getListDiv(target){
-        if(target.getAttribute("chatid")){
-            return target;
-        }
-        if(target.parentNode.getAttribute("chatid")){
-            return target.parentNode;
-        }
-        if(target.parentNode.parentNode.getAttribute("chatid")){
-            return target.parentNode.parentNode;
-        }
-        return null;
-    }
-
-    //list div的长按、点击事件
-
-    var startTapTime,startTapPoint = {},tapDelta = {};
-    var confirmDelMsgDiv = $("#confirmDelMsg")[0];
-    var currLongTapDiv;
-    $(listDiv).Event("touchstart",function(e){
-        e.preventDefault();
-        var touch = e.touches[0];
-        startTapTime = new Date();
-        startTapPoint.x = touch.pageX;
-        startTapPoint.y = touch.pageY;
-    });
-    $(listDiv).Event("touchmove",function(e){
-        e.preventDefault();
-        var touch = e.touches[0];
-        tapDelta.x =touch.pageX- startTapPoint.pageX;
-        tapDelta.y = touch.pageY-startTapPoint.pageY;
-    });
-    $(listDiv).Event("touchend",function(e){
-        e.preventDefault();
-        var touch = e.changedTouches[0],
-            delteTime = (new Date()).getTime()-startTapTime.getTime(),
-            item = getListDiv(e.target);
-        if(touch.pageX == startTapPoint.x && touch.pageY==startTapPoint.y && item){
-            if(delteTime<200){
-                doClickItem(item);
-            }
-            else{
-                currLongTapDiv = item;
-                confirmDelMsgDiv.querySelector("div>div:nth-of-type(1)>span").innerHTML = item.children[1].children[0].innerHTML;
-                confirmDelMsgDiv.className="act";
-                $.hideOrderMenu();
-            }
-        }
-    });
-
-    $("#confirmDelMsg>div>div:nth-of-type(2)>a:nth-of-type(1)").Click(function(){//确定删除
-        if(currLongTapDiv){
-            var chatId = currLongTapDiv.getAttribute("chatid");
-            $.getMsgList(chatId);
-            if($.$.easemob.sessionList[chatId]){//从sessionList 里面删除
-                delete $.$.easemob.sessionList[chatId];
-                $.localStorage($.$.userID+"_SessionList",JSON.stringify($.$.easemob.sessionList));//替换存储
-            }
-            if($.$.easemob.msgList[chatId]){//从messageList里面删除
-                delete $.$.easemob.msgList[chatId];
-                $.localStorageClear($.$.userID+"_MsgList_"+chatId);
-            }
-            listDiv.removeChild(currLongTapDiv);
-        }
-        confirmDelMsgDiv.className = "";
-        $.showOrderMenu();
-    });
-
-    $("#confirmDelMsg>div>div:nth-of-type(2)>a:nth-of-type(2)").Click(function(){//取消删除
-        confirmDelMsgDiv.className = "";
-        $.showOrderMenu();
-    });*/
 })();

@@ -3,21 +3,21 @@
 </style>
 <template>
     <div>
-        <div class="page-back-btn" @click="doClickPageBack()"></div>
+        <page-back></page-back>
         <div class="page" id="service-list-page" v-show="!global.loading">
             <div class="category" v-for="service in serviceList">
-                <div :class="service['code']">
+                <div :class="service.code">
                     <div></div>
                     <div>{{ service.name }}</div>
                 </div>
                 <ul class="service-list">
-                    <li v-for="item in service.serviceItems" @click="doClickItem(item.id)">
+                    <router-link tag="li" v-for="item in service.serviceItems" :to="{ name: 'serviceItem', query: { id : item.id }}">
                         <div :style="{ backgroundImage : 'url('+item.imageUrl+')' }"></div>
                         <div>
                             <div>{{ item.name }}</div>
                             <div>{{ item.price1 | itemPriceFormatter(item.duration1,item.durationUnit) }}<span><span v-show="item.price2">加钟：</span>{{ item.price2 | itemPriceFormatter(item.duration2,item.durationUnitPlus) }}</span></div>
                         </div>
-                    </li>
+                    </router-link>
                 </ul>
             </div>
         </div>
@@ -54,14 +54,6 @@
         },
         filters: {
             itemPriceFormatter: ItemPriceFormatter
-        },
-        methods: {
-            doClickPageBack: function () { // 点击返回按钮
-                history.back()
-            },
-            doClickItem: function (id) {
-                this.$router.push({name: 'serviceItem', query: {id: id}})
-            }
         }
     }
 </script>

@@ -45,7 +45,8 @@
       transitionEnd: null,
       oneEleWidth: 0,
       index: 0,
-      showEleCount: 1
+      showEleCount: 1,
+      overlap: 2    //跨度多少自动滚动一格：width/overlap, 2表示50%，3表示33.3333%，4表示表示25%
     }, options);
     if (!options.container) {
       throw new Error('ScrollHori 窗器不能为空。');
@@ -59,9 +60,13 @@
       //console.info('无需滚动');
       return;
     }
-    if (container.children.length < options.showEleCount * 2) {
+    if (container.children.length < options.showEleCount * 2 + 2) {
       //添加一定的元素做辅助视图
-      container.innerHTML += container.innerHTML;
+      var _tmpHtml = container.innerHTML;
+      if(container.children.length < 3){
+        _tmpHtml +=_tmpHtml;
+      }
+      container.innerHTML += _tmpHtml;
     }
     slides = container.children;
     var cssValue = getComputedStyle(slides[0]);
@@ -228,6 +233,7 @@
 
 
     function touchStart(e) {
+      stopAnimation();
       var touches = e.touches[0];
       startPos = {
         x: touches.clientX,
@@ -295,7 +301,7 @@
       var tmp = -slides[options.index].dataset.tx - eleCurrentTx[options.index];
       isAnimation = true;
       if (changeData.x < 0) {
-        if (Math.abs(tmp) > options.oneEleWidth / 2) {
+        if (Math.abs(tmp) > options.oneEleWidth / options.overlap) {
           tmp = tmp - options.oneEleWidth;
           moveToRight(0, tmp, 300, false);
         } else {

@@ -26,7 +26,7 @@
         <div class="tech-list" v-if="clubObj.techs.length>0">
             <div class="title">
                 <div>推荐技师</div>
-                <div>查看全部</div>
+                <router-link :to="{ name: 'technicianList' }" tag="div">查看全部</router-link>
             </div>
             <club :club-obj="clubObj"></club>
         </div>
@@ -43,6 +43,8 @@
             return {
                 global: Global.data,
                 bizId: '',
+                isIntegral: true,
+                couponType: '',
                 resData: {},
                 shareUrl: '',
                 clubObj: {
@@ -69,8 +71,16 @@
                 var global = that.global
                 var query = global.currPage.query
 
+                that.isIntegral = query.isIntegral == 'true'
+                that.couponType = query.couponType || 'paid_service_item'
                 that.bizId = query.id
-                that.$http.get('../api/v2/club/user_paid_service_item/pay/view', {params: {id: query.id}}).then(function (res) {
+                var params = {}
+                if (that.isIntegral) {
+                    params.suaId = that.bizId
+                } else {
+                    params.payId = that.bizId
+                }
+                that.$http.get('../api/v2/club/user/service_item_coupon/pay/view', {params: params}).then(function (res) {
                     res = res.body
                     if (res.statusCode == 200) {
                         res = res.respData
@@ -80,6 +90,7 @@
                         if (global.userAgent.isWX) {
                             that.shareSetting()
                         }
+                        global.loading = false
                     } else {
                         Util.tipShow(res.msg || '查询数据出错！')
                     }

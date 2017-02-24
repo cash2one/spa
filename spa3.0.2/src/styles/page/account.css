@@ -1,28 +1,30 @@
-div#account-page div.search-area {
-  margin: .667rem .889rem 0;
-  position: relative; }
-  div#account-page div.search-area > input {
-    width: 18.222rem;
-    padding: .3rem 2.361rem .3rem 1rem;
-    font-size: .889rem;
-    color: #212121;
-    border: 1px solid #ccc;
-    border-radius: .5rem;
-    box-sizing: border-box; }
-  div#account-page div.search-area > span {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    right: 0;
-    width: 2.278rem;
-    background-size: 1rem 1rem;
-    background-image: url("../../images/account/ic_search.png");
-    background-repeat: no-repeat;
-    background-position: center; }
-    div#account-page div.search-area > span:before {
-      content: ' ';
+div#account-page {
+  height: 100%; }
+  div#account-page div.search-area {
+    margin: .667rem .889rem 0;
+    position: relative; }
+    div#account-page div.search-area > input {
+      width: 18.222rem;
+      padding: .3rem 2.361rem .3rem 1rem;
+      font-size: .889rem;
+      color: #212121;
+      border: 1px solid #ccc;
+      border-radius: .333rem;
+      box-sizing: border-box; }
+    div#account-page div.search-area > span {
       position: absolute;
-      height: 60%;
-      top: 20%;
-      left: 0;
-      border: 1px solid #ccc; }
+      top: 0;
+      height: 100%;
+      right: 0;
+      width: 2.278rem;
+      background-size: 1rem 1rem;
+      background-image: url("../../images/account/ic_search.png");
+      background-repeat: no-repeat;
+      background-position: center; }
+      div#account-page div.search-area > span:before {
+        content: ' ';
+        position: absolute;
+        height: 60%;
+        top: 20%;
+        left: 0;
+        border: 1px solid #ccc; }

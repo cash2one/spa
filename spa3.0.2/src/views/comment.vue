@@ -20,12 +20,9 @@
             </router-link>
         </div>
         <div class="comment-info wrap">
-            <div class="title">服务评级</div>
             <div class="item" v-for="item in commentItems" v-show="item.show">
                 <div>{{ item.label }}</div>
-                <div class="comment-stars">
-                    <div @click="doClickCommentStar($event,item)"><div :style="{ width : item.value+'%' }"></div></div>
-                </div>
+                <div @click="doClickCommentStar($event,item)"><div :style="{ width : item.value+'%' }"></div></div>
                 <div>{{ item.value | commentFormatter(item.type) }}</div>
             </div>
         </div>
@@ -35,14 +32,15 @@
                 <div v-for="item in impressionList" :key="item.id" @click="doClickImpressionItem(item)" :class="{ active : item.selected }">{{ item.tag }}</div>
             </div>
             <div class="comment-text" v-show="!(orderType == 1 && commentInputText.length == 0)">
-                <textarea maxlength="200" @focus="onTextareaFocus()" @blur="onTextareaBlur()" v-model="commentInputText" :readonly="orderType==1"></textarea>
+                <textarea maxlength="200" ref="commentInput" @focus="onTextareaFocus()" @blur="onTextareaBlur()" v-model="commentInputText" :readonly="orderType==1"></textarea>
                 <div>200字以内哦~</div>
                 <span :class="{ none : !showTextareaPlaceholder }">亲，点击这里，留句好评哦，么么哒~</span>
             </div>
         </div>
         <attention></attention>
         <div class="submit-btn">
-            <div @click="doClickSubmitBtn()" :class="{ processing : inProcessing }">提交{{ inProcessing? "中..." : "" }}</div>
+            <div :class="{ checked: isAnonymous }" @click="doCheckAnonymous()">匿名评价</div>
+            <div class="submit-button" @click="doClickSubmitBtn()" :class="{ processing : inProcessing }">{{ inProcessing ? '提交中...' : '发表评价' }}</div>
         </div>
     </div>
 </template>
@@ -50,6 +48,7 @@
     import Vue from 'vue'
     import { Global } from '../libs/global'
     import Util from '../libs/util'
+    import { eventHub } from '../libs/hub'
     import CommentFormatter from '../filters/comment-formatter'
 
     module.exports = {
@@ -75,7 +74,10 @@
                 impressionList: [],
                 selectedImpression: [],
                 isScan: false,
-                commentItems: []
+                commentItems: [],
+
+                isAnonymous: false,
+                isFromFastPay: false
             }
         },
         created: function () {
@@ -91,14 +93,15 @@
             that.type = query.type || ''
             that.commentId = query.commentId || ''
             that.isScan = query.isScan == 1
+            that.isFromFastPay = query.from == 'fastPay'
 
             that.commentItems = [
-                {label: '技师态度：', value: 100, type: 0, show: true},
-                {label: '技师仪容：', value: 100, type: 0, show: true},
-                {label: '技师技能：', value: 100, type: 0, show: true},
-                {label: '技师偷钟：', value: 100, type: 1, show: true},
-                {label: '会所环境：', value: 100, type: 0, show: that.isScan},
-                {label: '接待服务：', value: 100, type: 0, show: that.isScan}]
+                {label: '态度：', value: 100, type: 0, show: true},
+                {label: '仪容：', value: 100, type: 0, show: true},
+                {label: '技能：', value: 100, type: 0, show: true},
+                {label: '偷钟：', value: 100, type: 1, show: true},
+                {label: '会所环境：', value: 100, type: 0, show: false},
+                {label: '接待服务：', value: 100, type: 0, show: false}]
 
             that.$http.get('../api/v2/club/impression/list').then(function (res) {
                 res = res.body
@@ -176,6 +179,9 @@
             })
         },
         methods: {
+            doCheckAnonymous: function () {
+                this.isAnonymous = !this.isAnonymous
+            },
             doClickCommentStar: function (event, item) { // 点击服务评级
                 var that = this
                 if (that.orderType != 0) return
@@ -188,6 +194,7 @@
                 var that = this
                 if (that.orderType != 0) return
                 that.showTextareaPlaceholder = false
+                that.$refs.commentInput.scrollIntoView(true)
             },
             onTextareaBlur: function () {
                 var that = this
@@ -222,7 +229,8 @@
                             environmentalScore: that.isScan ? commentItems[4] : '',
                             serviceScore: that.isScan ? commentItems[5] : '',
                             impression: impressionArr.join('、'),
-                            comment: encodeURIComponent(that.commentInputText)
+                            comment: encodeURIComponent(that.commentInputText),
+                            isAnonymous: that.isAnonymous ? 'Y' : 'N'
                         }).then(function (res) {
                             res = res.body
                             if (res.statusCode == 200) {
@@ -230,14 +238,29 @@
                                 that.orderType = 1
                                 that.commentCount++
                                 if (global.userAgent.isWX) {
+                                    var currPageQuery = global.currPage.query
+                                    var commentId = res.respData || ''
+                                    currPageQuery.commentId = commentId
+                                    that.$router.replace({name: 'comment', query: currPageQuery})
                                     that.$router.push({
                                         name: 'techReward',
-                                        query: {techId: that.techId, commentId: res.respData || ''}
+                                        query: {techId: that.techId, commentId: res.respData || '', isAnonymous: (that.isAnonymous ? 'Y' : 'N')}
                                     })
                                 }
                             } else if (res.statusCode == 412) {
                                 Util.tipShow(res.msg || '您今天已经评论过该技师了')
-                                history.back()
+                                if (that.isFromFastPay) {
+                                    setTimeout(function () {
+                                        eventHub.$emit('pop-reward-modal', {
+                                            avatarUrl: that.techHeader,
+                                            name: that.techName,
+                                            clubName: ''
+                                        })
+                                        that.$router.push({naame: 'home'})
+                                    }, 300)
+                                } else {
+                                    that.$router.back()
+                                }
                             } else {
                                 Util.tipShow(res.msg || '评论出错！')
                             }

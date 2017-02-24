@@ -136,6 +136,16 @@
             if(eb.secondUserId){ ///////旧账号登录
                 $.createEasemobConn(1);
             }
+	        var isLoginluckyWheel = $.sessionStorage("login_luckyWheel")
+            if(isLoginluckyWheel){
+	            if(!$.$.userTel){
+	                $.tipShow('请您先绑定手机号！')
+                    $.page('bindPhone',-1,true)
+                } else{
+                    location.href = location.origin+"/spa-manager/luckyWheel?actId="+isLoginluckyWheel+"&clubId="+$.$.clubID
+                    return
+                }
+            }
             if($.$.loginUrl && ($.$.loginUrl.indexOf('techReward&')!=-1 || $.$.loginUrl.indexOf('comment&')!=-1 || $.$.loginUrl.indexOf('confirmOrder&')!=-1)){
                 $.localStorage('backIndex',3);//==使在打赏页时，返回键不返回登录页
             }

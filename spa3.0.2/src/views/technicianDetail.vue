@@ -4,8 +4,8 @@
 <template>
     <div>
         <div class="page-back-btn tech-detail-page" @click="doClickPageBack()"></div>
-        <div class="page-back-home" @click="doClickBackHomeBtn()">会所</div>
-        <div class="page" id="technician-detail-page" :style="{ height : (global.winHeight-2.667*global.winScale*16)+'px' }">
+        <router-link class="page-back-home" :to="{ path: '/'+clubId+'/home' }" tag="div">会所</router-link>
+        <div class="page" id="technician-detail-page">
             <div class="top" :class="{ showCounter : showCounter }">
                 <div class="header">
                     <div v-if="techAvatarUrl" :style="{ backgroundImage : 'url('+techAvatarUrl+')' }"></div>
@@ -37,11 +37,11 @@
                     <div>{{ techCommentCount }}评论</div>
                 </div>
             </router-link>
-            <a class="view" @click="doClickViewOtherTech()">
+            <router-link :to="{ path: '/'+clubId+'/technicianList', query: { clubsource: '9358' }}" class="view">
                 <div class="icon"></div>
                 <div class="arrow"></div>
                 <div>查看店内其他技师</div>
-            </a>
+            </router-link>
             <div class="service-item" v-show="serviceItems.length>0">
                 <div class="title">选择项目<div></div></div>
                 <div class="wrap">
@@ -64,9 +64,10 @@
             <a @click="doClickOrderBtn()" :class="{ active : canOrder }">预约</a>
         </div>
         <tel-detail v-if="telephone.length>0" :telephone="telephone"></tel-detail>
-        <div class="club-coupon" :class="{ hide : paidCoupons.length==0 && ordinaryCoupons.length==0 }" @click="switchCouponListStatus(true)">
+        <div class="club-coupon" v-show="!(paidCoupons.length==0 && ordinaryCoupons.length==0)" @click="switchCouponListStatus(true)">
             <div></div>
-            <span>抢优惠</span></div>
+            <span>抢优惠</span>
+        </div>
         <div class="coupon-list" :class="{ active : showCouponList }">
             <div>
                 <div class="title"><span>抢优惠</span>
@@ -115,6 +116,7 @@
                 showCounter: false,
                 counterTime: '',
                 authCode: '',
+                canReward: true, // 是否可以打赏
 
                 techId: '', // 技师ID
                 techChatId: '', // 技师聊天ID
@@ -139,6 +141,7 @@
                 collectedText: '',
 
                 canOrder: true, // 是否可以预约
+                appointType: '',
                 phoneAppointment: '',
                 appointment: '',
                 payAppointment: '',
@@ -169,8 +172,7 @@
                         Global.getOauthCode('', '9358', 'confirm-tech-pay', 'base')
                         return
                     } else {
-                        Global.getOpenId({authCode: that.authCode, state: 'confirm-tech-pay'}).then(function (openId) {
-                            global.openId = openId
+                        Global.getOpenId({authCode: that.authCode, state: 'confirm-tech-pay'}).then(function () {
                             that.init()
                         }, function (error) {
                             Util.tipShow(error)
@@ -212,6 +214,7 @@
                         that.canComment = res.toDayCommentCount != 1
                         that.isFavorite = (res['isFavorite'] || 'n').toLowerCase() == 'y'
                         that.canOrder = (res['appointment'] || 'y').toLowerCase() != 'n' || (res['phoneAppointment'] || 'y').toLowerCase() != 'n'
+                        that.appointType = res.appointType
                         that.phoneAppointment = (res.phoneAppointment || 'y').toLowerCase()
                         that.appointment = (res.appointment || 'y').toLowerCase()
                         that.telephone = res.telephone ? res.telephone.split(',') : []
@@ -236,6 +239,14 @@
                                 imgUrl: that.techAvatarUrl
                             }, 'technicianDetail-' + that.techId)
                         }
+
+                        // 会所是否关闭了打赏
+                        that.$http.get('../api/v2/user/reward/isRewardOn', {params: {clubId: that.clubId}}).then(function (rewardSwitchRes) {
+                            rewardSwitchRes = rewardSwitchRes.body
+                            if (rewardSwitchRes.statusCode == 200) {
+                                that.canReward = rewardSwitchRes.respData
+                            }
+                        })
 
                         // 获取优惠券数据
                         that.getCouponData()
@@ -267,25 +278,7 @@
                 })
             },
             doClickPageBack: function () { // 点击返回按钮
-                history.back()
-            },
-            doClickViewOtherTech: function () { // 查看店内其他技师
-                var that = this
-                var global = that.global
-                if (global.pageMode == 'club') {
-                    that.$router.push({name: 'technicianList'})
-                } else {
-                    that.$router.push({path: '/' + that.clubId + '/technicianList', query: {clubsource: '9358'}})
-                }
-            },
-            doClickBackHomeBtn: function () { // 点击回到主页的按钮
-                var that = this
-                var global = that.global
-                if (global.pageMode == 'club') {
-                    that.$router.push({name: 'home'})
-                } else {
-                    that.$router.push({path: '/' + that.clubId + '/home'})
-                }
+                this.$router.back()
             },
             doSelectServiceItem: function (itemId) { // 选择服务项目
                 var that = this
@@ -297,12 +290,15 @@
             },
             doClickRewardBtn: function () { // 点击打赏按钮
                 var that = this
+                if (!that.canReward) {
+                    return Util.tipShow('会所关闭了打赏功能！')
+                }
                 that.$router.push({name: 'techReward', query: {techId: that.techId}})
             },
             doClickOrderBtn: function () { // 点击预约按钮
                 var that = this
                 if (that.canOrder) {
-                    if (that.phoneAppointment != 'n') {
+                    if (that.appointType == 'phone') {
                         if (!that.global.isLogin) { // 未登录，跳转到登录页
                             that.$router.push({name: 'login'})
                         } else if (that.telephone.length == 0) {
@@ -310,17 +306,27 @@
                         } else {
                             eventHub.$emit('change-tel-detail', true)
                         }
-                    } else if (that.appointment != 'n') {
-                        if (that.payAppointment == 'Y' && !that.global.userAgent.isWX) {
-                            Util.tipShow('此会所需支付预约，请在微信客户端中打开！')
-                        } else if (that.isCrossInner && !that.currSelectItem) {
-                            Util.tipShow('必须选择一个服务项目！', 4000)
+                    } else if (that.appointType == 'paid' || that.appointType == 'paid_full') {
+                        if (!that.global.userAgent.isWX) {
+                            if (Global.checkAccess('confirmOrder')) {
+                                Util.tipShow('此会所需支付预约，请在微信客户端中打开！')
+                            } else {
+                                Util.tipShow('会所未开通预约权限！')
+                            }
                         } else {
+                            if (that.isCrossInner && !that.currSelectItem) {
+                                return Util.tipShow('必须选择一个服务项目！', 4000)
+                            }
                             that.$router.push({
                                 name: 'confirmOrder',
                                 query: {techId: that.techId, itemId: that.currSelectItem, clubId: that.clubId}
                             })
                         }
+                    } else if (that.appointType == 'appoint') {
+                        that.$router.push({
+                            name: 'confirmOrder',
+                            query: {techId: that.techId, itemId: that.currSelectItem, clubId: that.clubId}
+                        })
                     } else {
                         Util.tipShow('会所不支持线上预约！')
                     }
@@ -461,6 +467,7 @@
                             Util.tipShow(res.msg || '购买点钟券请求失败！')
                         }
                     }, function () {
+                        Util.tipShow('购买点钟券请求失败！')
                         targetCls.remove('processing')
                         target.innerHTML = '立即购买'
                     })

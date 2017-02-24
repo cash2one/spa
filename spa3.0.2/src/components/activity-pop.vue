@@ -27,10 +27,13 @@
         computed: {
             clsName: function () {
                 var actData = this.actData
-                if (actData.activityType == 'paid_service_item') {
+                var actType = actData.acactivityType
+                if (actType == 'paid_service_item') { // 限时抢
                     return 'timeLimit'
-                } else if (actData.activityType == 'paid_plumflowe') {
+                } else if (actType == 'paid_plumflowe' || actType == 'one_yuan') { // 一元夺
                     return 'oneYuan'
+                } else {
+                    return actType // luckyWheel journal
                 }
             }
         },
@@ -47,10 +50,18 @@
             doJump: function () {
                 var that = this
                 var actData = that.actData
-                if (actData.activityType == 'paid_service_item') {
+                var actType = actData.acactivityType
+
+                if (actType == 'paid_service_item') {
                     that.$router.push({name: 'robProjectDetail', query: {robProjectId: actData.activityId}})
-                } else if (actData.activityType == 'paid_plumflowe') {
+                } else if (actType == 'paid_plumflowe') {
                     that.$router.push({name: 'plumflowers', query: {id: actData.activityId}})
+                } else if (actType == 'one_yuan') {
+                    that.$router.push({name: 'oneYuanDetail', query: {oneYuanBaseId: actData.activityId}})
+                } else if (actType == 'luckyWheel') {
+                    that.$router.push({name: 'luckyWheel', query: {actId: actData.activityId}})
+                } else if (actType == 'journal') {
+                    location.href = location.origin + '/spa-manager/journal?id=' + actData.activityId
                 }
             }
         },

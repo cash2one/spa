@@ -19,7 +19,7 @@
         tel = $.localStorage('_indianas_tel_phone') || $.$.userTel || '',
         isNeedQuery = false,
         buyNos = [],
-        actId = $.param('id') || $.getUrlParam('id') || '',
+        actId = $.param('id') || $.getUrlParam('id',true) || '',
         timesSurplus = 0,     //剩余可参与次数
         shareCode = $.getUrlParam('shareCode') || '',
         authCode = $.getUrlParam('code') || '',
@@ -89,7 +89,7 @@
                             openId =  resp.respData.openid;
                             $.localStorage("_indianas_user_open_id",openId);
                             initPage();
-                        }else if(resp.statusCode == '40029'){
+                        }else if(resp.statusCode == '935801'){
                             getAuthCode();
                         }
                         else{
@@ -275,9 +275,9 @@
                             $.page('plumflowers&isSearch=true&_time='+new Date().getTime()+'&id='+actId,0,true,false);
                             return;
                         }else if(!$.$.ua.isWX){
-							if($.checkAccessMenu('plumflowers')){
-								$.tipShow('请在微信中打开。')
-							}
+                          if($.checkAccessMenu('plumflowers')){
+                            $.tipShow('请在微信中打开。')
+                          }
                             return ;
                         }
                         //=== 是否需要查询之前是否已有购买数据
@@ -294,6 +294,7 @@
                                     chanel: $.getUrlParam('chanel') || 'link'
                                 },
                                 success: function (response) {
+                                    isNeedQuery = false;
                                     if(Array.isArray(response.actNos) && response.actNos.length>0){
                                         //=== 已购买的号码
                                         var _html = [];

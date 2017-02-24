@@ -17,16 +17,16 @@
         <div class="comment-list" ref="listEle" :style="{ height : (global.winHeight-2.611*global.winScale*16)+'px' }" @scroll="doHandlerListScroll()">
             <div class="comment-item" v-for="item in comments">
                 <div>
-                    <div :style="{ backgroundImage : 'url('+(item.avatarUrl || global.defaultHeader)+')' }"></div>
+                    <div :style="{ backgroundImage : 'url('+(item.avatarUrl || global.defaultHeader)+'),url('+global.defaultHeader+')' }"></div>
                     <div>{{ ((!item.name || item.name=="null") ? "匿名用户" : item.name ) }}</div>
                     <div>{{item.createdAt}}</div>
                     <div>{{item.commentTypeName}}</div>
                 </div>
                 <div>
-                    <div><div :style="{ width : item.rate+'%' }"></div></div>
+                    <div :style="{ width: starWidth * 5+'px', 'background-size': starWidth+'px 1.111rem' }"><div :style="{ width : item.rate+'%', 'background-size': starWidth+'px 1.111rem' }"></div></div>
                     <div v-show="item.rewardAmount != 0"><i></i>打赏：<span>{{ (item.rewardAmount/100).toFixed(2) }}</span>元</div>
                 </div>
-                <div v-show="item.comment">{{item.comment}}</div>
+                <div v-show="item.comment">{{ item.comment }}</div>
             </div>
             <div class="data-load-tip" :class="{ none : !showDataLoadTip }"><div>加载数据</div></div>
             <div class="finish-load-tip" :class="{ none : !showFinishLoadTip }"><div>已加载完全部数据</div></div>
@@ -45,7 +45,6 @@
         data: function () {
             return {
                 global: Global.data,
-                queryTechCommentsUrl: '../api/v2/club/technician/comments',
                 pageSize: 20,
                 currPage: 1,
                 currType: '',
@@ -55,18 +54,20 @@
                 showFinishLoadTip: false, // 显示已经加载完成
                 isDataAddEnd: false, // 数据是否已加载完
                 isAddData: false, // 数据是否正在加载
-                showCommentTypeSelect: false
+                showCommentTypeSelect: false,
+                starWidth: 0
             }
         },
         created: function () {
             var that = this
             var global = that.global
             that.techId = global.currPage.query.id
-            if (that.techId == undefined) { // 链接上无技师id
+            that.starWidth = Math.floor(1.333 * global.winScale * 16)
+            if (!that.techId) { // 链接上无技师id
                 Util.tipShow(global.visitError)
                 return that.$router.back()
             }
-            that.$http.get(that.queryTechCommentsUrl, {
+            that.$http.get('../api/v2/club/technician/comments', {
                 params: {
                     page: that.currPage,
                     pageSize: that.pageSize,
@@ -118,7 +119,7 @@
                 that.showFinishLoadTip = false
                 that.isDataAddEnd = false
 
-                that.$http.get(that.queryTechCommentsUrl, {
+                that.$http.get('../api/v2/club/technician/comments', {
                     params: {
                         page: page,
                         pageSize: that.pageSize,

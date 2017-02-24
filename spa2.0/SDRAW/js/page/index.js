@@ -1,5 +1,5 @@
 (function (win, doc, loc) {
-    var version = '2016111104c',//版本标记
+    var version = '2017022405c',//版本标记
         storeFont = 'spa_',
         DEBUG_ENABLE = false,   //=== 是否开启debug模式，开启后，部分$.tipShow才会显示 ===
         supportReplaceState = !!history.replaceState;
@@ -535,7 +535,7 @@
                     if (/^(200|204)$/.test(ajaxObj.status)) {
                         if (set.success) set.success(ajaxObj.responseText);
                     } else if (ajaxObj.status == 0) { //网络断开的情况下
-                        $.tipShow('请检查您的网络连接！');
+                        // $.tipShow('请检查您的网络连接！');
                         if (pageIsLoading) {
                             $.pageCancel();
                         }
@@ -549,6 +549,7 @@
             ajaxObj.send(set.data);
         };
         $.ajax = function (set) {//主要调用方法
+            var uuid = generateUUID();
             set = set || {};
             if (set.data == null)
                 set.data = {timestamp: Date.now(), sessionType: $.$.sessionType, token: $.$.userToken || ''};
@@ -556,8 +557,12 @@
                 set.data.timestamp = Date.now();
                 if (!set.data.sessionType) set.data.sessionType = $.$.sessionType;
                 set.data.token = set.data.token || $.$.userToken || '';
+                set.data.tokenId = set.data.tokenId || uuid;        //支付令牌信息
             } else if (typeof set.data == 'string') {
                 if (!/(&|\?)token=/.test(set.data)) set.data += '&token=' + ($.$.userToken || '') + '&timestamp=' + Date.now() + '&sessionType=' + $.$.sessionType;
+                if(!/(&|\?)tokenId=/.test(set.data)) {
+                    set.data += '&tokenId=' + uuid;
+                }
             }
 
             $._ajax({
@@ -577,7 +582,9 @@
                 },
                 error: function (text, code) {
                     text = text.trim();
-                    if (code == 0) $.tipShow("请检查您的网络连接！");
+                    if (code == 0) {
+                        //$.tipShow("请检查您的网络连接！");
+                    }
                     else if (!/user\/info\/view/.test(set.url)) {
                         if (code == 401) {
                             $.$.loginUrl = pageHashAll;
@@ -624,7 +631,8 @@
                 clubList:['map','customSwiper'],
                 picture: 'ic',
                 home:'customSwiper',
-                robProjectSuccess:'customSwiper'
+                robProjectSuccess:'customSwiper',
+                activities:'customSwiper'
             },
             kitList = {//插件对应路径
                 map: 'http://webapi.amap.com/maps?v=1.3&key=ff9e41d1f7fcaed686817ad278502750', //高德地图
@@ -803,22 +811,25 @@
                                 success: function (response) {}
                             });
                         }
-
-                        setTimeout(function(){
-                            $._ajax({
-                                url: '../api/v2/log/user_bind_club_tech',
-                                type: 'post',
-                                data: {
-                                    clubId: $.$.clubID,
-                                    timestamp: Date.now(),
-                                    token: v,
-                                    techCode : ($.$.techInviteCode?$.$.techInviteCode.split('/')[0]:''),
-                                    openId : $.$.openId || "",
-                                    source : (/scan/.test($.$.loginChanel) ? "qrCode" : "web")
-                                },
-                                success: function (response) {}
-                            });
-                        },350)
+                        if($.$.ua.isWX && $.$.loginChanel || !$.$.ua.isWX) {
+                            setTimeout(function () {
+                                $._ajax({
+                                    url: '../api/v2/log/user_bind_club_tech',
+                                    type: 'post',
+                                    data: {
+                                        clubId: $.$.clubID,
+                                        timestamp: Date.now(),
+                                        token: v,
+                                        techId: getUrlParam("techId") || "",
+                                        techCode: ($.$.techInviteCode ? $.$.techInviteCode.split('/')[0] : ''),
+                                        openId: $.$.openId || "",
+                                        source: (/scan/.test($.$.loginChanel) ? "qrCode" : "web")
+                                    },
+                                    success: function (response) {
+                                    }
+                                });
+                            }, 350)
+                        }
                     }
                     this.__userToken = v;
                 },
@@ -854,8 +865,8 @@
                 $.$.userHeader = $.$.headerImgUrl;
             }
         }
-        //========== 加载权限列表 =========
         if($.$.clubID){
+            //========== 加载权限列表 =========
             $.ajax({
                 url:'../api/v2/club/menu/all',
                 isReplaceUrl:true,
@@ -876,15 +887,22 @@
                                 arr[i]['isPass'] = result.respData.enabledResourcesIds.some(function (v) {
                                     return v == arr[i].id;
                                 });
+                                arr[i]['isOff'] = result.respData.switchOffResourcesIds.some(function (v) {
+                                    return v == arr[i].id;
+                                });
                                 if(arr[i].children && arr[i].children.length > 0){
                                     menuToObject(arr[i].children,obj);
                                 }
                             }
                         }
-
                     }
                 }
             });
+
+            //========== 加载会所预约类型 ======
+            /*$.ajax({
+
+            });*/
         }
 
         //重置hash
@@ -928,7 +946,6 @@
             $.$.winHeight = doc.documentElement.clientHeight || win.innerHeight;
             $.$.scale = scale = winWidth / win.baseWidth;
             html.style.fontSize = doc.documentElement.style.fontSize = scale * 16 + 'px';
-
             var pageContent = doc.querySelectorAll('#_content>div');
             if ($.$.ua.isiPhone && pageContent) {
                 for (var i = 0; i < pageContent.length; i++) {
@@ -1037,9 +1054,9 @@
             return false;*/
         }
         //检测此次跳转进入的页面 会所是否已开通此功能 =========
-        $.checkAccessMenu = function (url) {
+        $.checkAccessMenu = function (url, showTip) {
             var flag = checkAccessMenu(url,'url');
-            if(!flag) $.tipShow('会所未开通该功能');
+            if(!flag && showTip !== false) $.tipShow('会所未开通该功能');
             return flag;
         };
 
@@ -1195,8 +1212,15 @@
             //定义页面切换函数
             $.pageSwitch = function (useDefaultShareConfig) {
                 //定义页面返回按钮
-                $('#backBtn').Page();
-                $('div#title>div:nth-of-type(2)').Page();
+                if(/9358.manager/.test($.$.ua.value)){
+                    $('#backBtn,div#title>div:nth-of-type(2)').Click(function(){
+                        history.back();
+                    })
+                }
+                else{
+                    $('#backBtn').Page();
+                    $('div#title>div:nth-of-type(2)').Page();
+                }
 
                 if (pageSwitchType == -1) {
                     if (pageOld) {//初始化
@@ -2410,7 +2434,10 @@
                     msgObj.techCode = msg.ext.techCode;
                 }
                 else if (msgObj.msgType == "ordinaryCoupon") {
-                    msgObj.userActId = msg.userActId;
+                    msgObj.userActId = msg.userActId || msg.ext.userActId;
+                    msgObj.actId = msg.ext.actId;
+                    msgObj.techCode = msg.ext.techCode;
+                    msgObj.groupmessageId = msg.ext.groupmessageId;
                 }
                 else if(msgObj.msgType == "diceGame"){
                     msgObj.gameStatus = msg.ext.gameStatus;
@@ -2422,8 +2449,14 @@
                     msgObj.giftId = msg.ext.giftId;
                     msgObj.giftValue = msg.ext.giftValue;
                     msgObj.giftName = msg.ext.giftName;
+                }else if(msgObj.msgType == 'oneYuan' || msgObj.msgType == 'plumFlower' || msgObj.msgType == 'timeLimit' ||
+                    msgObj.msgType == 'luckyWheel' || msgObj.msgType == 'journal'){
+                    msgObj.actId = msg.ext.actId;
+                    msgObj.clubName = msg.ext.clubName;
+                    msgObj.techCode = msg.ext.techCode;
                 }
             }
+
             if (type == 'pic') {
                 msgObj.url = msg.url;
                 msgObj.width = msg.width;
@@ -2439,10 +2472,14 @@
          * @param name  参数名
          * @returns {Object | Array}
          */
-        function getUrlParams(name) {
+        function getUrlParams(name,isCurrPage) {
             var reg = new RegExp("(^|&)?([\da-zA-Z_]+)=([^&\\?#\/\\\\]*)(\\?|#|\/|\\\\|&|$)", "ig"),
                 strs = [loc.search.substring(1), loc.hash.substring(1)],
                 results = {}, tmpExec = '', _tmp;
+            if(isCurrPage){
+                strs = loc.hash.substring(1).split('/');
+                strs = [strs[strs.length - 1]];
+            }
             strs.forEach(function (s) {
                 tmpExec = reg.exec(s);
                 while (tmpExec) {
@@ -2454,8 +2491,8 @@
             });
             return name ? (results[name] || []) : results;
         }
-        function getUrlParam(name){
-            var param = getUrlParams(name);
+        function getUrlParam(name,isCurrPage){
+            var param = getUrlParams(name,isCurrPage);
             if (!name || param.length > 1) return param;
             if (Array.isArray(param) && param.length < 2) return param[0] || '';
             else return param;
@@ -2640,7 +2677,10 @@
                     $.showMsgNum(newMsgCount);
                 },
                 onTextMessage: function (msg) {//接收文本消息
-                    //console.log('收到一条文本消息：' + JSON.stringify(msg));
+                    // console.log('收到一条文本消息：' + JSON.stringify(msg));
+                    if(msg.ext && !msg.ext.techId){
+                        msg.ext.name = msg.ext.clubName // 当做管理者，显示会所名
+                    }
                     ///////////////////////////////////////调试收集用户消息
                     if(msg.data.toLowerCase()=="debug"){
                         var context = eb.conn.context,
@@ -2667,82 +2707,7 @@
                     /////////////////////////////////////////////////////////////
 
                     msg.time = parseInt(msg.ext.time);
-                    if (msg.ext.msgType == "ordinaryCoupon" && msg.ext.actId && msg.ext.techCode) {/////收到一张技师发来的优惠券
-                        var ct = eb.currChatTech;
-                        if(!$.$.userTel){
-                            eb.conn.send({
-                                to: ct.chatId,
-                                msg: "我还未绑定手机号码，暂无法领取您发送的券！",
-                                type: "chat",
-                                ext: {
-                                    name: ct.chatName,
-                                    header: ct.chatHeader,
-                                    msgType: "tip",
-                                    time: Date.now()
-                                }});
-                            return;
-                        }
-                        $.ajax({//领取
-                            url: ($.$.clubID ? "../" : "") + "get/redpacket",
-                            data: {
-                                actId: msg.ext.actId,
-                                phoneNum: $.$.userTel,
-                                openId: $.$.openId,
-                                userCode: "",
-                                techCode: msg.ext.techCode,
-                                chanel: "link",
-                                groupMessageId : msg.ext.groupmessageId || ""
-                            },
-                            success: function (res) {
-                                //console.log("领取优惠券的返回："+JSON.stringify(res));
-                                if (res.statusCode == 200 && res.respData && res.respData.userActId) {
-                                    msg.userActId = res.respData.userActId;
-                                }
-                                doHandlerTextMsg(msg);
-                                if (msg.userActId) {
-                                    var couponName = msg.data.split("元<b>")[0], strArr = couponName.split("</i><span>");
-                                    couponName = strArr[1].slice(0, -7) + "元" + strArr[0].substr(3);
-                                    var getCouponMsgObj = {
-                                        from: eb.userId,
-                                        to: ct.chatId,
-                                        data: "您领取了" + ct.name + '的"' + couponName + '"',
-                                        ext: {
-                                            name: ct.name,
-                                            header: ct.header,
-                                            avatar: ct.avatar,
-                                            no: ct.no,
-                                            techId: ct.techId,
-                                            clubId: ct.clubId,
-                                            msgType: "couponTip"
-                                        },
-                                        status: 1
-                                    };
-                                    eb.conn.send({
-                                        to: ct.chatId,
-                                        msg: couponName,
-                                        type: "chat",
-                                        ext: {
-                                            name: ct.chatName,
-                                            header: ct.chatHeader,
-                                            msgType: "couponTip",
-                                            time: Date.now()
-                                        },
-                                        success: function () {
-                                            $.sendFriend(ct.chatId, 'tech', eb.userId, 'user');
-                                            if (doc.querySelector('#chat') && ct.chatId == msg.from && $.addMsgDiv) {
-                                                $.addMsgDiv(getCouponMsgObj, "couponTip", false, true, false);
-                                            }
-                                            $.updateSessionList(getCouponMsgObj, "text", false);
-                                            $.addToMsgList(getCouponMsgObj, "text");
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                    }
-                    else {
-                        doHandlerTextMsg(msg);
-                    }
+                    doHandlerTextMsg(msg);
 
                     ////如果是旧账号收到技师发来的消息，则发送changAccount消息通知技师用户的账号已切换
                     if(conn==eb.secondConn){
@@ -2755,7 +2720,10 @@
                     }
                 },
                 onPictureMessage: function (msg) {//接收图片消息
-                    //console.log('收到一条图片消息：' + JSON.stringify(msg));
+                    // console.log('收到一条图片消息：' + JSON.stringify(msg));
+                    if(msg.ext && !msg.ext.techId){
+                        msg.ext.name = msg.ext.clubName // 当做管理者，显示会所名
+                    }
 
                     ///////////////////////////////////////调试收集用户消息
                    /* $.ajax({
@@ -2975,9 +2943,9 @@
         if ($.$.userToken) {
             $.updateUserNameAndHeader();
         }
-        if($.$.authCode == 'user_offline_notice'){
+        /*if($.$.authCode == 'user_offline_notice'){
             $.localStorage('offline_notice',true);
-        }
+        }*/
         if($.$.ua.isWX/* || $.$.visitChannel=="9358"*/){  //===== 因需知道此用户是否已关注9358公众号，所以只要是从微信进入系统，全部需走授权 ====  /////公众号模式
             var isNeedIndex = $.cookie('isNeedIndex'),
               isNeedFollow = $.getUrlParam('isNeedFollow') === 'true';      //是否需要进入引导页
@@ -3015,11 +2983,12 @@
                         success: function (res) {
                             res = JSON.parse(res);
                             if (res.statusCode == "200") {
-                                var isOffNce = $.localStorage('offline_notice');
-                                $.localStorageClear('offline_notice');
+                                var /*isOffNce = $.localStorage('offline_notice'),*/isForce = getUrlParam('force',true) == '1';
+                                //$.localStorageClear('offline_notice');
                                 res = res.respData;
                                 var wxInfo = res.wxUserInfo, loginData = res.loginChanelData;
                                 $.$.openId = wxInfo.openid;
+                                $.localStorage('_indianas_user_open_id',$.$.openId);
                                 $.$.sessionId = wxInfo.sessionId;
                                 $.$.nickName = wxInfo.nickname;
                                 $.$.headerImgUrl = wxInfo.headimgurl;
@@ -3032,7 +3001,7 @@
                                 $.$.loginChannelClubID = loginData.clubId;
                                 $.$.loginChanel = loginData.loginChannel;
                                 $.$.clubInviteCode = loginData.clubInviteCode;
-                                if(loginData.clubInviteCode){
+                                if(loginData.clubInviteCode && !isForce){
                                     $.$.clubID = loginData.clubId;
                                 }
                                 $.$.techSerialNo = loginData.techSerialNo;
@@ -3091,48 +3060,43 @@
                                 var isFollowed = wxInfo.subscribe == 1;        //是否已经关注9358公众号
                                 $.$.isFollowed = isFollowed;
                                 $.localStorage('spa_user_isFollowed', Number(isFollowed)+'');
-                                if($.param('isNeedFollow')) $.paramClear('isNeedFollow');
-                                if ($.$.loginChanel == "9358" || $.$.param('force') == '1') {//9358公众号访问
+                                if(isNeedFollow) $.paramClear('isNeedFollow');
+                                //if ($.$.loginChanel == "9358" || isForce || ($.$.loginChanel == 'pos' && isForce)) {//9358公众号访问
                                     if(!isFollowed&&isNeedFollow){           //是否需要跳转到引导关注页
                                         $.paramClear('visitChannel');
                                         $.$.tmpHash = $.sessionStorage('currInitHash') || location.hash;              //用于在引导页请求失败时，跳转回正常页面
                                         $.$.tmpHash = $.$.tmpHash?$.$.tmpHash.substring(1):'';
                                         var techId = $.$.tmpHash.match(/id=(\d+)$/);
                                         techId = techId ? techId[1] : '';
-                                        showPage('follow9358&techId='+ techId);
+                                        showPage('follow9358&techId='+ techId,true);
                                     }else if(isNeedIndex == 1){
                                         showPage('personal',true);
                                     }else{
-                                        var showPageName;
-                                        if(isOffNce) showPageName = "message";
+                                        var showPageName,currHash = $.sessionStorage('currInitHash') || location.hash;
+                                        $.sessionStorageClear('currInitHash');
+                                        if(currHash == '#home' && $.$.clubID){
+                                            showPageName = currHash.substr(1);
+                                        }else if((currHash && currHash != "#home") || (currHash == '#home' && $.$.clubID)){
+                                            showPageName = currHash.substr(1);
+                                        }
                                         else{
-                                            var currHash = $.sessionStorage('currInitHash') || location.hash;
-                                            $.sessionStorageClear('currInitHash');
-                                            if(currHash == '#home' && $.$.clubID){
-                                                showPageName = currHash.substr(1);
-                                            }else if(currHash && currHash != "#home"){
-                                                showPageName = currHash.substr(1);
-                                            }
-                                            else{
-                                                showPageName = 'clubList'+ ( $.getUrlParam('search_text') ? ('&search_text='+$.getUrlParam('search_text')):'');
-                                            }
+                                            showPageName = 'clubList'+ ( $.getUrlParam('search_text') ? ('&search_text='+$.getUrlParam('search_text')):'');
                                         }
                                         showPage(showPageName,true);
                                         //showPage(isOffNce ? 'message' : ('clubList'+ ( $.getUrlParam('search_text') ? ('&search_text='+$.getUrlParam('search_text')):'')),true);
                                     }
-                                }
-                                else if ($.$.loginChanel == "club_scan" || $.$.loginChanel == "tech_scan") {
+                                /*}
+                                else if ($.$.loginChanel == "club_scan" || $.$.loginChanel == "tech_scan" || $.$.loginChanel == "pos") {
                                     if ($.$.loginChanel == "tech_scan") {//收藏技师请求
                                         $.ajax({
-                                            url: "../profile/user/favorite/create",
+                                            url: "../api/v2/profile/user/favorite/create",
+                                            isReplaceUrl:true,
                                             data: { id: loginData.techId },
                                             success: function () {}
                                         });
                                     }
                                     showPage("inviteCode",true);
-                                }else if($.$.loginChanel == 'pos'){
-
-                                }
+                                }*/
                             }
                             else if(res.statusCode == "935801"){
                                 if(isNeedIndex == 1){
@@ -3190,6 +3154,7 @@
             if(clubSource && /wifi/.test(clubSource)){
                 clubSource = "wifi";
             }
+            $.$.clubSource = clubSource;
             $.ajax({
                 url:'../api/v2/log/club/visit',
                 isReplaceUrl:true,
@@ -3289,7 +3254,27 @@
                 return $.tipShow('绑定中，请稍候...');
             }
             _bindPhoneSureBtn.Class('processing').Text('绑定中...');
+            execBindPhone($('#_bindPhoneNumber',true).Value(),$('#_bindPhoneCode',true).Value(), function (result) {
+                if(result.statusCode == 200){
+                    result = result.respData;
+                    if(result.message) $.tipShow(result.message);
+                    $('#_bindPhone',true).ClassClear('active');
+                }else{
+                    $.eventMaskShow(false);
+                    if(result.msg != 'HAS_BOUND'){
+                        //_bindPhoneSureBtn.ClassClear('processing').Text('确认');
+                        result.msg = result.msg?(result.msg.indexOf('绑定失败')==0?result.msg:('绑定失败：'+result.msg)):'绑定失败';
+                        $.tipShow(result.msg);
+                    }else{
+                        $('#_bindPhone',true).ClassClear('active');
+                    }
+                }
+                _bindPhoneSureBtn.ClassClear('processing').Text('确认');
+            });
+        });
 
+        function execBindPhone(phoneNum,code,callback,isAutoNext){
+            var oldUserId = $.$.userID;
             $.ajax({
                 url:'../api/v2/wx/bind_phone/save',
                 isReplaceUrl:true,
@@ -3299,10 +3284,11 @@
                     clubCode: $.$.clubInviteCode || '',
                     techInviteCode: $.$.techInviteCode || '',
                     clubId: $.$.clubID || '',
-                    code:$('#_bindPhoneCode',true).Value(),
-                    phoneNum:$('#_bindPhoneNumber',true).Value()
+                    code:code,
+                    phoneNum:phoneNum
                 },
                 success: function (result) {
+                    var callData = result;
                     if(result.statusCode == 200){
                         result = result.respData;
                         $.$.userToken = result['token'];
@@ -3338,27 +3324,16 @@
                             eb.secondUserId = oldUserId;
                             $.switchUserChatInfo(oldUserId,$.$.userID);
                         }
-                        initEasemob();
-                        if(result.message) $.tipShow(result.message);
-                        //_bindPhoneSureBtn.ClassClear('processing').Text('确认');
-                        $('#_bindPhone',true).ClassClear('active');
-                    }else{
-                        $.eventMaskShow(false);
-                        if(result.msg != 'HAS_BOUND'){
-                            //_bindPhoneSureBtn.ClassClear('processing').Text('确认');
-                            result.msg = result.msg?(result.msg.indexOf('绑定失败')==0?result.msg:('绑定失败：'+result.msg)):'绑定失败';
-                            $.tipShow(result.msg);
-                        }else{
-                            $('#_bindPhone',true).ClassClear('active');
-                        }
+                        initEasemob(isAutoNext);
                     }
-                    _bindPhoneSureBtn.ClassClear('processing').Text('确认');
+                    if(typeof callback === 'function') callback(callData);
                 }
             });
-        });
+        }
 
-        function initEasemob(){
+        function initEasemob(isAutoNext){
             var eb = $.$.easemob, delay=false;
+            isAutoNext = isAutoNext !== false;
             if(!eb.conn.isClosed()){//退出重新登录
                 delay = true;
                 eb.conn.stopHeartBeat(eb.conn);
@@ -3374,23 +3349,26 @@
                 if(eb.secondUserId){ ///////旧账号登录
                     $.createEasemobConn(1);
                 }
-                if($.$.loginUrl && ($.$.loginUrl.indexOf('techReward&')!=-1 || $.$.loginUrl.indexOf('comment&')!=-1)){
-                    $.localStorage('backIndex',3);//==使在打赏页时，返回键不返回登录页
-                }
-                if($.$.loginUrl && forceReload !== false){
-                    if($.$.loginUrl==pageHash || forceReload){
-                        //如果是当前页，需刷新页面
-                        location.reload();
-                    }else{
-                        $.$.loginUrl ?  $.page($.$.loginUrl,1,true) : $.page("home",-1,true);
+                if(isAutoNext){
+                    if($.$.loginUrl && ($.$.loginUrl.indexOf('techReward&')!=-1 || $.$.loginUrl.indexOf('comment&')!=-1)){
+                        $.localStorage('backIndex',3);//==使在打赏页时，返回键不返回登录页
                     }
+                    if($.$.loginUrl && forceReload !== false){
+                        if($.$.loginUrl==pageHash || forceReload){
+                            //如果是当前页，需刷新页面
+                            location.reload();
+                        }else{
+                            $.$.loginUrl ?  $.page($.$.loginUrl,1,true) : $.page("home",-1,true);
+                        }
+                    }
+                    forceReload = 0;
+                    $.$.loginUrl = '';
+                    $.eventMaskShow(false);
                 }
-                forceReload = 0;
-                $.$.loginUrl = '';
-                $.eventMaskShow(false);
             },(delay ? 500 : 1))
         }
 
+        $.execBindPhone = execBindPhone;
         $.bindPhone = function (flag) {
             forceReload = flag;
             $.eventMaskShow(true);
@@ -3428,4 +3406,18 @@
             doc.querySelector("head").appendChild(js);
         }
     }
+
+  /**
+   * 生成唯一标识
+   * @returns {string}
+   */
+  function generateUUID() {
+        var d = new Date().getTime();
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = (d + Math.random()*16)%16 | 0;
+            d = Math.floor(d/16);
+            return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+        });
+        return uuid;
+    };
 })(window, document, location);

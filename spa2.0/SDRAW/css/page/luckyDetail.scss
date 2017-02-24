@@ -1,0 +1,164 @@
+@import "../common/common.scss";
+
+#_content>#luckyDetail {
+  #content {
+    background: #eee;
+    &>div{
+      background-color: #fff;
+
+      &:nth-of-type(1){
+        background-color: #ededed;
+        &>div:nth-of-type(2)>a.home{
+          width:1.111rem;
+          height:1.111rem;
+          border:none;
+          @include rotate(0deg);
+          @include img("../../../img/order/home.png",1.111rem 1.111rem);
+        }
+      }
+
+      &:nth-of-type(2){
+        height:2rem;
+        border-bottom:1px solid #ffe8c2;
+        background-color: #fff0d9;
+        padding:0.222rem 0;
+        &>div:nth-of-type(1){
+          line-height: 2rem;
+          width:20rem;
+          color:#666;
+          font-size:0.889rem;
+          text-align: center;
+          @include sl();
+        }
+      }
+      &:nth-of-type(3){
+        height:4.333rem;
+        border-top:1px solid #e0e0e0;
+        position: relative;
+        &>div{
+          height:2.778rem;
+          padding-top:0.75rem;
+          &:nth-of-type(1){
+            float: left;
+            padding-left: 0.889rem;
+            &>div:nth-of-type(1){
+              color:#4d4d4d;
+              font-size: 1.167rem;
+              width:15rem;
+              @include sx();
+              line-height: 1.6;
+              &>div:nth-of-type(1){
+                max-width: 15rem;
+                @include sl();
+              }
+              &>div:nth-of-type(2){
+                font-size:0.778rem;
+                margin-left:0.2rem;
+                &>span{
+                  color:#ff9d09;
+                }
+              }
+            }
+            &>div:nth-of-type(2){
+              color:#999;
+              font-size:0.778rem;
+              line-height: 1.2rem;
+              width:15rem;
+              @include sl();
+            }
+          }
+          &:nth-of-type(2){
+            position: absolute;
+            top:0.15rem;
+            right:0.694rem;
+            color:#fb5549;
+            &.fail{
+              color:#999;
+            }
+          }
+        }
+      }
+
+      &:nth-of-type(4){
+        margin-top:0.666rem;
+        padding-bottom:0.722rem;
+        margin-bottom: 0;
+        border-top:1px solid #d9d9d9;
+        &>div:nth-of-type(1){
+          padding: 0.694rem 0 0 0.886rem;
+          font-size: 0.778rem;
+          color: #4c4c4c;
+        }
+        &>div:nth-of-type(2){
+          text-align: center;
+          color:#fb2657;
+          font-size:0.889rem;
+          display: none;
+          margin-bottom:0.5rem;
+        }
+        &>div:nth-of-type(3){
+          width:6.444rem;
+          height:6.444rem;
+          box-sizing: border-box;
+          margin:1rem auto 0.3rem;
+          &>img{
+            width:6.444rem;
+            height:6.444rem;
+          }
+        }
+        &>div:nth-of-type(4){
+          width:12.056rem;
+          text-align: center;
+          color:#4c4c4c;
+          margin:0 auto;
+          font-size:0.889rem;
+        }
+      }
+
+      &:nth-of-type(5){
+        margin-top:0.666rem;
+        padding-bottom:0.722rem;
+        margin-bottom: 0;
+        border-top:1px solid #d9d9d9;
+        &>div:nth-of-type(1){
+          padding: 0.694rem 0 0 0.886rem;
+          font-size: 0.778rem;
+          color: #4c4c4c;
+        }
+        &>div:nth-of-type(2){
+          margin: 0.972rem auto 0;
+          padding: 1.25rem 0;
+          width: 17.917rem;
+          border: 1px dashed #d7d7d7;
+          border-radius: 0.35rem;
+          font-size: 2.056rem;
+          text-align: center;
+          color: #4a4a4a;
+        }
+      }
+
+      &:nth-of-type(6){
+        margin-top:0.666rem;
+        padding-bottom:0.722rem;
+        min-height: 8.889rem;
+        margin-bottom: 0;
+        border-top:1px solid #d9d9d9;
+        &>div:nth-of-type(1){
+          margin:0.528rem 0 auto 1rem;
+          border-bottom: 1px solid #d9d9d9;
+          font-size: 0.889rem;
+          color: #ff9c0a;
+        }
+        &>div:nth-of-type(2){
+          margin: 0.25rem 1rem;
+          font-size: 0.833rem;
+          color: #616161;
+          &>div:before{
+            padding: 0 0.35rem;
+            content: "●";
+          }
+        }
+      }
+    }
+  }
+}

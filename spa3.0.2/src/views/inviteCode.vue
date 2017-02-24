@@ -8,9 +8,7 @@
             <input placeholder="会所邀请码 (必填)" maxlength="6" v-model="inviteCode" @input="doInputInviteCode()"/>
             <input placeholder="技师编号 (选填)" maxlength="6" v-model="techNo" @input="doInputTechNo()"/>
         </div>
-        <div class="submit-btn" :class="{ active : isInviteCodeValid && isTechNoValid }" @click="doClickSubmitBtn()">
-            完成
-        </div>
+        <div class="submit-btn" :class="{ active : isInviteCodeValid && isTechNoValid }" @click="doClickSubmitBtn()">完成</div>
     </div>
 </template>
 <script>
@@ -24,8 +22,7 @@
                 inviteCode: '',
                 techNo: '',
                 isInviteCodeValid: false,
-                isTechNoValid: true,
-                getClubTechUrl: '../api/v1/wx/club_tech_page_url'
+                isTechNoValid: true
             }
         },
         created: function () {
@@ -38,7 +35,7 @@
             if (global.techSerialNo) {
                 that.techNo = global.techSerialNo
             }
-
+            global.loading = false
             if (that.clubInviteCode && (global.techSerialNo || global.techInviteCode)) {
                 that.doClickSubmitBtn()
             }
@@ -48,7 +45,7 @@
                 var that = this
                 var global = that.global
                 if (that.isInviteCodeValid && that.isTechNoValid) {
-                    that.$http.get(that.getClubTechUrl, {
+                    that.$http.get('../api/v1/wx/club_tech_page_url', {
                         params: {
                             clubInviteCode: that.inviteCode,
                             techSerialNo: that.techNo || '',
@@ -64,15 +61,13 @@
                                 Util.sessionStorage('techInviteCode', res.techInviteCode)
                             }
                             var urlObj = Util.urlFormat(res.linkUrl)
-                            var paramArr = []
-                            if (global.techSerialNo) paramArr.push('techNo=' + global.techSerialNo)
-                            if (global.clubInviteCode) paramArr.push('clubCode=' + global.clubInviteCode)
-
-                            var targetUrl = urlObj.url + (paramArr.length > 0 ? (urlObj.querys ? '&' : '?') + paramArr.join('&') : '')
-                            console.log('跳转targetUrl：' + targetUrl)
-
-                            location.href = targetUrl
-                            location.reload(true)
+                            if (global.techSerialNo) {
+                                urlObj.query.techNo = global.techSerialNo
+                            }
+                            if (global.clubInviteCode) {
+                                urlObj.query.clubCode = global.clubInviteCode
+                            }
+                            that.$router.push({path: urlObj.path, query: urlObj.query})
                         } else {
                             Util.tipShow(res.msg || '操作失败！')
                         }

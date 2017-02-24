@@ -2,7 +2,7 @@
     $('#loadTip').ClassClear('none');
 
     $.ajax({
-        url:'../api/v2/finacial/accounts',
+        url:'../api/v2/financial/accounts',
         isReplaceUrl:true,
         success: function (result) {
             if (result.statusCode != "200") {

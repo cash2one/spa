@@ -6,7 +6,7 @@
         <div v-if="global.userAgent.isWX" @click="doClickWrap($event)" class="top">发送给朋友或者分享到朋友圈</div>
         <div class="center-wrap center" @click="doClickWrap($event)" v-else>
             <div><a :href="shareUrl">{{ shareUrl }}</a></div>
-            <div>长按复制您的专属链接，发送给您的朋友</div>
+            <div>长按复制链接，发送给您的朋友</div>
             <div @click="doChange(false)">关闭</div>
         </div>
     </div>

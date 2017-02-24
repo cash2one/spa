@@ -1,6 +1,7 @@
 div#rob-project-success-page div.club-info {
   background-color: #FEF7E3;
   padding: .333rem .667rem;
+  border-bottom: 1px solid #e0e0e0;
   display: -webkit-box;
   display: -moz-box;
   -webkit-box-align: center;
@@ -42,15 +43,17 @@ div#rob-project-success-page div.success-tip {
       background-position: center; }
     div#rob-project-success-page div.success-tip > div:nth-of-type(2) {
       font-size: 1rem;
-      margin-top: .833rem; }
+      margin-top: .833rem;
+      color: #616161; }
     div#rob-project-success-page div.success-tip > div:nth-of-type(3) {
-      font-size: 1.278rem;
+      font-size: 0.833rem;
       color: #999;
-      margin-top: .833rem; }
+      margin-top: 1.5rem; }
   div#rob-project-success-page div.success-tip > a {
     display: block;
     line-height: 1;
     margin-top: .7rem;
+    margin-bottom: 1.4rem;
     color: #FF9D09;
     font-size: .889rem;
     text-decoration: underline; }
@@ -68,7 +71,8 @@ div#rob-project-success-page div.paid-info {
     div#rob-project-success-page div.paid-info > div:nth-of-type(1) > div:nth-of-type(1) {
       -webkit-box-flex: 1;
       box-flex: 1;
-      font-size: .944rem; }
+      font-size: .944rem;
+      color: #616161; }
       div#rob-project-success-page div.paid-info > div:nth-of-type(1) > div:nth-of-type(1) > span {
         color: #212121; }
     div#rob-project-success-page div.paid-info > div:nth-of-type(1) > div:nth-of-type(2) {
@@ -92,7 +96,7 @@ div#rob-project-success-page div.tech-list {
   padding-bottom: .2rem; }
   div#rob-project-success-page div.tech-list > div:nth-of-type(1) {
     padding: .444rem .667rem;
-    border-bottom: .056rem solid #E0E0E0;
+    border-bottom: .056rem solid #e0e0e0;
     display: -webkit-box;
     display: -moz-box;
     -webkit-box-align: center;

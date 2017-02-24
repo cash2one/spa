@@ -2,7 +2,7 @@
     @import '../styles/page/qrPayCode.css';
 </style>
 <template>
-    <div class="page" id="qrpay-code-page" :style="{ height : global.winHeight+'px' }">
+    <div class="page" id="qrpay-code-page">
         <page-title title-text="付款二维码" :show-back="!isDirect"></page-title>
         <div class="qrcode-wrap">
             <div>
@@ -43,13 +43,13 @@
                     return Util.tipShow('正在请求二维码！')
                 }
                 that.isProcessing = true
-                that.$http.get('../api/v2/finacial/account/pay/qrcode').then(function (res) {
+                that.$http.get('../api/v2/financial/account/pay/qrcode').then(function (res) {
                     res = res.body
                     that.isProcessing = false
                     if (res.statusCode == 200) {
                         res = res.respData
                         if (that.timer) clearTimeout(that.timer)
-                        that.qrCodeImgSrc = jrQrcode.getQrBase64(JSON.stringify(res), {padding: 0})
+                        that.qrCodeImgSrc = jrQrcode.getQrBase64(res.qrcode, {padding: 0})
                         if (res.period > 0) {
                             that.timer = setTimeout(that.refreshCode, res.period * 1000)
                             var timeStr = that.formatSec(res.period)

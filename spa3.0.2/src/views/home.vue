@@ -8,7 +8,7 @@
                 <swiper class="banner-swipe" :options="swiperOption">
                     <swiper-slide v-for="pic in bannerPics">
                         <div :style="{ backgroundImage : 'url('+(pic.imageUrl || global.defaultBannerImgUrl )+')' }"></div>
-                        <div></div>
+                        <div @click="doClickBannerPic(pic.link)"></div>
                     </swiper-slide>
                     <div class="swiper-pagination" slot="pagination"></div>
                 </swiper>
@@ -30,20 +30,24 @@
             </div>
 
             <div class="recommend act" v-show="paidServiceItems.length>0">
-                <div class="title"><div>热门活动</div></div>
-                <div class="paid-item" v-for="item in paidServiceItems">
-                    <div :style="{ backgroundImage : 'url('+(item.imageUrl || global.defaultServiceItemImgUrl )+')' }"></div>
-                    <div>
-                        <div>
-                            <div>{{ item.name }}</div>
-                            <div v-show="item.canPaidCount>0">剩余<span>{{ item.canPaidCount }}</span>份</div>
-                        </div>
-                        <div>￥{{ item.amount }}<span>原价{{ item.price }}元</span>
-                            <router-link :to="{ name : 'robProjectDetail' , query : { robProjectId : item.id }}">去抢购</router-link>
-                        </div>
-                        <counter :start="item.startDate" :end="item.endDate"></counter>
-                    </div>
-                </div>
+                <div class="title"><div>热门活动</div><router-link :to="{ name: 'activities' }">全部</router-link></div>
+                <template v-for="item in paidServiceItems">
+                    <paid-service-act v-if="item.actType == 'paid_item'" :act-data="item"></paid-service-act>
+                    <one-yuan-act v-if="item.actType == 'one_yuan'" :act-data="item"></one-yuan-act>
+                </template>
+            </div>
+
+            <div class="recommend onceCard" v-show="onceCards.length>0">
+                <div class="title"><div>特惠商城</div><router-link :to="{ name: 'discountMall' }">全部</router-link></div>
+                <ul class="clear-fix">
+                    <router-link class="onceCard" v-for="item in onceCards" tag="li" :class="{ sellOut: item.statusName=='已售完', expired: item.statusName=='已过期' }" :to="{ name: 'onceCardDetail', query: { id: item.id } }">
+                        <div :style="{'background-image': 'url('+(item.imageUrl || global.defaultServiceItemImgUrl)+')'}"><div>{{ item.name }}</div></div>
+                        <div><b>{{ item.plan.price }}</b>元/次<span>买{{ item.plan.paidCount }}送{{ item.plan.giveCount }}</span></div>
+                        <div>{{ Math.round(item.plan.itemAmount/100) }}元/次<div v-if="item.progress">{{ item.progress }}%<div :style="{ left: item.progress +'%' }"></div></div></div>
+                        <div v-if="item.id==newOnceCardId" class="new">最新</div>
+                        <div v-else-if="item.id==bestOnceCardId" class="best">最优惠</div>
+                    </router-link>
+                </ul>
             </div>
 
             <div class="recommend service">
@@ -59,17 +63,24 @@
                 </div>
             </div>
         </div>
+
+        <!--电话号码-->
         <tel-detail v-if="global.clubTelephone.length>0" :telephone="global.clubTelephone"></tel-detail>
-        <router-link class="home-coupon" :to="{ name: 'promotions' }" v-show="!global.loading">
+
+        <!--抢优惠按钮-->
+        <router-link class="home-coupon" :to="{ name: 'activities' }" v-show="!global.loading">
             <div></div>
             <span>抢优惠</span>
         </router-link>
 
+        <!--coupon的弹窗-->
         <div id="home-red-pack" class="pop-modal" v-if="popActType == 'coupon'" :class="{ active : showPopCoupon }">
             <div @click="doClickPopCoupon()"><div :class="popCouponActCls"><div>{{ popActData.activityName }}</div></div></div>
             <div @click="doClickPopCoupon()">领取红包</div>
             <div @click="doClosePopCoupon()"></div>
         </div>
+
+        <!--其他活动的弹窗-->
         <activity-pop v-if="popActType != 'coupon'" :act-data="popActData"></activity-pop>
     </div>
 </template>
@@ -99,7 +110,12 @@
                 journal: {
                     id: '', title: '', templateId: 1
                 },
-                swiperOption: {
+
+                onceCards: [], // 次卡数据
+                newOnceCardId: '', // 最新的次卡ID
+                bestOnceCardId: '', // 最优惠的次卡ID
+
+                swiperOption: { // banner图
                     autoplay: 5000,
                     pagination: '.swiper-pagination',
                     paginationClickable: true,
@@ -115,9 +131,11 @@
                 }
             }
         },
-        mounted: function () {
+        created: function () {
             var that = this
             var global = that.global
+
+            // 请求主页数据
             that.$http.get('../api/v2/club/{clubId}/homeData', {params: {clubId: global.clubId}}).then(function (res) {
                 res = res.body
                 if (res.statusCode == 200) {
@@ -155,19 +173,23 @@
             }, function () {
                 Util.tipShow(global.loadError)
             })
+
             // 请求弹窗数据
             that.$http.get('../api/v2/club/popup/get', {params: {clubId: global.clubId}}).then(function (popRes) {
                 popRes = popRes.body
                 if (popRes.statusCode == 200) {
                     popRes = popRes.respData
+                    if (!popRes) {
+                        return
+                    }
                     // 上次的弹窗数据
                     var lastPopInfo = Util.localStorage('pastPopInfo_' + global.clubId)
                     if (lastPopInfo) {
                         lastPopInfo = JSON.parse(lastPopInfo)
                     }
                     // 是否弹窗
-                    if (!lastPopInfo || lastPopInfo.id != popRes.activityId || (lastPopInfo.id && lastPopInfo.time && (+new Date()) - new Date(lastPopInfo.time) > 24 * 3600 * 1000)) {
-                        Util.localStorage('pastPopInfo_' + global.clubId, JSON.stringify({id: popRes.activityId, time: (+new Date())}))
+                    if (!lastPopInfo || lastPopInfo.id != popRes.id || (lastPopInfo.id && lastPopInfo.time && (+new Date()) - new Date(lastPopInfo.time) > 24 * 3600 * 1000)) {
+                        Util.localStorage('pastPopInfo_' + global.clubId, JSON.stringify({id: popRes.id, time: (+new Date())}))
                         that.popActType = popRes.activityType
                         if (that.popActType == 'coupon') { // 优惠券
                             var len = that.computedWords(popRes.activityName)
@@ -196,11 +218,77 @@
             that.$http.get('../api/v2/club/paid_service_item/list', {params: {clubId: global.clubId}}).then(function (paidItemRes) {
                 paidItemRes = paidItemRes.body
                 if (paidItemRes.statusCode == 200) {
-                    that.paidServiceItems = paidItemRes.respData || []
+                    paidItemRes = paidItemRes.respData || []
+                    var actList = []
+                    var actItem
+                    for (var k = 0; k < paidItemRes.length; k++) {
+                        actItem = paidItemRes[k]
+                        if (/^(paid_item|one_yuan)$/.test(actItem.actType)) {
+                            actList.push(actItem)
+                        }
+                    }
+                    that.paidServiceItems = actList
+                }
+            })
+
+            // 次卡数据
+            that.$http.get('../api/v2/club/once_card/activity/list', {params: {clubId: global.clubId}}).then(function (onceCardRes) {
+                onceCardRes = onceCardRes.body
+                if (onceCardRes.statusCode == 200) {
+                    onceCardRes = onceCardRes.respData
+                    if (onceCardRes && onceCardRes.activityList.length > 0) {
+                        var cards = onceCardRes.activityList
+                        var cardList = []
+                        cardList.push(cards[0])
+                        that.newOnceCardId = cardList[0].id
+                        var count = 1
+                        if (cards[0].id != onceCardRes.optimalActivity.id) {
+                            cardList.push(onceCardRes.optimalActivity)
+                            that.bestOnceCardId = cardList[1].id
+                        }
+                        while (cardList.length <= 3 && count < cards.length) {
+                            if (cards[count].id != onceCardRes.optimalActivity.id) {
+                                cardList.push(cards[count])
+                            }
+                            count++
+                        }
+                        var cardItem
+                        var plan
+                        var price
+                        for (count = 0; count < cardList.length; count++) {
+                            cardItem = cardList[count]
+                            if (cardItem.totalCount != 0 && cardItem.paidCount > cardItem.totalCount * 0.49) {
+                                cardItem.progress = (cardItem.paidCount / cardItem.totalCount) * 100
+                            }
+                            for (var i = 0; i < cardItem.onceCardPlans.length; i++) {
+                                plan = cardItem.onceCardPlans[i]
+                                if (plan.optimal == 'Y') {
+                                    price = plan.actAmount / 100 / (plan.giveCount + plan.paidCount)
+                                    if (price > 1.001) {
+                                        price = Math.round(price)
+                                    } else {
+                                        if (price < 0.01) {
+                                            price = 0.01
+                                        }
+                                        price = price.toFixed(2)
+                                    }
+                                    plan.price = price
+                                    cardItem.plan = plan
+                                    break
+                                }
+                            }
+                        }
+                        that.onceCards = cardList
+                    }
                 }
             })
         },
         methods: {
+            doClickBannerPic: function (link) {
+                if (link) {
+                    location.href = link
+                }
+            },
             doClickContactClub: function () {
                 var that = this
                 if (that.global.clubTelephone.length == 0) {

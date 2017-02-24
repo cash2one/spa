@@ -2,18 +2,16 @@
     @import '../styles/page/member.css';
 </style>
 <template>
-    <div>
-        <div class="page-back-btn" @click="doClickPageBack()"></div>
-        <div class="page" id="member-page" v-show="!global.loading">
-            <div class="item" v-for="item in dataList">
-                <div :style="{ backgroundImage : 'url('+item.logoUrl+')' }"></div>
-                <div>{{ item.memberName }}</div>
-                <div v-html="item.memberContent"></div>
-            </div>
-            <div class="nullData" v-show="dataList.length==0">
-                <div v-show="!global.loading"></div>
-                <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
-            </div>
+    <div class="page" id="member-page" v-show="!global.loading">
+        <page-back></page-back>
+        <div class="item" v-for="item in dataList">
+            <div :style="{ backgroundImage : 'url('+item.logoUrl+')' }"></div>
+            <div>{{ item.memberName }}</div>
+            <div v-html="item.memberContent"></div>
+        </div>
+        <div class="nullData" v-show="dataList.length==0">
+            <div v-show="!global.loading"></div>
+            <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
         </div>
     </div>
 </template>
@@ -44,11 +42,6 @@
                 Util.tipShow(global.loadError)
                 that.$router.back()
             })
-        },
-        methods: {
-            doClickPageBack: function () {
-                history.back()
-            }
         }
     }
 </script>

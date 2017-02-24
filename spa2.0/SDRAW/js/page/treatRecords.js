@@ -45,7 +45,7 @@
 
         //开始加载数据
         $.ajax({
-            url: '../api/v2/finacial/account/payforother/list',
+            url: '../api/v2/financial/account/payforother/list',
             isReplaceUrl:true,
             type:'post',
             data: {

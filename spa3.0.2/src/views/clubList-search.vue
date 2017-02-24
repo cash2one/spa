@@ -76,6 +76,7 @@
                 that.searchText = decodeURIComponent(currPage.key)
                 that.doClickSearchBtn()
             }
+            that.global.loading = false
         },
         methods: {
             // 查询会所标签

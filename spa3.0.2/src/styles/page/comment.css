@@ -1,15 +1,14 @@
 div#comment-page {
   padding-bottom: 3rem; }
   div#comment-page div.wrap {
-    padding-bottom: 0.667rem;
-    background-color: #fff;
-    border-bottom: 1px solid #ccc; }
+    padding: 0 0.667rem 0.667rem;
+    background-color: #fff; }
     div#comment-page div.wrap > div.title {
       height: 1.778rem;
       font-size: .889rem;
       color: #333;
       line-height: 1.778rem;
-      padding: 0 .667rem; }
+      padding: 0; }
       div#comment-page div.wrap > div.title > span {
         font-size: .778rem;
         color: #999; }
@@ -63,58 +62,54 @@ div#comment-page {
         -webkit-box-align: center;
         -moz-box-align: center; }
         div#comment-page div.tech-info-wrap > a > div:nth-of-type(2) > div {
-          color: #616161;
-          text-align: center; }
+          color: #616161; }
           div#comment-page div.tech-info-wrap > a > div:nth-of-type(2) > div:nth-of-type(1) {
             -webkit-box-flex: 1;
             box-flex: 1;
             font-size: .889rem;
-            min-width: 4.6rem;
+            min-width: 2.433rem;
+            max-width: 7rem;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap; }
+            white-space: nowrap;
+            text-align: right; }
           div#comment-page div.tech-info-wrap > a > div:nth-of-type(2) > div:nth-of-type(2) {
             margin-left: .5rem;
-            min-width: 2.833rem;
+            min-width: 2.433rem;
             height: .722rem;
-            line-height: .82rem;
-            font-size: .667rem;
+            line-height: .722rem;
+            font-size: .556rem;
+            box-sizing: border-box;
             border: 1px solid #616161;
-            border-radius: .361rem; }
+            border-radius: .361rem;
+            text-align: center; }
   div#comment-page div.comment-info > div.item {
-    padding: 0 1.278rem;
-    margin-top: .4rem;
-    height: 1.111rem;
-    line-height: 1.111rem;
-    display: table;
-    width: 100%; }
-    div#comment-page div.comment-info > div.item:nth-of-type(1) {
-      margin-top: 0; }
-    div#comment-page div.comment-info > div.item > div {
-      font-size: .833rem;
-      color: #4d4d4d;
-      height: 1.111rem;
-      line-height: 1.111rem;
-      display: table-cell;
-      vertical-align: middle; }
-    div#comment-page div.comment-info > div.item > .comment-stars {
-      text-align: center; }
-      div#comment-page div.comment-info > div.item > .comment-stars > div, div#comment-page div.comment-info > div.item > .comment-stars > div > div {
-        height: 1.083rem;
-        background-size: 9.278rem 1.083rem;
-        background-repeat: no-repeat; }
-      div#comment-page div.comment-info > div.item > .comment-stars > div {
-        display: inline-block;
-        width: 9.278rem;
-        background-image: url("../../images/comment/star-null-2.png"); }
-        div#comment-page div.comment-info > div.item > .comment-stars > div > div {
-          background-image: url("../../images/comment/star-selected-2.png"); }
+    display: -webkit-box;
+    display: -moz-box;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    font-size: .778rem;
+    color: #4d4d4d; }
+    div#comment-page div.comment-info > div.item > div:nth-of-type(1) {
+      text-align: right;
+      -webkit-box-flex: 1;
+      box-flex: 1; }
+    div#comment-page div.comment-info > div.item > div:nth-of-type(2), div#comment-page div.comment-info > div.item > div:nth-of-type(2) > div {
+      width: 9.278rem;
+      height: 1.083rem;
+      background-size: 9.278rem 1.083rem;
+      background-repeat: no-repeat; }
+    div#comment-page div.comment-info > div.item > div:nth-of-type(2) {
+      margin: 0 1rem 0 1.8rem;
+      position: relative;
+      top: -.1rem;
+      background-image: url("../../images/comment/star-null-2.png"); }
+      div#comment-page div.comment-info > div.item > div:nth-of-type(2) > div {
+        background-image: url("../../images/comment/star-selected-2.png"); }
     div#comment-page div.comment-info > div.item > div:nth-of-type(3) {
-      color: #ff9d09;
       width: 4rem;
-      text-align: right; }
-  div#comment-page div.comment-info > div:nth-of-type(2) {
-    margin-top: 0; }
+      text-align: right;
+      color: #ff9d09; }
   div#comment-page div.comment-impression {
     margin-top: .556rem;
     margin-bottom: 0.667rem; }
@@ -127,43 +122,8 @@ div#comment-page {
       div#comment-page div.comment-impression > div:nth-of-type(1) > span {
         font-size: .778rem;
         color: #999; }
-    div#comment-page div.comment-impression > div:nth-of-type(2) {
-      padding: .4rem .667rem; }
-      div#comment-page div.comment-impression > div:nth-of-type(2) > div.comment-score {
-        margin-top: .667rem;
-        height: 1.111rem;
-        line-height: 1.111rem;
-        display: table;
-        width: 100%; }
-        div#comment-page div.comment-impression > div:nth-of-type(2) > div.comment-score:nth-of-type(1) {
-          margin-top: 0; }
-        div#comment-page div.comment-impression > div:nth-of-type(2) > div.comment-score > div {
-          font-size: .833rem;
-          color: #4d4d4d;
-          height: 1.111rem;
-          line-height: 1.111rem;
-          display: table-cell;
-          vertical-align: middle; }
-        div#comment-page div.comment-impression > div:nth-of-type(2) > div.comment-score > .comment-stars {
-          text-align: center; }
-          div#comment-page div.comment-impression > div:nth-of-type(2) > div.comment-score > .comment-stars > div {
-            display: inline-block;
-            width: 8.611rem;
-            height: 1.111rem;
-            background-size: 8.611rem 1.111rem;
-            background-image: url("../../images/comment/star-null-2.png");
-            background-repeat: no-repeat; }
-            div#comment-page div.comment-impression > div:nth-of-type(2) > div.comment-score > .comment-stars > div > div {
-              height: 1.111rem;
-              background-size: 8.611rem 1.111rem;
-              background-image: url("../../images/comment/star-selected-2.png");
-              background-repeat: no-repeat; }
-        div#comment-page div.comment-impression > div:nth-of-type(2) > div.comment-score > div:nth-of-type(3) {
-          color: #ff9d09;
-          width: 4rem;
-          text-align: right; }
     div#comment-page div.comment-impression > div.comment-labels {
-      padding-bottom: 0; }
+      padding: 0.4rem 0 0; }
       div#comment-page div.comment-impression > div.comment-labels:after {
         content: ' ';
         display: block;
@@ -192,7 +152,7 @@ div#comment-page {
       height: 5.389rem;
       border: 1px solid #d9d9d9;
       border-radius: .333rem;
-      margin: 0 .667rem; }
+      margin: 0; }
       div#comment-page div.comment-impression > div.comment-text > div {
         text-align: right;
         font-size: .722rem;
@@ -232,27 +192,33 @@ div#comment-page {
           display: none; }
   div#comment-page div.submit-btn {
     position: fixed;
-    padding: .556rem .667rem;
+    left: 0;
     bottom: 0;
-    left: 50%;
-    width: 20rem;
-    margin-left: -10rem;
-    background: #e0e0e0; }
-    div#comment-page div.submit-btn > div {
-      height: 2.389rem;
-      line-height: 2.389rem;
-      color: #fff;
-      border-radius: .333rem;
-      text-align: center;
-      background-color: #fb5549;
-      display: -webkit-box;
-      display: -moz-box;
-      -webkit-box-pack: center;
-      -moz-box-pack: center;
-      -webkit-box-align: center;
-      -moz-box-align: center; }
-      div#comment-page div.submit-btn > div.processing {
-        background: #ccc url("../../images/common/loading.gif") no-repeat 33% 45%; }
+    right: 0;
+    border-top: 1px solid #ccc;
+    background-color: #e0e0e0;
+    height: 2.444rem;
+    box-sizing: content-box;
+    padding: 0.4305rem 0 0.4305rem 6.8rem; }
+    div#comment-page div.submit-btn > div:nth-of-type(1) {
+      position: absolute;
+      left: 0.5rem;
+      top: 0.866rem;
+      padding-left: 1rem;
+      font-size: .889rem;
+      color: #212121;
+      margin-right: 1.5rem;
+      background-size: 0.889rem 0.889rem;
+      background-repeat: no-repeat;
+      background-position: left center;
+      background-image: url("../../images/comment/check.png"); }
+      div#comment-page div.submit-btn > div:nth-of-type(1).checked {
+        background-image: url("../../images/comment/check_active.png"); }
+    div#comment-page div.submit-btn > div:nth-of-type(2) {
+      width: 12.612rem;
+      margin: 0; }
+      div#comment-page div.submit-btn > div:nth-of-type(2).processing {
+        background-position-x: 25%; }
   div#comment-page.already-comment {
     padding-bottom: 0; }
     div#comment-page.already-comment div.thanks {

@@ -220,8 +220,7 @@
           margin-top:0.5rem;
           padding: 0.4rem 0.8rem;
           font-size: 0.778rem;
-          border-bottom-left-radius: 0.38rem;
-          border-bottom-right-radius: 0.38rem;
+          border-radius: 0.38rem;
           word-break: break-all;
           img {
             width: 1.2rem;
@@ -232,10 +231,12 @@
             content: "";
             display: block;
             position: absolute;
-            width: 0;
-            height: 0;
-            top: 0;
-            border-bottom: 0.358rem solid transparent;
+            width: .8rem;
+            height: .3rem;
+            top: .3rem;
+            border-bottom: 0.5rem solid transparent;
+            background-color: transparent;
+            z-index: -1;
           }
           &.img {
             padding: 0.25rem;
@@ -294,6 +295,8 @@
             }
           }
           &.paidCoupon,&.ordinaryCoupon{
+            min-width: 10.848rem;
+            box-sizing: border-box;
             background-color: #ff9c0a !important;
             color:#fff !important;
             padding-bottom:1.5rem !important;
@@ -328,12 +331,11 @@
               bottom:0;
               line-height: 1.167rem;
               background-color: #fff;
-              font-size:0.611rem;
+              font-size:0.6rem;
               color:#a9a9a9;
               text-indent: 0;
               font-weight: normal;
               text-align: right;
-              padding-right:0.5rem;
               border-bottom-left-radius: 0.38rem;
               border-bottom-right-radius: 0.38rem;
             }
@@ -344,7 +346,7 @@
             }
           }
           &.ordinaryCoupon{
-            min-width: 8.5rem;
+            /*min-width: 8.5rem;*/
             &>i{
               background-image: url("../../../img/chat/ordinaryCoupon.png");
             }
@@ -708,19 +710,23 @@
           float: left;
           background-color: #f86c61;
           color: #fff;
-          border-top-right-radius: 0.38rem;
           &:before {
-            left: -0.48rem;
-            border-top: 0.358rem solid #f86c61;
+            left: -0.6rem;
+            -webkit-border-bottom-left-radius: 100%;
+            -moz-border-bottom-left-radius: 100%;
+            border-bottom-left-radius: 100%;
+            border-bottom-color: #f86c61;
+            /*border-top: 0.358rem solid #f86c61;
             border-right: 0.358rem solid #f86c61;
-            border-left: 0.358rem solid transparent;
+            border-left: 0.358rem solid transparent;*/
           }
           &.reward,&.begReward{
             background-color: #6fa9f0;
             color:#fff;
             &:before{
-              border-top: 0.358rem solid #6fa9f0;
-              border-right: 0.358rem solid #6fa9f0;
+              border-color: #6fa9f0;
+              /*border-top: 0.358rem solid #6fa9f0;
+              border-right: 0.358rem solid #6fa9f0;*/
             }
           }
           &.order{
@@ -735,8 +741,9 @@
           }
           &.paidCoupon,&.ordinaryCoupon{
             &:before {
-              border-top: 0.358rem solid #ff9c0a;
-              border-right: 0.358rem solid #ff9c0a;
+              border-color: #ff9c0a;
+              /*border-top: 0.358rem solid #ff9c0a;
+              border-right: 0.358rem solid #ff9c0a;*/
             }
           }
         }
@@ -799,7 +806,8 @@
         &.activity{
           >div{
             &:nth-of-type(2){
-              width: 8.848rem;
+              width: 10.848rem;
+              box-sizing: border-box;
               line-height: 1.4;
               background-color: #ffffff;
               padding: .556rem;
@@ -842,19 +850,24 @@
                   }
                 }
               }
-              &.oneYuan{
+              &.oneYuan,&.plumFlower{
                 >div>div:nth-of-type(1){
-                  background-image: url('../../../img/chat/indiana-icon.png');
+                  background-image: url('../../../img/chat/oneYuan-icon.png');
                 }
               }
               &.timeLimit{
                 >div>div:nth-of-type(1){
-                  background-image: url('../../../img/chat/seckill-icon.png');
+                  background-image: url('../../../img/chat/timeLimit-icon.png');
                 }
               }
               &.luckyWheel{
                 >div>div:nth-of-type(1){
-                  background-image: url('../../../img/chat/turntable-icon.png');
+                  background-image: url('../../../img/chat/luckyWheel-icon.png');
+                }
+              }
+              &.journal{
+                >div>div:nth-of-type(1){
+                  background-image: url('../../../img/chat/journal-icon.png');
                 }
               }
             }
@@ -873,7 +886,6 @@
           float: right;
           background-color: #cdd7e2;
           color: #4d4d4d;
-          border-top-left-radius: 0.38rem;
           &:after{
             content: "!";
             display: block;
@@ -891,10 +903,14 @@
             background-color: #fb5549;
           }
           &::before {
-            right: -0.45rem;
-            border-top: 0.358rem solid #cdd7e2;
+            right: -0.6rem;
+            -webkit-border-bottom-right-radius: 100%;
+            -moz-border-bottom-right-radius: 100%;
+            border-bottom-right-radius: 100%;
+            border-bottom-color: #cdd7e2;
+            /*border-top: 0.358rem solid #cdd7e2;
             border-left: 0.358rem solid #cdd7e2;
-            border-right: 0.358rem solid transparent;
+            border-right: 0.358rem solid transparent;*/
           }
           &.reward,&.begReward{
             background-color: #6fa9f0;

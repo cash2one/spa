@@ -32,11 +32,11 @@
 
             <div class="item-wrap service" :class="{ notPay: isNotPay }">
                 <div class="item-title">相关项目</div>
-                <div class="service-item">
+                <router-link class="service-item" tag="div" :to="{ name: 'serviceItem', query: { id: actItemData.id } }">
                     <div :style="{ 'background-image': 'url('+actItemData.imgUrl+')' }"></div>
                     <div>{{ actItemData.name }}</div>
                     <div>{{ actItemData.price }}元/{{ actItemData.duration }}{{ actItemData.durationUnit }}<template v-if="actItemData.pricePlus"><span>加钟</span>{{ actItemData.pricePlus }}元/{{ actItemData.durationPlus }}{{ actItemData.durationUnitPlus }}</template></div>
-                </div>
+                </router-link>
             </div>
         </div>
         <div class="submit-button footer" :class="{ sellOut: actData.statusName == '已售完' , expired: actData.statusName == '已过期', processing: inProcessing }" @click="doClickConfirmBtn()">{{ isNotPay ? '逛商城、找优惠' : (inProcessing ? '购买中...' : '购买') }}</div>
@@ -68,6 +68,7 @@
                     statusName: ''
                 },
                 actItemData: {
+                    id: '',
                     duration: '',
                     durationUnit: '',
                     imgUrl: '',
@@ -133,6 +134,7 @@
                         var k
                         var plan
                         var periodObj = {'Y': '年', 'M': '月', 'D': '日'}
+                        var optimalPlan
 
                         that.clubName = res.clubName
                         that.clubLogo = res.clubImageUrl || global.defaultClubLogo
@@ -148,6 +150,7 @@
                         thisActData.statusName = actData.statusName
                         that.isNotPay = (actData.statusName == '已售完' || actData.statusName == '已过期')
 
+                        thisActItemData.id = actItemData.id
                         thisActItemData.duration = actItemData.duration
                         thisActItemData.durationUnit = actItemData.durationUnit
                         thisActItemData.imgUrl = actItemData.imageUrl || global.defaultServiceItemImgUrl
@@ -162,6 +165,7 @@
                             plan = plans[k]
                             if (plan.optimal == 'Y') {
                                 that.currActiveIndex = k
+                                optimalPlan = plan
                             }
                             plan.totalCount = plan.paidCount + plan.giveCount
                             plan.originAmount = actItemData.price * plan.totalCount
@@ -169,6 +173,17 @@
                         }
                         that.plans = plans
                         global.loading = false
+
+                        // 分享配置
+                        if (global.userAgent.isWX) {
+                            var discount = ((optimalPlan.actAmount / (optimalPlan.originAmount * 100)) * 10).toFixed(1)
+                            Global.shareConfig({
+                                title: actData.name,
+                                desc: actItemData.name + '_' + discount + '折_（买' + optimalPlan.paidCount + '送' + optimalPlan.giveCount + '）',
+                                link: location.origin + '/spa-manager/spa/#/' + that.clubId + '/onceCardDetail?id=' + that.cardId + (that.techId ? '&techId=' + that.techId : ''),
+                                imgUrl: that.clubLogo
+                            }, 'onceCardDetail')
+                        }
 
                         if (that.paramData) {
                             that.currActiveIndex = that.paramData

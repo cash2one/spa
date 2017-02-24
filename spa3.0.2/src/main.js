@@ -13,6 +13,7 @@ Vue.use(VueResource)
 Vue.use(AwesomeSwiper)
 
 // 注册公用组件
+var PageBack = require('./components/page-back')
 var PageTitle = require('./components/page-title')
 var TelDetail = require('./components/tel-detail')
 var Share = require('./components/share')
@@ -20,7 +21,10 @@ var Club = require('./components/club')
 var Attention = require('./components/attention')
 var CreditTip = require('./components/credit-tip')
 var Spinner = require('./components/spinner')
+var PaidServiceAct = require('./components/paid-service-act')
+var OneYuanAct = require('./components/one-yuan-act')
 
+Vue.component('page-back', PageBack)
 Vue.component('page-title', PageTitle)
 Vue.component('tel-detail', TelDetail)
 Vue.component('share', Share)
@@ -28,6 +32,8 @@ Vue.component('club', Club)
 Vue.component('attention', Attention)
 Vue.component('credit-tip', CreditTip)
 Vue.component('spinner', Spinner)
+Vue.component('paid-service-act', PaidServiceAct)
+Vue.component('one-yuan-act', OneYuanAct)
 
 // 非公共组件，但打包到app.js中
 var Tech = require('./components/tech')
@@ -37,6 +43,7 @@ var LoadMore = require('./components/load-more')
 var GoldenEffect = require('./components/golden-effect')
 var HomeTech = require('./components/home-tech')
 var Counter = require('./components/counter')
+var Clock = require('./components/clock')
 
 Vue.component('tech', Tech)
 Vue.component('chat-input', ChatInput)
@@ -45,6 +52,7 @@ Vue.component('load-more', LoadMore)
 Vue.component('golden-effect', GoldenEffect)
 Vue.component('home-tech', HomeTech)
 Vue.component('counter', Counter)
+Vue.component('clock', Clock)
 
 Vue.http.options.emulateJSON = true
 Global.beforeInit()
@@ -190,7 +198,7 @@ var pageRouterOption = [
     {
         path: prefixPath + 'map',
         name: 'map',
-        meta: { checkLogin: false },
+        meta: { checkLogin: false, fullPage: true },
         component: function (resolve) {
             require(['./views/map.vue'], resolve)
         }
@@ -270,7 +278,7 @@ var pageRouterOption = [
     {
         path: prefixPath + 'accountDetail',
         name: 'accountDetail',
-        meta: { checkLogin: true },
+        meta: { checkLogin: true, fullPage: true },
         component: function (resolve) {
             require(['./views/accountDetail.vue'], resolve)
         }
@@ -278,7 +286,7 @@ var pageRouterOption = [
     {
         path: prefixPath + 'account',
         name: 'account',
-        meta: { checkLogin: true },
+        meta: { checkLogin: true, fullPage: true },
         component: function (resolve) {
             require(['./views/account.vue'], resolve)
         }
@@ -326,7 +334,7 @@ var pageRouterOption = [
     {
         path: prefixPath + 'collect',
         name: 'collect',
-        meta: { checkLogin: true },
+        meta: { checkLogin: true, fullPage: true },
         component: function (resolve) {
             require(['./views/collect.vue'], resolve)
         }
@@ -390,7 +398,7 @@ var pageRouterOption = [
     {
         path: prefixPath + 'suggestions',
         name: 'suggestions',
-        meta: { checkLogin: true },
+        meta: { checkLogin: true, fullPage: true },
         component: function (resolve) {
             require(['./views/suggestions.vue'], resolve)
         }
@@ -398,7 +406,7 @@ var pageRouterOption = [
     {
         path: prefixPath + 'qrPayCode',
         name: 'qrPayCode',
-        meta: { checkLogin: true },
+        meta: { checkLogin: true, fullPage: true },
         component: function (resolve) {
             require(['./views/qrPayCode.vue'], resolve)
         }
@@ -414,7 +422,7 @@ var pageRouterOption = [
     {
         path: prefixPath + 'treat',
         name: 'treat',
-        meta: { checkLogin: true },
+        meta: { checkLogin: true, fullPage: true },
         component: function (resolve) {
             require(['./views/treat.vue'], resolve)
         }
@@ -534,7 +542,7 @@ var pageRouterOption = [
     {
         path: prefixPath + 'robProjectSuccess',
         name: 'robProjectSuccess',
-        meta: { checkLogin: false },
+        meta: { checkLogin: true },
         component: function (resolve) {
             require(['./views/robProjectSuccess.vue'], resolve)
         }
@@ -553,6 +561,22 @@ var pageRouterOption = [
         meta: { checkLogin: true },
         component: function (resolve) {
             require(['./views/luckyWheel.vue'], resolve)
+        }
+    },
+    {   // 中奖纪录页面
+        path: prefixPath + 'lucky',
+        name: 'lucky',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/lucky.vue'], resolve)
+        }
+    },
+    {   // 中奖纪录详情页
+        path: prefixPath + 'luckyDetail',
+        name: 'luckyDetail',
+        meta: { checkLogin: true },
+        component: function (resolve) {
+            require(['./views/luckyDetail.vue'], resolve)
         }
     },
     {   // wifi列表页面
@@ -617,6 +641,78 @@ var pageRouterOption = [
         meta: { checkLogin: true },
         component: function (resolve) {
             require(['./views/onceCardOrderDetail.vue'], resolve)
+        }
+    },
+    {   // 热门活动页面
+        path: prefixPath + 'activities',
+        name: 'activities',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/activities.vue'], resolve)
+        }
+    },
+    {   // 预约技师页面
+        path: prefixPath + 'appointTech',
+        name: 'appointTech',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/appointTech.vue'], resolve)
+        }
+    },
+    {   //
+        path: prefixPath + 'oneYuanDetail',
+        name: 'oneYuanDetail',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/oneYuanDetail.vue'], resolve)
+        }
+    },
+    {   //
+        path: prefixPath + 'oneYuanExplain',
+        name: 'oneYuanExplain',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/oneYuanExplain.vue'], resolve)
+        }
+    },
+    {   //
+        path: prefixPath + 'oneYuanJoinRecords',
+        name: 'oneYuanJoinRecords',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/oneYuanJoinRecords.vue'], resolve)
+        }
+    },
+    {   //
+        path: prefixPath + 'oneYuanPastWinRecords',
+        name: 'oneYuanPastWinRecords',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/oneYuanPastWinRecords.vue'], resolve)
+        }
+    },
+    {   //
+        path: prefixPath + 'oneYuanRecords',
+        name: 'oneYuanRecords',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/oneYuanRecords.vue'], resolve)
+        }
+    },
+    {   //
+        path: prefixPath + 'oneYuanRecordsDetail',
+        name: 'oneYuanRecordsDetail',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/oneYuanRecordsDetail.vue'], resolve)
+        }
+    },
+    {   //
+        path: prefixPath + 'oneYuanSuccess',
+        name: 'oneYuanSuccess',
+        meta: { checkLogin: false },
+        component: function (resolve) {
+            require(['./views/oneYuanSuccess.vue'], resolve)
         }
     },
     {
@@ -725,7 +821,7 @@ router.beforeEach(function (to, from, next) {
 
 // 加载页面之后
 router.afterEach(function (to) {
-    if (_global.userAgent.isWX && !/(technicianDetail|couponDetail|luckyWheel)/.test(to.name)) { // 自定义分享的页面除外
+    if (_global.userAgent.isWX && !/(technicianDetail|couponDetail|luckyWheel|onceCardDetail|robProjectDetail|robProjectSuccess)/.test(to.name)) { // 自定义分享的页面除外
         Global.shareConfig(_global.shareConfigOption, 'global')
     }
 })

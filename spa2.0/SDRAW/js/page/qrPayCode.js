@@ -16,13 +16,14 @@
         }
         refreshBtn.Class('processing');
         $.ajax({
-            url:'../api/v2/finacial/account/pay/qrcode',
+            url:'../api/v2/financial/account/pay/qrcode',
             isReplaceUrl:true,
             success: function (result) {
                 refreshBtn.ClassClear('processing');
                 if(result.statusCode == '200'){
                     if(timer) clearTimeout(timer);
-                    qrcode.makeCode(JSON.stringify(result.respData));
+                    //qrcode.makeCode(JSON.stringify(JSON.parse(result.respData.qrcode)));
+                    qrcode.makeCode(result.respData.qrcode);
                     var timeStr = '';
                     if(result.respData.period>0){
                         timer = setTimeout(reMakeCode,result.respData.period * 1000);
@@ -81,4 +82,13 @@
     }
 
     $.pageSwitch();
+
+    var tmpPageSwitch = $.pageSwitch;
+    $.pageSwitch = function () {
+        console.log('切换页面时，清除定时器');
+        //=== 切换页面时，清除定时器 ===
+        if(timer) clearTimeout(timer);
+        $.pageSwitch = tmpPageSwitch;
+        $.pageSwitch();
+    };
 })();

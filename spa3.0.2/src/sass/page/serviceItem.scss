@@ -193,26 +193,26 @@ div#service-item-page{
       border-bottom:0
     }
   }
-}
 
-div.confirm-btn{
-  position: fixed;
-  bottom: 0;
-  height: 3.333rem;
-  left: 0;
-  right: 0;
-  background-color: #e1e1e1;
-  z-index:10;
-  >a{
-    display: block;
-    height: 2.444rem;
-    line-height: 2.444rem;
-    margin: .444rem .667rem 0;
-    background-color: #fb5549;
-    color: #fff;
-    font-size: 1.056rem;
-    text-align: center;
-    letter-spacing: 2px;
-    border-radius: 5px;
+  div.confirm-btn{
+    position: fixed;
+    bottom: 0;
+    height: 3.333rem;
+    left: 0;
+    right: 0;
+    background-color: #e1e1e1;
+    z-index:10;
+    >a{
+      display: block;
+      height: 2.444rem;
+      line-height: 2.444rem;
+      margin: .444rem .667rem 0;
+      background-color: #fb5549;
+      color: #fff;
+      font-size: 1.056rem;
+      text-align: center;
+      letter-spacing: 2px;
+      border-radius: 5px;
+    }
   }
 }

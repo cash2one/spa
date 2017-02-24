@@ -30,7 +30,6 @@
           -webkit-border-top-left-radius: .5rem;
           -moz-border-radius-topleft: .5rem;
           border-top-left-radius: .5rem;
-
           -webkit-border-top-right-radius: .5rem;
           -moz-border-radius-topright: .5rem;
           border-top-right-radius: .5rem;
@@ -52,6 +51,7 @@
                   @include boxFlex(1);
                   font-size: .889rem;
                   padding-left: .5rem;
+                  @include sl();
                 }
               }
             }

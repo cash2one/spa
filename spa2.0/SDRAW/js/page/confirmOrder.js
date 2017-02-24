@@ -46,10 +46,13 @@
         $timeListDom = $('.time-list'),
         timeListDiv = $('.time-list>div'),
         timeSelectedDiv = $('.selected-time>span'),
-        confirmBtn = $('.confirm-button'),
+        confirmBtn = $('#_timePicker .confirm-button'),
         _timePicker = $('#_timePicker'),
+        _servicePicker = $('#_servicePicker'),
         projectTimeDiv = $('#content>div:nth-of-type(4)>div:nth-of-type(4)>span'),
         _service = $('#content>div:nth-of-type(4)>div:nth-of-type(4)>span'),
+        selectedItemSpan = $('#_servicePicker>div>div>.selected-service>span'),
+        selectedItemConfirmBtn =  $('#_servicePicker .confirm-button'),
         payMask = $('#payMask'),
         _seviceTimeArr = [45,60,90,120],
         curSelectTime = '',
@@ -57,9 +60,12 @@
         days = ['今天','明天','后天'],
         fdates = [],
         allTimes = [],
+        initDownPayment = 0,
         downPayment = 0,
         serviceDuration = 0,
         payAppointment,     //是否是付费预约   on：是，off：否;
+        appointType,
+        payTip = $('#content>div:nth-of-type(6)>div:nth-of-type(2)'),   //付费预约提示语
         selectTimeId = '';  //内网对接时，所选时间的timeId
     if($.param("backPublic")=="true"){
         $("#title>div:nth-of-type(2)").Click(function(event){
@@ -92,7 +98,9 @@
                 data = data.respData;
                 isCrossInner = data.hasInnerProvider === 'true';
                 downPayment = data.downPayment || 0;
-                payAppointment = isCrossInner ? 'on' : data.payAppointment;
+                initDownPayment = downPayment;
+                payAppointment = isCrossInner ? 'on' : (data.appointType == 'paid' || data.appointType == 'paid_full' ? 'on' : 'off');
+                appointType = data.appointType;
                 /////////////////////////技师信息
                 if(data["tech"]){
                     data["tech"]["avatarUrl"] = data["tech"]["avatarUrl"] || $.$.defaultHeader;
@@ -119,6 +127,11 @@
                     $("#content>div:nth-of-type(3)>div:nth-of-type(1)>span").Text(data["item"]["name"]);//预约项目名
                     $("#content>div:nth-of-type(3)>div:nth-of-type(2)>span").Text($.formatPrice(data['item']['price'],data['item']['duration'],data['item']['durationUnit']));//项目价格
                     $('#content>div:nth-of-type(4)>div:nth-of-type(3),#content>div:nth-of-type(4)>div:nth-of-type(4)').Hide();
+                    if(appointType === 'paid_full'){
+                        downPayment = data.item.price;
+                        $('#content>div:nth-of-type(6)>div:nth-of-type(1)>span').Text('￥'+downPayment+'元');
+                        payTip.Text('支付金额可在结账时抵扣 '+data["item"]["name"]+' 的消费');
+                    }
                 }
 
                 if(oldOrderId){
@@ -314,7 +327,7 @@
                                             clubId : clubId,
                                             techId : techId || '',
                                             itemId : itemId || '',
-                                            orderType: payAppointment == 'on'?'paid':'appoint',
+                                            orderType: data.appointType,
                                             downPayment:0,
                                             serviceDuration:serviceDuration,
                                             timeId: selectTimeId,               //内网对接所需的timeId
@@ -410,6 +423,7 @@
                             }
                             else {//跳转到login页面
                                 $.tipShow("未能获取您的账号信息，请您重新登录！");
+                                $.$.loginUrl='order';
                                 return $.page("login");
                             }
                         }
@@ -476,7 +490,7 @@
                         dateTime:dateTime,
                         downPayment:downPayment,
                         itemId:itemId || '',
-                        orderType:'paid',
+                        orderType: appointType,
                         serviceDuration:serviceDuration,
                         techId:techId || '',
                         tradeChannel:'wx',
@@ -557,6 +571,47 @@
                 }
             }
         });
+
+        //查询服务项目，若已选择技师，则查询技师可服务的项目，否则查询所有服务项目
+        if(techId){
+            $.ajax({
+                url:'../api/v1/profile/tech/getServiceItemByTech',
+                isReplaceUrl:true,
+                data:{
+                    techId: techId
+                },
+                success: function (res) {
+                    if(res.statusCode == 200){
+                        var items = res.respData;
+                        if(items.length > 0){
+                            serviceItem(items);
+                            $('#content>div:nth-of-type(3)>div:nth-of-type(1)').Click(function () {
+                                showServiceItems(itemId || '');
+                            }).Class('active');
+                        }
+                    }else{
+                        $.tipShow(res.msg || '查询技师服务项目失败');
+                    }
+                }
+            });
+        }else{
+            $.ajax({
+                url:'../api/v2/club/'+ $.$.clubID +'/categoryService',
+                isReplaceUrl:true,
+                success: function (res) {
+                    var items = [];
+                    res.forEach(function (obj) {
+                        items = items.concat(obj.serviceItems);
+                    });
+                    if(items.length > 0){
+                        serviceItem(items);
+                        $('#content>div:nth-of-type(3)>div:nth-of-type(1)').Click(function () {
+                            showServiceItems(itemId || '');
+                        }).Class('active');
+                    }
+                }
+            });
+        }
     }
 
     $('#content>div:nth-of-type(4)>div:nth-of-type(2)>span:nth-of-type(2)').Event('click', function (e, obj) {
@@ -679,5 +734,82 @@
         });
         $timeListDom[0].innerHTML = htmlStr.join('');
         if($('.time-list>div.active').length > 0) $('.time-list>div.active')[0].click();
+    }
+
+    //======== 拼接服务项目 ========
+    function serviceItem(items){
+        var html = [];
+        items.forEach(function (item) {
+            html.push('<div class="item" id="item_'+item.id+'" data-service-id="'+item.id+'" data-service-name="'
+              +item.name+'" data-service-price1="'+item.price1+'" data-service-price="'
+              +(item.price1 ? (item.price1+'元/'+item.duration1+item.durationUnit):'')+'">\
+                          <div></div>\
+                          <div style="background-image: url('+item.imageUrl+')"></div>\
+                          <div>\
+                            <div>'+item.name+'</div>\
+                            <div>\
+                              <div>'+(item.price1 ? (item.price1+'元/'+item.duration1+item.durationUnit):'&nbsp;')+'</div>\
+                              <div>'+(item.price2 ? (item.price2+'元/'+item.duration2+item.durationUnitPlus):'&nbsp;')+'</div>\
+                            </div>\
+                          </div>\
+                        </div>');
+        });
+        $('#_servicePicker .service-list').Html(html.join(''));
+        initServiceItemEvent();
+    }
+
+    function showServiceItems(id){
+        if(id){
+            clickServiceItem($('#item_'+id)[0],true);
+        }
+        _servicePicker.Class('active');
+    }
+
+    function initServiceItemEvent(){
+        $('#_servicePicker>div>div>div:nth-of-type(1)>span').Click(function () {
+            _servicePicker.ClassClear('active');
+        });
+        $('#_servicePicker>div>div>.service-list>div.item').Click(function (e,item) {
+            clickServiceItem(item);
+        });
+        selectedItemConfirmBtn.Click(function (e, item) {
+            if(selectedItemConfirmBtn.ClassHave('disabled')) return;
+            itemId = currSelectItem.serviceId;
+            $('#content>div:nth-of-type(3)>div:nth-of-type(1)>span').Text(currSelectItem.serviceName);
+            $('#content>div:nth-of-type(3)>div:nth-of-type(2)>span').Text(currSelectItem.servicePrice);
+            if(appointType === 'paid_full'){
+                downPayment = currSelectItem.servicePrice1 || initDownPayment;
+                $('#content>div:nth-of-type(6)>div:nth-of-type(1)>span').Text('￥'+downPayment+'元');
+                payTip.Text('支付金额可在结账时抵扣 '+currSelectItem.serviceName+' 的消费');
+            }
+            _servicePicker.ClassClear('active');
+            if(itemId){
+                $('#content>div:nth-of-type(4)>div:nth-of-type(3),#content>div:nth-of-type(4)>div:nth-of-type(4)').Hide();
+            }else{
+                $('#content>div:nth-of-type(4)>div:nth-of-type(3),#content>div:nth-of-type(4)>div:nth-of-type(4)').Show();
+            }
+        });
+    }
+    var currSelectItem;
+    function clickServiceItem(item,flag){
+        var dataset = item.dataset, $item = $(item);
+        if(appointType === 'paid_full' && $item.ClassHave('active')){
+            return;
+        }
+        if($item.ClassHave('active') && !flag){
+            $item.ClassClear('active');
+            selectedItemSpan.Text('未选择项目');
+            selectedItemConfirmBtn.ClassClear('disabled');
+            currSelectItem = {
+                serviceName:'到店选择',
+                servicePrice:'待定'
+            };
+        }else{
+            $('#_servicePicker>div>div>.service-list>div.active').ClassClear('active');
+            $item.Class('active');
+            selectedItemSpan.Text(dataset.serviceName);
+            selectedItemConfirmBtn.ClassClear('disabled');
+            currSelectItem = dataset;
+        }
     }
 })();

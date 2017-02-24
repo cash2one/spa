@@ -117,13 +117,13 @@ div.finish-load-tip{
 div.pop-modal{
   @include mask();
   z-index:11;
-  @include transition(transform 0.5s);
-  @include tOrigin(50% 100%);
-  @include scale(1,0);
+  transform: scaleY(0);
+  transform-origin: 50% 100%;
   opacity: 0;
+  transition: transform 0.5s ease-out, opacity 0.5s;
   &.active{
     opacity: 1;
-    @include scale(1,1);
+    transform: scaleY(1);
   }
   >div.center-wrap{
     position: absolute;
@@ -202,6 +202,383 @@ div.credit-tip-pop{
   }
 }
 
+li.onceCard{
+  float: left;
+  position: relative;
+  width: 9.0278rem;
+  height: 11.9444rem;
+  margin-bottom: 0.833rem;
+  margin-right: 0.667rem;
+  border-radius: 3px;
+  box-shadow: 0 0 1px 2px rgba(0,0,0,0.1);
+  overflow: hidden;
+  &.sellOut,&.expired{
+    &:after{
+      position: absolute;
+      content: "售罄";
+      width: 4.722rem;
+      height: 4.722rem;
+      top: 1.556rem;
+      left: 50%;
+      margin-left: -2.361rem;
+      text-align: center;
+      line-height: 4.722rem;
+      color: #fff;
+      font-size: 1.111rem;
+      background: rgba(0,0,0,0.4);
+      border-radius: 50%;
+    }
+  }
+  &.expired{
+    &:after{
+      content: "已过期"
+    }
+  }
+  >div{
+    &:nth-of-type(1){
+      position: relative;
+      height: 9.0278rem;
+      @include imgBgFix(9.0278rem 9.0278rem);
+      display: flex;
+      align-items: flex-end;
+      >div{
+        height: 1.611rem;
+        line-height: 1.611rem;
+        background: rgba(0,0,0,0.2);
+        color: #fff;
+        width: 100%;
+        text-indent: 0.278rem;
+        font-size: 0.889rem;
+        @include sl();
+      }
+    }
+    &:nth-of-type(2){
+      padding-left: 0.5rem;
+      color: #f66;
+      line-height: 1.85;
+      font-size: 0.667rem;
+      >b{
+        font-size: 1.056rem;
+        margin-right: 0.1rem;
+      }
+      >span{
+        float: right;
+        margin-top:0.4rem;
+        margin-right: 0.3rem;
+        border: 1px solid #f66;
+        border-radius: 3px;
+        padding: 0 0.3rem;
+        line-height: 1.5;
+      }
+    }
+    &:nth-of-type(3){
+      line-height: 1.2;
+      font-size: 0.667rem;
+      text-decoration: line-through;
+      padding-left: 0.5rem;
+      color: #999;
+      >div{
+        position: relative;
+        float: right;
+        margin-right: 0.3rem;
+        width:4.8rem;
+        height: 0.611rem;
+        background: #f66;
+        border-radius: 1rem;
+        line-height: 0.611rem;
+        color: #fff;
+        text-align: center;
+        font-size: 0.556rem;
+        overflow: hidden;
+        >div{
+          position: absolute;
+          left:50%;
+          top:0;
+          bottom:0;
+          right:0;
+          border-bottom-right-radius: 1rem;
+          border-top-right-radius: 1rem;
+          background: rgba(255,255,255,0.65);
+        }
+      }
+    }
+    &:nth-of-type(4){
+      position: absolute;
+      height: 1.167rem;
+      line-height: 1.167rem;
+      width: 3.8rem;
+      top: 1.5rem;
+      left:0;
+      color: #fff;
+      font-size: 0.667rem;
+      text-align: center;
+      @include tOrigin(0% 100%);
+      @include rotate(-45deg);
+      &.new{
+        background: #80d7c6;
+      }
+      &.best{
+        background: #febb5c;
+      }
+    }
+  }
+}
+
+div.paid-act-item{
+  margin-top: 0.8rem;
+  padding: 0 .667rem .889rem;
+  position: relative;
+  border-bottom: 1px solid #e0e0e0;
+  @include sx();
+  &:before{
+    content: ' ';
+    position: absolute;
+    width: 2.028rem;
+    height: 1.75rem;
+    left: .2rem;
+    top: -0.4rem;
+    @include img('../../images/home/rob-project.png',2.028rem 1.75rem);
+  }
+  >div:nth-of-type(1){
+    width: 3.833rem;
+    height: 3.833rem;
+    @include imgBgFix(3.833rem 3.833rem);
+    -webkit-border-radius: .278rem;
+    -moz-border-radius: .278rem;
+    border-radius: .278rem;
+    margin-right: .5rem;
+  }
+  >div:nth-of-type(2){
+    position: relative;
+    width: 14.2rem;
+  }
+  &:last-child{
+    border-bottom-width:0;
+  }
+  .paid-act-item-name{
+    line-height: 1;
+    @include s();
+    >div{
+      &:nth-of-type(1){
+        font-size: .944rem;
+        color: #212121;
+        line-height: 1.1;
+        @include boxFlex(1);
+        @include sx();
+        >div{
+          &:nth-of-type(1){
+            max-width: 8.5rem;
+            @include sl();
+          }
+          &:nth-of-type(2){
+            height: .833rem;
+            line-height: .833rem;
+            padding-top: .056rem;
+            width: 2.639rem;
+            color: #ff9a0c;
+            font-size: .722rem;
+            border: 1px solid #FF9A0C;
+            border-radius: .2rem;
+            text-align: center;
+            margin-left: .2rem;
+          }
+        }
+      }
+      &:nth-of-type(2){
+        font-size: .722rem;
+        color: #999;
+      }
+    }
+  }
+
+  .paid-act-item-price{
+    color: #fb5549;
+    font-size: 0.722rem;
+    margin-top: 0.45rem;
+    line-height: 1.4;
+    >span{
+      &:nth-of-type(1){
+        font-size: 1rem;
+      }
+      &:nth-of-type(2){
+        color: #999;
+        font-size: 0.778rem;
+        >b{
+          font-weight: normal;
+          font-size: 0.889rem;
+          color: #ff9a0c;
+        }
+      }
+    }
+    >label{
+      text-decoration: line-through;
+      margin-left: 0.667rem;
+      color: #757575;
+      font-size: 0.667rem;
+    }
+  }
+
+  .paid-act-item-time{
+    line-height: 1.1;
+    >span{
+      color: #757575;
+      font-size: 0.667rem;
+      text-decoration: line-through;
+    }
+    >div{
+      float: right;
+      margin-top: 0.18rem;
+    }
+  }
+
+  .paid-act-item-btn{
+    position: absolute;
+    right: 0;
+    bottom: 1.22rem;
+    padding-top: 0.45rem;
+    padding-left: 0.35rem;
+    width: 3.639rem;
+    height: 1.833rem;
+    color: #fff;
+    font-size: 0.75rem;
+    @include imgBgFix(3.639rem 1.833rem);
+    background-image: url("../../images/activities/qiang-btn-active.png");
+    &:after{
+      content: "";
+      position: absolute;
+      right:0.38rem;
+      top:0.96rem;
+      width: .32rem;
+      height: .32rem;
+      border-left: .1rem solid #fff;
+      border-bottom: .1rem solid #fff;
+      transform: rotate(-135deg);
+    }
+  }
+
+  .one-yuan-act-name{
+    color: #212121;
+    line-height: 1.1;
+    font-size: 0.944rem;
+    >span{
+      &:nth-of-type(1){
+        font-size: 0.833rem;
+        color: #616161;
+      }
+      &:nth-of-type(2){
+        float: right;
+        color: #ff9a0c;
+        font-size: 0.72rem;
+      }
+    }
+  }
+
+  .one-yuan-act-status{
+    margin-top: 0.2rem;
+    >div.counter-wrap{
+      >label:first-child{
+        display: none;
+      }
+      &:before{
+        content: '揭晓倒计时：';
+        float: left;
+      }
+      >label{
+        margin-left: 0.2rem;
+        margin-right: 0.2rem;
+      }
+    }
+    >div.progress{
+      display: none;
+      >label,>span,>div{
+        float: left;
+      }
+      font-size: 0.667rem;
+      >label{
+        color: #616161;
+      }
+      >span{
+        color: #ff935f;
+      }
+      >div{
+        height: 0.334rem;
+        background: #f2f0f0;
+        border-radius: 0.167rem;
+        width: 5.706rem;
+        margin-top: 0.6rem;
+        margin-left: 0.2rem;
+        >div{
+          height: 100%;
+          background: linear-gradient(to right,#ffcc58,#feb445);
+          border-radius: 0.167rem;
+        }
+      }
+    }
+    >span{
+      display: none;
+      color: #757575;
+      font-size: 0.667rem;
+    }
+  }
+
+  &.one-yuan{
+    &:before{
+      width: 2.111rem;
+      height: 1.583rem;
+      @include img("../../images/activities/ic_yiyuanduo.png", 2.111rem 1.583rem);
+    }
+    .paid-act-item-price{
+      margin-top: 0.2rem;
+    }
+    .paid-act-item-btn{
+      display: none;
+      bottom:0.5rem;
+    }
+    &.started{
+      .paid-act-item-btn{
+        display: block;
+      }
+      .one-yuan-act-status{
+        >div.counter-wrap{
+          display: none;
+        }
+        >div.progress{
+          display: block;
+        }
+      }
+    }
+    &.completed{
+      .one-yuan-act-name{
+        >span:nth-of-type(2){
+          display: none;
+        }
+      }
+      .one-yuan-act-status{
+        >div.counter-wrap{
+          display: none;
+        }
+        >span{
+          display: inline;
+        }
+      }
+    }
+  }
+  &.act-end{
+    &:before{
+      background-image: url("../../images/activities/qiang-tip-end.png");
+    }
+    .paid-act-item-btn{
+      background-image: url("../../images/activities/qiang-btn-end.png");
+    }
+    .paid-act-item-time{
+      >div{
+        display: none;
+      }
+    }
+  }
+}
+
+
 @include keyframes(couponAni){
   from{
     @include rotate(0);
@@ -231,7 +608,6 @@ div.credit-tip-pop{
       height: 5.722rem;
       border-top-left-radius: .5rem;
       border-top-right-radius: .5rem;
-
       @include imgBgFix(18.222rem 5.722rem);
       >div{
         &:nth-of-type(1){
@@ -247,6 +623,7 @@ div.credit-tip-pop{
               @include boxFlex(1);
               font-size: .889rem;
               padding-left: .5rem;
+              @include sl();
             }
           }
         }

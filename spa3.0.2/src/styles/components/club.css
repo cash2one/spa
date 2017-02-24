@@ -7,60 +7,93 @@ div.club-item-wrap {
   div.club-item-wrap.no-techs {
     padding-bottom: 0; }
   div.club-item-wrap > div.club-info {
-    padding: .5rem 0 .333rem 3.611rem;
-    line-height: 1;
-    position: relative;
-    margin: 0 .667rem; }
-    div.club-item-wrap > div.club-info > i {
-      display: inline-block;
-      position: absolute;
-      width: 2.944rem;
-      height: 2.944rem;
-      background-size: 2.944rem 2.944rem;
+    padding-top: .5rem;
+    margin: 0 .667rem;
+    display: -webkit-box;
+    display: -moz-box;
+    -webkit-box-align: center;
+    -moz-box-align: center; }
+    div.club-item-wrap > div.club-info > div:nth-of-type(1) {
+      width: 1.778rem;
+      height: 1.778rem;
+      background-size: 1.778rem 1.778rem;
       background-repeat: no-repeat;
-      top: 50%;
-      margin-top: -1.472rem;
-      left: 0;
-      border-radius: 50%; }
-    div.club-item-wrap > div.club-info > div > div > span:nth-of-type(1) {
-      width: 11rem;
-      display: inline-block;
+      border-radius: 50%;
+      margin-right: .667rem;
+      border: 1px solid #e0e0e0;
+      box-sizing: content-box; }
+    div.club-item-wrap > div.club-info > div:nth-of-type(2) {
+      -webkit-box-flex: 1;
+      box-flex: 1;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      line-height: 1.3; }
-    div.club-item-wrap > div.club-info > div > div:first-child {
-      font-size: .944rem;
+      font-size: .889rem;
       color: #212121;
-      margin-bottom: .667rem; }
-      div.club-item-wrap > div.club-info > div > div:first-child > span:nth-of-type(2) {
-        float: right;
-        padding: .278rem .556rem;
-        text-align: center;
-        color: #fff;
-        background-color: #ff9d09;
-        font-size: .611rem;
-        border-radius: .556rem; }
-    div.club-item-wrap > div.club-info > div > div:last-child {
-      font-size: .778rem;
-      color: #666; }
-      div.club-item-wrap > div.club-info > div > div:last-child > span:nth-of-type(2) {
-        float: right;
-        font-size: .722rem;
-        color: #999; }
+      margin-right: .361rem; }
+    div.club-item-wrap > div.club-info > div:nth-of-type(3) {
+      padding: 0 .2rem;
+      text-align: center;
+      color: #fff;
+      font-size: .556rem;
+      width: 1.694rem;
+      height: .822rem;
+      line-height: .822rem;
+      margin-right: .631rem;
+      background-color: #ff9d09;
+      background-image: -webkit-linear-gradient(left, #f66, #fea03a);
+      background-image: linear-gradient(to right, #f66, #fea03a);
+      border-radius: .16rem; }
+    div.club-item-wrap > div.club-info > div:nth-of-type(4) {
+      font-size: .722rem;
+      color: #999;
+      background-size: 0.444rem 0.556rem;
+      background-image: url("../../images/clubList/location_icon.png");
+      background-repeat: no-repeat;
+      background-position: left center;
+      padding-left: .889rem; }
   div.club-item-wrap > div.club-techs {
     padding: .14rem 0.14rem 0.556rem;
-    margin-left: .667rem;
-    height: 5.807rem; }
+    margin-left: 2.311rem;
+    height: 6.771rem; }
     div.club-item-wrap > div.club-techs div.swiper-slide {
       border-radius: .222rem;
-      box-shadow: 0 0 .139rem 0 #c7c7c7;
       display: inline-block;
       margin-right: .611rem;
-      width: 5.111rem;
-      height: 5.111rem;
-      background-size: 5.111rem 5.111rem;
-      background-repeat: no-repeat; }
-      div.club-item-wrap > div.club-techs div.swiper-slide > div {
-        width: 100%;
-        height: 100%; }
+      width: 4.667rem;
+      height: 6.075rem; }
+      div.club-item-wrap > div.club-techs div.swiper-slide > div:nth-of-type(1) {
+        width: 4.667rem;
+        height: 4.667rem;
+        margin-bottom: .556rem;
+        background-size: 4.667rem 4.667rem;
+        background-repeat: no-repeat;
+        border-radius: .333rem; }
+      div.club-item-wrap > div.club-techs div.swiper-slide > div:nth-of-type(2) {
+        color: #4d4d4d;
+        font-size: .722rem;
+        line-height: 1.3;
+        display: -webkit-box;
+        display: -moz-box;
+        -webkit-box-align: center;
+        -moz-box-align: center; }
+        div.club-item-wrap > div.club-techs div.swiper-slide > div:nth-of-type(2) > div {
+          max-width: 3.2rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap; }
+          div.club-item-wrap > div.club-techs div.swiper-slide > div:nth-of-type(2) > div:nth-of-type(1) {
+            -webkit-box-flex: 1;
+            box-flex: 1;
+            padding-left: .222rem; }
+          div.club-item-wrap > div.club-techs div.swiper-slide > div:nth-of-type(2) > div:nth-of-type(2) {
+            font-size: .556rem;
+            color: #999;
+            padding-left: .656rem;
+            padding-right: .222rem;
+            background-size: 0.583rem 0.389rem;
+            background-image: url("../../images/clubList/visit_icon.png");
+            background-repeat: no-repeat;
+            background-position: left 15%;
+            margin-left: .2rem;
+            text-align: right; }

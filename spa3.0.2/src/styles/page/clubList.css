@@ -21,7 +21,7 @@ div.club-list-page div.search-title > input {
           transform: translate(-50%, -50%);
   font-size: .667rem;
   background-size: 0.778rem 0.75rem;
-  background-image: url("../../images/clubList/search2.png?base64");
+  background-image: url("../../images/clubList/search2.png");
   background-repeat: no-repeat;
   background-position: .3rem center; }
 
@@ -125,116 +125,146 @@ div#club-list-nearby-page div.list div.view-all {
   font-size: .887rem;
   line-height: 2rem; }
 
-div#club-list-all-page div.filter-title {
-  height: 2.278rem;
-  border-bottom: 1px solid #d9d9d9;
-  background-color: #f3f0eb;
-  color: #666;
-  font-size: 0.778rem;
-  padding-top: 0.361rem;
-  overflow: visible; }
-  div#club-list-all-page div.filter-title.ani {
-    height: 0;
-    padding: 0;
-    overflow: hidden; }
-  div#club-list-all-page div.filter-title > div {
-    width: 6.638rem;
-    height: 1.556rem;
-    box-sizing: border-box;
-    text-align: center;
-    float: left;
-    position: relative; }
-  div#club-list-all-page div.filter-title > div:nth-of-type(1), div#club-list-all-page div.filter-title > div:nth-of-type(2), div#club-list-all-page div.filter-title > div:nth-of-type(3) {
-    z-index: 99; }
-    div#club-list-all-page div.filter-title > div:nth-of-type(1) > div, div#club-list-all-page div.filter-title > div:nth-of-type(2) > div, div#club-list-all-page div.filter-title > div:nth-of-type(3) > div {
-      width: 0.38rem;
-      height: 0.38rem;
-      display: inline-block;
-      border-left: 0.1rem solid #999;
-      border-bottom: 0.1rem solid #999;
-      margin-left: 0.25rem;
-      -webkit-transform: rotate(135deg);
-      transform: rotate(135deg);
-      -webkit-transition: all 0.3s;
-      transition: all 0.3s; }
-    div#club-list-all-page div.filter-title > div:nth-of-type(1) > ul, div#club-list-all-page div.filter-title > div:nth-of-type(2) > ul, div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul {
-      position: absolute;
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-      top: 1.917rem;
-      left: 0.36rem;
-      opacity: 0;
-      -webkit-transform: scale(1, 0);
-      transform: scale(1, 0);
-      -webkit-transition: all 0.4s;
-      transition: all 0.4s;
-      -webkit-transform-origin: 50% 0%;
-      transform-origin: 50% 0%; }
-      div#club-list-all-page div.filter-title > div:nth-of-type(1) > ul > li, div#club-list-all-page div.filter-title > div:nth-of-type(2) > ul > li, div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul > li {
+div#club-list-all-page {
+  padding-top: 2.417rem; }
+  div#club-list-all-page div.filter-title {
+    position: absolute;
+    top: 0;
+    z-index: 5;
+    width: 100%;
+    display: -webkit-box;
+    display: -moz-box;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    height: 2.417rem;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #fafafa;
+    color: #616161; }
+    div#club-list-all-page div.filter-title > div {
+      text-align: center;
+      height: 1.778rem;
+      font-size: .778rem;
+      color: #616161;
+      border-right: 1px solid #e0e0e0; }
+      div#club-list-all-page div.filter-title > div > div {
+        background-size: 0.889rem 0.889rem;
+        background-repeat: no-repeat;
+        background-position: left center;
+        display: inline-block;
+        padding-left: 1rem;
+        line-height: 1.778rem; }
+      div#club-list-all-page div.filter-title > div:nth-of-type(1) {
+        -webkit-box-flex: 1;
+        box-flex: 1; }
+        div#club-list-all-page div.filter-title > div:nth-of-type(1) > div {
+          background-image: url("../../images/clubList/table_icon.png"); }
+          div#club-list-all-page div.filter-title > div:nth-of-type(1) > div.active {
+            background-image: url("../../images/clubList/table_selected_icon.png");
+            color: #f66; }
+      div#club-list-all-page div.filter-title > div:nth-of-type(2) {
+        -webkit-box-flex: 1;
+        box-flex: 1; }
+        div#club-list-all-page div.filter-title > div:nth-of-type(2) > div {
+          background-image: url("../../images/clubList/list_icon.png"); }
+          div#club-list-all-page div.filter-title > div:nth-of-type(2) > div.active {
+            background-image: url("../../images/clubList/list_selected_icon.png");
+            color: #f66; }
+      div#club-list-all-page div.filter-title > div:nth-of-type(3) {
+        -webkit-box-flex: 1;
+        box-flex: 1; }
+        div#club-list-all-page div.filter-title > div:nth-of-type(3) > div {
+          background-image: url("../../images/clubList/filter_icon.png"); }
+          div#club-list-all-page div.filter-title > div:nth-of-type(3) > div.active {
+            background-image: url("../../images/clubList/filter_selected_icon.png");
+            color: #f66; }
+      div#club-list-all-page div.filter-title > div:nth-of-type(4) {
+        width: 2.361rem;
+        border-right: none;
+        background-size: 0.889rem 0.889rem;
+        background-image: url("../../images/clubList/search_icon.png");
+        background-repeat: no-repeat;
+        background-position: center; }
+  div#club-list-all-page div.filter-pop {
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    top: 2.417rem;
+    left: 0;
+    z-index: 11;
+    overflow: visible;
+    -webkit-transform: scale(1, 0);
+    transform: scale(1, 0);
+    -webkit-transform-origin: top center;
+    transform-origin: top center;
+    -webkit-transition: transform 0.3s ease;
+    -webkit-transition: -webkit-transform 0.3s ease;
+    transition: -webkit-transform 0.3s ease;
+    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, -webkit-transform 0.3s ease;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-transition-property: -webkit-transform;
+    transition-property: -webkit-transform;
+    transition-property: transform;
+    transition-property: transform, -webkit-transform; }
+    div#club-list-all-page div.filter-pop.active {
+      -webkit-transform: scale(1, 1);
+      transform: scale(1, 1); }
+    div#club-list-all-page div.filter-pop ul {
+      display: none;
+      position: relative; }
+      div#club-list-all-page div.filter-pop ul.active {
+        display: block; }
+      div#club-list-all-page div.filter-pop ul:before {
+        position: absolute;
+        content: ' ';
         background-color: #fff;
-        height: 2.222rem;
-        width: 6.611rem;
-        margin: 0;
-        line-height: 2.222rem;
-        border-left: 1px solid #fb5549;
-        border-right: 1px solid #fb5549;
-        border-bottom: 1px solid #fb5549;
-        text-align: center;
-        color: #666;
-        font-size: 0.667rem;
-        letter-spacing: 1px; }
-        div#club-list-all-page div.filter-title > div:nth-of-type(1) > ul > li:nth-of-type(1), div#club-list-all-page div.filter-title > div:nth-of-type(2) > ul > li:nth-of-type(1), div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul > li:nth-of-type(1) {
-          position: relative;
-          border-top: 1px solid #fb5549; }
-          div#club-list-all-page div.filter-title > div:nth-of-type(1) > ul > li:nth-of-type(1):before, div#club-list-all-page div.filter-title > div:nth-of-type(1) > ul > li:nth-of-type(1):after, div#club-list-all-page div.filter-title > div:nth-of-type(2) > ul > li:nth-of-type(1):before, div#club-list-all-page div.filter-title > div:nth-of-type(2) > ul > li:nth-of-type(1):after, div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul > li:nth-of-type(1):before, div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul > li:nth-of-type(1):after {
-            content: "";
-            display: block;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            height: 0;
-            position: absolute;
-            left: 4.145rem; }
-          div#club-list-all-page div.filter-title > div:nth-of-type(1) > ul > li:nth-of-type(1):before, div#club-list-all-page div.filter-title > div:nth-of-type(2) > ul > li:nth-of-type(1):before, div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul > li:nth-of-type(1):before {
-            border-bottom: 10px solid #fb5549;
-            top: -10px; }
-          div#club-list-all-page div.filter-title > div:nth-of-type(1) > ul > li:nth-of-type(1):after, div#club-list-all-page div.filter-title > div:nth-of-type(2) > ul > li:nth-of-type(1):after, div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul > li:nth-of-type(1):after {
-            border-bottom: 10px solid #fff;
-            top: -8.5px; }
-          div#club-list-all-page div.filter-title > div:nth-of-type(1) > ul > li:nth-of-type(1).selected:after, div#club-list-all-page div.filter-title > div:nth-of-type(2) > ul > li:nth-of-type(1).selected:after, div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul > li:nth-of-type(1).selected:after {
-            border-bottom-color: #fb5549; }
-        div#club-list-all-page div.filter-title > div:nth-of-type(1) > ul > li.selected, div#club-list-all-page div.filter-title > div:nth-of-type(2) > ul > li.selected, div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul > li.selected {
-          background-color: #fb5549;
-          color: #fff; }
-    div#club-list-all-page div.filter-title > div:nth-of-type(1).active, div#club-list-all-page div.filter-title > div:nth-of-type(2).active, div#club-list-all-page div.filter-title > div:nth-of-type(3).active {
-      color: #fb5549; }
-      div#club-list-all-page div.filter-title > div:nth-of-type(1).active > div, div#club-list-all-page div.filter-title > div:nth-of-type(2).active > div, div#club-list-all-page div.filter-title > div:nth-of-type(3).active > div {
-        border-left-color: #fb5549;
-        border-bottom-color: #fb5549;
+        display: block;
+        box-sizing: border-box;
+        width: .6rem;
+        height: .6rem;
+        border-top: 1px solid #eee;
+        border-right: 1px solid #eee;
         -webkit-transform: rotate(-45deg);
-        transform: rotate(-45deg); }
-      div#club-list-all-page div.filter-title > div:nth-of-type(1).active > ul, div#club-list-all-page div.filter-title > div:nth-of-type(2).active > ul, div#club-list-all-page div.filter-title > div:nth-of-type(3).active > ul {
-        opacity: 1;
-        -webkit-transform: scale(1, 1);
-        transform: scale(1, 1); }
-  div#club-list-all-page div.filter-title > div:nth-of-type(1) {
-    border-right: 1px solid #d9d9d9; }
-  div#club-list-all-page div.filter-title > div:nth-of-type(2) {
-    border-right: 1px solid #d9d9d9; }
-    div#club-list-all-page div.filter-title > div:nth-of-type(2) > div {
-      left: 4.6rem; }
-    div#club-list-all-page div.filter-title > div:nth-of-type(2) > ul > li:nth-of-type(1):before, div#club-list-all-page div.filter-title > div:nth-of-type(2) > ul > li:nth-of-type(1):after {
-      left: 4rem; }
-  div#club-list-all-page div.filter-title > div:nth-of-type(3) {
-    width: 6.6rem; }
-    div#club-list-all-page div.filter-title > div:nth-of-type(3) > div {
-      left: 4rem; }
-    div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul {
-      left: 0; }
-      div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul > li {
-        width: 6.5rem; }
-      div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul > li:nth-of-type(1):before, div#club-list-all-page div.filter-title > div:nth-of-type(3) > ul > li:nth-of-type(1):after {
-        left: 3.7rem; }
+                transform: rotate(-45deg);
+        -webkit-transform-origin: center;
+                transform-origin: center;
+        top: -.3rem;
+        left: 5rem;
+        z-index: -1; }
+      div#club-list-all-page div.filter-pop ul > li {
+        background: #fff;
+        height: 2.222rem;
+        line-height: 2.222rem;
+        border-bottom: 1px solid #eee;
+        padding-left: 1.944rem;
+        position: relative;
+        font-size: .889rem;
+        color: #212121; }
+        div#club-list-all-page div.filter-pop ul > li.selected {
+          color: #f66; }
+          div#club-list-all-page div.filter-pop ul > li.selected:before {
+            position: absolute;
+            content: ' ';
+            display: block;
+            height: .367rem;
+            width: .611rem;
+            box-sizing: border-box;
+            border-left: 1px solid #f66;
+            border-bottom: 1px solid #f66;
+            -webkit-transform-origin: center top;
+                    transform-origin: center top;
+            -webkit-transform: rotate(-45deg);
+                    transform: rotate(-45deg);
+            left: .667rem;
+            top: .8rem; }
+      div#club-list-all-page div.filter-pop ul.distance:before {
+        left: 3rem; }
+      div#club-list-all-page div.filter-pop ul.sort:before {
+        left: 9.3rem; }
+      div#club-list-all-page div.filter-pop ul.filter:before {
+        left: 15rem; }
 
 div#club-list-search-page {
   overflow-y: auto; }
@@ -245,8 +275,6 @@ div#club-list-search-page {
     margin-bottom: 0.667rem; }
     div#club-list-search-page div.club-list div.finish-load-tip {
       border-top: 1px solid #e0e0e0; }
-  div#club-list-search-page div.tech-list {
-    border-top: 1px solid #e0e0e0; }
   div#club-list-search-page div.list-title {
     height: 2.222rem;
     line-height: 2.222rem;

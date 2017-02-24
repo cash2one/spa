@@ -105,7 +105,6 @@ module.exports = {
         var tempArr
         var page
 
-        baseStr = baseStr[0].replace('/spa2', '/spa').replace('sdcm163.stonebean.com', '192.168.1.19:8051')
         paramStr = queryStr[0]
         queryStr = queryStr[1]
 
@@ -131,24 +130,13 @@ module.exports = {
                 }
             }
         }
-
-        url = baseStr + '?#/' + (paramObj.club ? paramObj.club + '/' : '') + page
-
-        if (queryObj) {
-            url += '?'
-            tempArr = []
-            for (var item in queryObj) {
-                tempArr.push(item + '=' + queryObj[item])
-            }
-            url += tempArr.join('&')
-        }
+        var path = '/' + (paramObj.club ? paramObj.club + '/' : '') + page
 
         return {
-            baseUrl: baseStr,
+            path: path,
             page: page || '',
             params: paramObj,
-            querys: queryObj,
-            url: url
+            query: queryObj
         }
     },
     assignIndex: function (arr) { // 给数组中的对象增加index属性

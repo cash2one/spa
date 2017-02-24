@@ -15,7 +15,7 @@
 }
 
 div#technician-detail-page{
-  overflow-y: auto;
+  padding-bottom: 2.667rem;
   div.top{
     height:8rem;
     position: relative;
@@ -28,7 +28,7 @@ div#technician-detail-page{
       position: absolute;
       left: .667rem;
       top: 3.333rem;
-      &>div{
+      >div{
         position: relative;
         width: 3.389rem;
         height: 3.389rem;

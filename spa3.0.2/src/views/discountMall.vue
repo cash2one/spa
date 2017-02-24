@@ -14,20 +14,20 @@
             <div class="result-list" v-show="!noData">
                 <div class="tip" v-show="showTip" v-html="tipStr"></div>
                 <ul class="clear-fix">
-                    <router-link v-for="item in dataList" tag="li" :class="{ sellOut: item.statusName=='已售完', expired: item.statusName=='已过期' }" :to="{ name: 'onceCardDetail', query: { id: item.id } }">
-                        <div :style="{'background-image': 'url('+(item.imageUrl || global.defaultServiceItemImgUrl)+')'}"><div>{{ item.itemName }}</div></div>
-                        <div><b>{{ item.plan.price }}</b>元<span>买{{ item.plan.paidCount }}送{{ item.plan.giveCount }}</span></div>
-                        <div>{{ Math.round(item.plan.itemAmount/100) }}元/次</div>
+                    <router-link v-for="item in dataList" class="onceCard" tag="li" :class="{ sellOut: item.statusName=='已售完', expired: item.statusName=='已过期' }" :to="{ name: 'onceCardDetail', query: { id: item.id } }">
+                        <div :style="{'background-image': 'url('+(item.imageUrl || global.defaultServiceItemImgUrl)+')'}"><div>{{ item.name }}</div></div>
+                        <div><b>{{ item.plan.price }}</b>元/次<span>买{{ item.plan.paidCount }}送{{ item.plan.giveCount }}</span></div>
+                        <div>{{ Math.round(item.plan.itemAmount/100) }}元/次<div v-if="item.progress">{{ item.progress }}%<div :style="{ left: item.progress +'%' }"></div></div></div>
                         <div v-if="item.id==newId" class="new">最新</div>
                         <div v-else-if="item.id==bestId" class="best">最优惠</div>
                     </router-link>
                 </ul>
                 <div class="more-tip" v-show="showMoreTip">{{ moreTipStr }}</div>
                 <ul class="clear-fix" v-show="showMoreList">
-                    <router-link v-for="item in moreList" tag="li" :class="{ sellOut: item.statusName=='已售完', expired: item.statusName=='已过期' }" :to="{ name: 'onceCardDetail', query: {id: item.id} }">
-                        <div :style="{'background-image': 'url('+(item.imageUrl || global.defaultServiceItemImgUrl)+')'}"><div>{{ item.itemName }}</div></div>
-                        <div><b>{{ item.plan.price }}</b>元<span>买{{ item.plan.paidCount }}送{{ item.plan.giveCount }}</span></div>
-                        <div>{{ Math.round(item.plan.itemAmount/100) }}元/次</div>
+                    <router-link v-for="item in moreList" tag="li" class="onceCard" :class="{ sellOut: item.statusName=='已售完', expired: item.statusName=='已过期' }" :to="{ name: 'onceCardDetail', query: {id: item.id} }">
+                        <div :style="{'background-image': 'url('+(item.imageUrl || global.defaultServiceItemImgUrl)+')'}"><div>{{ item.name }}</div></div>
+                        <div><b>{{ item.plan.price }}</b>元/次<span>买{{ item.plan.paidCount }}送{{ item.plan.giveCount }}</span></div>
+                        <div>{{ Math.round(item.plan.itemAmount/100) }}元/次<div v-if="item.progress">{{ item.progress }}%<div :style="{ left: item.progress +'%' }"></div></div></div>
                         <div v-if="item.id==newId" class="new">最新</div>
                         <div v-else-if="item.id==bestId" class="best">最优惠</div>
                     </router-link>
@@ -126,6 +126,9 @@
                         }
                         for (i = 0; i < activityList.length; i++) {
                             listItem = activityList[i]
+                            if (listItem.totalCount != 0 && listItem.paidCount > listItem.totalCount * 0.49) {
+                                listItem.progress = (listItem.paidCount / listItem.totalCount) * 100
+                            }
                             for (k = 0; k < listItem.onceCardPlans.length; k++) {
                                 plan = listItem.onceCardPlans[k]
                                 if (plan.optimal == 'Y') {
@@ -166,6 +169,9 @@
                             } else {
                                 for (i = 0; i < moreList.length; i++) {
                                     listItem = moreList[i]
+                                    if (listItem.totalCount != 0 && listItem.paidCount > listItem.totalCount * 0.49) {
+                                        listItem.progress = (listItem.paidCount / listItem.totalCount) * 100
+                                    }
                                     for (k = 0; k < listItem.onceCardPlans.length; k++) {
                                         plan = listItem.onceCardPlans[k]
                                         if (plan.optimal == 'Y') {

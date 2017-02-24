@@ -5,16 +5,19 @@
         type=$.param('type'),
         techInfo,
         commentId = $.param('commentId') || '',
-        clubId;
-
+        clubId,
+        isScan = $.getUrlParam('isScan',true) == '1';     //是否是扫评论二维码进入此页面的
     $.$.payAuthCode = $.param("code") || $.getUrlParam('code') || $.$.payAuthCode;
     $.paramClear('commentId');
     if($.$.ua.isWX){
         //隐藏关注微信中的文字内容
-        $("#content>div:nth-of-type(6)>div:nth-of-type(3)").CSS("display","none");
-        $("#content>div:nth-of-type(6)>div:nth-of-type(4)").CSS("display","none");
-        $("#content>div:nth-of-type(6)>div:nth-of-type(1)").CSS("display","block");
-        $("#content>div:nth-of-type(6)").CSS("padding-top","1.25rem");
+        $("#content>div>div:nth-of-type(5)>div:nth-of-type(3)").CSS("display","none");
+        $("#content>div>div:nth-of-type(5)>div:nth-of-type(4)").CSS("display","none");
+        $("#content>div>div:nth-of-type(5)>div:nth-of-type(1)").CSS("display","block");
+        $("#content>div>div:nth-of-type(5)").CSS("padding-top","1.25rem");
+    }
+    if(isScan){
+        $('.service-level>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(5),.service-level>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(6)').ClassClear('hide');
     }
     $.ajax({
         url: ($.$.clubID ? "../" : "") + '/impression/list',
@@ -48,34 +51,40 @@
                     var starValues = [100,100,100,100],
                       starTexts = [['非常差','很差','一般','很好','非常好'],['非常严重','很严重','一般','无偷钟','认真负责']],
                       starTextObjs = [
-                          $('div.comment-score:nth-of-type(1)>div:nth-of-type(3)'),
-                          $('div.comment-score:nth-of-type(2)>div:nth-of-type(3)'),
-                          $('div.comment-score:nth-of-type(3)>div:nth-of-type(3)'),
-                          $('div.comment-score:nth-of-type(4)>div:nth-of-type(3)')
+                          $('.service-level>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(3)'),
+                          $('.service-level>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(3)'),
+                          $('.service-level>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(3)>div:nth-of-type(3)'),
+                          $('.service-level>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(4)>div:nth-of-type(3)'),
+                          $('.service-level>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(5)>div:nth-of-type(3)'),
+                          $('.service-level>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(6)>div:nth-of-type(3)')
                       ],
                       selectedLabels = [],
                       $textArea = $('div.comment-text>textarea'),
                       $textareaPlaceholder = $('div.comment-text>span');
                     var orderType=data['allow'],
-                      footer=$('#footer>div'),
+                      footer=$('#commentFooter>div>div:nth-of-type(2)'),
+                      isAnonymous = $('#commentFooter>div>div:nth-of-type(1)'),
                       isSubmit=false;
                     /*************************************加载数据*************************************/
-                    $('#content>div:nth-of-type(3)>div:nth-of-type(1)').CSS('backgroundImage','url("' + (data['tech']['avatarUrl']|| $.$.defaultHeader) + '")');
-                    $('#content>div:nth-of-type(3)>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)').Text(data['tech']['name']|| $.$.defaultTechName);
-                    $('#content>div:nth-of-type(3)>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(2)>div:nth-of-type(1)>div').CSS('width',data['tech']['star'] + '%');
-                    $('#content>div:nth-of-type(3)>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(2)>div:nth-of-type(2)').Text(data['tech']['commentCount'] + '评论');
-                    $('#content>div:nth-of-type(3)>div:nth-of-type(2)>div:nth-of-type(2)').Html(data['tech']['serialNo']?'编号【<span>' + data['tech']['serialNo'] + '</span>】':'');
+                    $('.service-level>div:nth-of-type(1)>div:nth-of-type(2)>div:nth-of-type(1)').CSS('backgroundImage','url("' + (data['tech']['avatarUrl']|| $.$.defaultHeader) + '")');
+                    $('.service-level>div:nth-of-type(1)>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(1)').Text(data['tech']['name']|| $.$.defaultTechName);
+                    if(data['tech']['serialNo']){
+                        $('.service-level>div:nth-of-type(1)>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)').Text(data['tech']['serialNo']);
+                    }else{
+                        $('.service-level>div:nth-of-type(1)>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)').Hide();
+                    }
 
-                    $('#footer>div').Class('active');
+                    $('#commentFooter>div>div:nth-of-type(2)').Class('active');
                     /*************************************定义逻辑*************************************/
                     clubId = data['tech']['clubId'];
+                    techId = data['tech']['id'];
                     if($.$.visitChannel == "9358") {
-                        $("#content>div:nth-of-type(6)").CSS("display","none");
+                        $("#content>div>div:nth-of-type(5)").CSS("display","none");
                     }else{
                         //获取二维码图片
                         $.ajax({
                             url : "../api/v1/wx/club/param_qrcode",
-							              isReplaceUrl:true,
+                            isReplaceUrl:true,
                             data : { clubId : clubId },
                             success : function(data){
                                 if(data.statusCode == "200"){
@@ -86,19 +95,19 @@
                                             data : { clubId : clubId },
                                             success : function(data2){
                                                 if(data2.statusCode == "200" && data2.respData != "N"){
-                                                    $("#content>div:nth-of-type(6)>div:nth-of-type(2)>img")[0].src = data2.respData;
+                                                    $("#content>div>div:nth-of-type(5)>div:nth-of-type(2)>img")[0].src = data2.respData;
                                                 }
                                             }});
                                     }
                                     else{
-                                        $("#content>div:nth-of-type(6)>div:nth-of-type(2)>img")[0].src = data.respData;
+                                        $("#content>div>div:nth-of-type(5)>div:nth-of-type(2)>img")[0].src = data.respData;
                                     }
                                 }
                             }
                         });
                     }
                     //点击技师
-                    $('#content>div:nth-of-type(3)').Page('technicianDetail&id='+ data['tech']['id']);
+                    $('.service-level>div:nth-of-type(1)>div:nth-of-type(2)').Page('technicianDetail&id='+ data['tech']['id']);
                     //点击评分
                     function starFunc(e,item){
                         var v=Math.ceil(e.offsetX/item.clientWidth/0.2),
@@ -108,11 +117,11 @@
                         starValues[_index] = v*20;
 
                         _child[0].style.width = starValues[_index]+'%';
-                        starTextObjs[_index].Text(starTexts[_index<3?0:1][v-1]);
+                        starTextObjs[_index].Text(starTexts[_index==3?1:0][v-1]);
                     }
-                    $('.comment-stars').Delegate('click','>div',starFunc,false,'__star_click_event__');
+                    $('.service-level>div:nth-of-type(2)>div:nth-of-type(2)>div').Delegate('click','>div:nth-of-type(2)',starFunc,false,'__star_click_event__');
                     //$('.comment-stars>div').Click(starFunc,'__star_click_event__');
-                    //$('.comment-stars').EventRemove('click',starFunc,false,'__star_click_event__');
+                    //$('.service-level>div:nth-of-type(2)>div:nth-of-type(2)>div>div:nth-of-type(2)').EventRemove('click',starFunc,false,'__star_click_event__');
                     //点击印象标签
                     function removeLabelsFromArray(label){
                         var _index = 0;
@@ -141,7 +150,7 @@
                     //文本域
                     $textArea.Event('focus', function (e) {
                         $textareaPlaceholder.Class('none');
-                        $('#content')[0].scrollTop = 19.444 * $.$.scale * 16;
+                        $('#content')[0].scrollTop = 20.444 * $.$.scale * 16;
                     });
                     $textArea.Event('blur', function (e) {
                         if($textArea.Value().length == 0){
@@ -149,20 +158,19 @@
                         }
                     });
 
-
                     if(orderType==0){
-                        $('#content>div:nth-of-type(2)').Class('none');
+                        $('#content>div>div:nth-of-type(2)').Class('none');
                     }else if(orderType == 1){
-                        $('#content>div:nth-of-type(2)').ClassClear('none');
-                        $("#content>div:nth-of-type(6)").CSS("display","none");
+                        $('#content>div>div:nth-of-type(2)').ClassClear('none');
+                        $("#content>div>div:nth-of-type(5)").CSS("display","none");
                         //=== 移除绑定事件 ===
-                        $('.comment-stars').EventRemove('click',starFunc,false,'__star_click_event__');
+                        $('.service-level>div:nth-of-type(2)>div:nth-of-type(2)>div>div:nth-of-type(2)').EventRemove('click',starFunc,false,'__star_click_event__');
                         $('.comment-labels').EventRemove('click',labelsFunc,false,'__labels_click_event__');
                         $textArea.Value(data.comment.comment+' ');
                         $textArea.Attr('readonly','readonly');
                         $textareaPlaceholder.Hide();
                         $('div.comment-text>div').Hide();
-                        $('#footer').Hide();
+                        $('#commentFooter').Hide();
 
                         var _starRates = $('.comment-stars>div').Children();
                         starValues = [data.comment.attitudeRate,data.comment.appearanceRate,data.comment.skillRate,data.comment.clockRate];
@@ -187,12 +195,38 @@
                             $('.comment-text').Hide();
                         }
                     }
+
+                    //点击匿名提交
+                    isAnonymous.Click(function (e, item) {
+                        if(isAnonymous.ClassHave('checked')){
+                            isAnonymous.ClassClear('checked');
+                        }else{
+                            isAnonymous.Class('checked');
+                        }
+                    });
+
                     //点击提交
                     footer.Click(function(){
                         if(footer.ClassHave('active') ) {
                             if(!isSubmit){
                                 if (orderType == 0) {
                                     isSubmit=true;
+                                    /*if(isScan){
+                                        //==== 对会所的评价
+                                        $.ajax({
+                                            url : "../../profile/user/feedback/create",
+                                            type : "post",
+                                            data : {
+                                                "clubId" : $.$.clubID,
+                                                "environmentalScore" : $('div.service-level>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(5)>div:nth-of-type(2)>div')[0].style.width.slice(0,-1) || 100,
+                                                "serviceScore" : $('div.service-level>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(6)>div:nth-of-type(2)>div')[0].style.width.slice(0,-1) || 100,
+                                                "comments" : ''
+                                            },
+                                            success : function(){
+                                            }
+                                        });
+                                    }*/
+
                                     footer.Class('disabled');
                                     footer.Text('提交中...');
                                     var contentStr = $textArea.Value();
@@ -202,7 +236,7 @@
                                             url: ($.$.clubID ? "../" : "")+'/user/comment/create',
                                             data: {
                                                 id: orderId || techId,
-                                                type: type,
+                                                type: isScan ? 'tech_qrcode':type,
                                                 attitudeRate : starValues[0],
                                                 appearanceRate :starValues[1],
                                                 skillRate : starValues[2],
@@ -214,7 +248,8 @@
                                                     })
                                                     return _tmp.join('、')
                                                 })(),
-                                                comment: encodeURIComponent(contentStr)
+                                                comment: encodeURIComponent(contentStr),
+                                                isAnonymous: isAnonymous.ClassHave('checked')?'Y':'N'
                                             },
                                             type:'post',
                                             success: function (response) {
@@ -226,10 +261,10 @@
                                                     orderType=1;
                                                     footer.ClassClear('disabled');
                                                     footer.Text('提交');
-                                                    $('#content>div:nth-of-type(2)').ClassClear('none');
-                                                    $("#content>div:nth-of-type(6)").CSS("display","none");
+                                                    $('#content>div>div:nth-of-type(2)').ClassClear('none');
+                                                    $("#content>div>div:nth-of-type(5)").CSS("display","none");
                                                     //=== 移除绑定事件 ===
-                                                    $('.comment-stars').EventRemove('click',starFunc,false,'__star_click_event__');
+                                                    $('.service-level>div:nth-of-type(2)>div:nth-of-type(2)>div').EventRemove('click',starFunc,false,'__star_click_event__');
                                                     $('.comment-labels').EventRemove('click',labelsFunc,false,'__labels_click_event__');
                                                     if($textArea.Value() == ''){
                                                         $textArea.Value(' ');
@@ -238,23 +273,37 @@
                                                     $textArea.Attr('readonly','readonly');
                                                     $textareaPlaceholder.Hide();
                                                     $('div.comment-text>div').Hide();
-                                                    $('#footer').Hide();
+                                                    $('#commentFooter').Hide();
 
                                                     $textArea.Event('focus', function (e,item) {
                                                         item.blur();
                                                     });
+                                                    $('#content')[0].scrollTop = 0;
                                                     //=== 评论数加1 ===
-                                                    var comCount = $('#content>div:nth-of-type(3)>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(2)>div:nth-of-type(2)');
-                                                    comCount.Text((parseInt(comCount.Text())+1)+'评论');
+                                                    /*var comCount = $('#content>div>div:nth-of-type(3)>div:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(2)>div:nth-of-type(2)');
+                                                    comCount.Text((parseInt(comCount.Text())+1)+'评论');*/
 
                                                     if($.$.ua.isWX){
                                                         commentId = response.respData;
                                                         $.param('commentId',commentId);
-                                                        $.page("techReward&techId=" + techId  + (commentId?"&commentId=" + commentId:"")  );
+                                                        $.page("techReward&isAnonymous="+(isAnonymous.ClassHave('checked')?'Y':'N')+"&techId=" + techId  + (commentId?"&commentId=" + commentId:"")  );
                                                     }
                                                 }else if(response.statusCode == '412'){
-                                                    $.page();
                                                     $.tipShow(response.msg || '您今天已经评论过该技师了');
+                                                    if($.param("from")=="fastPay"){
+                                                        setTimeout(function(){
+                                                            $.$.afterReward = true;
+                                                            if(!$.$.afterRewardInfo){
+                                                                $.$.afterRewardInfo = {}
+                                                            }
+                                                            $.$.afterRewardInfo['avatarUrl'] = techInfo.avatarUrl;
+                                                            $.$.afterRewardInfo['name'] = techInfo.name;
+                                                            $.$.afterRewardInfo['clubName'] = "";
+                                                            $.page("home");
+                                                        },500)
+                                                    } else {
+                                                        $.page();
+                                                    }
                                                 }else{
                                                     isSubmit=false;
                                                     footer.ClassClear('disabled');

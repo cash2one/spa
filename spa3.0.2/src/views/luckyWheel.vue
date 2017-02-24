@@ -3,6 +3,7 @@
 </style>
 <template>
     <div class="page" id="lucky-wheel-page">
+        <page-title title-text="幸运大转盘"></page-title>
         <template>
             <canvas ref="lightBg" class="light-bg ani" width="1512" height="1512" v-show="!global.loading && !loadError"></canvas>
             <div class="title ani" v-show="!global.loading && !loadError"></div>
@@ -27,8 +28,6 @@
         <div v-if="loadError" class="page-error">
             <router-link v-show="clubId" :to="{name: 'home'}" tag="div"></router-link>
         </div>
-
-        <div class="back-btn ani"><div :to="{name: 'home'}" tag="div"></div></div>
 
         <!-- 中奖 实物弹窗 -->
         <div class="pop-modal winning material" :class="{ active: popData.material }" @click="closePopModal('material')">
@@ -155,6 +154,18 @@
                 <div class="close-btn" @click="closePopModal('noChance')">&times;</div>
             </div>
         </div>
+	<!-- 二维码关注窗口 -->
+        <div class="pop-modal no-winning attention" :class="{ active: popData.attention }" @click="closePopModal('attention')">
+            <div class="center-wrap" @click="doClickPopWrap($event)">
+                <div class="top-wrap">
+                    <div class="attention-tip">需要关注公众号才能抽奖</div>
+                    <div class="qrCode"><img v-if="qrCodeImgUrl" :src="qrCodeImgUrl"/></div>
+                </div>
+                <split-line type="white"></split-line>
+                <div class="act-desc">长按二维码进行关注</div>
+                <div class="close-btn" @click="closePopModal('attention')">&times;</div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -162,6 +173,7 @@
     import Util from '../libs/util'
     import { eventHub } from '../libs/hub'
     import SplitLine from '../components/splitLine'
+    import 'jr-qrcode'
 
     module.exports = {
         components: {
@@ -196,6 +208,9 @@
                 giftList: [],
                 recordList: [], // 中奖纪录
                 hasShared: false, // 是否已分享
+                qrCodeImgUrl: '', // 关注二维码
+                getCodeImgMaxCount: 2,
+                hasAttention: false, // 是否已关注9358公众号
 
                 popData: { // 控制弹窗的对象
                     material: false, // 中奖 实物弹窗
@@ -204,7 +219,8 @@
                     serviceItem: false, // 中奖 项目券
                     again: false, // 中奖 再抽一次
                     canShare: false, // 未中奖 分享可再抽一次
-                    noChance: false // 未中奖 没有抽奖机会
+                    noChance: false, // 未中奖 没有抽奖机会
+                    attention: false // 需要关注二维码
                 }
             }
         },
@@ -214,91 +230,41 @@
             var pageParams = global.currPage.query
 
             that.actId = pageParams.actId
-            global.clubId = that.clubId = pageParams.clubId
+            that.clubId = pageParams.clubId || global.clubId
 
             if (!that.actId) {
                 return that.toBack('页面缺少访问参数！')
             } else if (!global.isLogin) {
                 Util.tipShow('请您先登录！')
                 return Global.login(that.$router)
+            } else if (!global.userTel) {
+                Util.tipShow('请您先绑定手机号码！')
+                return Global.bindTelPhone()
             }
 
-            that.$http.get('../api/v2/user/luckyWheel/toActMain', {params: {actId: pageParams.actId}}).then(function (res) {
-                res = res.body
-                if (res.statusCode == 200) {
-                    res = res.respData
-                    var act = res.activity
-                    that.actName = act.name
-                    that.actId = act.id
-                    that.actDesc = act.description
-                    that.actStartTime = act.startTime
-                    that.actEndTime = act.endTime
-                    that.currLotteryCount = res.drawChance // 剩余抽奖机会
-                    if (that.currLotteryCount < 0) {
-                        that.currLotteryCount = 0
-                    }
-
-                    var club = res.club
-                    global.clubId = that.clubId = club.clubId
-                    that.clubName = club.clubName
-                    that.clubLogo = club.clubLogo || './images/logo.png'
-
-                    var prizeList = res.prizeList
-                    var giftList = []
-                    var prize
-                    for (var k = 0; k < prizeList.length; k++) {
-                        prize = prizeList[k]
-                        giftList.push({
-                            id: prize.prizeId,
-                            name: prize.prizeName,
-                            type: that.giftMap[prize.prizeType],
-                            deg: 0
-                        })
-                    }
-                    that.giftList = giftList
-                    that.recordList = res.recordList
-                    that.init()
-
-                    // 分享配置
-                    Global.shareConfig({
-                        title: that.actName,
-                        desc: '那一世转山转水，只为相见，点我立即开始',
-                        link: location.href,
-                        imgUrl: that.clubLogo || '',
-                        success: function () {
-                            if (!that.hasShared) {
-                                that.$http.post('../api/v2/user/luckyWheel/shareAddDrawChance', {actId: that.actId}).then(function (sharedRes) {
-                                    sharedRes = sharedRes.body
-                                    if (sharedRes.statusCode == 200) {
-                                        if (sharedRes.respData == 1) {
-                                            that.currLotteryCount++
-                                            Util.tipShow('分享成功！')
-                                        } else {
-                                            // Global.tipShow('您今天已经分享过了！')
-                                        }
-                                        that.hasShared = true
-                                    } else {
-                                        Util.tipShow('分享失败！')
-                                    }
-                                })
-                            }
+            // 公众号是否关注判断
+            if (global.userAgent.isWX) {
+                if (global.openId) {
+                    that.getAttentionStatus()
+                    that.initData()
+                } else if (global.code) {
+                    // 获取openID
+                    Global.getOpenId({authCode: global.code}).then(function (res) {
+                        Global.localStorage('spa_openId', res)
+                        that.getAttentionStatus()
+                        that.initData()
+                    }, function (error) {
+                        if (error) {
+                            Util.tipShow(error)
                         }
-                    }, 'luckyWheel')
-
-                    that.doLoadingHide()
-                } else {
-                    // global.tipShow(res.msg || '数据请求异常！')
-                    if (res.msg) {
-                        that.loadErrorTip = res.msg
-                    }
-                    that.loadError = true
-                    if (res.respData) {
-                        global.clubId = that.clubId = res.respData.clubId
-                    }
+                    })
+                } else { // 重新获取授权
+                    Global.getOauthCode('', global.sessionType, global.sessionType, 'base')
                 }
-            }, function () {
-                that.toBack('数据请求异常！')
-            })
+            } else {
+                that.initData()
+                that.getClubQrCodeImg()
+            }
         },
         methods: {
             doLoadingHide: function () {
@@ -550,11 +516,6 @@
             },
             doClickLotteryBtn: function () { // 点击抽奖按钮
                 var that = this
-                var global = that.global
-                if (!global.userTel) {
-                    Util.tipShow('请您先绑定手机号！')
-                    return Global.bindTelPhone()
-                }
                 if (that.currLotteryCount == 0) {
                     return Util.tipShow('当前您的剩余抽奖次数为0！')
                 }
@@ -679,6 +640,116 @@
                 var rewardData = that.rewardData
                 var cardInfo = rewardData.cardInfo
                 that.$router.push({name: 'luckyDetail', query: {actId: that.actId, cardId: cardInfo.cardId, prizeType: rewardData.type, recordId: rewardData.recordId}})
+            },
+            getClubQrCodeImg: function () {
+                var that = this
+                that.$http.get('../api/v2/user/luckyWheel/generateGuideQrcode', {params: {actId: that.actId}}).then(function (res) {
+                    res = res.body
+                    if (res.statusCode == 200) {
+                        if (res.respData) {
+                            that.qrCodeImgUrl = jrQrcode.getQrBase64(res.respData.url, {padding: 0, width: 200, height: 200, correctLevel: 0})
+                        }
+                    }
+                })
+            },
+            getAttentionStatus: function () {
+                var that = this
+                var global = that.global
+                that.$http.get('../api/v2/user/luckyWheel/isUserSubscribe', {params: {
+                    actId: that.actId,
+                    openId: global.openId,
+                    sessionType: global.sessionType
+                }}).then(function (attentionRes) {
+                    attentionRes = attentionRes.body
+                    if (attentionRes.statusCode == 200) {
+                        that.hasAttention = attentionRes.respData
+                        if (!that.hasAttention) { // 未关注
+                            that.getClubQrCodeImg()
+                        }
+                    } else {
+                        that.getClubQrCodeImg()
+                    }
+                }, function () {
+                    that.getClubQrCodeImg()
+                })
+            },
+            initData: function () {
+                var that = this
+                that.$http.get('../api/v2/user/luckyWheel/toActMain', {params: {actId: that.actId}}).then(function (res) {
+                    res = res.body
+                    if (res.statusCode == 200) {
+                        res = res.respData
+                        var act = res.activity
+                        that.actName = act.name
+                        that.actId = act.id
+                        that.actDesc = act.description
+                        that.actStartTime = act.startTime
+                        that.actEndTime = act.endTime
+                        that.currLotteryCount = res.drawChance // 剩余抽奖机会
+                        if (that.currLotteryCount < 0) {
+                            that.currLotteryCount = 0
+                        }
+
+                        var club = res.club
+                        that.clubId = club.clubId
+                        that.clubName = club.clubName
+                        that.clubLogo = club.clubLogo || './images/logo.png'
+
+                        var prizeList = res.prizeList
+                        var giftList = []
+                        var prize
+                        for (var k = 0; k < prizeList.length; k++) {
+                            prize = prizeList[k]
+                            giftList.push({
+                                id: prize.prizeId,
+                                name: prize.prizeName,
+                                type: that.giftMap[prize.prizeType],
+                                deg: 0
+                            })
+                        }
+                        that.giftList = giftList
+                        that.recordList = res.recordList
+                        that.init()
+
+                        // 分享配置
+                        Global.shareConfig({
+                            title: that.actName,
+                            desc: '那一世转山转水，只为相见，点我立即开始',
+                            link: location.href,
+                            imgUrl: that.clubLogo || '',
+                            success: function () {
+                                if (!that.hasShared) {
+                                    that.$http.post('../api/v2/user/luckyWheel/shareAddDrawChance', {actId: that.actId}).then(function (sharedRes) {
+                                        sharedRes = sharedRes.body
+                                        if (sharedRes.statusCode == 200) {
+                                            if (sharedRes.respData == 1) {
+                                                that.currLotteryCount++
+                                                Util.tipShow('分享成功！')
+                                            } else {
+                                                // Global.tipShow('您今天已经分享过了！')
+                                            }
+                                            that.hasShared = true
+                                        } else {
+                                            Util.tipShow('分享失败！')
+                                        }
+                                    })
+                                }
+                            }
+                        }, 'luckyWheel')
+
+                        that.doLoadingHide()
+                    } else {
+                        if (res.msg) {
+                            that.loadErrorTip = res.msg
+                        }
+                        that.loadError = true
+                        if (res.respData) {
+                            that.clubId = res.respData.clubId
+                        }
+                    }
+                }, function () {
+                    that.toBack('数据请求异常！')
+                })
             }
         }
     }

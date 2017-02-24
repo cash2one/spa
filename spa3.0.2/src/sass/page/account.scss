@@ -1,6 +1,7 @@
 @import "../common/mixin.scss";
 
 div#account-page{
+  height: 100%;
   div.search-area{
     margin: .667rem .889rem 0;
     position: relative;
@@ -10,7 +11,7 @@ div#account-page{
       font-size: .889rem;
       color: #212121;
       border: 1px solid #ccc;
-      border-radius: .5rem;
+      border-radius: .333rem;
       box-sizing: border-box;
     }
     >span{

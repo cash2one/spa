@@ -3,9 +3,9 @@
 </style>
 <template>
     <div>
-        <div class="page-back-btn" @click="doClickPageBack()"></div>
+        <page-back></page-back>
         <div class="page" id="service-group-page">
-            <div class="item" v-for="item in dataList" :style="{ backgroundImage : 'url('+item.imageUrl+')' }" @click="doClickItem(item.id)"></div>
+            <router-link  tag="div" class="item" v-for="item in dataList" :style="{ backgroundImage : 'url('+item.imageUrl+')' }" :to="{ name: 'serviceList', query: { id: item.id }}"></router-link>
             <div class="nullData" v-show="dataList.length==0">
                 <div v-show="global.loading"></div>
                 <div>{{ global.loading ? '数据加载中...' : '暂无内容...' }}</div>
@@ -40,14 +40,6 @@
                 Util.tipShow(global.loadError)
                 return that.$router.back()
             })
-        },
-        methods: {
-            doClickPageBack: function () {
-                history.back()
-            },
-            doClickItem: function (id) {
-                this.$router.push({name: 'serviceList', query: {id: id}})
-            }
         }
     }
 </script>

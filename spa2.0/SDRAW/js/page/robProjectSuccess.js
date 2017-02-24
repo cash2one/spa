@@ -1,5 +1,5 @@
 (function(){
-    var id = $.param('id');
+    var id = $.param('id'),isIntegral = $.param('isIntegral') === 'true',couponType = $.param('couponType') || 'paid_service_item';
     if(!id){
         $.tipShow('缺少必要参数：ID');
         return $.page('home',-1,true);
@@ -13,13 +13,16 @@
     $('#content>div>div:nth-of-type(2)').Page('home',-1,true);
     $('#content>div>div:nth-of-type(2)>div:nth-of-type(1)').CSS('background-image','url('+ $.$.clubLogo +')');
     $('#content>div>div:nth-of-type(2)>div:nth-of-type(2)').Text($.$.clubName);
-
+    var params = {};
+    if(isIntegral){
+        params.suaId = id;
+    }else{
+        params.payId = id;
+    }
     $.ajax({
-        url:'../api/v2/club/user_paid_service_item/pay/view',
+        url:'../api/v2/club/user/service_item_coupon/pay/view',
         isReplaceUrl:true,
-        data:{
-            id:id
-        },
+        data:params,
         success: function (result) {
             if(result.statusCode == 200){
                 result = result.respData;
@@ -38,7 +41,7 @@
                     $('#show-coupons-pop').ClassClear('active');
                 });
                 $('#content>div>div:nth-of-type(4)').Click(function (e, item) {
-                    $.page('couponDetail&userActId='+result.id+'&couponType=paid_service_item');
+                    $.page('couponDetail&userActId='+result.id+'&couponType='+couponType);
                 });
                 if($.$.ua.isWX){
                     $.X5Config({
@@ -76,10 +79,7 @@
                 result.forEach(function (techObj,index) {
                     if(index > 4) return false;
                     _techHtml.push('<div data-tech-id="'+techObj.id+'">\
-                                        <div style="background-image: url('+(techObj.avatarUrl || $.$.defaultHeader)+')"></div>\
-                                        <div><span>'+techObj.name+'</span><span>'+(techObj.star/20).toFixed(1)+'</span>\
-                                        </div>\
-                                        <div>'+techObj.orderCount+' 人约</div>\
+                                        <div style="background-image: url('+(techObj.avatarUrl || $.$.defaultHeader)+')"><div>'+techObj.name+'</span></div></div>\
                                     </div>');
                 });
                 if(_techHtml.length > 0){

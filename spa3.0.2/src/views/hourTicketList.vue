@@ -40,8 +40,9 @@
         created: function () {
             var that = this
             var global = that.global
-            that.clubId = global.currPage.query.clubId || global.clubId
-            that.techCode = global.currPage.query.techCode
+            var query = global.currPage.query
+            that.clubId = query.clubId || global.clubId
+            that.techCode = query.techCode
             that.$http.get('../api/v1/profile/redpack/list', {params: {clubId: that.clubId}}).then(function (res) {
                 res = res.body
                 if (res.statusCode == 200) {

@@ -37,7 +37,7 @@
 
         //开始加载数据
         $.ajax({
-            url: '../api/v2/finacial/account/trades/'+accountId,
+            url: '../api/v2/financial/account/trades/'+accountId,
             isReplaceUrl:true,
             data: {
                 page: page,
@@ -53,7 +53,7 @@
                 for (var i = 0, dataLength = data.length; i < dataLength; i++) {
                     income = data[i].tradeType=='income';
                     str +='<div>\
-                              <div>'+tradeType[data[i].bizType]+'<span class="'+(income?'recharge':'')+'">'+(income?'+':'-')+((data[i].amount/100).toFixed(2))+'元</span>\
+                              <div>'+tradeType[data[i].businessCategory]+'<span class="'+(income?'recharge':'')+'">'+(income?'+':'-')+((data[i].amount/100).toFixed(2))+'元</span>\
                                 </div>\
                                 <div>'+data[i].createDatetime+'</div>\
                             </div>';

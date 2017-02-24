@@ -23,7 +23,7 @@ div#hour-ticket-list-page div.item {
         font-size: 1.333rem;
         font-weight: normal; }
     div#hour-ticket-list-page div.item > div > span:nth-of-type(1) {
-      padding: 0.222rem 1.389rem;
+      padding: 0.111rem 1.389rem;
       background-color: #fbcacb;
       font-size: 0.778rem;
       border-radius: 1.2rem;

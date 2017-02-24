@@ -1,6 +1,7 @@
 @import "../common/mixin.scss";
 
 div#club-profile-page{
+  height: 100%;
   div.profile-swipe,div.swiper-wrapper{
     height:100%;
   }
@@ -24,7 +25,7 @@ div#club-profile-page{
       &:nth-of-type(2) {
         padding:0 0.667rem;
         margin-top: 0.889rem;
-        color: #666666;
+        color: #666;
         font-size: 1rem;
         line-height: 1rem;
         margin-bottom: 0.889rem;
@@ -50,8 +51,9 @@ div.club-profile-page-num{
   border-radius: .556rem;
   line-height: 1.333rem;
   z-index: 3;
-  right: .667rem;
+  left: 50%;
   top: .861rem;
+  transform: translateX(5.3rem);
   background: #ff9d09;
   color: #fff;
   text-align: center;

@@ -1,0 +1,325 @@
+@import "../common/common.scss";
+@mixin transform($prop...){
+  -webkit-transform: $prop;
+  -moz-transform: $prop;
+  -o-transform: $prop;
+  -ms-transform: $prop;
+  transform: $prop;
+}
+@include keyframes(activitiesAni){
+  from,to{
+    @include rotate(0);
+  }
+  25%{
+    @include rotate(-8deg)
+  }
+  75%{
+    @include rotate(8deg);
+  }
+}
+@include keyframes(slideLeft){
+  from{
+    border-color: darken(rgba(255,255,255,.9),0);
+    @include transform(translate(0,0) rotate(45deg));
+  }
+  to{
+    border-color: darken(rgba(255,255,255,.6),16%);
+    @include transform(translate(-200%,0) rotate(45deg));
+  }
+}
+@include keyframes(slideRight){
+  from{
+    border-color: darken(rgba(255,255,255,.9),0);
+    @include transform(translate(0,0) rotate(-135deg));
+  }
+  to{
+    border-color: darken(rgba(255,255,255,.6),16%);
+    @include transform(translate(200%,0) rotate(-135deg));
+  }
+}
+$slideTime: 4s;
+
+#_content>#appointTech {
+  #content {
+    background-color: #121c2e;
+    @include img('../../../img/appointTech/bg.jpg',100% 100%);
+    >div{
+      &:nth-of-type(1){
+        color: #ffffff;
+        font-size: .833rem;
+        text-align: center;
+        margin-top: .5rem;
+      }
+      &.image-area{
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+        >div{
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          @include translate(-50%,-50%);
+          >div:nth-of-type(1){
+            background-color: #FFFFFF;
+            -webkit-border-radius: .5rem;
+            -moz-border-radius: .5rem;
+            border-radius: .5rem;
+            box-sizing: border-box;
+            padding: .556rem;
+            @include ty(0,.1rem,0.3rem,0,rgba(0,0,0,0.3));
+            -webkit-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            -webkit-transition-property: -webkit-transform,opacity;
+            -moz-transition-property: -moz-transform,opacity;
+            -o-transition-property: -o-transform,opacity;
+            -ms-transition-property: -ms-transform,opacity;
+            transition-property: transform,opacity;
+            >div{
+              line-height: 1;
+              &:nth-of-type(1){
+                position: relative;
+                overflow: hidden;
+                >img{
+                  width: 15.556rem;
+                  height: 15.556rem;
+                }
+                >span{
+                  position: absolute;
+                  top: 0.222rem;
+                  left: -.7rem;
+                  padding: 0 .85rem 0 1.2rem;
+                  text-align: center;
+                  color: #FFFFFF;
+                  font-size: 1.111rem;
+                  background-color: rgba(140,150,165,.5);
+                  -webkit-border-radius: .75rem;
+                  -moz-border-radius: .75rem;
+                  border-radius: .75rem;
+                  line-height: 1.5;
+                }
+              }
+              &:nth-of-type(2){
+                font-size: .944rem;
+                color: #4d4d4d;
+                margin-top: .5rem;
+                width: 15.556rem;
+                @include sl();
+              }
+              &:nth-of-type(3){
+                margin-top: .556rem;
+                >span{
+                  font-size: .667rem;
+                  color: #ff6666;
+                  margin:0 .556rem;
+                }
+              }
+              &:nth-of-type(4){
+                margin-top: .756rem;
+                font-size: .778rem;
+                color: #757575;
+                width: 15.556rem;
+                @include sl();
+              }
+            }
+          }
+          >div:nth-of-type(2){
+            position: absolute;
+            font-size: 1.556rem;
+            color: #FFFFFF;
+            top: 7rem;
+            width: 100%;
+            height: 2.667rem;
+            background: -webkit-linear-gradient(left,rgba(255,255,255,0),rgba(255,255,255,.3),rgba(0,0,0,.3),rgba(0,0,0,.5),rgba(0,0,0,.3),rgba(255,255,255,.3),rgba(255,255,255,0));
+            background: -moz-linear-gradient(left,rgba(255,255,255,0),rgba(255,255,255,.3),rgba(0,0,0,.3),rgba(0,0,0,.5),rgba(0,0,0,.3),rgba(255,255,255,.3),rgba(255,255,255,0));
+            background: -o-linear-gradient(left,rgba(255,255,255,0),rgba(255,255,255,.3),rgba(0,0,0,.3),rgba(0,0,0,.5),rgba(0,0,0,.3),rgba(255,255,255,.3),rgba(255,255,255,0));
+            background: linear-gradient(left,rgba(255,255,255,0),rgba(255,255,255,.3),rgba(0,0,0,.3),rgba(0,0,0,.5),rgba(0,0,0,.3),rgba(255,255,255,.3),rgba(255,255,255,0));
+            @include wq();
+            >div{
+              @include wq();
+              &:nth-of-type(1),&:nth-of-type(3){
+                position: relative;
+                >div{
+                  width: .778rem;
+                  height: .778rem;
+                  box-sizing: border-box;
+                  border-left: .2rem solid;
+                  border-bottom: .2rem solid;
+                  border-color: darken( rgba(255,255,255,.6), 8%);
+                  &:nth-of-type(4){
+                    position: absolute;
+                    top: 0;
+                    border-color: darken( rgba(255,255,255,.9), 0);
+                  }
+
+                }
+              }
+              &:nth-of-type(1){
+                >div{
+                  @include rotate(45deg);
+                  &:nth-of-type(1){
+                    border-color: darken( rgba(255,255,255,.6), 24%);
+                  }
+                  &:nth-of-type(2){
+                    border-color: darken( rgba(255,255,255,.6), 16%);
+                  }
+                  &:nth-of-type(4){
+                    right: 0;
+                    @include dhz(slideLeft,$slideTime infinite);
+                  }
+                }
+              }
+              &:nth-of-type(3){
+                >div{
+                  @include rotate(-135deg);
+                  &:nth-of-type(2){
+                    border-color: darken( rgba(255,255,255,.6), 16%);
+                  }
+                  &:nth-of-type(3){
+                    border-color: darken( rgba(255,255,255,.6), 24%);
+                  }
+                  &:nth-of-type(4){
+                    left: 0;
+                    @include dhz(slideRight,$slideTime infinite);
+                  }
+                }
+              }
+            }
+          }
+          >span{
+            margin-top: 1rem;
+            display: block;
+            text-align: right;
+            color: #fff;
+            font-size: .667rem;
+          }
+          &:nth-of-type(1),&:nth-of-type(2){
+            >div{
+              @include transform(translate(0,4%) scale(.88,1));
+            }
+          }
+          &:nth-of-type(3){
+            >div{
+              opacity: .9;
+              @include transform(translate(0,2%) scale(.94,1));
+            }
+          }
+          &:nth-of-type(5){
+            pointer-events: none;
+            >div{
+              opacity: 0;
+              @include transform(translate(100%,0%));
+            }
+          }
+          &:nth-of-type(6){
+            pointer-events: none;
+            >div{
+              opacity: 0;
+              @include transform(translate(-100%,0));
+            }
+          }
+        }
+      }
+      &:nth-of-type(3){
+        position: absolute;
+        bottom: 3%;
+        width: 100%;
+        @include wq();
+        >div{
+          @include wq();
+          width: 5.833rem;
+          height: 2.083rem;
+          border:1px solid #7c797e;
+          -webkit-border-radius: .3rem;
+          -moz-border-radius: .3rem;
+          border-radius: .3rem;
+          font-size: .889rem;
+          color: #FFFFFF;
+          background-color: rgba(255, 255, 255, .1);
+          >div{
+            &:nth-of-type(1){
+              width: 1.111rem;
+              height: 1.111rem;
+              margin-right: .5rem;
+            }
+          }
+          &:nth-of-type(1){
+            margin-right: .833rem;
+            >div:nth-of-type(1){
+              @include img('../../../img/appointTech/heart.png',1.111rem 1.111rem);
+            }
+            &.active{
+              >div:nth-of-type(1){
+                background-image: url('../../../img/appointTech/heart-active.png');
+              }
+            }
+          }
+          &:nth-of-type(2){
+            >div:nth-of-type(1){
+              @include img('../../../img/appointTech/album.png',1.111rem 1.111rem);
+            }
+          }
+        }
+      }
+      &:nth-of-type(4){
+        position: absolute;
+        top: 0;
+        right: 0;
+        >div{
+          &:nth-of-type(1){
+            width: 3.861rem;
+            height:3.639rem;
+            @include img('../../../img/appointTech/coupon-text.png',3.861rem 1.778rem);
+            background-position: 0 95%;
+          }
+          &:nth-of-type(2){
+            position: absolute;
+            bottom: 0;
+            left: -1.5rem;
+            width: 3rem;
+            height: 3.639rem;
+            @include img('../../../img/appointTech/coupon-icon.png',3rem 3.639rem);
+            @include dhz(activitiesAni,600ms ease-in-out 5);
+          }
+        }
+      }
+    }
+  }
+
+  #jumpHome{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 20;
+    background-color: rgba(0, 0, 0, .6);
+    overflow: hidden;
+    @include wq();
+    &.hide{
+      display:none;
+    }
+    >div{
+      text-align: center;
+      background-color: #ffffff;
+      @include ty(0,0,1rem,0,#aaa);
+      >div{
+        &:nth-of-type(1){
+          padding: 1rem;
+          font-size: .889rem;
+          color: #212121;
+          >span{
+            color: #6c6;
+          }
+        }
+        &:nth-of-type(2){
+          padding: .5rem;
+          background-color: #fb5549;
+          color: #FFFFFF;
+        }
+      }
+    }
+  }
+}

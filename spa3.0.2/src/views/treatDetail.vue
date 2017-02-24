@@ -79,7 +79,7 @@
         data: function () {
             return {
                 global: Global.data,
-                queryDataUrl: '../api/v2/finacial/account/payforother/',
+                queryDataUrl: '../api/v2/financial/account/payforother/',
                 detailId: '',
                 authorizeCode: '-',
                 treatMoney: '-',
@@ -99,35 +99,49 @@
             var that = this
             var global = that.global
             var pageParams = global.currPage.query
-
+            var tmpCache = Util.sessionStorage('tmpTreat_cache')
             that.detailId = pageParams.detailId
+            if (tmpCache) {
+                tmpCache = JSON.parse(tmpCache)
+            }
+
             if (!that.detailId) {
                 Util.tipShow(global.visitError)
                 return that.$router.back()
-            } else {
+            } else if (!tmpCache) {
                 that.$http.get(that.queryDataUrl + 'detail', {params: {detailId: that.detailId}}).then(function (res) {
                     res = res.body
                     if (res.statusCode == 200) {
-                        res = res.respData
-                        that.authorizeCode = Util.spaceFormat(res.authorizeCode)
-                        that.treatMoney = (res.amount / 100).toFixed(2)
-                        that.isOpen = res.open == 'Y'
-                        that.telephone = res.telephone
-                        that.telStr = Util.spaceFormat(res.telephone, true)
-                        that.createDate = res.createDate
-                        that.resultStatus = res.status
-                        that.cancelDate = res.cancelDate
-                        that.usedDate = res.usedDate
-                        that.usedAmount = (res.usedAmount / 100).toFixed(2)
-                        global.loading = false
+                        that.doHandlerData(res.respData)
                     } else {
                         Util.tipShow(res.msg || global.loadError)
                         return that.$router.back()
                     }
+                }, function () {
+                    Util.tipShow(global.loadError)
+                    return that.$router.back()
                 })
+            } else {
+                Util.removeSessionStorage('tmpTreat_cache')
+                that.doHandlerData(tmpCache)
             }
         },
         methods: {
+            doHandlerData: function (res) {
+                var that = this
+                var global = that.global
+                that.authorizeCode = Util.spaceFormat(res.authorizeCode)
+                that.treatMoney = (res.amount / 100).toFixed(2)
+                that.isOpen = res.open == 'Y'
+                that.telephone = res.telephone
+                that.telStr = Util.spaceFormat(res.telephone, true)
+                that.createDate = res.createDate
+                that.resultStatus = res.status
+                that.cancelDate = res.cancelDate
+                that.usedDate = res.usedDate
+                that.usedAmount = (res.usedAmount / 100).toFixed(2)
+                global.loading = false
+            },
             doClickCancelAuthBtn: function () {
                 this.isShowConfirm = true
             },
@@ -152,6 +166,9 @@
                     } else {
                         Util.tipShow(res.msg || '请求出错！')
                     }
+                }, function () {
+                    that.isProcessing = false
+                    Util.tipShow('操作出错了！')
                 }, function () {
                     that.isProcessing = false
                     Util.tipShow('操作出错了！')

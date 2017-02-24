@@ -56,6 +56,10 @@
         isCrossInner,
         //=== 活动消息 ===
         activityMsg = {
+            'plumFlower': {
+                title: '一元夺',
+                subTitle: '我和你只有一块钱的距离'
+            },
             'oneYuan':{
                 title:'一元夺',
                 subTitle:'我和你只有一块钱的距离'
@@ -68,21 +72,29 @@
                 title:'大转盘',
                 subTitle:'那一世转山转水，只为相见'
             },
-        };
+            'journal': {
+                title: '会所期刊',
+                subTitle: '有美女、有福利，你就是我的VIP！'
+            }
+        },
+        canReward = false;
 
     ///////////////////////////////////////////////////构造解析表情的正则
     decodeExpressionReg = new RegExp('/::[A-Zab]+', "g");
     var chatHeader = $.$.userHeader,
-        chatName = ($.$.userName == $.$.defaultUserName) ? $.$.defaultUserName + "(" + $.$.userTel.substr(0, 3) + "****" + $.$.userTel.slice(-4) + ")" : $.$.userName;
+        chatName = ($.$.userName == $.$.defaultUserName) ? $.$.defaultUserName + "(" + $.$.userTel.substr(0, 3) + "****" + $.$.userTel.slice(-4) + ")" : $.$.userName,
+        inGettingCoupon = false;
 
     ////////////////////////////////////////获取当前聊天的技师信息
     var eb = $.$.easemob, currChatTech;
-
     if (!eb.conn.isOpened()) {//未登录
         if (eb.userId) {///存在环信账号
             var waitEasemobInit = setInterval(function(){//等待环信登录完成
                 if(eb.conn.isOpened()){
                     clearInterval(waitEasemobInit);
+                    if(!(eb.currChatTech && eb.currChatTech.chatId)){
+                        eb.currChatTech = $.sessionStorage('curr_chat_tech') ? JSON.parse($.sessionStorage('curr_chat_tech')) : undefined;
+                    }
                     startChat();
                 }
             },20)
@@ -93,6 +105,10 @@
         }
     }
     else{///已登录状态
+        if(!(eb.currChatTech && eb.currChatTech.chatId)){
+            eb.currChatTech = $.sessionStorage('curr_chat_tech')?JSON.parse($.sessionStorage('curr_chat_tech')):undefined;
+        }
+
         startChat();
     }
 
@@ -117,7 +133,8 @@
                             phoneAppointment : res["phoneAppointment"],
                             telephone : res["telephone"],
                             chatName : chatName,
-                            chatHeader : chatHeader
+                            chatHeader : chatHeader,
+                            appointType : res['appointType']
                         };
                         if((res.isFavorite || 'n').toLowerCase()=="y"){//已收藏该技师
                             $("div#title>i:nth-of-type(1)").Class("collected");
@@ -687,7 +704,8 @@
         var telDetail=$('#telDetail'),
             orderBtn = $("#tip"),
             telStr = "", telArr = currChatTech['telephone'].split(",");
-        if((currChatTech['appointment']||'y').toLowerCase()=='y' || (currChatTech['phoneAppointment']||'y').toLowerCase()=='y') orderBtn.Class('active');
+        //if((currChatTech['appointType']||'y').toLowerCase()=='y' || (currChatTech['phoneAppointment']||'y').toLowerCase()=='y') orderBtn.Class('active');
+        if(currChatTech['appointType']) orderBtn.Class('active');
         if(currChatTech['telephone'] !=''){
             for(i= 0;i<telArr.length;i++){
                 telStr+='<div>'+telArr[i]+'</div>';
@@ -709,6 +727,9 @@
 
         //点击"赏"按钮
         $("#chatInput>div:nth-of-type(2)>div.reward").Click(function () {
+            if(!canReward){
+                return $.tipShow("会所关闭了打赏！")
+            }
             changeToolClosed("reward");
             if ($.$.ua.isWX) {  /////===================================
                 //if ($.$.sessionType == "9358") {
@@ -730,19 +751,34 @@
         //点击头部预约提示条
         orderBtn.Click(function () {
             if(orderBtn.ClassHave("active")){
-                if((currChatTech['phoneAppointment'] || 'y').toLowerCase()=='y'){
+                if(currChatTech['appointType']=='phone'){
                     if(currChatTech['telephone']=='') $.tipShow('暂无预约电话！');
                     else if(!telDetail.ClassHave("active")) telDetail.Class('active');
                     else telDetail.ClassClear('active');
-                }else if((currChatTech['appointment'] || 'y').toLowerCase()=='y'){
+                }/*else{
                     if(isCrossInner){
                         //==== 防止在聊天与技师首页间多次点击后，地址栏地址无限增长，及返回操作无限在此两者间跳转 ====
                         if(!!history.replaceState)
-                            history.replaceState(null, document.title, location.search + location.hash.toString().replace(new RegExp('technicianDetail&id='+techId+'[^\/]*/'),''));
+                            history.replaceState(null, document.title, location.search + location.hash.toString().replace(new RegExp('technicianDetail&id='+techId+'[^\/]*!/'),''));
                         $.page('technicianDetail&id='+techId);
                     }else{
                         $.login('confirmOrder&techId=' + techId + '&backChat=true' + ($.$.visitChannel == "9358" ? "&clubId=" + clubId : ""),false,true,true);
                     }
+                }*/ else if (currChatTech['appointType'] == 'paid' || currChatTech['appointType'] == 'paid_full') {
+                    if (!$.$.ua.isWX) {
+                        if ($.checkAccessMenu('confirmOrder')) {
+                            $.tipShow('【此会所需支付预约，请在微信中打开】');
+                        }
+                    } else {
+                        //==== 防止在聊天与技师首页间多次点击后，地址栏地址无限增长，及返回操作无限在此两者间跳转 ====
+                        if(!!history.replaceState)
+                            history.replaceState(null, document.title, location.search + location.hash.toString().replace(new RegExp('technicianDetail&id='+techId+'[^\/]*/'),''));
+                        $.page('technicianDetail&id='+techId);
+                    }
+                } else if(currChatTech['appointType'] == 'appoint') {
+                    $.login('confirmOrder&techId=' + techId + '&backChat=true' + ($.$.visitChannel == "9358" ? "&clubId=" + clubId : ""),false,true,true);
+                } else {
+                    $.tipShow('此会所不支持线上预约。');
                 }
             }
             else{
@@ -800,7 +836,18 @@
             if(!msg) return;
             var divItem = document.createElement("div"), preDivItem;
             type = (type || msg.type || "text");
-            if(msg.ext && msg.ext.msgType) msg.msgType = msg.ext.msgType;
+            if(msg.ext && msg.ext.msgType) {
+                var ext = msg.ext;
+                msg.msgType = ext.msgType;
+                if(msg.msgType == "oneYuan" || msg.msgType == "plumFlower" || msg.msgType == 'journal' || msg.msgType == "timeLimit" || msg.msgType == "luckyWheel"){
+                    msg.actId = ext.actId;
+                    msg.techCode = msg.techCode || ext.techCode;
+                }
+                if(msg.msgType == "ordinaryCoupon"){
+                    msg.userActId = msg.userActId || ext.userActId
+                    msg.groupmessageId = msg.groupmessageId || ext.groupmessageId
+                }
+            }
 
             if(msg.msgType=="paidCouponTip" || msg.msgType == "couponTip"){
                 divItem.className="center "+msg.msgType;
@@ -908,7 +955,8 @@
                 divItem.className = "right gift";
                 divItem.innerHTML += "<span>" + $.formatMsgTime(msg.time || new Date(), true) + "</span><div style='background-image: url(" + chatHeader + ")'></div><div "+((msg.status || 1) == 1 ? "class='success'" : "")+"><img gift='true' src='"+giftImg+"'/></div>";
             }
-            else if(msg.msgType == "oneYuan" || msg.msgType == "timeLimit" || msg.msgType == "luckyWheel"){
+            else if(msg.msgType == "oneYuan" || msg.msgType == 'plumFlower' || msg.msgType == "timeLimit"
+                || msg.msgType == "luckyWheel" || msg.msgType == 'journal'){
                 divItem.className = "left activity";
                 var header = (msg.from == eb.userId ? chatHeader : currChatTech.header);
                 divItem.innerHTML = '<span>'+ $.formatMsgTime((msg.time || new Date()), true) +'</span><div style="background-image: url(' + header + ')"></div><div class="'+msg.msgType+'" actid="'+msg.actId+'"><div><div></div><div><div>'+ (activityMsg[msg.msgType]?activityMsg[msg.msgType].title : '消息类型不存在') + '</div><div>'+(activityMsg[msg.msgType]?activityMsg[msg.msgType].subTitle : '消息类型不存在')+'</div></div></div></div>';
@@ -921,6 +969,14 @@
                 }
                 var statusCls = (divItem.className == "right" && (msg.status || 1) == 1 ) ? "success" : "";
                 if (type == "text") {//文本消息
+                    if(msg.msgType == "ordinaryCoupon" && !msg.userActId){
+                        var actDataObj = msg
+                        if(msg.ext) actDataObj = msg.ext
+                        divItem.setAttribute("actId", actDataObj.actId || '')
+                        divItem.setAttribute("techCode", actDataObj.techCode || '')
+                        divItem.setAttribute("groupmessageId", actDataObj.groupmessageId || '')
+                        divItem.setAttribute("msgTime", msg.time)
+                    }
                     divItem.innerHTML += "<span>" + $.formatMsgTime((msg.time || new Date()), true) + "</span><div style='background-image: url(" + header + ")'></div><div class='"+(msg.msgType || '' )+" "+statusCls+"' "+(msg.msgType=="paidCoupon" ? "actId='"+msg.actId+"' techCode='"+msg.techCode+"'" : msg.msgType=="ordinaryCoupon" && msg.userActId ? "userActId='"+msg.userActId+"'" : "")+">" + decodeTextMsg(msg.data) + "</div>";
                 }
                 else if (type == "pic") {//图片消息
@@ -956,7 +1012,7 @@
                         gameOverTime = switchRes.gameTimeoutSeconds*1000;
                         //addRecentlyMsg(isChatThisDay);
                     }
-                    giftBtn.Show();
+                    if(!isManager) giftBtn.Show();
                     ///////获取积分礼物
                     $.ajax({
                         url : "../api/v2/credit/gift/list",
@@ -988,10 +1044,22 @@
             }
         });
 
+        // 查询会所是否关闭打赏
+        $.ajax({
+            url: "../api/v2/user/reward/isRewardOn",
+            data: { clubId: clubId },
+            isReplaceUrl: true,
+            success: function(rewardRes){
+                if(rewardRes.statusCode == 200){
+                    canReward = rewardRes.respData
+                }
+            }
+        })
+
         ///点击聊天消息列表中的消息
         $(talkDiv).Event("click",function(e){
             var node = e.target, pNode=node.parentNode, ppNode=pNode.parentNode;
-            if(/(paidCoupon|begReward|ordinaryCoupon|dice-game|dice-game-tip|oneYuan|timeLimit|luckyWheel)/.test(pNode.className)) node=pNode;
+            if(/(paidCoupon|begReward|ordinaryCoupon|dice-game|dice-game-tip|oneYuan|plumFlower|timeLimit|luckyWheel|journal)/.test(pNode.className)) node=pNode;
             if(node.tagName.toLowerCase()=="img" && !/dice/.test(node.src) && !node.getAttribute("gift")){
                 if(!node.getAttribute("data-exp")){
                     $.param("imgScan","true");
@@ -1011,22 +1079,100 @@
                 $("#chatInput>div:nth-of-type(2)>div.reward")[0].click();
             }
             else if(/ordinaryCoupon/.test(node.className)){
-                if(node.getAttribute("userActId")) $.page("couponDetail&userActId="+node.getAttribute("userActId"));
-                else $.page("coupon");
+                pNode=node.parentNode;
+                if(node.getAttribute("userActId")) {
+                    $.page("couponDetail&userActId="+node.getAttribute("userActId"));
+                } else if (pNode.getAttribute("groupmessageId")){
+                    $.page("coupon");
+                }
+                else{
+                    /// 走领取优惠券的逻辑
+                    if(!$.$.userTel){
+                        $.$.loginUrl = location.hash.substring(1).replace(/^\//, '').replace(/\/$/, '');
+                        $.bindPhone(true);
+                    } else{
+                        //领取优惠券
+                        if(inGettingCoupon) {
+                            $.tipShow("领取优惠券中，请稍后...")
+                            return;
+                        }
+                        inGettingCoupon = true
+                        $.ajax({
+                            url: "../api/v2/club/get/redpacket",
+                            isReplaceUrl: true,
+                            data: {
+                                actId: pNode.getAttribute("actId"),
+                                phoneNum: $.$.userTel,
+                                openId: $.$.openId,
+                                userCode: "",
+                                techCode: pNode.getAttribute("techCode") || '',
+                                chanel: "link",
+                                groupMessageId : pNode.getAttribute("groupmessageId") || ""
+                            },
+                            success: function (res) {
+                                var userActId
+                                if (res.statusCode == 200 && res.respData && res.respData.userActId) {
+                                    userActId = res.respData.userActId;
+                                    //console.log("领取成功！"+userActId)
+                                    var couponName = node.querySelector("span").innerHTML+"元"+node.querySelector("i").innerHTML;
+                                    node.setAttribute("userActId",userActId)
+
+                                    var getCouponMsgObj = {
+                                        from: eb.userId,
+                                        to: currChatTech.chatId,
+                                        data: "您领取了" + currChatTech.name + '的"' + couponName + '"',
+                                        ext: {
+                                            name: currChatTech.name,
+                                            header: currChatTech.header,
+                                            avatar: currChatTech.avatar,
+                                            no: currChatTech.no,
+                                            techId: currChatTech.techId,
+                                            clubId: currChatTech.clubId,
+                                            msgType: "couponTip"
+                                        },
+                                        status: 1
+                                    };
+                                    eb.conn.send({
+                                        to: currChatTech.chatId,
+                                        msg: couponName,
+                                        type: "chat",
+                                        ext: {
+                                            name: chatName,
+                                            header: chatHeader,
+                                            msgType: "couponTip",
+                                            time: Date.now()
+                                        },
+                                        success: function () {
+                                            // 更新优惠券消息，增加userActId
+                                            var k, list = eb.msgList[currChatTech.chatId].list, itemObj;
+                                            for(k=list.length-1;k>=0;k--){
+                                                if(list[k].msgType && list[k].msgType=="ordinaryCoupon" && list[k].time==pNode.getAttribute("msgTime")){
+                                                    itemObj = list[k];
+                                                    break;
+                                                }
+                                            }
+                                            if(itemObj){
+                                                itemObj.userActId = userActId
+                                            }
+
+                                            $.sendFriend(currChatTech.chatId, 'tech', eb.userId, 'user');
+                                            $.addMsgDiv(getCouponMsgObj, "couponTip", false, true, false);
+                                            $.updateSessionList(getCouponMsgObj, "text", false);
+                                            $.addToMsgList(getCouponMsgObj, "text");
+                                        }
+                                    });
+                                } else {
+                                    $.tipShow(res.msg || "未能成功领取！")
+                                }
+                                inGettingCoupon = false
+                            }
+                        });
+                    }
+                }
             }
             else if(/dice-game-tip/.test(node.className)){///再玩一局
                 doHandlerClickDiceBtn(node.getAttribute("amount"));
                 return true;
-            }else if(/oneYuan/.test(node.className)){
-                var actId = node.getAttribute('actid');
-                $.tipShow('暂无一元夺活动');
-            }else if(/timeLimit/.test(node.className)){
-                var actId = node.getAttribute('actid');
-                if(actId) $.page('robProjectDetail&robProjectId='+actId);
-                else $.tipShow('无活动ID');
-            }else if(/luckyWheel/.test(node.className)){
-                var actId = node.getAttribute('actid');
-                $.tipShow('暂无大转盘活动');
             }
 
             if(/center/.test(pNode.className)) node=pNode;
@@ -1090,6 +1236,48 @@
             }
         });
 
+        $('#message-list-wrapper').Delegate('click','.activity>.timeLimit',function(e,item){
+            var actId = item.getAttribute('actid');
+            if(actId && actId !== 'undefined') {
+                if($.$.clubID){
+                    $.page('robProjectDetail&robProjectId='+actId);
+                }else{
+                    $.sessionStorage('curr_chat_tech',JSON.stringify(eb.currChatTech));
+                    location.href = location.origin + location.pathname + '?club='+ clubId + '#robProjectDetail&robProjectId='+actId;
+                }
+            }else $.tipShow('无活动ID');
+        }).Delegate('click','.activity>.oneYuan,.activity>.plumFlower',function(e,item){
+            var actId = item.getAttribute('actid'),isNew = $(item).ClassHave('oneYuan');
+            if(actId && actId !== 'undefined') {
+                if($.$.clubID){
+                    if(isNew){
+                        $.page('oneYuanDetail&oneYuanId='+actId);
+                    }else{
+                        $.page('plumflowers&id='+actId);
+                    }
+                }else{
+                    $.sessionStorage('curr_chat_tech',JSON.stringify(eb.currChatTech));
+                    if(isNew){
+                        location.href = location.origin + location.pathname + '?club='+ clubId + '#oneYuanDetail&oneYuanId='+actId;
+                    }else{
+                        location.href = location.origin + location.pathname + '?club='+ clubId + '#plumflowers&id='+actId;
+                    }
+                }
+            }else $.tipShow('无活动ID');
+        }).Delegate('click','.activity>.luckyWheel',function(e,item){
+            var actId = item.getAttribute('actid');
+            if(actId && actId !== 'undefined'){
+                location.href = location.origin+'/spa-manager/luckyWheel/?actId='+actId+'&clubId='+ clubId
+            }else{
+                $.tipShow('无活动ID');
+            }
+        }).Delegate('click','.activity>.journal', function (e, item) {
+            var actId = item.getAttribute('actid');
+            if(actId && actId !== 'undefined'){
+                location.href = location.origin + '/spa-manager/journal/?id='+actId;
+            }else $.tipShow('无期刊ID');
+        });
+
         //////获取技师的优惠券列表
         if(currChatTech.techId){
             $.ajax({
@@ -1149,7 +1337,7 @@
                                             phoneNum: $.$.userTel,
                                             openId: $.$.openId,
                                             userCode : "",
-                                            techCode : item.getAttribute("techCode"),
+                                            techCode : item.getAttribute("techCode") || '',
                                             chanel : "link"
                                         },
                                         success: function (res) {

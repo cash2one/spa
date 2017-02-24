@@ -2,20 +2,21 @@
     var i;
     var dataList = [], currPage = 1, pageSize = 20,
         distance = 0,
-        sortField = '',
+        sortField = 'distance',
         filterItem = "all",
         $content = $('#content'),
-        filterMenus = $(".show-area>.fourth-page>div:nth-of-type(1)>div:not(:nth-of-type(4))>div"),
+        $filterMenuArea = $('#filterMenu'),
+        filterMenus = $("#filterMenu>div:not(:nth-of-type(4))>div"),
         clubFilterPop = $('#clubFilterPop'),
         list = $("#content div.fourth-page>div.list"),
-        loadMore = $("#content div.fourth-page>div:nth-of-type(3)"),
-        loadMoreTxt = $("#content div.fourth-page>div:nth-of-type(3)>span"),
-        loadMoreImg = $("#content div.fourth-page>div:nth-of-type(3)>img"),
-        loadDataOver = $("#content div.fourth-page>div:nth-of-type(4)"),
+        loadMore = $("#content div.fourth-page>div:nth-of-type(2)"),
+        loadMoreTxt = $("#content div.fourth-page>div:nth-of-type(2)>span"),
+        loadMoreImg = $("#content div.fourth-page>div:nth-of-type(2)>img"),
+        loadDataOver = $("#content div.fourth-page>div:nth-of-type(3)"),
         dataOver = false,
         inQuery = false,
         $searchIcon = $("div#content>div:nth-of-type(1)>div:nth-of-type(1)>div:last-child"),
-        $searchIcon2 = $('.show-area>.fourth-page>div:nth-of-type(1)>div:nth-of-type(4)'),
+        $searchIcon2 = $('#filterMenu>div:nth-of-type(4)'),
         $searchBtn = $('#searchArea>div:nth-of-type(3)'),
         $searchInput = $('#searchArea input'),
         $titleDiv = $('#searchArea'),
@@ -85,10 +86,10 @@
 
     function initElement(){
       list = $("#content div.fourth-page>div.list");
-      loadMore = $("#content div.fourth-page>div:nth-of-type(3)");
-      loadMoreTxt = $("#content div.fourth-page>div:nth-of-type(3)>span");
-      loadMoreImg = $("#content div.fourth-page>div:nth-of-type(3)>img");
-      loadDataOver = $("#content div.fourth-page>div:nth-of-type(4)");
+      loadMore = $("#content div.fourth-page>div:nth-of-type(2)");
+      loadMoreTxt = $("#content div.fourth-page>div:nth-of-type(2)>span");
+      loadMoreImg = $("#content div.fourth-page>div:nth-of-type(2)>img");
+      loadDataOver = $("#content div.fourth-page>div:nth-of-type(3)");
       $searchIcon = $("div#content>div:nth-of-type(1)>div:nth-of-type(1)>div:last-child");
       $searchBtn = $('#searchArea>div:nth-of-type(3)');
       $searchInput = $('#searchArea input');
@@ -98,7 +99,7 @@
       loadMore5 = $("#content div.fifth-page>div:nth-of-type(2)");
       loadDataOver5 = $("#content div.fifth-page>div:nth-of-type(3)");
       $showArea =$('.show-area');
-      filterMenus = $(".show-area>.fourth-page>div:nth-of-type(1)>div:not(:nth-of-type(4))>div");
+      filterMenus = $("#filterMenu>div:not(:nth-of-type(4))>div");
       clubFilterPop = $('#clubFilterPop');
     }
     //地图信息
@@ -208,10 +209,15 @@
             }
             showPageByIndex(showPageIndex);
             if($.param('search_text')){
+                filterMenus.ClassClear('active');
+                clubFilterPop.ClassClear('active');
+                $content.ClassClear('no-scroll');
+                $filterMenuArea.Class('hide');
                 searchIconFunc();
                 $searchInput[0].value = decodeURIComponent($.param('search_text'));
                 //$searchBtn[0].click();
                 isSearched = false;
+                searchBtnClick();
             }
 
             if(initShowPageIndex == 1){
@@ -220,8 +226,8 @@
             }else if(initShowPageIndex == 4){
                 //=== 当用户查看自己已访问过的会所时，默认查全部会所
                 distance = 0;
-                $('.fourth-page>div:nth-of-type(1)>div:nth-of-type(1)>span').Text('全部会所');
-                var lis = $('.fourth-page>div:nth-of-type(1)>div:nth-of-type(1)>ul>li').ClassClear('selected');
+                $('#filterMenu>div:nth-of-type(1)>span').Text('全部会所');
+                var lis = $('#filterMenu>div:nth-of-type(1)>ul>li').ClassClear('selected');
                 lis.Index(lis.length-1).Class('selected');
 
                 //查询会所数据列表
@@ -241,11 +247,12 @@
 
         //返回按钮
         $returnBtn.Event('click', function () {
-            if(showPageIndex == 3){
-                showPageIndex--;
+            if(showPageIndex == 3 || showPageIndex == 5){
+                showPageIndex = 2;
             }else{
                 showPageIndex = 4;
                 $titleDiv.Class('hide');
+                $filterMenuArea.ClassClear('hide');
             }
             /*if(fromPageIndex == 4){
                 $('#showListTitle').ClassClear('hide');
@@ -262,6 +269,7 @@
             filterMenus.ClassClear('active');
             clubFilterPop.ClassClear('active');
             $content.ClassClear('no-scroll');
+            $filterMenuArea.Class('hide');
             searchIconFunc();
         });
         function searchBtnClick(){
@@ -339,9 +347,9 @@
          item.className = ( item.className == "active" ? "" : "active");
          });*/
         var popDiv = $(".pop-select-layer>div>div>div"),
-          distanceTextDiv = $('.show-area>.fourth-page>div:nth-of-type(1)>div:nth-of-type(1)>div'),
-          sortTextDiv = $('.show-area>.fourth-page>div:nth-of-type(1)>div:nth-of-type(2)>div'),
-          filterTextDiv = $('.show-area>.fourth-page>div:nth-of-type(1)>div:nth-of-type(3)>div');
+          distanceTextDiv = $('#filterMenu>div:nth-of-type(1)>div'),
+          sortTextDiv = $('#filterMenu>div:nth-of-type(2)>div'),
+          filterTextDiv = $('#filterMenu>div:nth-of-type(3)>div');
         popDiv.Event('click',function (e, item) {
             var parentNode,siblings;
             if(item.className == 'active') return;
@@ -557,7 +565,7 @@
         });
         $('.club-item-list>div:first-child>div:nth-of-type(3):not(.has-event)').Click(function (e, item) {
             e.stopPropagation();
-            jumpToSpaPage(item.dataset.clubId,'promotions');
+            jumpToSpaPage(item.dataset.clubId,'activities');
         }).Class('has-event');
         $('.club-item-list>div:first-child:not(.has-event)').Click(function (e, item) {
             e.stopPropagation();

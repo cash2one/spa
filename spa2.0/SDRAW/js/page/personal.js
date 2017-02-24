@@ -143,6 +143,7 @@
     }
 
     function initPage(){
+        var accessMenus = $.$.accessMenus;
         //单击绑定手机
         $('#content').Delegate('click','.bind-phone', function () {
             $.$.loginUrl = 'personal';
@@ -159,6 +160,15 @@
             /*}*/
         });
 
+        // 买单记录入口是否显示
+        if((accessMenus &&!accessMenus["fastPayRecords"].isOff) || !accessMenus){
+            $('#content>div.menu-wrap>div:nth-of-type(7)').ClassClear("hide")
+        }
+        // 我的次卡入口是否显示
+        if((accessMenus &&!accessMenus["onceCardSellRecords"].isOff) || !accessMenus){
+            $('#content>div.menu-wrap>div:nth-of-type(8)').ClassClear("hide")
+        }
+
         //点击我的账户
         $('#content>div.account-wrap>div:nth-of-type(1)').Click(function () {
             $.login($.$.clubID ? 'accountDetail' : 'account',false,true,true);
@@ -166,12 +176,25 @@
 	
         //单击优惠券
         $('#content>div.menu-wrap>div:nth-of-type(1)').Login('coupon',false,true,true);
-
+        //单击热门活动
+        $('#content>div.menu-wrap>div:nth-of-type(2)').Login('activities',false,true,true);
         //单击订单
-        $('#content>div.menu-wrap>div:nth-of-type(2)').Login('order',false,true,true);
+        $('#content>div.menu-wrap>div:nth-of-type(3)').Login('order',false,true,true);
 
         //单击收藏
-        $('#content>div.menu-wrap>div:nth-of-type(3)').Login('collect');
+        $('#content>div.menu-wrap>div:nth-of-type(4)').Login('collect');
+
+        //1元抢购
+        $('#content>div.menu-wrap>div:nth-of-type(5)').Login('oneYuanRecords');
+
+        //单击中奖记录
+        $('#content>div.menu-wrap>div:nth-of-type(6)').Login('lucky');
+
+        // 点击买单
+        $('#content>div.menu-wrap>div:nth-of-type(7)').Login("fastPayRecords")
+
+        // 点击我的次卡
+        $('#content>div.menu-wrap>div:nth-of-type(8)').Login("onceCardOrders")
 
         //单击消息
         //$('#content>div.menu-wrap>div:nth-of-type(4)').Login('contacts');

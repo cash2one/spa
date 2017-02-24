@@ -5,34 +5,38 @@
     <div class="counter-wrap" :class="type" @transitionend="doTransitionEnd($event)">
         <label>{{ type=='clock' ? '距离下钟' : tipText[status] }}</label>
         <template v-if="status !='over' ">
-            <div ref="w0">
+            <div ref="w0" v-show="showAni && showDay">
                 <div data-index="0"><b>{{ times[0][0] }}</b><b>{{ times[0][1] }}</b></div>
             </div>
-            <div ref="w1">
+            <div ref="w1" v-show="showAni && showDay">
                 <div data-index="1"><b>{{ times[1][0] }}</b><b>{{ times[1][1] }}</b></div>
             </div>
-            <label>天</label>
-            <div ref="w2">
+            <span v-show="showDay">{{ times[0][1] }}{{ times[1][1] }}</span>
+            <label v-show="showDay">天</label>
+            <div ref="w2" v-show="showAni">
                 <div data-index="2"><b>{{ times[2][0] }}</b><b>{{ times[2][1] }}</b></div>
             </div>
-            <div ref="w3">
+            <div ref="w3" v-show="showAni">
                 <div data-index="3"><b>{{ times[3][0] }}</b><b>{{ times[3][1] }}</b></div>
             </div>
+            <span>{{ times[2][1] }}{{ times[3][1] }}</span>
             <label>{{ type=='clock' ? ':' : '时' }}</label>
-            <div ref="w4">
+            <div ref="w4" v-show="showAni">
                 <div data-index="4"><b>{{ times[4][0] }}</b><b>{{ times[4][1] }}</b></div>
             </div>
-            <div ref="w5">
+            <div ref="w5" v-show="showAni">
                 <div data-index="5"><b>{{ times[5][0] }}</b><b>{{ times[5][1] }}</b></div>
             </div>
+            <span>{{ times[4][1] }}{{ times[5][1] }}</span>
             <label>{{ type=='clock' ? ':' : '分' }}</label>
-            <div ref="w6">
+            <div ref="w6" v-show="showAni && showSecond">
                 <div data-index="6"><b>{{ times[6][0] }}</b><b>{{ times[6][1] }}</b></div>
             </div>
-            <div ref="w7">
+            <div ref="w7" v-show="showAni && showSecond">
                 <div data-index="7"><b>{{ times[7][0] }}</b><b>{{ times[7][1] }}</b></div>
             </div>
-            <label>秒</label>
+            <span v-show="showSecond">{{ times[6][1] }}{{ times[7][1] }}</span>
+            <label v-show="showSecond">秒</label>
         </template>
         <label v-else>活动已结束，欢迎下次抢购！</label>
     </div>
@@ -67,6 +71,18 @@
             type: {
                 type: String,
                 default: 'act'
+            },
+            showSecond: {
+                type: Boolean,
+                default: false
+            },
+            showDay: {
+                type: Boolean,
+                default: true
+            },
+            showAni: {
+                type: Boolean,
+                default: false
             }
         },
         computed: {

@@ -2,8 +2,10 @@
 div#lucky-wheel-page {
   position: relative;
   z-index: 0;
-  padding: 1.083rem 0 1.1389rem;
+  padding: 0 0 1.1389rem;
   background-color: #f66; }
+  div#lucky-wheel-page .page-title {
+    background: #eee; }
   div#lucky-wheel-page .light-bg {
     position: absolute;
     width: 42rem;
@@ -25,6 +27,7 @@ div#lucky-wheel-page {
       -webkit-transform: rotate(0deg) scale(1, 1);
               transform: rotate(0deg) scale(1, 1); }
   div#lucky-wheel-page .title {
+    margin-top: 1.083rem;
     height: 4.972rem;
     background-size: 16.528rem 4.972rem;
     background-image: url("../../images/luckyWheel/2.png");
@@ -420,6 +423,17 @@ div#lucky-wheel-page {
       div#lucky-wheel-page .pop-modal.no-winning .top-wrap > div.tip > b {
         color: #f66;
         margin: 0 0.2rem; }
+    div#lucky-wheel-page .pop-modal.no-winning .top-wrap > div.attention-tip {
+      margin-top: -3rem;
+      color: #616161;
+      font-size: 0.889rem; }
+    div#lucky-wheel-page .pop-modal.no-winning .top-wrap > div.qrCode {
+      width: 10.4167rem;
+      height: 10.4167rem;
+      margin: 0.5rem auto 0; }
+      div#lucky-wheel-page .pop-modal.no-winning .top-wrap > div.qrCode > img {
+        width: inherit;
+        height: inherit; }
     div#lucky-wheel-page .pop-modal.no-winning .top-wrap > div.btn {
       margin-top: 0.444rem; }
       div#lucky-wheel-page .pop-modal.no-winning .top-wrap > div.btn:after {
@@ -493,46 +507,3 @@ div#lucky-wheel-page {
         background-size: 0.556rem 0.778rem;
         background-image: url("../../images/luckyWheel/8.png");
         background-repeat: no-repeat; }
-  div#lucky-wheel-page .back-btn {
-    position: fixed;
-    top: 0.5rem;
-    left: 0.5rem;
-    opacity: 0;
-    -webkit-transition: opacity 0.3s 1.8s;
-    transition: opacity 0.3s 1.8s; }
-    div#lucky-wheel-page .back-btn > div:nth-of-type(1) {
-      position: relative;
-      width: 1.722rem;
-      height: 1.722rem;
-      background-color: rgba(72, 68, 67, 0.5);
-      border-radius: 50%;
-      float: left;
-      margin-right: 0.4rem; }
-      div#lucky-wheel-page .back-btn > div:nth-of-type(1):before {
-        content: "";
-        position: absolute;
-        width: .5rem;
-        height: .5rem;
-        top: 50%;
-        left: 50%;
-        margin-top: -.25rem;
-        margin-left: -.25rem;
-        box-sizing: border-box;
-        border-left: .15rem solid #fff;
-        border-bottom: .15rem solid #fff;
-        -webkit-transform: rotate(45deg);
-                transform: rotate(45deg); }
-    div#lucky-wheel-page .back-btn > div:nth-of-type(2) {
-      height: 1.722rem;
-      line-height: 1.722rem;
-      padding: 0 .611rem;
-      background-color: rgba(72, 68, 67, 0.5);
-      top: .5rem;
-      z-index: 3;
-      left: 3.056rem;
-      border-radius: .861rem;
-      color: #fff;
-      font-size: 0.889rem;
-      float: left; }
-    div#lucky-wheel-page .back-btn.act {
-      opacity: 1; }

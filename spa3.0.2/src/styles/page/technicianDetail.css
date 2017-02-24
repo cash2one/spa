@@ -15,7 +15,7 @@
     transform: translate(0, -2.556rem); } }
 
 div#technician-detail-page {
-  overflow-y: auto; }
+  padding-bottom: 2.667rem; }
   div#technician-detail-page div.top {
     height: 8rem;
     position: relative;

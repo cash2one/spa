@@ -1,0 +1,1 @@
+!function(){var n=$.param("info");$("#content>div>span").Html(n),$.pageSwitch(),setTimeout(function(){$.page("home")},3e3)}();

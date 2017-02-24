@@ -1,0 +1,29 @@
+@import "../common/common.scss";
+
+#_content>#fastPayError {
+  #content {
+    width: 20rem;
+    position: relative;
+    background: #fff;
+    div{
+      position: absolute;
+      width: 15rem;
+      left: 50%;
+      top: 40%;
+      @include translate(-50%,-50%);
+      color: #fd7b08;
+      font-size: 1.222rem;
+      text-align: center;
+      letter-spacing: 2px;
+      line-height: 1.8;
+      &:before{
+        content: "";
+        display: block;
+        width: 11.667rem;
+        height: 10.444rem;
+        margin: 0 auto 1.389rem;
+        @include img("../../../img/fastPay/3.png",11.667rem 10.444rem);
+      }
+    }
+  }
+}

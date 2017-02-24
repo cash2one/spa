@@ -174,7 +174,7 @@
                 var rewardAmounts = data.rewardAmounts,rewardStrs = [];
                 if(Array.isArray(rewardAmounts) && rewardAmounts.length > 0){
                     rewardAmounts.forEach(function (money) {
-                        rewardStrs.push('<div>'+money+'元</div>');
+                        rewardStrs.push('<div>'+((money - 0)/100).toFixed(2)+'</div>');
                     });
                 }else{
                     rewardStrs.push('<div>0元</div>');
@@ -240,9 +240,7 @@
 
     //== 追加打赏 ==
     appendReward$.Click(function () {
-        
 		$.page("techReward&techId=" + techId + "&backPublic=true" + (commentId?"&commentId=" + commentId:"")  );
-        
     });
 
     //== 再来一单 ==

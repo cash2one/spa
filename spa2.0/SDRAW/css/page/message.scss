@@ -120,7 +120,7 @@
               }
               &:nth-of-type(2){
                 padding: .667rem 0;
-                border-bottom: 1px solid #E0E0E0;
+                border-bottom: 1px solid #EEEEEE;
                 @include boxFlex(1);
                 >div{
                   &:nth-of-type(1){
@@ -136,21 +136,28 @@
                             @include sl();
                             font-size: .889rem;
                             color: #4d4d4d;
-                            margin-right: .5rem;
+                            margin-right: .3rem;
                           }
                           &:nth-of-type(2){
-                            min-width: 2.444rem;
+                            min-width: 2.433rem;
                             max-width: 3.5rem;
-                            height: .668rem;
+                            height: .722rem;
                             text-align: center;
-                            line-height: 1.2;
-                            font-size: .611rem;
+                            font-size: .556rem;
                             color: #999;
-                            box-sizing: border-box;
                             border: 1px solid #999;
-                            -webkit-border-radius: .334rem;
-                            -moz-border-radius: .334rem;
-                            border-radius: .334rem;
+                            -webkit-border-radius: .361rem;
+                            -moz-border-radius: .361rem;
+                            border-radius: .361rem;
+                            line-height: 0.755rem;
+                            box-sizing: border-box;
+                            &.none{
+                              display: none;
+                            }
+                            &.manager{
+                              border-color: #fb5549;
+                              color: #fb5549;
+                            }
                           }
                         }
                       }
@@ -215,7 +222,7 @@
                 }
                 &:nth-of-type(2){
                   padding: .667rem 0;
-                  border-bottom: 1px solid #E0E0E0;
+                  border-bottom: 1px solid #EEEEEE;
                   @include boxFlex(1);
                   @include sx();
                   >div{
@@ -232,21 +239,28 @@
                               @include sl();
                               font-size: .889rem;
                               color: #4d4d4d;
-                              margin-right: .5rem;
+                              margin-right: .3rem;
                             }
                             &:nth-of-type(2){
-                              min-width: 2.444rem;
+                              min-width: 2.433rem;
                               max-width: 3.5rem;
-                              height: .668rem;
+                              height: .722rem;
                               text-align: center;
-                              line-height: 1.2;
-                              font-size: .611rem;
+                              font-size: .556rem;
                               color: #999;
-                              box-sizing: border-box;
                               border: 1px solid #999;
-                              -webkit-border-radius: .334rem;
-                              -moz-border-radius: .334rem;
-                              border-radius: .334rem;
+                              -webkit-border-radius: .361rem;
+                              -moz-border-radius: .361rem;
+                              border-radius: .361rem;
+                              line-height: 0.755rem;
+                              box-sizing: border-box;
+                              &.none{
+                                display: none;
+                              }
+                              &.manager{
+                                border-color: #fb5549;
+                                color: #fb5549;
+                              }
                             }
                           }
                         }
@@ -339,7 +353,7 @@
   #loadTip{
     @include wq();
     height: 2rem;
-    border-top: 1px solid #E0E0E0;
+    border-top: 1px solid #EEEEEE;
     background-color: #fff;
     &.none{
       display: none;
@@ -362,7 +376,7 @@
     margin-top: .5rem;
     @include wq();
     height: 2rem;
-    border-top: 1px solid #E0E0E0;
+    border-top: 1px solid #EEEEEE;
     background-color: #fff;
     &.none{
       display: none;
